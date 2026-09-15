@@ -1,10 +1,12 @@
 <?php
+
 // api-v8/app/Http/Controllers/SearchSuggestController.php
+
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Services\OpenSearchService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /**
  * 搜索自动建议控制器
@@ -50,8 +52,6 @@ class SearchSuggestController extends Controller
 
     /**
      * 构造函数，注入 OpenSearchService
-     *
-     * @param  \App\Services\OpenSearchService  $searchService
      */
     public function __construct(OpenSearchService $searchService)
     {
@@ -79,16 +79,15 @@ GET /api/v2/suggest?q=dhamma&fields[]=title&fields[]=content&limit=10
      *
      * 基于 OpenSearch completion suggester，支持从不同字段获取建议。
      *
-     * @param  \Illuminate\Http\Request  $request
-     *   - q (string): 输入的部分文本（必填）
-     *   - fields (string|array): 要查询的字段，可选值：
-     *       - 不传：查询所有字段 (title, content, page_refs)
-     *       - 单个字段：'title' | 'content' | 'page_refs'
-     *       - 多个字段：'title,content' 或 ['title', 'content']
-     *   - language (string): 语言过滤，可选（如：pali, zh, en）
-     *   - limit (int): 每个字段返回的建议数量，默认 10，最大 50
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * @param  Request  $request
+     *                            - q (string): 输入的部分文本（必填）
+     *                            - fields (string|array): 要查询的字段，可选值：
+     *                            - 不传：查询所有字段 (title, content, page_refs)
+     *                            - 单个字段：'title' | 'content' | 'page_refs'
+     *                            - 多个字段：'title,content' 或 ['title', 'content']
+     *                            - language (string): 语言过滤，可选（如：pali, zh, en）
+     *                            - limit (int): 每个字段返回的建议数量，默认 10，最大 50
+     * @return JsonResponse
      */
     public function index(Request $request)
     {
@@ -97,7 +96,7 @@ GET /api/v2/suggest?q=dhamma&fields[]=title&fields[]=content&limit=10
         if (empty($query)) {
             return response()->json([
                 'success' => false,
-                'error'   => '缺少参数 q（查询文本）'
+                'error' => '缺少参数 q（查询文本）',
             ], 400);
         }
 
@@ -122,22 +121,22 @@ GET /api/v2/suggest?q=dhamma&fields[]=title&fields[]=content&limit=10
 
             return response()->json([
                 'success' => true,
-                'data'    => [
-                    'query'       => $query,
+                'data' => [
+                    'query' => $query,
                     'suggestions' => $suggestions,
-                    'total'       => count($suggestions)
-                ]
+                    'total' => count($suggestions),
+                ],
             ]);
         } catch (\InvalidArgumentException $e) {
             return response()->json([
                 'success' => false,
-                'error'   => '无效的字段参数：' . $e->getMessage(),
-                'hint'    => '有效的字段值：title, content, page_refs'
+                'error' => '无效的字段参数：'.$e->getMessage(),
+                'hint' => '有效的字段值：title, content, page_refs',
             ], 400);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'error'   => '搜索建议失败：' . $e->getMessage(),
+                'error' => '搜索建议失败：'.$e->getMessage(),
             ], 500);
         }
     }
@@ -158,8 +157,10 @@ GET /api/v2/suggest?q=dhamma&fields[]=title&fields[]=content&limit=10
             // 如果是逗号分隔的字符串，转换为数组
             if (strpos($fields, ',') !== false) {
                 $fieldsArray = array_map('trim', explode(',', $fields));
+
                 return $fieldsArray;
             }
+
             // 单个字段
             return $fields;
         }
@@ -173,9 +174,6 @@ GET /api/v2/suggest?q=dhamma&fields[]=title&fields[]=content&limit=10
 
     /**
      * 格式化建议结果
-     *
-     * @param  array  $rawSuggestions
-     * @return array
      */
     protected function formatSuggestions(array $rawSuggestions): array
     {
@@ -183,15 +181,15 @@ GET /api/v2/suggest?q=dhamma&fields[]=title&fields[]=content&limit=10
             $docSource = $item['doc_source'] ?? [];
 
             return [
-                'text'          => $item['text'] ?? '',
-                'source'        => $item['source'] ?? null,
-                'score'         => round($item['score'] ?? 0, 2),
+                'text' => $item['text'] ?? '',
+                'source' => $item['source'] ?? null,
+                'score' => round($item['score'] ?? 0, 2),
                 'resource_type' => $docSource['resource_type'] ?? null,
-                'language'      => $docSource['language'] ?? null,
-                'doc_id'        => $item['doc_id'] ?? null,
+                'language' => $docSource['language'] ?? null,
+                'doc_id' => $item['doc_id'] ?? null,
                 // 可选：添加更多元数据
-                'category'      => $docSource['category'] ?? null,
-                'granularity'   => $docSource['granularity'] ?? null,
+                'category' => $docSource['category'] ?? null,
+                'granularity' => $docSource['granularity'] ?? null,
             ];
         })->all();
     }

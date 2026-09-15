@@ -10,6 +10,7 @@ class UpdateOpenSearchIndex extends Command
     /**
      * The name and signature of the console command.
      * php artisan create:opensearch.index
+     *
      * @var string
      */
     protected $signature = 'update:opensearch.index';
@@ -46,6 +47,7 @@ class UpdateOpenSearchIndex extends Command
             $this->info($open[1]);
         } else {
             $this->error($open[1]);
+
             return 1; // Exit with error code
         }
 
@@ -53,19 +55,21 @@ class UpdateOpenSearchIndex extends Command
         $this->warn('Index already exists, attempting to update...');
         try {
             $update = $openSearch->updateIndex();
-            if (!empty($update['settings']) && $update['settings']['acknowledged']) {
+            if (! empty($update['settings']) && $update['settings']['acknowledged']) {
                 $this->info('Index settings updated successfully');
             }
-            if (!empty($update['mappings']) && $update['mappings']['acknowledged']) {
+            if (! empty($update['mappings']) && $update['mappings']['acknowledged']) {
                 $this->info('Index mappings updated successfully');
             }
             if (empty($update['settings']) && empty($update['mappings'])) {
                 $this->warn('No settings or mappings provided for update');
             }
         } catch (\Exception $updateException) {
-            $this->error('Failed to update index: ' . $updateException->getMessage());
+            $this->error('Failed to update index: '.$updateException->getMessage());
+
             return 1;
         }
+
         return 0;
     }
 }

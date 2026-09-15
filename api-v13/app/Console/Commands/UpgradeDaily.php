@@ -2,10 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Tools\Tools;
 use Illuminate\Console\Command;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
-
 
 class UpgradeDaily extends Command
 {
@@ -40,7 +39,7 @@ class UpgradeDaily extends Command
      */
     public function handle()
     {
-        if (\App\Tools\Tools::isStop()) {
+        if (Tools::isStop()) {
             return 0;
         }
         $env = config('app.env');
@@ -51,28 +50,28 @@ class UpgradeDaily extends Command
             $this->call('message:webhook', [
                 'listener' => 'dingtalk',
                 'url' => 'dingtalk1',
-                'title' => "后台任务",
-                'message' => " wikipali: 每日统计后台任务开始执行。app.env=" . $env,
+                'title' => '后台任务',
+                'message' => ' wikipali: 每日统计后台任务开始执行。app.env='.$env,
             ]);
         }
         Log::info('wikipali: 每日统计后台任务开始执行{app.env}', ['app.env' => $env]);
-        $message = "wikipali: 每日统计后台任务执行完毕。" . $env;
+        $message = 'wikipali: 每日统计后台任务执行完毕。'.$env;
 
-        //更新单词首选意思
+        // 更新单词首选意思
         $this->call('upgrade:dict.default.meaning');
         $time = time() - $start;
         $message .= "dict.default.meaning:{$time}; ";
         $currTime = time();
-        Log::info('更新单词首选意思完毕' . $env);
+        Log::info('更新单词首选意思完毕'.$env);
 
-        //社区术语表
+        // 社区术语表
         $this->call('upgrade:community.term', ['lang' => 'zh-Hans']);
         $time = time() - $currTime;
         $message .= "community.term:{$time}; ";
         $currTime = time();
         Log::info('社区术语表完毕 {app.env}', ['app.env' => $env]);
 
-        # 导出离线数据
+        // 导出离线数据
 
         $this->call('export:offline', ['format' => 'lzma', '--driver' => 'str']);
         $time = time() - $currTime;
@@ -86,15 +85,15 @@ class UpgradeDaily extends Command
             $this->call('message:webhook', [
                 'listener' => 'dingtalk',
                 'url' => 'dingtalk1',
-                'title' => "后台任务",
-                'message' => $message . ' app.env=' . $env,
+                'title' => '后台任务',
+                'message' => $message.' app.env='.$env,
             ]);
-            //发送dingding消息
+            // 发送dingding消息
             $this->call('message:webhookarticlenew', [
                 'host' => 'https://oapi.dingtalk.com/robot/send?access_token=34143dbec80a8fc09c1cb5897a5639ee3a9a32ecfe31835ad29bf7013bdb9fdf',
                 'type' => 'dingtalk',
             ]);
-            //发送微信消息
+            // 发送微信消息
             $this->call('message:webhookarticlenew', [
                 'host' => 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=25dbd74f-c89c-40e5-8cbc-48b1ef7710b8',
                 'type' => 'wechat',

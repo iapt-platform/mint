@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class WordPart extends Model
 {
     use HasFactory;
-	protected $fillable = ['word' , 'weight'];
 
+    protected $fillable = ['word', 'weight'];
 }

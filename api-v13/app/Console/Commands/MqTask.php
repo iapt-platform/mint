@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Http\Api\Mq;
-use Illuminate\Support\Facades\Log;
+use App\Tools\Tools;
+use Illuminate\Console\Command;
 
 class MqTask extends Command
 {
@@ -39,19 +39,21 @@ class MqTask extends Command
      */
     public function handle()
     {
-        if(\App\Tools\Tools::isStop()){
+        if (Tools::isStop()) {
             return 0;
         }
-        $this->info('env='.env("RABBITMQ_HOST"));
-        $this->info('config='.config("queue.connections.rabbitmq.host"));
+        $this->info('env='.env('RABBITMQ_HOST'));
+        $this->info('config='.config('queue.connections.rabbitmq.host'));
         $exchange = 'router';
         $queue = 'task';
         $this->info(" [*] Waiting for {$queue}. To exit press CTRL+C");
-        Mq::worker($exchange,$queue,function ($message){
+        Mq::worker($exchange, $queue, function ($message) {
             $message = json_decode(json_encode($message), true);
-            $this->info('name=',$message['name']);
-            return $this->call($message['name'],$message['param']);
+            $this->info('name=', $message['name']);
+
+            return $this->call($message['name'], $message['param']);
         });
+
         return 0;
     }
 }

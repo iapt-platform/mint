@@ -1,5 +1,31 @@
 <?php
 return [
     'home' => '首页',
-    'translation' => '译文',
+    'translation' => '譯文',
+    'original' => '原文',
+    'nissaya' => '緬文逐詞',
+
+    'script_convertor' => '巴利文字轉換器',
+    'input_script' => '輸入文字',
+    'output_script' => '輸出文字',
+    'paste_here' => '在此貼上文本...',
+    'converted_text' => '轉換結果顯示在此...',
+    'niggahita_label' => 'ṃ / ṁ / ŋ 轉換為',
+    'script_roman' => '巴利羅馬字 Unicode',
+    'script_sangayana' => 'Sangayana',
+    'script_sinhala' => '僧伽羅文',
+    'script_sinhala_traditional' => '僧伽羅文（傳統）',
+    'script_sinhala_modern' => '僧伽羅文（現代）',
+    'script_myanmar' => '緬甸文',
+    'script_tai_tham' => '蘭納文（傣曇文）',
+    'script_tai_old' => '蘭納文（舊非Unicode）',
+    'script_thai' => '泰文',
+    'script_chinese_detail' => '錫蘭注音（詳）',
+    'script_chinese_simple' => '錫蘭注音（簡）',
+    'script_chinese_pinyin' => '漢語拼音（錫）',
+    'script_telugu' => '泰盧固文',
+
+    'toolbox' => '工具箱',
+    'tool_script_convertor' => '腳本轉換器',
+    'tool_script_convertor_desc' => '巴利文字多腳本互轉',
 ];

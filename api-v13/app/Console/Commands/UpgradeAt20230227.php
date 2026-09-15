@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Tools\Tools;
 use Illuminate\Console\Command;
 
 class UpgradeAt20230227 extends Command
@@ -37,7 +38,7 @@ class UpgradeAt20230227 extends Command
      */
     public function handle()
     {
-        if(\App\Tools\Tools::isStop()){
+        if (Tools::isStop()) {
             return 0;
         }
         $this->call('init:system.channel');
@@ -46,13 +47,13 @@ class UpgradeAt20230227 extends Command
         $this->call('upgrade:dict.vocabulary');
         $this->call('upgrade:dict.default.meaning');
 
-        //语料库
+        // 语料库
         $this->call('init:cs6sentence');
         $this->call('upgrade:palitext');
         $this->call('upgrade:wbw.template');
 
         $this->call('upgrade:related.paragraph');
-        $this->call('upgrade:fts',['--content'=>true]);
+        $this->call('upgrade:fts', ['--content' => true]);
         $this->call('upgrade:pcd.book.id');
 
         return 0;

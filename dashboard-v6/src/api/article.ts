@@ -3,6 +3,7 @@
 import type { IStudio, IStudioApiResponse, IUser, TRole } from "./Auth";
 import type { IChannel } from "./channel";
 import { delete_, get, post, put } from "../request";
+import { bookName } from "./bookName";
 import type { ITocPathNode } from "./pali-text";
 import type { LoaderFunctionArgs } from "react-router";
 import type { ListNodeData } from "../components/article/components/EditableTree";
@@ -572,4 +573,81 @@ export async function articleLoader({ params }: LoaderFunctionArgs) {
   }
 
   return res.data;
+}
+
+/**
+ * 页码导航
+ *
+ * pageId 形如 `M-dīghanikāya-2-10`（页码类型_书名_卷号_页码）。
+ * 书名（第 2 段）需按页码类型对应不同版本的书名标题字段反查 book id：
+ * M 缅文版 → m_title，P PTS版 → p_title，V 内观研究所版 → v_title，
+ * 其余类型退回 term（与后端 pageInfoByPara 的映射保持一致），
+ * 之后请求 GET /api/v2/nav-page/{TYPE}-{booksId}-{volume}-{page}。
+ */
+export const fetchPageNav = (pageId: string): Promise<IPageNavResponse> => {
+  const pageParam = pageId.split("_");
+  if (pageParam.length < 4) {
+    return Promise.reject(new Error(`invalid page id: ${pageId}`));
+  }
+  const type = pageParam[0].toUpperCase();
+  const titleField: "term" | "m_title" | "p_title" | "v_title" =
+    type === "M"
+      ? "m_title"
+      : type === "P"
+        ? "p_title"
+        : type === "V"
+          ? "v_title"
+          : "term";
+  const booksId = bookName
+    .filter((value) => value[titleField] === pageParam[1])
+    .map((item) => item.id)
+    .join("_");
+  const url = `/api/v2/nav-page/${type}-${booksId}-${pageParam[2]}-${
+    pageParam[3]
+  }`;
+  return get<IPageNavResponse>(url);
+};
+
+/**
+ * cs-para 导航
+ *
+ * csParaId 形如 `book_para_page`，例如 `169_3_64`。
+ * GET /api/v2/nav-cs-para/{csParaId}
+ */
+export const fetchCSParaNav = (
+  csParaId: string
+): Promise<ICSParaNavResponse> => {
+  return get<ICSParaNavResponse>(`/api/v2/nav-cs-para/${csParaId}`);
+};
+
+export async function csParaLoader({ params }: LoaderFunctionArgs) {
+  const id = params.id;
+
+  if (!id) {
+    throw new Response("Missing cs-para id", { status: 400 });
+  }
+
+  const res = await fetchCSParaNav(id);
+
+  if (!res.ok) {
+    throw new Response("cs-para not found", { status: 404 });
+  }
+
+  // title 使用 `book_para_page` 中的 page（第三段），例如 `169_3_64` -> `64`
+  return { title: id.split("_")[2] ?? id };
+}
+
+/**
+ * 页码引用路由 loader。
+ *
+ * 仅用于提供面包屑标题，页面内容由 TypePage 内部的 usePageNav 解析渲染。
+ */
+export async function pageLoader({ params }: LoaderFunctionArgs) {
+  const id = params.id;
+
+  if (!id) {
+    throw new Response("Missing page id", { status: 400 });
+  }
+
+  return { title: id };
 }

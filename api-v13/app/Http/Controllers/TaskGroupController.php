@@ -2,16 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Task;
 use App\Models\Project;
-use App\Models\TaskRelation;
+use App\Models\Task;
 use App\Models\TaskAssignee;
-
-use Illuminate\Support\Facades\Log;
-
-use Illuminate\Http\Request;
+use App\Models\TaskRelation;
 use App\Services\AuthService;
-
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 
 class TaskGroupController extends Controller
@@ -19,7 +16,7 @@ class TaskGroupController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -29,8 +26,7 @@ class TaskGroupController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -38,23 +34,22 @@ class TaskGroupController extends Controller
         //
 
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'), 401, 401);
         }
-        //获取全部的project_id
+        // 获取全部的project_id
         $input = $request->input(key: 'data');
         $id = [];
         foreach ($input as $key => $value) {
             $id[$value['project_id']] = 1;
         }
         $projectsId = array_keys($id);
-        //鉴权
+        // 鉴权
         $projects = Project::whereIn('uid', $projectsId)
             ->select(['uid', 'owner_id'])->get();
         foreach ($projects as $key => $project) {
             $id[$project->uid] = $project->owner_id;
-            if (!TaskController::canEdit($user['user_uid'], $project->owner_id)) {
-                Log::error(__('auth.failed'), ['user' => $user['user_uid'], 'owner' => $project->owner_id]);
+            if (! TaskController::canEdit($user['user_uid'], $project->owner_id)) {
                 return $this->error(__('auth.failed'), 403, 403);
             }
         }
@@ -63,7 +58,7 @@ class TaskGroupController extends Controller
         $trData = [];
         $taData = [];
         foreach ($input as $key => $project) {
-            # code...
+            // code...
             $projectData = [];
             $tasks = [];
             $taskRelationData = [];
@@ -104,7 +99,7 @@ class TaskGroupController extends Controller
             }
             $data = [...$data, ...$projectData];
 
-            //处理 task relation
+            // 处理 task relation
             $tasksId = array_keys($tasks);
             $taskRelations = TaskRelation::whereIn('task_id', $tasksId)
                 ->get();
@@ -119,7 +114,7 @@ class TaskGroupController extends Controller
             }
             $trData = [...$trData, ...$taskRelationData];
 
-            //处理 task assignee
+            // 处理 task assignee
             $ta = TaskAssignee::whereIn('task_id', $tasksId)->get();
             foreach ($ta as $key => $value) {
                 $taskAssigneesData[] = [
@@ -151,8 +146,7 @@ class TaskGroupController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Task  $task
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(Task $task)
     {
@@ -162,9 +156,7 @@ class TaskGroupController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Task  $task
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, Task $task)
     {
@@ -174,8 +166,7 @@ class TaskGroupController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Task  $task
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(Task $task)
     {

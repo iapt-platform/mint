@@ -2,10 +2,11 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Models\PaliText;
 use App\Models\Tag;
 use App\Models\TagMap;
+use App\Tools\Tools;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
 class UpgradePaliTextTag extends Command
@@ -41,19 +42,19 @@ class UpgradePaliTextTag extends Command
      */
     public function handle()
     {
-        if (\App\Tools\Tools::isStop()) {
+        if (Tools::isStop()) {
             return 0;
         }
-        $this->info("upgrade pali text tag");
+        $this->info('upgrade pali text tag');
         $startTime = time();
 
-        #载入csv数据
-        $csvFile = config("mint.path.pali_title") . '/pali_text_tag.csv';
-        if (($fp = fopen($csvFile, "r")) === false) {
-            $this->error("can not open csv file. filename=" . $csvFile . PHP_EOL);
-            Log::error("can not open csv file. filename=" . $csvFile);
+        // 载入csv数据
+        $csvFile = config('mint.path.pali_title').'/pali_text_tag.csv';
+        if (($fp = fopen($csvFile, 'r')) === false) {
+            $this->error('can not open csv file. filename='.$csvFile.PHP_EOL);
+            Log::error('can not open csv file. filename='.$csvFile);
         }
-        Log::info("csv load:" . $csvFile);
+        Log::info('csv load:'.$csvFile);
         $inputRow = 0;
         $tagCount = 0;
         while (($data = fgetcsv($fp, 0, ',')) !== false) {
@@ -62,7 +63,7 @@ class UpgradePaliTextTag extends Command
                 $this->info($inputRow);
             }
 
-            //略过第一行标题行
+            // 略过第一行标题行
             if ($inputRow == 1) {
                 continue;
             }
@@ -72,27 +73,27 @@ class UpgradePaliTextTag extends Command
             }
             */
             $book = $data[0];
-            if (!empty($this->argument('book'))) {
-                if ($book != (int)$this->argument('book')) {
+            if (! empty($this->argument('book'))) {
+                if ($book != (int) $this->argument('book')) {
                     continue;
                 }
             }
             $para = $data[1];
             $tags = explode(':', $data[4]);
-            $paliTextUuid = PaliText::where("book", $book)->where("paragraph", $para)->value('uid');
+            $paliTextUuid = PaliText::where('book', $book)->where('paragraph', $para)->value('uid');
             if ($paliTextUuid) {
-                //删除旧数据
+                // 删除旧数据
                 $tagMapDelete = TagMap::where('table_name', 'pali_texts')
                     ->where('anchor_id', $paliTextUuid)
                     ->delete();
                 foreach ($tags as $key => $tag) {
-                    # code...
-                    if (!empty($tag)) {
-                        $tagRow = Tag::firstOrCreate(['name' => $tag], ['owner_id' => config("mint.admin.root_uuid")]);
+                    // code...
+                    if (! empty($tag)) {
+                        $tagRow = Tag::firstOrCreate(['name' => $tag], ['owner_id' => config('mint.admin.root_uuid')]);
                         $tagMap = TagMap::firstOrCreate([
                             'table_name' => 'pali_texts',
                             'anchor_id' => $paliTextUuid,
-                            'tag_id' => $tagRow->id
+                            'tag_id' => $tagRow->id,
                         ]);
                         if ($tagMap) {
                             $tagCount++;
@@ -104,8 +105,9 @@ class UpgradePaliTextTag extends Command
             }
         }
         fclose($fp);
-        $this->info(" $inputRow para $tagCount tags  finished. in " . time() - $startTime . "s");
-        Log::info("$inputRow para $tagCount tags  finished. in " . time() - $startTime . "s");
+        $this->info(" $inputRow para $tagCount tags  finished. in ".time() - $startTime.'s');
+        Log::info("$inputRow para $tagCount tags  finished. in ".time() - $startTime.'s');
+
         return 0;
     }
 }

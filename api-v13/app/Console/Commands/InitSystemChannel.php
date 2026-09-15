@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Channel;
+use App\Tools\Tools;
 use Illuminate\Console\Command;
 
 class InitSystemChannel extends Command
@@ -23,80 +24,85 @@ class InitSystemChannel extends Command
 
     protected $channels = [
         [
-            "name" => '_System_Pali_VRI_',
+            'name' => '_System_Pali_VRI_',
             'type' => 'original',
             'lang' => 'pali',
         ],
         [
-            "name" => '_System_Wbw_VRI_',
+            'name' => '_System_Wbw_VRI_',
             'type' => 'wbw',
             'lang' => 'pali',
         ],
         [
-            "name" => '_System_Grammar_Term_zh-hans_',
+            'name' => '_System_Grammar_Term_zh-hans_',
             'type' => 'translation',
             'lang' => 'zh-Hans',
         ],
         [
-            "name" => '_System_Grammar_Term_zh-hant_',
+            'name' => '_System_Grammar_Term_zh-hant_',
             'type' => 'translation',
             'lang' => 'zh-Hant',
         ],
         [
-            "name" => '_System_Grammar_Term_en_',
+            'name' => '_System_Grammar_Term_en_',
             'type' => 'translation',
             'lang' => 'en',
         ],
         [
-            "name" => '_System_Grammar_Term_my_',
+            'name' => '_System_Grammar_Term_my_',
             'type' => 'translation',
             'lang' => 'my',
         ],
         [
-            "name" => '_community_term_zh-hans_',
+            'name' => '_community_term_zh-hans_',
             'type' => 'translation',
             'lang' => 'zh-Hans',
         ],
         [
-            "name" => '_community_term_zh-hant_',
+            'name' => '_community_term_zh-hant_',
             'type' => 'translation',
             'lang' => 'zh-Hant',
         ],
         [
-            "name" => '_community_term_en_',
+            'name' => '_community_term_en_',
             'type' => 'translation',
             'lang' => 'en',
         ],
         [
-            "name" => '_community_translation_zh-hans_',
+            'name' => '_community_translation_zh-hans_',
             'type' => 'translation',
             'lang' => 'zh-Hans',
         ],
         [
-            "name" => '_community_translation_zh-hant_',
+            'name' => '_community_translation_zh-hant_',
             'type' => 'translation',
             'lang' => 'zh-Hant',
         ],
         [
-            "name" => '_community_translation_en_',
+            'name' => '_community_translation_en_',
             'type' => 'translation',
             'lang' => 'en',
         ],
         [
-            "name" => '_System_Quote_',
+            'name' => '_System_Quote_',
             'type' => 'original',
             'lang' => 'en',
         ],
         [
-            "name" => '_community_summary_zh-hans_',
+            'name' => '_community_summary_zh-hans_',
             'type' => 'translation',
             'lang' => 'zh-Hans',
         ],
         [
-            "name" => '_System_commentary_',
+            'name' => '_System_commentary_',
             'type' => 'commentary',
             'lang' => 'en',
             'status' => 30,
+        ],
+        [
+            'name' => '_system_glossary_',
+            'type' => 'original',
+            'lang' => 'pi',
         ],
     ];
 
@@ -117,15 +123,15 @@ class InitSystemChannel extends Command
      */
     public function handle()
     {
-        if (\App\Tools\Tools::isStop()) {
+        if (Tools::isStop()) {
             return 0;
         }
-        $this->info("init:system.channel start");
+        $this->info('init:system.channel start');
         foreach ($this->channels as $key => $value) {
-            # code...
+            // code...
             $channel = Channel::firstOrNew([
                 'name' => $value['name'],
-                'owner_uid' => config("mint.admin.root_uuid"),
+                'owner_uid' => config('mint.admin.root_uuid'),
             ]);
             if (empty($channel->id)) {
                 $channel->id = app('snowflake')->id();
@@ -133,7 +139,7 @@ class InitSystemChannel extends Command
             $channel->type = $value['type'];
             $channel->lang = $value['lang'];
             $channel->editor_id = 0;
-            $channel->owner_uid = config("mint.admin.root_uuid");
+            $channel->owner_uid = config('mint.admin.root_uuid');
             $channel->create_time = time() * 1000;
             $channel->modify_time = time() * 1000;
             $channel->is_system = true;
@@ -141,9 +147,9 @@ class InitSystemChannel extends Command
                 $channel->status = $value['status'];
             }
             $channel->save();
-            $this->line("init " . $value['name']);
+            $this->line('init '.$value['name']);
         }
-        $this->info("init:system.channel successful");
+        $this->info('init:system.channel successful');
 
         return 0;
     }

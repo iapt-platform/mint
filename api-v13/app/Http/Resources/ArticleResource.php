@@ -2,47 +2,45 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Api\ChannelApi;
+use App\Http\Api\MdRender;
+use App\Http\Api\StudioApi;
+use App\Http\Api\UserApi;
+use App\Http\Controllers\ArticleController;
+use App\Models\ArticleCollection;
+use App\Models\Channel;
+use App\Models\Collection;
+use App\Models\Course;
+use App\Models\CourseMember;
+use App\Services\AuthService;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-
-use App\Models\CourseMember;
-use App\Models\Course;
-use App\Models\Collection;
-use App\Models\ArticleCollection;
-use App\Models\Channel;
-
-use App\Http\Controllers\ArticleController;
-
-use App\Http\Api\MdRender;
-use App\Http\Api\UserApi;
-use App\Http\Api\StudioApi;
-use App\Services\AuthService;
-use App\Http\Api\ChannelApi;
-
 
 class ArticleResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     * @param  Request  $request
+     * @return array|Arrayable|\JsonSerializable
      */
     public function toArray($request)
     {
         $data = [
-            "uid" => $this->uid,
-            "title" => $this->title,
-            "subtitle" => $this->subtitle,
-            "summary" => $this->summary,
-            "studio" => StudioApi::getById($this->owner),
-            "editor" => UserApi::getById($this->editor_id),
-            "status" => $this->status,
-            "lang" => $this->lang,
-            "parent_uid" => $this->parent,
-            "created_at" => $this->created_at,
-            "updated_at" => $this->updated_at,
+            'uid' => $this->uid,
+            'title' => $this->title,
+            'subtitle' => $this->subtitle,
+            'summary' => $this->summary,
+            'studio' => StudioApi::getById($this->owner),
+            'editor' => UserApi::getById($this->editor_id),
+            'status' => $this->status,
+            'lang' => $this->lang,
+            'parent_uid' => $this->parent,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ];
 
         $user = AuthService::current($request);
@@ -53,7 +51,7 @@ class ArticleResource extends JsonResource
             }
         }
 
-        //查询该文章在哪些文集中出现
+        // 查询该文章在哪些文集中出现
         $collectionCount = ArticleCollection::where('article_id', $this->uid)->count();
         if ($collectionCount > 0) {
             $data['anthology_count'] = $collectionCount;
@@ -63,25 +61,25 @@ class ArticleResource extends JsonResource
         if ($request->has('anthology') && Str::isUuid($request->input('anthology'))) {
             $anthology = Collection::where('uid', $request->input('anthology'))->first();
         }
-        //渲染简化版标题
+        // 渲染简化版标题
         $channels = [];
         if ($request->has('channel')) {
-            //有channel
+            // 有channel
             $channels = explode('_', $request->input('channel'));
-        } else if (isset($anthology) && $anthology && !empty($anthology->default_channel)) {
-            //没有channel,使用文集channel
+        } elseif (isset($anthology) && $anthology && ! empty($anthology->default_channel)) {
+            // 没有channel,使用文集channel
             $channels[] = $anthology->default_channel;
         }
         $mdRender = new MdRender(['format' => 'simple']);
 
-        //path
+        // path
         if ($request->has('anthology') && Str::isUuid($request->input('anthology'))) {
-            $data['path'] = array();
+            $data['path'] = [];
             if (isset($anthology) && $anthology) {
                 $data['path'][] = [
                     'key' => $anthology->uid,
                     'title' => $anthology->title,
-                    'level' => 0
+                    'level' => 0,
                 ];
             }
 
@@ -89,7 +87,7 @@ class ArticleResource extends JsonResource
             $aList = ArticleCollection::where('collect_id', $request->input('anthology'))
                 ->orderBy('id', 'desc')
                 ->select(['article_id', 'title', 'level'])->get();
-            $path = array();
+            $path = [];
             foreach ($aList as $article) {
                 if (
                     $article->article_id === $this->uid ||
@@ -99,7 +97,7 @@ class ArticleResource extends JsonResource
                     $path[] = [
                         'key' => $article->article_id,
                         'title' => $mdRender->convert($article->title, $channels),
-                        'level' => $article->level
+                        'level' => $article->level,
                     ];
                 }
             }
@@ -107,17 +105,17 @@ class ArticleResource extends JsonResource
                 $data['path'][] = $path[$i];
             }
 
-            //下级目录
+            // 下级目录
             $level = -1;
-            $subToc = array();
+            $subToc = [];
             for ($i = count($aList) - 1; $i >= 0; $i--) {
                 $article = $aList[$i];
                 if ($level >= 0) {
                     if ($article->level > $level) {
                         $subToc[] = [
-                            "key" => $article->article_id,
-                            "title" => $mdRender->convert($article->title, $channels),
-                            "level" => $article->level
+                            'key' => $article->article_id,
+                            'title' => $mdRender->convert($article->title, $channels),
+                            'level' => $article->level,
                         ];
                     } else {
                         break;
@@ -130,15 +128,14 @@ class ArticleResource extends JsonResource
             $data['toc'] = $subToc;
         }
 
-
         $data['title_text'] = $mdRender->convert($this->title, $channels);
 
-        //render html
-        $channels = array();
-        if (isset($this->content) && !empty($this->content)) {
+        // render html
+        $channels = [];
+        if (isset($this->content) && ! empty($this->content)) {
             if ($request->has('channel')) {
                 $channels = explode('_', $request->input('channel'));
-            } else if ($request->has('anthology')) {
+            } elseif ($request->has('anthology')) {
                 $defaultChannel = Collection::where('uid', $request->input('anthology'))
                     ->value('default_channel');
                 if ($defaultChannel) {
@@ -146,7 +143,7 @@ class ArticleResource extends JsonResource
                 }
             }
             if (count($channels) === 0) {
-                //查找用户默认channel
+                // 查找用户默认channel
                 $studioChannel = Channel::where('owner_uid', $this->owner)
                     ->where('type', 'translation')
                     ->get();
@@ -155,7 +152,7 @@ class ArticleResource extends JsonResource
                     $channels = [$channelId];
                 } else {
                     $channelId = ChannelApi::getSysChannel(
-                        '_community_translation_' . strtolower($this->lang) . '_',
+                        '_community_translation_'.strtolower($this->lang).'_',
                         '_community_translation_en_'
                     );
                     if ($channelId) {
@@ -163,8 +160,8 @@ class ArticleResource extends JsonResource
                     }
                 }
             }
-            $data["content"] = $this->content;
-            $data["content_type"] = $this->content_type;
+            $data['content'] = $this->content;
+            $data['content_type'] = $this->content_type;
             $query_id = null;
             if ($request->has('course')) {
                 if ($request->has('exercise')) {
@@ -183,7 +180,7 @@ class ArticleResource extends JsonResource
                             $channelId = $userInCourse->channel_id;
                             $channels = [$channelId];
                         }
-                    } else if ($request->input('view') === "answer") {
+                    } elseif ($request->input('view') === 'answer') {
                         /**
                          * 显示答案
                          * 算法：查询course 答案 channel
@@ -191,7 +188,7 @@ class ArticleResource extends JsonResource
                         $channelId = Course::where('id', $request->input('course'))->value('channel_id');
                         $channels = [$channelId];
                     } else {
-                        //显示答案
+                        // 显示答案
                         $channelId = Course::where('id', $request->input('course'))->value('channel_id');
                         $channels = [$channelId];
                     }
@@ -211,10 +208,10 @@ class ArticleResource extends JsonResource
                 'origin' => $request->input('origin', true),
                 'paragraph' => $request->input('paragraph', false),
             ]);
-            //Log::debug('article render',['content'=>$this->content,'format'=>$format,'html'=>$html]);
-            $data["html"] = $htmlRender->convert($this->content, $channels);
+            // Log::debug('article render',['content'=>$this->content,'format'=>$format,'html'=>$html]);
+            $data['html'] = $htmlRender->convert($this->content, $channels);
             if (empty($this->summary)) {
-                $data["_summary"] = MdRender::render(
+                $data['_summary'] = MdRender::render(
                     $this->content,
                     $channels,
                     $query_id,
@@ -225,6 +222,7 @@ class ArticleResource extends JsonResource
                 );
             }
         }
+
         return $data;
     }
 }

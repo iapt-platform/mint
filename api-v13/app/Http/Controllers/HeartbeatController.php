@@ -18,12 +18,13 @@ class HeartbeatController extends Controller
         } else {
             $status = 200;
         }
+
         return response()->json(
             ['createdAt' => now()],
             $status,
             [
                 'Content-Type' => 'application/json;charset=UTF-8',
-                'Charset' => 'utf-8'
+                'Charset' => 'utf-8',
             ],
             JSON_UNESCAPED_UNICODE
         );

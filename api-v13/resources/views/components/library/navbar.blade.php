@@ -36,6 +36,13 @@
                 </li>
 
                 <li>
+                    <a href="{{ route('library.course') }}"
+                        class="{{ request()->routeIs('library.course', 'library.course.history') ? 'active' : '' }}">
+                        {{ __('site.nav.course') }}
+                    </a>
+                </li>
+
+                <li>
                     <a href="{{ route('library.download') }}"
                         class="{{ request()->routeIs('library.download') ? 'active' : '' }}">
                         {{ __('site.nav.download') }}
@@ -87,6 +94,11 @@
         <li><a href="{{ route('library.anthology.index') }}"
                 class="{{ request()->routeIs('library.anthology.*') ? 'active' : '' }}">
                 {{ __('site.nav.anthology') }}
+            </a></li>
+
+        <li><a href="{{ route('library.course') }}"
+                class="{{ request()->routeIs('library.course', 'library.course.history') ? 'active' : '' }}">
+                {{ __('site.nav.course') }}
             </a></li>
 
         <li><a href="{{ route('library.download') }}"

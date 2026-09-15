@@ -2,18 +2,22 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Http;
-use App\Services\AIModelService;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class SummaryService
 {
     protected string $modelId;
+
     protected string $apiUrl = '';
+
     protected string $apiModel = 'deepseek-v3';
+
     protected int $maxRetries = 3;
+
     protected int $chunkSize = 20000; // 每段字符数，可根据模型上下文调整
+
     private string $system_prompt = '你是一个摘要写作助手.请根据用户的输入文本生成中文的摘要,直接输出摘要，无需解释说明。';
 
     /**
@@ -27,7 +31,7 @@ class SummaryService
         if (isset($models[0])) {
             $this->modelId = $models[0]['uid'];
         }
-        $this->apiUrl = config('mint.ai.proxy') . '/api/openai';
+        $this->apiUrl = config('mint.ai.proxy').'/api/openai';
     }
 
     /**
@@ -42,25 +46,26 @@ class SummaryService
      * - 默认缓存有效期为 1 天。
      * - 可通过 forceRefresh 参数强制重新生成摘要。
      *
-     * @param  string  $text          输入的 Markdown 文本
-     * @param  int     $maxTokens     每次请求允许的最大 tokens 数
-     * @param  bool    $forceRefresh  是否忽略缓存并强制刷新摘要
-     * @return string                 最终生成的摘要文本
+     * @param  string  $text  输入的 Markdown 文本
+     * @param  int  $maxTokens  每次请求允许的最大 tokens 数
+     * @param  bool  $forceRefresh  是否忽略缓存并强制刷新摘要
+     * @return string 最终生成的摘要文本
      */
     public function summarize(string $text, int $maxTokens = 500, bool $forceRefresh = false): string
     {
         // 1️⃣ 计算缓存 key
-        $cacheKey = 'summary_' . md5($text);
+        $cacheKey = 'summary_'.md5($text);
 
         // 2️⃣ 检查缓存命中
-        if (!$forceRefresh && Cache::has($cacheKey)) {
-            Log::debug("SummaryService cache hit", ['key' => $cacheKey]);
+        if (! $forceRefresh && Cache::has($cacheKey)) {
+            Log::debug('SummaryService cache hit', ['key' => $cacheKey]);
+
             return Cache::get($cacheKey);
         }
 
-        Log::debug("SummaryService generating new summary", [
+        Log::debug('SummaryService generating new summary', [
             'key' => $cacheKey,
-            'forceRefresh' => $forceRefresh
+            'forceRefresh' => $forceRefresh,
         ]);
 
         // 3️⃣ 执行摘要逻辑
@@ -75,7 +80,8 @@ class SummaryService
         }
 
         if (count($partialSummaries) === 0) {
-            Log::warning("SummaryService no partial summaries", ['key' => $cacheKey]);
+            Log::warning('SummaryService no partial summaries', ['key' => $cacheKey]);
+
             return '';
         }
 
@@ -90,9 +96,9 @@ class SummaryService
         // 4️⃣ 写入缓存（默认缓存 1 周）
         Cache::put($cacheKey, $finalSummary, now()->addWeek());
 
-        Log::debug("SummaryService cached new summary", [
+        Log::debug('SummaryService cached new summary', [
             'key' => $cacheKey,
-            'summary' => mb_substr($finalSummary, 0, 10, 'UTF-8')
+            'summary' => mb_substr($finalSummary, 0, 10, 'UTF-8'),
         ]);
 
         return $finalSummary;
@@ -105,9 +111,9 @@ class SummaryService
      * 避免在段落中间截断。
      * 如果段落超过设定 chunkSize，则按字符截断。
      *
-     * @param  string  $text       输入的 Markdown 文本
-     * @param  int     $chunkSize  每个块的最大字符数
-     * @return array               分割后的文本块数组
+     * @param  string  $text  输入的 Markdown 文本
+     * @param  int  $chunkSize  每个块的最大字符数
+     * @return array 分割后的文本块数组
      */
     protected function splitText(string $text, int $chunkSize): array
     {
@@ -129,6 +135,7 @@ class SummaryService
                     $chunks[] = $subChunk;
                     $subStart += $chunkSize;
                 }
+
                 continue;
             }
 
@@ -138,7 +145,7 @@ class SummaryService
                 $currentChunk = $para;
             } else {
                 // 否则累加到当前 chunk
-                $currentChunk .= ($currentChunk === '' ? '' : "\n\n") . $para;
+                $currentChunk .= ($currentChunk === '' ? '' : "\n\n").$para;
             }
         }
 
@@ -156,9 +163,9 @@ class SummaryService
      * 在 429 或 500+ 错误时重试，最大重试次数为 maxRetries。
      * 其他错误直接返回空字符串。
      *
-     * @param  string  $text       输入文本
-     * @param  int     $maxTokens  每次请求允许的最大 tokens 数
-     * @return string              模型返回的摘要文本
+     * @param  string  $text  输入文本
+     * @param  int  $maxTokens  每次请求允许的最大 tokens 数
+     * @return string 模型返回的摘要文本
      */
     protected function callOpenAI(string $text, int $maxTokens = 200): string
     {
@@ -170,11 +177,11 @@ class SummaryService
             'messages' => [
                 [
                     'role' => 'system',
-                    'content' => $this->system_prompt
+                    'content' => $this->system_prompt,
                 ],
                 [
                     'role' => 'user',
-                    'content' => $text
+                    'content' => $text,
                 ],
             ],
             'max_tokens' => $maxTokens,
@@ -187,16 +194,17 @@ class SummaryService
                         'Content-Type' => 'application/json',
                     ])->post($this->apiUrl, [
                         'model_id' => $this->modelId,
-                        'payload' => $payload
+                        'payload' => $payload,
                     ]);
 
                 if ($response->successful()) {
                     $data = $response->json();
+
                     return $data['choices'][0]['message']['content'] ?? '';
                 }
 
                 if (in_array($response->status(), [429, 500, 502, 503, 504])) {
-                    throw new \Exception("Temporary server error: " . $response->status());
+                    throw new \Exception('Temporary server error: '.$response->status());
                 }
 
                 return '';

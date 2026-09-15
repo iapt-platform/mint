@@ -4,16 +4,16 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpFoundation\Response;
 
 class ApiLog
 {
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -31,11 +31,11 @@ class ApiLog
          * =========================
          */
         Log::channel('daily')->info('api.request', [
-            'time'   => now()->toTimeString(),
-            'delay'  => $delay,
+            'time' => now()->toTimeString(),
+            'delay' => $delay,
             'method' => $request->method(),
-            'path'   => $request->path(),
-            'ip'     => $request->ip(),
+            'path' => $request->path(),
+            'ip' => $request->ip(),
         ]);
 
         /**
@@ -46,7 +46,7 @@ class ApiLog
         $apiPath = explode('/', trim($request->path(), '/'));
 
         if (count($apiPath) >= 3 && $apiPath[2] !== 'api') {
-            $apiName    = $apiPath[2];
+            $apiName = $apiPath[2];
             $timeMinute = intdiv(time(), 60);
             $timeSecond = time();
 

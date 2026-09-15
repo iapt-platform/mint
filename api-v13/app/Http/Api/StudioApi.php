@@ -2,12 +2,11 @@
 
 namespace App\Http\Api;
 
-use App\Models\UserInfo;
 use App\Models\GroupInfo;
 use App\Models\GroupMember;
-
-use Illuminate\Support\Facades\Storage;
+use App\Models\UserInfo;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Storage;
 
 class StudioApi
 {
@@ -16,13 +15,13 @@ class StudioApi
         /**
          * 获取 uuid
          */
-        //TODO 改为studio table
+        // TODO 改为studio table
         if (empty($name)) {
             return false;
         }
         $userInfo = UserInfo::where('username', $name)->first();
         if ($userInfo) {
-            //group
+            // group
             return $userInfo->userid;
         } else {
             $group = GroupInfo::where('uid', $name)->first();
@@ -33,9 +32,10 @@ class StudioApi
             }
         }
     }
+
     public static function getById($id)
     {
-        //TODO 改为studio table
+        // TODO 改为studio table
         if (empty($id)) {
             return false;
         }
@@ -47,7 +47,7 @@ class StudioApi
                 'realName' => $userInfo->username,
                 'studioName' => $userInfo->username,
             ];
-            if (!empty($userInfo->role)) {
+            if (! empty($userInfo->role)) {
                 $data['roles'] = json_decode($userInfo->role);
             }
             if ($userInfo->avatar) {
@@ -59,6 +59,7 @@ class StudioApi
                     $data['avatar'] = Storage::temporaryUrl($img, now()->addDays(6));
                 }
             }
+
             return $data;
         } else {
             $group = GroupInfo::where('uid', $id)->first();
@@ -77,14 +78,15 @@ class StudioApi
 
     public static function getByIntId($id)
     {
-        //TODO 改为studio table
+        // TODO 改为studio table
         if (empty($id)) {
             return false;
         }
         $userInfo = UserInfo::where('id', $id)->first();
-        if (!$userInfo) {
+        if (! $userInfo) {
             return false;
         }
+
         return [
             'id' => $userInfo['userid'],
             'nickName' => $userInfo['nickname'],
@@ -105,8 +107,10 @@ class StudioApi
         if ($group && $group->power <= 1) {
             return true;
         }
+
         return false;
     }
+
     public static function userCanList($userId, $studioId)
     {
         if ($userId === $studioId) {
@@ -118,6 +122,7 @@ class StudioApi
         if ($group && $group->power <= 2) {
             return true;
         }
+
         return false;
     }
 }

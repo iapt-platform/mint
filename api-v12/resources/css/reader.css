@@ -1,6 +1,0 @@
-/* resources/css/reader.css
-   全站阅读页 CSS 入口。
-   只做 @import，不写任何样式规则。
-*/
-
-@import "./modules/_reader.css";

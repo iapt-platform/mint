@@ -1,0 +1,5 @@
+node_modules/
+/package-lock.json
+playwright/.auth/
+playwright-report/
+test-results/

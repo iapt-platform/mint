@@ -1,6 +1,10 @@
+[build-system]
+requires = ["hatchling >= 1.26"]
+build-backend = "hatchling.build"
+
 [project]
 name = "dahlia"
-version = "2026.5.8"
+version = "2026.6.28"
 authors = [
     { name = "Visuddhinanda", email = "visuddhinanda@gmail.com" },
     { name = "Kassapa", email = "ven.kassapa@qq.com" },
@@ -27,4 +31,4 @@ Homepage = "https://github.com/iapt-platform/mint/tree/master/sutta-pitaka-impor
 Issues = "https://github.com/iapt-platform/mint/issues"
 
 [project.scripts]
-dahlia = "dahlia:main"
+dahlia = "dahlia.__main__:main"

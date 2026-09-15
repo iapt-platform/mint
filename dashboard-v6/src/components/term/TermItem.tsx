@@ -20,6 +20,7 @@ import Discussion from "../discussion/DiscussionMock";
 import { useIntl } from "react-intl";
 import User from "../auth/User";
 import MdView from "../general/MdView";
+import { articlePath } from "../../utils";
 
 const { Text } = Typography;
 
@@ -95,7 +96,7 @@ const TermItemWidget = ({ data, onTermClick }: IWidget) => {
                     setOpenTermModal(true);
                     break;
                   case "translate":
-                    navigate(`/article/term/${data?.guid}`);
+                    navigate(articlePath("term", data?.guid ?? ""));
                     break;
                   default:
                     break;

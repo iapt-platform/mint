@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Http\Requests\StoreChatRequest;
 use App\Http\Requests\UpdateChatRequest;
-use App\Models\Chat;
 use App\Http\Resources\ChatResource;
+use App\Models\Chat;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class ChatController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
@@ -30,15 +31,14 @@ class ChatController extends Controller
 
         return $this->ok([
             'rows' => ChatResource::collection($chats),
-            'total' => $total
+            'total' => $total,
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreChatRequest  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(StoreChatRequest $request)
     {
@@ -50,8 +50,7 @@ class ChatController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Chat  $chat
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(Chat $chat)
     {
@@ -61,9 +60,7 @@ class ChatController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateChatRequest  $request
-     * @param  \App\Models\Chat  $chat
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(UpdateChatRequest $request, Chat $chat)
     {
@@ -73,8 +70,7 @@ class ChatController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Chat  $chat
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     /**
      * 单个软删除
@@ -82,6 +78,7 @@ class ChatController extends Controller
     public function destroy(Chat $chat)
     {
         $chat->delete(); // 软删除
+
         return $this->ok('Chat deleted successfully.');
     }
 
@@ -94,8 +91,8 @@ class ChatController extends Controller
         $count = Chat::batchSoftDelete($chatIds);
 
         return $this->ok([
-            'message' => "Chats soft deleted successfully.",
-            'deleted_count' => $count
+            'message' => 'Chats soft deleted successfully.',
+            'deleted_count' => $count,
         ]);
     }
 
@@ -108,8 +105,8 @@ class ChatController extends Controller
         $count = Chat::batchRestore($chatIds);
 
         return $this->ok([
-            'message' => "Chats restored successfully.",
-            'restored_count' => $count
+            'message' => 'Chats restored successfully.',
+            'restored_count' => $count,
         ]);
     }
 }

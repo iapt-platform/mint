@@ -1,5 +1,7 @@
 const items = {
   "flashes.success": "操作成功",
+  "message.copy.success": "已复制到剪贴板",
+  "message.copy.fail": "复制失败",
   "message.irrevocable": "此操作不可撤销",
   "message.delete.confirm": "确定删除吗？",
   "message.auth.guest.alert":

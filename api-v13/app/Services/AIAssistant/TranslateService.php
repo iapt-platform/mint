@@ -2,30 +2,37 @@
 
 namespace App\Services\AIAssistant;
 
+use App\DTO\LLMTranslation\TranslationResponseDTO;
+use App\Http\Resources\AiModelResource;
+use App\Services\AIModelService;
+use App\Services\AuthService;
 use App\Services\NissayaParser;
 use App\Services\OpenAIService;
 use App\Services\RomanizeService;
-use App\Services\AIModelService;
-use App\Services\AuthService;
-
 use Illuminate\Support\Facades\Log;
-use App\Http\Resources\AiModelResource;
-
-use App\DTO\LLMTranslation\TranslationResponseDTO;
 
 class TranslateService
 {
     protected OpenAIService $openAIService;
+
     protected NissayaParser $nissayaParser;
+
     protected RomanizeService $romanizeService;
+
     protected AIModelService $aiModelService;
+
     protected AiModelResource $model;
+
     protected string $modelToken;
 
+    protected bool $thinking;
+
     protected bool $stream = false;
-    protected array $original; //需要被翻译的原文
+
+    protected array $original; // 需要被翻译的原文
 
     protected string $systemPrompt = '';
+
     /**
      * 翻译提示词模板
      */
@@ -41,46 +48,51 @@ class TranslateService
 
     /**
      * 设置模型配置
-     *
-     * @param string $model
-     * @return self
      */
     public function setModel(string $model): self
     {
         $this->model = $this->aiModelService->getModelById($model);
         $this->modelToken = AuthService::getUserToken($model);
+
         return $this;
     }
+
+    /**
+     * 设置模型配置
+     */
+    public function setThinking(bool $thinking): self
+    {
+        $this->thinking = $thinking;
+
+        return $this;
+    }
+
     /**
      * 设置翻译提示词
-     *
-     * @param string $prompt
-     * @return self
      */
     public function setSystemPrompt(string $prompt): self
     {
         $this->systemPrompt = $prompt;
+
         return $this;
     }
+
     /**
      * 设置翻译提示词
-     *
-     * @param string $prompt
-     * @return self
      */
     public function setTranslatePrompt(string $prompt): self
     {
         $this->translatePrompt = $prompt;
+
         return $this;
     }
-
 
     /**
      * 翻译缅文版逐词解析
      *
-     * @param string $text 格式: 巴利文=缅文
-     * @param bool $stream 是否流式输出
-     * @return TranslationResponseDTO
+     * @param  string  $text  格式: 巴利文=缅文
+     * @param  bool  $stream  是否流式输出
+     *
      * @throws \Exception
      */
     public function translate(): TranslationResponseDTO
@@ -89,29 +101,30 @@ class TranslateService
 
         try {
 
-
-            Log::info('准备翻译', [
+            Log::debug('准备翻译', [
                 'systemPrompt' => $this->systemPrompt,
                 'translatePrompt' => $this->translatePrompt,
             ]);
 
             // 3. 调用LLM进行翻译
-            $response = $this->openAIService
+            $llm = $this->openAIService
                 ->setApiUrl($this->model['url'])
                 ->setModel($this->model['model'])
                 ->setApiKey($this->model['key'])
                 ->setSystemPrompt($this->systemPrompt)
                 ->setTemperature(0.3)
-                ->setStream($this->stream)
-                ->send($this->translatePrompt);
-
+                ->setStream($this->stream);
+            if (isset($this->thinking)) {
+                $llm = $llm->setThinking($this->thinking);
+            }
+            $response = $llm->send($this->translatePrompt);
             $complete = time() - $startAt;
             $content = $response['choices'][0]['message']['content'] ?? '';
 
             if (empty($content)) {
                 throw new \Exception('LLM返回内容为空');
             }
-            Log::info('翻译完成', [
+            Log::debug('翻译完成', [
                 'content' => $content,
                 'duration' => $complete,
                 'input_tokens' => $response['usage']['prompt_tokens'] ?? 0,
@@ -120,7 +133,7 @@ class TranslateService
             // 4. 解析JSONL格式的翻译结果
             $translatedData = $this->jsonlToArray($content);
 
-            Log::info('解析完成', [
+            Log::debug('解析完成', [
                 'output_items' => count($translatedData),
             ]);
 
@@ -147,12 +160,8 @@ class TranslateService
         }
     }
 
-
     /**
      * 将数组转换为JSONL格式
-     *
-     * @param array $data
-     * @return string
      */
     protected function arrayToJsonl(array $data): string
     {
@@ -160,14 +169,12 @@ class TranslateService
         foreach ($data as $item) {
             $lines[] = json_encode($item, JSON_UNESCAPED_UNICODE);
         }
+
         return implode("\n", $lines);
     }
 
     /**
      * 将JSONL格式转换为数组
-     *
-     * @param string $jsonl
-     * @return array
      */
     protected function jsonlToArray(string $jsonl): array
     {
@@ -201,9 +208,7 @@ class TranslateService
     /**
      * 批量翻译(将大文本分批处理)
      *
-     * @param string $text
-     * @param int $batchSize 每批处理的条目数
-     * @return array
+     * @param  int  $batchSize  每批处理的条目数
      */
     public function translateInBatches(string $text, int $batchSize = 50): array
     {
@@ -219,7 +224,7 @@ class TranslateService
             ];
 
             foreach ($batches as $index => $batch) {
-                Log::info("NissayaTranslate: 处理批次 " . ($index + 1) . "/" . count($batches));
+                Log::info('NissayaTranslate: 处理批次 '.($index + 1).'/'.count($batches));
 
                 $jsonlInput = $this->arrayToJsonl($batch);
                 $response = $this->openAIService

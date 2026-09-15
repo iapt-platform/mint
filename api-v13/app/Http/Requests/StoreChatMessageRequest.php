@@ -36,7 +36,7 @@ class StoreChatMessageRequest extends FormRequest
             'messages.*.tool_calls.*.id' => 'required_with:tool_calls|string',
             'messages.*.tool_calls.*.function' => 'required_with:tool_calls|string',
             'messages.*.tool_calls.*.arguments' => 'required_with:tool_calls',
-            'messages.*.tool_call_id' => 'nullable|string|max:100'
+            'messages.*.tool_call_id' => 'nullable|string|max:100',
         ];
     }
 
@@ -45,7 +45,7 @@ class StoreChatMessageRequest extends FormRequest
         return [
             'messages.required' => '批量更新的消息列表不能为空',
             'messages.*.parent_id.required' => '消息ID不能为空',
-            'messages.*.parent_id.exists' => '消息不存在'
+            'messages.*.parent_id.exists' => '消息不存在',
         ];
     }
 }

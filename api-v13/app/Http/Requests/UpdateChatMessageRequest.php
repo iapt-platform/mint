@@ -26,7 +26,7 @@ class UpdateChatMessageRequest extends FormRequest
         return [
             'content' => 'sometimes|string',
             'is_active' => 'sometimes|boolean',
-            'model_name' => 'sometimes|string|max:100'
+            'model_name' => 'sometimes|string|max:100',
         ];
     }
 }

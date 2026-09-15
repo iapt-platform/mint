@@ -4,10 +4,8 @@ namespace App\Services\Template\Renderers;
 
 use App\Services\Template\Contracts\RendererInterface;
 use App\Services\Template\ParsedDocument;
-use App\Services\Template\ContentNode;
-use App\Services\Template\TextNode;
-use App\Services\Template\MarkdownNode;
 use App\Services\Template\TemplateNode;
+use App\Services\Template\TextNode;
 
 // ================== JSON 渲染器 ==================
 
@@ -17,8 +15,8 @@ class JsonRenderer implements RendererInterface
     {
         $data = [
             'type' => $document->type,
-            'content' => array_map(fn($node) => $node->toArray(), $document->content),
-            'meta' => $document->meta
+            'content' => array_map(fn ($node) => $node->toArray(), $document->content),
+            'meta' => $document->meta,
         ];
 
         return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);

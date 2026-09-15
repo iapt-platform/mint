@@ -23,13 +23,13 @@ class BlogViewComposer
         // $user 由各 Controller 方法传入，Composer 不覆盖
         $user = $data['user'] ?? null;
 
-        if (!$user) {
+        if (! $user) {
             return;
         }
 
         $userName = $user['userName'] ?? null;
 
-        if (!$userName) {
+        if (! $userName) {
             return;
         }
 
@@ -42,17 +42,17 @@ class BlogViewComposer
         // 示例结构，保持与 BlogController 现有数据结构一致
 
         // Categories：[['id' => ..., 'label' => ...], ...]
-        if (!$view->offsetExists('categories')) {
+        if (! $view->offsetExists('categories')) {
             $view->with('categories', $this->getCategories($userName));
         }
 
         // Tags：[['name' => ...], ...]
-        if (!$view->offsetExists('tags')) {
+        if (! $view->offsetExists('tags')) {
             $view->with('tags', $this->getTags($userName));
         }
 
         // Archives：[['year' => ..., 'count' => ...], ...]
-        if (!$view->offsetExists('archives')) {
+        if (! $view->offsetExists('archives')) {
             $view->with('archives', $this->getArchives($userName));
         }
     }

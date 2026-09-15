@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Channel;
-use App\Models\Sentence;
-use App\Models\PaliSentence;
 use App\Http\Api\PaliTextApi;
-use Illuminate\Support\Arr;
-
+use App\Models\Channel;
+use App\Models\PaliSentence;
+use App\Models\Sentence;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Arr;
 
 class ArticleProgressController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
@@ -29,15 +29,15 @@ class ArticleProgressController extends Controller
                     ->groupBy('channel_uid')
                     ->select('channel_uid')
                     ->get();
-                //获取单句长度
+                // 获取单句长度
                 $sentLen = PaliSentence::where('book', $request->input('book'))
                     ->whereBetween('paragraph', $chapter)
                     ->orderBy('word_begin')
                     ->select(['book', 'paragraph', 'word_begin', 'word_end', 'length'])
                     ->get();
-                //获取每个channel的完成度
+                // 获取每个channel的完成度
                 foreach ($channels as $key => $value) {
-                    # code...
+                    // code...
                     $finished = Sentence::where('book_id', $request->input('book'))
                         ->whereBetween('paragraph', $chapter)
                         ->where('channel_uid', $value->channel_uid)
@@ -45,18 +45,19 @@ class ArticleProgressController extends Controller
                         ->select(['strlen', 'book_id', 'paragraph', 'word_start', 'word_end'])
                         ->get();
                     $final = [];
-                    foreach ($sentLen as  $sent) {
-                        # code...
+                    foreach ($sentLen as $sent) {
+                        // code...
                         $first = Arr::first($finished, function ($value, $key) use ($sent) {
-                            return ($value->book_id == $sent->book &&
+                            return $value->book_id == $sent->book &&
                                 $value->paragraph == $sent->paragraph &&
                                 $value->word_start == $sent->word_begin &&
-                                $value->word_end == $sent->word_end);
+                                $value->word_end == $sent->word_end;
                         });
                         $final[] = [$sent->length, $first ? true : false];
                     }
                     $value['final'] = $final;
                 }
+
                 return $this->ok($channels);
                 break;
         }
@@ -65,7 +66,7 @@ class ArticleProgressController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -75,8 +76,7 @@ class ArticleProgressController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -86,8 +86,7 @@ class ArticleProgressController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Channel  $channel
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(Channel $channel)
     {
@@ -97,8 +96,7 @@ class ArticleProgressController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Channel  $channel
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit(Channel $channel)
     {
@@ -108,9 +106,7 @@ class ArticleProgressController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Channel  $channel
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, Channel $channel)
     {
@@ -120,8 +116,7 @@ class ArticleProgressController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Channel  $channel
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(Channel $channel)
     {

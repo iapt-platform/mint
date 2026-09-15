@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
 
 class PaliText extends Model
 {
     use HasFactory;
+
     protected $fillable = ['book', 'paragraph', 'level', 'class', 'toc', 'text', 'html', 'lenght'];
 
     public function progressChapters()
@@ -30,6 +31,7 @@ class PaliText extends Model
                 $q->where('name', $name);
             });
         }
+
         return $query;
     }
 

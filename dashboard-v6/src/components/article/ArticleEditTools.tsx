@@ -7,6 +7,7 @@ import ShareModal from "../share/ShareModal";
 import TplBuilder from "../tpl-builder/TplBuilder";
 import AddToAnthology from "../anthology/AddToAnthology";
 import { EResType } from "../share/utils";
+import { articlePath } from "../../utils";
 
 interface IWidget {
   studioName?: string;
@@ -42,7 +43,7 @@ const ArticleEditToolsWidget = ({
           resType={EResType.article}
         />
       ) : undefined}
-      <Link to={`/article/article/${articleId}`} target="_blank">
+      <Link to={articlePath("article", articleId ?? "")} target="_blank">
         {intl.formatMessage({ id: "buttons.open.in.tab" })}
       </Link>
       <TplBuilder

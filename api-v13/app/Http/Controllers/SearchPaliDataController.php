@@ -7,16 +7,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\BookTitle;
 use App\Models\WbwTemplate;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class SearchPaliDataController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
@@ -26,7 +27,7 @@ class SearchPaliDataController extends Controller
         $maxParagraph = WbwTemplate::where('book', $book)->max('paragraph');
         $pageSize = $request->input('page_size', 1000);
         $start = $request->input('start', 1);
-        $output = array();
+        $output = [];
         if ($start + $pageSize > $maxParagraph) {
             $endOfPara = $maxParagraph + 1;
         } else {
@@ -35,14 +36,14 @@ class SearchPaliDataController extends Controller
 
         for ($iPara = $start; $iPara < $endOfPara; $iPara++) {
             $content = $this->getContent($book, $iPara);
-            //查找黑体字
+            // 查找黑体字
             $words = WbwTemplate::where('book', $book)
                 ->where('paragraph', $iPara)
                 ->orderBy('wid')->get();
-            $bold1 = array();
-            $bold2 = array();
-            $bold3 = array();
-            $currBold = array();
+            $bold1 = [];
+            $bold2 = [];
+            $bold3 = [];
+            $currBold = [];
             foreach ($words as $word) {
                 if ($word->style === 'bld') {
                     $currBold[] = $word->real;
@@ -50,9 +51,9 @@ class SearchPaliDataController extends Controller
                     $countBold = count($currBold);
                     if ($countBold === 1) {
                         $bold1[] = $currBold[0];
-                    } else if ($countBold === 2) {
+                    } elseif ($countBold === 2) {
                         $bold2 = array_merge($bold2, $currBold);
-                    } else if ($countBold > 0) {
+                    } elseif ($countBold > 0) {
                         $bold3 = array_merge($bold3, $currBold);
                     }
                     $currBold = [];
@@ -77,39 +78,42 @@ class SearchPaliDataController extends Controller
                 'bold2' => implode(' ', $bold2),
                 'bold3' => implode(' ', $bold3),
                 'content' => $content,
-                'pcd_book_id' => $pcd_book_id
+                'pcd_book_id' => $pcd_book_id,
             ];
             $output[] = $update;
         }
+
         return $this->ok(['rows' => $output, 'count' => $maxParagraph]);
     }
+
     private function getContent($book, $para)
     {
         $words = WbwTemplate::where('book', $book)
             ->where('paragraph', $para)
-            ->where('type', "<>", ".ctl.")
+            ->where('type', '<>', '.ctl.')
             ->orderBy('wid')->get();
         $content = '';
-        foreach ($words as  $word) {
+        foreach ($words as $word) {
             if ($word->style === 'bld') {
-                if (strpos($word->word, "{") === FALSE) {
+                if (strpos($word->word, '{') === false) {
                     $content .= "**{$word->word}** ";
                 } else {
                     $content .= str_replace(['{', '}'], ['**', '** '], $word->word);
                 }
-            } else if ($word->style === 'note') {
+            } elseif ($word->style === 'note') {
                 $content .= " _{$word->word}_ ";
             } else {
-                $content .= $word->word . " ";
+                $content .= $word->word.' ';
             }
         }
+
         return $content;
     }
+
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -120,7 +124,7 @@ class SearchPaliDataController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show($id)
     {
@@ -130,9 +134,8 @@ class SearchPaliDataController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, $id)
     {
@@ -143,7 +146,7 @@ class SearchPaliDataController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {

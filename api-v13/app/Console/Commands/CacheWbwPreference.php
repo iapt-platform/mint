@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Cache;
 use App\Models\WbwAnalysis;
+use App\Tools\Tools;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class CacheWbwPreference extends Command
@@ -41,7 +41,7 @@ class CacheWbwPreference extends Command
      */
     public function handle()
     {
-        if (\App\Tools\Tools::isStop()) {
+        if (Tools::isStop()) {
             return 0;
         }
         $prefix = 'wbw-preference';
@@ -78,7 +78,7 @@ class CacheWbwPreference extends Command
                 $bar->advance();
                 $count++;
                 if ($count % 1000 === 0) {
-                    if (\App\Tools\Tools::isStop()) {
+                    if (Tools::isStop()) {
                         return 0;
                     }
                 }
@@ -105,8 +105,8 @@ class CacheWbwPreference extends Command
                 $data = WbwAnalysis::where('wbw_word', $value->wbw_word)
                     ->where('type', $value->type)
                     ->selectRaw('data,count(*)')
-                    ->groupBy("data")
-                    ->orderBy("count", "desc")
+                    ->groupBy('data')
+                    ->orderBy('count', 'desc')
                     ->first();
 
                 Cache::put("{$prefix}/{$value->wbw_word}/{$value->type}/0", $data->data);

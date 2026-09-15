@@ -2,14 +2,15 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Api\UserApi;
+use App\Http\Api\MdRender;
+use App\Http\Api\ProjectApi;
 use App\Http\Api\StudioApi;
 use App\Http\Api\TaskApi;
-use App\Http\Api\ProjectApi;
-use App\Http\Api\MdRender;
+use App\Http\Api\UserApi;
 use App\Models\TaskAssignee;
-
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Str;
 
 class TaskResource extends JsonResource
@@ -17,8 +18,8 @@ class TaskResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     * @param  Request  $request
+     * @return array|Arrayable|\JsonSerializable
      */
     public function toArray($request)
     {
@@ -49,9 +50,9 @@ class TaskResource extends JsonResource
             'project_id' => $this->project_id,
             'project' => ProjectApi::getById($this->project_id),
             'owner_id' => $this->owner_id,
-            "owner" => StudioApi::getById($this->owner_id),
+            'owner' => StudioApi::getById($this->owner_id),
             'editor_id' => $this->editor_id,
-            "editor" => UserApi::getByUuid($this->editor_id),
+            'editor' => UserApi::getByUuid($this->editor_id),
             'order' => $this->order,
             'status' => $this->status,
             'created_at' => $this->created_at,
@@ -68,13 +69,14 @@ class TaskResource extends JsonResource
             $data['assignees_id'] = $assignees_id;
             $data['assignees'] = UserApi::getListByUuid($assignees_id);
         }
-        if (!empty($this->description)) {
-            $data["html"] = $htmlRender->convert($this->description, []);
+        if (! empty($this->description)) {
+            $data['html'] = $htmlRender->convert($this->description, []);
         }
 
         if (Str::isUuid($this->executor_id)) {
-            $data["executor"] = UserApi::getByUuid($this->executor_id);
+            $data['executor'] = UserApi::getByUuid($this->executor_id);
         }
+
         return $data;
     }
 }

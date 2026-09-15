@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 use App\Services\PacketService;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class OfflineIndexController extends Controller
 {
-
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
@@ -24,7 +23,7 @@ class OfflineIndexController extends Controller
             200,
             [
                 'Content-Type' => 'application/json;charset=UTF-8',
-                'Charset' => 'utf-8'
+                'Charset' => 'utf-8',
             ],
             JSON_UNESCAPED_UNICODE
         );
@@ -33,8 +32,7 @@ class OfflineIndexController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -45,16 +43,15 @@ class OfflineIndexController extends Controller
      * Display the specified resource.
      *
      * @param  string  $filename
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show($filename) {}
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, $id)
     {
@@ -65,7 +62,7 @@ class OfflineIndexController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {

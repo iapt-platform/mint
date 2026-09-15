@@ -8,7 +8,7 @@ class GroupApi
 {
     public static function getById($id)
     {
-        $group = GroupInfo::where("uid", $id)->first();
+        $group = GroupInfo::where('uid', $id)->first();
         if ($group) {
             return [
                 'id' => $id,

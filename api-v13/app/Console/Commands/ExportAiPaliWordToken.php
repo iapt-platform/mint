@@ -2,16 +2,18 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Http\Api\DictApi;
-use Illuminate\Support\Facades\Log;
 use App\Models\UserDict;
+use App\Tools\Tools;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class ExportAiPaliWordToken extends Command
 {
     /**
      * The name and signature of the console command.
      * php artisan export:ai.pali.word.token
+     *
      * @var string
      */
     protected $signature = 'export:ai.pali.word.token {--format=gz  : zip file format 7z,lzma,gz }';
@@ -42,31 +44,34 @@ class ExportAiPaliWordToken extends Command
     {
         Log::debug('export ai pali word token');
 
-        if (\App\Tools\Tools::isStop()) {
+        if (Tools::isStop()) {
             return 0;
         }
         $exportDir = storage_path('app/tmp/export/offline');
-        if (!is_dir($exportDir)) {
+        if (! is_dir($exportDir)) {
             $res = mkdir($exportDir, 0755, true);
-            if (!$res) {
-                Log::error('mkdir fail path=' . $exportDir);
+            if (! $res) {
+                Log::error('mkdir fail path='.$exportDir);
+
                 return 1;
             } else {
-                Log::info('make dir successful ' . $exportDir);
+                Log::info('make dir successful '.$exportDir);
             }
         }
 
         $dict_id = DictApi::getSysDict('system_preference');
-        if (!$dict_id) {
+        if (! $dict_id) {
             Log::error('没有找到 system_preference 字典');
+
             return 1;
         }
 
-        $filename = 'ai-pali-word-token-' . date("Y-m-d") . '.tsv';
-        $exportFile = $exportDir . '/' . $filename;
+        $filename = 'ai-pali-word-token-'.date('Y-m-d').'.tsv';
+        $exportFile = $exportDir.'/'.$filename;
         $fp = fopen($exportFile, 'w');
         if ($fp === false) {
             Log::error('无法创建文件');
+
             return 1;
         }
 
@@ -78,15 +83,15 @@ class ExportAiPaliWordToken extends Command
                 'factors',
             ])->cursor();
         foreach ($words as $key => $word) {
-            $output = array($word->word, $word->factors);
-            fwrite($fp, implode("\t", $output) . "\n");
+            $output = [$word->word, $word->factors];
+            fwrite($fp, implode("\t", $output)."\n");
             if ($key % 100 === 0) {
-                $present = (int)($key * 100 / $total);
+                $present = (int) ($key * 100 / $total);
                 $this->info("[{$present}%]-{$key}");
             }
         }
         fclose($fp);
-        Log::info((time() - $start) . ' seconds');
+        Log::info((time() - $start).' seconds');
 
         $this->call('export:zip', [
             'id' => 'ai-pali-word-token',

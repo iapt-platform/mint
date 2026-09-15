@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Services\OpenSearchService;
+use Illuminate\Console\Command;
 
 class ClearEmbeddingsCache extends Command
 {

@@ -10,6 +10,7 @@ import { Link } from "react-router";
 import type { TResType } from "../../api/discussion";
 import type { ISentenceData, ISentenceResponse } from "../../api/sentence";
 import MdView from "../general/MdView";
+import { articlePath } from "../../utils";
 
 export interface IAnchor {
   type: TResType;
@@ -81,7 +82,7 @@ const DiscussionAnchorWidget = ({
           .then((json) => {
             if (json.ok) {
               setTitle(
-                <Link to={`/article/article/${resId}`}>{json.data.title}</Link>
+                <Link to={articlePath("article", resId ?? "")}>{json.data.title}</Link>
               );
               setContent(json.data.content?.substring(0, 200));
             }

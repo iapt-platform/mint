@@ -1,9 +1,12 @@
 <?php
+
 /**
  * 局部刷新语料库
  */
+
 namespace App\Console\Commands;
 
+use App\Tools\Tools;
 use Illuminate\Console\Command;
 
 class UpgradeTestData extends Command
@@ -39,14 +42,15 @@ class UpgradeTestData extends Command
      */
     public function handle()
     {
-        if(\App\Tools\Tools::isStop()){
+        if (Tools::isStop()) {
             return 0;
         }
-        $this->call('init:cs6sentence',[$this->argument('book')]);
-        $this->call('upgrade:wbw.template',[$this->argument('book')]);
-        $this->call('upgrade:chapter.dynamic.weekly',["--book"=>$this->argument('book'),"--offset"=>300]);
-        $this->call('upgrade:palitext',[$this->argument('book')]);
-        $this->call('upgrade:compound',["--book"=>$this->argument('book')]);
+        $this->call('init:cs6sentence', [$this->argument('book')]);
+        $this->call('upgrade:wbw.template', [$this->argument('book')]);
+        $this->call('upgrade:chapter.dynamic.weekly', ['--book' => $this->argument('book'), '--offset' => 300]);
+        $this->call('upgrade:palitext', [$this->argument('book')]);
+        $this->call('upgrade:compound', ['--book' => $this->argument('book')]);
+
         return 0;
     }
 }

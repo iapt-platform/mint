@@ -2,13 +2,12 @@
 
 namespace App\Jobs;
 
+use App\Services\AiTranslateService;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Services\AiTranslateService;
 use Illuminate\Support\Facades\Log;
 
 class AiTranslate implements ShouldQueue
@@ -16,9 +15,13 @@ class AiTranslate implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $tries = 3;       // 最大尝试次数（重试次数 = 3 - 1）
+
     public $timeout = 60;    // 超时时间，单位：秒
+
     private $aiService;
+
     private $data;
+
     /**
      * Create a new job instance.
      *
@@ -43,6 +46,7 @@ class AiTranslate implements ShouldQueue
         ]);
         $data = json_decode(json_encode($this->data['payload']));
         $this->aiService = app(AiTranslateService::class);
+
         return $this->aiService->processTranslate($this->data['message_id'], $data, null);
     }
 }

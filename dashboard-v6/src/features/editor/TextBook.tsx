@@ -2,7 +2,9 @@
 // Props
 // ─────────────────────────────────────────────
 
-import type { ArticleMode } from "../../api/article";
+import type { ArticleMode, ArticleType } from "../../api/article";
+import type { ISearchParams } from "../../components/article/TypePali";
+import type { TTarget } from "../../types";
 import AnthologyTocTree from "../../components/anthology/AnthologyTocTree";
 import TypeCourse from "../../components/article/TypeCourse";
 import { useCourse } from "../../components/course/hooks/useCourse";
@@ -24,7 +26,12 @@ export interface ArticleEditorProps {
   /** 选择了新的 anthology 时触发 */
   onAnthologySelect?: (anthologyId: string) => void;
   /** 文章内部触发跳转（type: 'article' | 'anthology' 等） */
-  onArticleChange?: (type: string, id: string) => void;
+  onArticleChange?: (
+    type: ArticleType,
+    id: string,
+    target?: TTarget,
+    param?: ISearchParams[]
+  ) => void;
 }
 
 // ─────────────────────────────────────────────
@@ -40,9 +47,7 @@ export default function TextBookEditor({
   onArticleChange,
 }: ArticleEditorProps) {
   const channels = channelId ? channelId.split("_") : undefined;
-  const { data, loading, errorCode } = useCourse(courseId);
-
-  console.error(errorCode);
+  const { data, loading } = useCourse(courseId);
 
   return (
     <Editor

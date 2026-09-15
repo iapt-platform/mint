@@ -4,17 +4,17 @@
 
 namespace App\Services\Template;
 
-use App\Services\Template\Contracts\RendererInterface;
 use App\Services\Template\Contracts\ParserInterface;
 
 class TemplateParser implements ParserInterface
 {
     private TemplateRegistry $registry;
+
     private ParameterResolver $parameterResolver;
 
     public function __construct()
     {
-        $this->registry = new TemplateRegistry();
+        $this->registry = new TemplateRegistry;
         $this->parameterResolver = new ParameterResolver($this->registry);
     }
 
@@ -43,7 +43,7 @@ class TemplateParser implements ParserInterface
 
         return new ParsedDocument($nodes, [
             'templates_used' => array_unique($templatesUsed),
-            'total_templates' => count($templatesUsed)
+            'total_templates' => count($templatesUsed),
         ]);
     }
 
@@ -94,7 +94,7 @@ class TemplateParser implements ParserInterface
             $char = $content[$i];
             $nextChar = $i + 1 < strlen($content) ? $content[$i + 1] : '';
 
-            if (!$inQuotes && ($char === '"' || $char === "'")) {
+            if (! $inQuotes && ($char === '"' || $char === "'")) {
                 $inQuotes = true;
                 $quoteChar = $char;
                 $current .= $char;
@@ -102,15 +102,15 @@ class TemplateParser implements ParserInterface
                 $inQuotes = false;
                 $quoteChar = '';
                 $current .= $char;
-            } elseif (!$inQuotes && $char === '{' && $nextChar === '{') {
+            } elseif (! $inQuotes && $char === '{' && $nextChar === '{') {
                 $braceLevel++;
                 $current .= '{{';
                 $i++; // 跳过下一个字符
-            } elseif (!$inQuotes && $char === '}' && $nextChar === '}') {
+            } elseif (! $inQuotes && $char === '}' && $nextChar === '}') {
                 $braceLevel--;
                 $current .= '}}';
                 $i++; // 跳过下一个字符
-            } elseif (!$inQuotes && $char === '|' && $braceLevel === 0) {
+            } elseif (! $inQuotes && $char === '|' && $braceLevel === 0) {
                 $parts[] = trim($current);
                 $current = '';
             } else {
@@ -131,7 +131,7 @@ class TemplateParser implements ParserInterface
         $positionalIndex = 0;
 
         foreach ($parts as $part) {
-            if (strpos($part, '=') !== false && !$this->isInNestedTemplate($part)) {
+            if (strpos($part, '=') !== false && ! $this->isInNestedTemplate($part)) {
                 // 命名参数
                 [$key, $value] = explode('=', $part, 2);
                 $params[trim($key)] = trim($value);
@@ -149,6 +149,7 @@ class TemplateParser implements ParserInterface
     {
         $openBraces = substr_count($content, '{{');
         $closeBraces = substr_count($content, '}}');
+
         return $openBraces > 0 && $openBraces >= $closeBraces;
     }
 

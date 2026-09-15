@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\DictInfo;
+use App\Tools\Tools;
 use Illuminate\Console\Command;
 
 class InitSystemDict extends Command
@@ -11,7 +12,7 @@ class InitSystemDict extends Command
      * The name and signature of the console command.
      *
      * @var string
-     * php artisan init:system.dict
+     *             php artisan init:system.dict
      */
     protected $signature = 'init:system.dict';
 
@@ -27,35 +28,35 @@ class InitSystemDict extends Command
      */
     protected $dictionary = [
         [
-            "name" => 'robot_compound',
+            'name' => 'robot_compound',
             'shortname' => 'compound',
             'description' => 'split compound by AI',
             'src_lang' => 'pa',
             'dest_lang' => 'cm',
         ],
         [
-            "name" => 'system_regular',
+            'name' => 'system_regular',
             'shortname' => 'regular',
             'description' => 'system regular',
             'src_lang' => 'pa',
             'dest_lang' => 'cm',
         ],
         [
-            "name" => 'community',
+            'name' => 'community',
             'shortname' => '社区',
             'description' => '由用户贡献词条的社区字典',
             'src_lang' => 'pa',
             'dest_lang' => 'cm',
         ],
         [
-            "name" => 'community_extract',
+            'name' => 'community_extract',
             'shortname' => '社区汇总',
             'description' => '由用户贡献词条的社区字典汇总统计',
             'src_lang' => 'pa',
             'dest_lang' => 'cm',
         ],
         [
-            "name" => 'system_preference',
+            'name' => 'system_preference',
             'shortname' => '系统单词首选项',
             'description' => '通过系统筛选出的首选项，只包含语法信息',
             'src_lang' => 'pa',
@@ -80,15 +81,15 @@ class InitSystemDict extends Command
      */
     public function handle()
     {
-        if (\App\Tools\Tools::isStop()) {
+        if (Tools::isStop()) {
             return 0;
         }
-        $this->info("init:system.dict start");
+        $this->info('init:system.dict start');
         foreach ($this->dictionary as $key => $value) {
-            # code...
+            // code...
             $channel = DictInfo::firstOrNew([
                 'name' => $value['name'],
-                'owner_id' => config("mint.admin.root_uuid"),
+                'owner_id' => config('mint.admin.root_uuid'),
             ]);
             $channel->shortname = $value['shortname'];
             $channel->description = $value['description'];
@@ -98,7 +99,7 @@ class InitSystemDict extends Command
             $channel->save();
             $this->line("updated {$value['name']}");
         }
-        $this->info("init:system.dict successful");
+        $this->info('init:system.dict successful');
 
         return 0;
     }

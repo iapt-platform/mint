@@ -1,4 +1,5 @@
-import { useNavigate, useParams, useSearchParams } from "react-router";
+import { useMatches, useNavigate, useParams, useSearchParams } from "react-router";
+import { useIntl } from "react-intl";
 import type { ArticleMode } from "../../../api/article";
 import ArticleEditor from "../../../features/editor/Article";
 
@@ -6,13 +7,22 @@ const Widget = () => {
   const { articleId, anthologyId } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
+  const intl = useIntl();
+  const matches = useMatches() as {
+    data?: { title?: string; name?: string; word?: string };
+  }[];
+  const data = [...matches].reverse().find((m) => m.data)?.data;
+  const name = data?.title ?? data?.name ?? data?.word;
+  const prefix = intl.formatMessage({ id: "columns.studio.article.title" });
 
   const mode = searchParams.get("mode") ?? "read";
   const channelId = searchParams.get("channel");
   const anthology = searchParams.get("anthology");
 
   return (
-    <ArticleEditor
+    <>
+      <title>{name ? `${prefix}-${name}` : prefix}</title>
+      <ArticleEditor
       articleId={articleId}
       anthologyId={anthologyId}
       anthology={anthology}
@@ -49,7 +59,8 @@ const Widget = () => {
         newParams.set("channel", channelsParams);
         setSearchParams(newParams);
       }}
-    />
+      />
+    </>
   );
 };
 

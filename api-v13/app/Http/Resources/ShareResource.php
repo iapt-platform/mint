@@ -2,34 +2,36 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
-use App\Models\Channel;
+use App\Http\Api\GroupApi;
+use App\Http\Api\StudioApi;
+use App\Http\Api\UserApi;
 use App\Models\Article;
+use App\Models\Channel;
 use App\Models\Collection;
 use App\Models\Project;
-use App\Http\Api\StudioApi;
-use App\Http\Api\GroupApi;
-use App\Http\Api\UserApi;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class ShareResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     * @param  Request  $request
+     * @return array|Arrayable|\JsonSerializable
      */
     public function toArray($request)
     {
-        //获取资源信息
-        $res_name = "";
-        $owner = "";
+        // 获取资源信息
+        $res_name = '';
+        $owner = '';
         switch ($this->res_type) {
             case 1:
-                # PCS 文档
+                // PCS 文档
                 break;
             case 2:
-                # Channel 版本
+                // Channel 版本
                 $res = Channel::where('uid', $this->res_id)->first();
                 if ($res) {
                     $res_name = $res->name;
@@ -37,7 +39,7 @@ class ShareResource extends JsonResource
                 }
                 break;
             case 3:
-                # Article 文章
+                // Article 文章
                 $res = Article::where('uid', $this->res_id)->first();
                 if ($res) {
                     $res_name = $res->title;
@@ -45,7 +47,7 @@ class ShareResource extends JsonResource
                 }
                 break;
             case 4:
-                # Collection 文集
+                // Collection 文集
                 $res = Collection::where('uid', $this->res_id)->first();
                 if ($res) {
                     $res_name = $res->title;
@@ -53,9 +55,9 @@ class ShareResource extends JsonResource
                 }
                 break;
             case 5:
-                # 版本片段 不支持
+                // 版本片段 不支持
                 break;
-            case 6: //workflow
+            case 6: // workflow
                 $res = Project::where('uid', $this->res_id)->first();
                 if ($res) {
                     $res_name = $res->title;
@@ -63,30 +65,31 @@ class ShareResource extends JsonResource
                 }
                 break;
             default:
-                # code...
+                // code...
                 break;
         }
         $data = [
-            "id" => $this->id,
-            "res_id" => $this->res_id,
-            "res_type" => $this->res_type,
-            "collaborator_type" => $this->cooperator_type,
-            "power" => $this->power,
+            'id' => $this->id,
+            'res_id' => $this->res_id,
+            'res_type' => $this->res_type,
+            'collaborator_type' => $this->cooperator_type,
+            'power' => $this->power,
             'res_name' => $res_name,
             'owner' => $owner,
-            "created_at" => $this->created_at,
-            "updated_at" => $this->updated_at,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ];
         switch ($this->cooperator_type) {
             case 0:
-                # user
+                // user
                 $data['user'] = UserApi::getByUuid($this->cooperator_id);
                 break;
             case 1:
-                # code...
+                // code...
                 $data['group'] = GroupApi::getById($this->cooperator_id);
                 break;
         }
+
         return $data;
     }
 }

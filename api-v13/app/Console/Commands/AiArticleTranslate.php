@@ -2,14 +2,20 @@
 
 namespace App\Console\Commands;
 
+use App\Services\AIAssistant\ArticleTranslateService;
+use App\Services\ArticleService;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
-use App\Services\AIAssistant\ArticleTranslateService;
-use App\Services\ArticleService;
 
-
-#[Signature('app:ai-article-translate  {--article=} {--anthology=} {--model=}  {--channel=}  {--token=} {--endpoint=}')]
+#[Signature('app:ai-article-translate
+{--article=}
+{--anthology=}
+{--model=}
+{--channel=}
+{--thinking=} : deepseek deep thinking true or false
+{--token=}
+{--endpoint=}')]
 #[Description('translate article by ai ')]
 class AiArticleTranslate extends Command
 {
@@ -19,10 +25,11 @@ class AiArticleTranslate extends Command
     public function handle()
     {
         if (
-            !$this->option('model') ||
-            !$this->option('channel')
+            ! $this->option('model') ||
+            ! $this->option('channel')
         ) {
             $this->error('model,article,channel is requested');
+
             return;
         }
         //
@@ -32,10 +39,15 @@ class AiArticleTranslate extends Command
         // ===== 执行 =====
         if ($this->option('article')) {
             $this->info('article translate start');
-            $total = $service->setModel($this->option('model'))
-                ->setChannel($this->option('channel'))
-                ->translateArticle($this->option('article'))
-                ->saveRpc($this->option('endpoint'), $this->option('token'));
+            $llm = $service->setModel($this->option('model'))
+                ->setChannel($this->option('channel'));
+
+            if ($this->option('thinking')) {
+                $llm = $llm->setThinking($this->option('thinking') === 'true');
+            }
+
+            $total = $llm->translateArticle($this->option('article'))
+                ->save();
             $this->info("{$total} sentences saved");
         }
         if ($this->option('anthology')) {
@@ -44,14 +56,19 @@ class AiArticleTranslate extends Command
 
             foreach ($articleIds as $article) {
                 $this->info('article translate start');
-                $total = $service->setModel($this->option('model'))
-                    ->setChannel($this->option('channel'))
-                    ->translateArticle($article)
-                    ->saveRpc($this->option('endpoint'), $this->option('token'));
+                $llm = $service->setModel($this->option('model'))
+                    ->setChannel($this->option('channel'));
+
+                if ($this->option('thinking')) {
+                    $llm = $llm->setThinking($this->option('thinking') === 'true');
+                }
+
+                $total = $llm->translateArticle($article)
+                    ->save();
                 $this->info("{$total} sentences saved");
             }
 
-            $this->info(count($articleIds) . " article saved");
+            $this->info(count($articleIds).' article saved');
         }
     }
 }

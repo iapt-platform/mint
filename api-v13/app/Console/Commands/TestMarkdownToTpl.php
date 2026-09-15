@@ -2,8 +2,9 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Http\Controllers\ArticleController;
+use App\Tools\Tools;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
 class TestMarkdownToTpl extends Command
@@ -39,12 +40,12 @@ class TestMarkdownToTpl extends Command
      */
     public function handle()
     {
-        if(\App\Tools\Tools::isStop()){
+        if (Tools::isStop()) {
             return 0;
         }
         Log::info('md render start item='.$this->argument('item'));
-        $data = array();
-        $data['basic'] = <<<md
+        $data = [];
+        $data['basic'] = <<<'md'
         # 去除烦恼的五种方法（一种分类）
 
         1 为了自己的利益而从别人处听法；
@@ -56,7 +57,7 @@ class TestMarkdownToTpl extends Command
         （无碍解道，义注，1，63）
         md;
 
-        $data['tpl'] = <<<md
+        $data['tpl'] = <<<'md'
         为了自己的利益而从别人处听法；
 
         {{168-916-2-9}}
@@ -66,18 +67,19 @@ class TestMarkdownToTpl extends Command
 
         foreach ($data as $key => $value) {
             $_item = $this->argument('item');
-            if(!empty($_item) && $key !==$_item){
+            if (! empty($_item) && $key !== $_item) {
                 continue;
             }
             $tpl = $article->toTpl($value,
-                        'eb9e3f7f-b942-4ca4-bd6f-b7876b59a523',
-                        [
-                            'user_uid'=>'ba5463f3-72d1-4410-858e-eadd10884713',
-                            'user_id'=>4,
-                        ]
-                    );
+                'eb9e3f7f-b942-4ca4-bd6f-b7876b59a523',
+                [
+                    'user_uid' => 'ba5463f3-72d1-4410-858e-eadd10884713',
+                    'user_id' => 4,
+                ]
+            );
             var_dump($tpl);
         }
+
         return 0;
     }
 }

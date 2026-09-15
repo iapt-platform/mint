@@ -2,58 +2,61 @@
 
 namespace App\Http\Api;
 
-use PhpAmqpLib\Connection\AMQPStreamConnection;
-use PhpAmqpLib\Message\AMQPMessage;
-use PhpAmqpLib\Exchange\AMQPExchangeType;
-use PhpAmqpLib\Exception\AMQPTimeoutException;
-use PhpAmqpLib\Exception\AMQPProtocolChannelException;
+use App\Tools\Tools;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-
+use PhpAmqpLib\Channel\AMQPChannel;
+use PhpAmqpLib\Connection\AbstractConnection;
+use PhpAmqpLib\Connection\AMQPStreamConnection;
+use PhpAmqpLib\Exception\AMQPTimeoutException;
+use PhpAmqpLib\Exchange\AMQPExchangeType;
+use PhpAmqpLib\Message\AMQPMessage;
 
 class Mq
 {
-
     private static function connection()
     {
-        $host = config("queue.connections.rabbitmq.host");
-        $port = config("queue.connections.rabbitmq.port");
-        $user = config("queue.connections.rabbitmq.user");
-        $password = config("queue.connections.rabbitmq.password");
-        $vhost = config("queue.connections.rabbitmq.password");
+        $host = config('queue.connections.rabbitmq.host');
+        $port = config('queue.connections.rabbitmq.port');
+        $user = config('queue.connections.rabbitmq.user');
+        $password = config('queue.connections.rabbitmq.password');
+        $vhost = config('queue.connections.rabbitmq.password');
         if (empty($host) || empty($port) || empty($user) || empty($password) || empty($vhost)) {
             Log::error('rabbitmq set error');
+
             return;
         }
         $connection = new AMQPStreamConnection($host, $port, $user, $password, $vhost);
+
         return $connection;
     }
 
     public static function publish(string $queue, $message)
     {
-        //一对一
+        // 一对一
         try {
             Log::debug('mq publish', ['queue' => $queue, 'message' => $message]);
-            $host = config("queue.connections.rabbitmq.host");
-            $port = config("queue.connections.rabbitmq.port");
-            $user = config("queue.connections.rabbitmq.user");
-            $password = config("queue.connections.rabbitmq.password");
-            $vhost = config("queue.connections.rabbitmq.virtual_host");
+            $host = config('queue.connections.rabbitmq.host');
+            $port = config('queue.connections.rabbitmq.port');
+            $user = config('queue.connections.rabbitmq.user');
+            $password = config('queue.connections.rabbitmq.password');
+            $vhost = config('queue.connections.rabbitmq.virtual_host');
             if (empty($host) || empty($port) || empty($user) || empty($password) || empty($vhost)) {
                 Log::error('rabbitmq set error');
+
                 return;
             }
             $connection = new AMQPStreamConnection($host, $port, $user, $password, $vhost);
             $channel = $connection->channel();
-            //$channel->queue_declare($queue, false, true, false, false);
+            // $channel->queue_declare($queue, false, true, false, false);
 
             $msgId = Str::uuid();
             Log::info("mq push message queue={$queue} id={$msgId}");
             $msg = new AMQPMessage(
                 json_encode($message, JSON_UNESCAPED_UNICODE),
                 [
-                    "message_id" => $msgId,
-                    "content_type" => 'application/json; charset=utf-8'
+                    'message_id' => $msgId,
+                    'content_type' => 'application/json; charset=utf-8',
                 ]
             );
             $channel->basic_publish($msg, '', $queue);
@@ -62,26 +65,26 @@ class Mq
             $connection->close();
         } catch (\Exception $e) {
             Log::error($e);
+
             return;
         }
     }
 
     /**
-     * @param string $exchange
-     * @param string $queue
-     * @param callable|null $callback
+     * @param  string  $exchange
+     * @param  string  $queue
+     * @param  callable|null  $callback
      */
     public static function worker($exchange, $queue, $callback = null)
     {
 
         $consumerTag = 'consumer';
 
-
-        $host = config("queue.connections.rabbitmq.host");
-        $port = config("queue.connections.rabbitmq.port");
-        $user = config("queue.connections.rabbitmq.user");
-        $password = config("queue.connections.rabbitmq.password");
-        $vhost = config("queue.connections.rabbitmq.virtual_host");
+        $host = config('queue.connections.rabbitmq.host');
+        $port = config('queue.connections.rabbitmq.port');
+        $user = config('queue.connections.rabbitmq.user');
+        $password = config('queue.connections.rabbitmq.password');
+        $vhost = config('queue.connections.rabbitmq.virtual_host');
         $connection = new AMQPStreamConnection($host, $port, $user, $password, $vhost);
 
         $channel = $connection->channel();
@@ -113,12 +116,12 @@ class Mq
         $channel->queue_bind($queue, $exchange);
 
         /**
-         * @param \PhpAmqpLib\Message\AMQPMessage $message
+         * @param  AMQPMessage  $message
          */
         $process_message = function (AMQPMessage $message) use ($callback, $queue) {
             Log::debug('received message', [
                 'message_id' => $message->get('message_id'),
-                'content_type' => $message->get('content_type')
+                'content_type' => $message->get('content_type'),
             ]);
             if ($callback !== null) {
                 try {
@@ -126,7 +129,7 @@ class Mq
                     Log::debug(
                         'mq done',
                         [
-                            'message_id' => $message->get('message_id')
+                            'message_id' => $message->get('message_id'),
                         ]
                     );
                     if ($result !== 0) {
@@ -136,18 +139,17 @@ class Mq
                     Log::error("mq worker {$queue} exception", [
                         'queue' => $queue,
                         'message_id' => $message->get('message_id'),
-                        'exception' => $e
+                        'exception' => $e,
                     ]);
                 }
 
-                if (\App\Tools\Tools::isStop()) {
+                if (Tools::isStop()) {
                     Log::info('mq worker: .stop file exist. cancel the consumer.');
                     $message->getChannel()->basic_cancel($message->getConsumerTag());
                 }
             }
 
-
-            //exit
+            // exit
             foreach (config('mint.mq.loop_limit') as $key => $value) {
                 if ($queue === $key) {
                     if ($value > 0) {
@@ -157,7 +159,7 @@ class Mq
                             $GLOBALS[$key] = 1;
                         }
                         if ($GLOBALS[$key] >= $value) {
-                            Log::info("mq exit queue={$queue} loop=" . $GLOBALS[$key]);
+                            Log::info("mq exit queue={$queue} loop=".$GLOBALS[$key]);
                             $message->getChannel()->basic_cancel($message->getConsumerTag());
                         }
                     }
@@ -183,8 +185,8 @@ class Mq
         $channel->basic_consume($queue, $consumerTag, false, true, false, false, $process_message);
 
         /**
-         * @param \PhpAmqpLib\Channel\AMQPChannel $channel
-         * @param \PhpAmqpLib\Connection\AbstractConnection $connection
+         * @param  AMQPChannel  $channel
+         * @param  AbstractConnection  $connection
          */
         $shutdown = function ($channel, $connection) {
             $channel->close();

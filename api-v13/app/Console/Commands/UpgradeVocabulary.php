@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use App\Models\WordIndex;
 use App\Models\UserDict;
-
+use App\Models\WordIndex;
+use App\Tools\Tools;
+use Illuminate\Console\Command;
 
 class UpgradeVocabulary extends Command
 {
@@ -40,18 +40,19 @@ class UpgradeVocabulary extends Command
      */
     public function handle()
     {
-        if(\App\Tools\Tools::isStop()){
+        if (Tools::isStop()) {
             return 0;
         }
-		$words = UserDict::select('word')->groupBy('word')->cursor();
-		$count=0;
-		foreach ($words as $word) {
-			$update = WordIndex::where('word',$word->word)->update(['final'=>1]);
-			if($update==1){
-				$this->info("{$count}. {$word->word}");
-				$count++;
-			}
-		}
+        $words = UserDict::select('word')->groupBy('word')->cursor();
+        $count = 0;
+        foreach ($words as $word) {
+            $update = WordIndex::where('word', $word->word)->update(['final' => 1]);
+            if ($update == 1) {
+                $this->info("{$count}. {$word->word}");
+                $count++;
+            }
+        }
+
         return 0;
     }
 }

@@ -45,7 +45,7 @@ const UserCard = ({ user }: IUserCard) => {
             id: "columns.library.blog.label",
           })}
         >
-          <Link to={`/blog/${user?.realName}/overview`}>
+          <Link to={`/blog/${user?.realName}/overview`} target="_blank">
             <HomeOutlined key="home" />
           </Link>
         </Tooltip>,

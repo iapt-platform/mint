@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Http\Api\Mq;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
 class MqExport extends Command
@@ -11,6 +11,7 @@ class MqExport extends Command
     /**
      * The name and signature of the console command.
      * php artisan mq:export
+     *
      * @var string
      */
     protected $signature = 'mq:export';
@@ -42,30 +43,32 @@ class MqExport extends Command
         $exchange = 'router';
         $queue = 'export';
         $this->info(" [*] Waiting for {$queue}. To exit press CTRL+C");
-        Log::debug("mq:progress start.");
-        Mq::worker($exchange,$queue,function ($message){
+        Log::debug('mq:progress start.');
+        Mq::worker($exchange, $queue, function ($message) {
             $data = [
-                        'book'=>$message->book,
-                        'para'=>$message->para,
-                        'channel'=>$message->channel,
-                        '--format'=>$message->format,
-                        'filename'=>$message->filename,
-                    ];
-            if(isset($message->origin) && is_string($message->origin)){
+                'book' => $message->book,
+                'para' => $message->para,
+                'channel' => $message->channel,
+                '--format' => $message->format,
+                'filename' => $message->filename,
+            ];
+            if (isset($message->origin) && is_string($message->origin)) {
                 $data['--origin'] = $message->origin;
             }
-            if(isset($message->translation) && is_string($message->translation)){
+            if (isset($message->translation) && is_string($message->translation)) {
                 $data['--translation'] = $message->translation;
             }
-            $ok = $this->call('export:chapter',$data);
-            if($ok !== 0){
-                Log::error('mq:progress upgrade:progress fail',$data);
-            }else{
-                $this->info("Received book=".$message->book.' result='.$ok);
-                Log::debug("mq:export: done ",$data);
+            $ok = $this->call('export:chapter', $data);
+            if ($ok !== 0) {
+                Log::error('mq:progress upgrade:progress fail', $data);
+            } else {
+                $this->info('Received book='.$message->book.' result='.$ok);
+                Log::debug('mq:export: done ', $data);
+
                 return $ok;
             }
         });
+
         return 0;
     }
 }

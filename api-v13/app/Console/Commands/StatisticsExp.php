@@ -2,10 +2,11 @@
 
 namespace App\Console\Commands;
 
+use App\Models\UserOperationDaily;
+use App\Tools\Tools;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
-use Carbon\Carbon;
-use App\Models\UserOperationDaily;
 
 class StatisticsExp extends Command
 {
@@ -40,38 +41,39 @@ class StatisticsExp extends Command
      */
     public function handle()
     {
-        if(\App\Tools\Tools::isStop()){
+        if (Tools::isStop()) {
             return 0;
         }
-        $file = "public/statistics/exp-monthly.csv";
-        Storage::disk('local')->put($file, "");
-        #按月获取数据
+        $file = 'public/statistics/exp-monthly.csv';
+        Storage::disk('local')->put($file, '');
+        // 按月获取数据
         $firstDay = UserOperationDaily::select('created_at')
-                            ->orderBy('created_at')
-                            ->first();
+            ->orderBy('created_at')
+            ->first();
         $firstDay = strtotime($firstDay->created_at);
-        $firstMonth = Carbon::create(date("Y-m",$firstDay));
+        $firstMonth = Carbon::create(date('Y-m', $firstDay));
         $now = Carbon::now();
         $current = $firstMonth;
         $sumTime = 0;
         while ($current <= $now) {
-            # code...
+            // code...
             $start = Carbon::create($current)->startOfMonth();
             $end = Carbon::create($current)->endOfMonth();
             $date = $current->format('Y-m');
-            $time = UserOperationDaily::whereDate('created_at','>=',$start)
-                              ->whereDate('created_at','<=',$end)
-                              ->sum('duration')/1000;
+            $time = UserOperationDaily::whereDate('created_at', '>=', $start)
+                ->whereDate('created_at', '<=', $end)
+                ->sum('duration') / 1000;
             $sumTime += $time;
-            $editor = UserOperationDaily::whereDate('created_at','>=',$start)
-                              ->whereDate('created_at','<=',$end)
-                              ->groupBy('user_id')
-                              ->select('user_id')->get();
-            $info = $date.','.(int)($time/3600).','.(int)($sumTime/3600).','.count($editor);
+            $editor = UserOperationDaily::whereDate('created_at', '>=', $start)
+                ->whereDate('created_at', '<=', $end)
+                ->groupBy('user_id')
+                ->select('user_id')->get();
+            $info = $date.','.(int) ($time / 3600).','.(int) ($sumTime / 3600).','.count($editor);
             $this->info($info);
             Storage::disk('local')->append($file, $info);
             $current->addMonth(1);
         }
+
         return 0;
     }
 }

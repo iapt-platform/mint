@@ -2,18 +2,20 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Api\StudioApi;
 use App\Models\GroupMember;
 use App\Services\AuthService;
-use App\Http\Api\StudioApi;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class GroupResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     * @param  Request  $request
+     * @return array|Arrayable|\JsonSerializable
      */
     public function toArray($request)
     {
@@ -22,9 +24,9 @@ class GroupResource extends JsonResource
             'name' => $this->name,
             'description' => $this->description,
             'owner' => $this->owner,
-            "studio" => StudioApi::getById($this->owner),
+            'studio' => StudioApi::getById($this->owner),
             'updated_at' => $this->updated_at,
-            'created_at' => $this->created_at
+            'created_at' => $this->created_at,
         ];
         $user = AuthService::current($request);
         if ($user) {
@@ -50,6 +52,7 @@ class GroupResource extends JsonResource
                 }
             }
         }
+
         return $data;
     }
 }

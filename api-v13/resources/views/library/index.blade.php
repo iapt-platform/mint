@@ -4,10 +4,10 @@
 --}}
 @extends('layouts.library')
 
-@section('title', 'WikiPāli · 巴利书库')
+@section('title', __('library.portal_title'))
 
 @push('styles')
-@vite('resources/css/modules/_library-index.css')
+@vite('resources/css/modules/library-index.css')
 @endpush
 
 {{-- Hero --}}
@@ -16,12 +16,11 @@
     style="background-image: url('{{ URL::asset('assets/images/hero-2.jpg') }}')">
     <div class="hero-overlay"></div>
     <div class="hero-content">
-        <h1 class="hero-title">WikiPāli 巴利书库</h1>
-        <p class="hero-subtitle">探索巴利三藏 · 开启智慧之门</p>
+        <h1 class="hero-title">{{ __('library.portal_hero_title') }}</h1>
+        <p class="hero-subtitle">{{ __('library.portal_hero_subtitle') }}</p>
         <div class="search-box">
             <x-ui.search-input
-                :action="route('library.search')"
-                placeholder="搜索经典、词条、文集…"
+                :placeholder="__('library.search_placeholder_home')"
                 size="lg" />
         </div>
     </div>
@@ -37,11 +36,11 @@
             <div class="lib-section__header">
                 <h2 class="lib-section__title">
                     <i class="ti ti-books"></i>
-                    巴利三藏
+                    {{ __('library.section_tipitaka') }}
                 </h2>
                 <a href="{{ route('library.tipitaka.index') }}"
                     class="lib-section__more">
-                    进入三藏 <i class="ti ti-arrow-right"></i>
+                    {{ __('library.enter_tipitaka') }} <i class="ti ti-arrow-right"></i>
                 </a>
             </div>
 
@@ -55,7 +54,7 @@
                             </span>
                             <a href="{{ route('library.tipitaka.category', ['id' => $data['category']['id']]) }}"
                                 class="lib-cat-card__more">
-                                更多 <i class="ti ti-arrow-right"></i>
+                                {{ __('library.more') }} <i class="ti ti-arrow-right"></i>
                             </a>
                         </div>
                         <ul class="wiki-cat-list">
@@ -79,15 +78,15 @@
             <div class="lib-section__header">
                 <h2 class="lib-section__title">
                     <i class="ti ti-clock"></i>
-                    最新译文
+                    {{ __('library.section_recent') }}
                     <span class="lib-live-badge">
                         <span class="lib-live-dot"></span>
-                        持续更新中
+                        {{ __('library.updating_badge') }}
                     </span>
                 </h2>
                 <a href="{{ route('library.tipitaka.index') }}"
                     class="lib-section__more">
-                    查看全部 <i class="ti ti-arrow-right"></i>
+                    {{ __('library.view_all') }} <i class="ti ti-arrow-right"></i>
                 </a>
             </div>
 
@@ -117,9 +116,9 @@
                     {{-- 右侧：标签 + 时间 --}}
                     <div class="lib-recent__right">
                         @if($book['is_new'])
-                        <span class="lib-new-badge">新增</span>
+                        <span class="lib-new-badge">{{ __('library.badge_new') }}</span>
                         @else
-                        <span class="lib-update-badge">更新</span>
+                        <span class="lib-update-badge">{{ __('library.badge_updated') }}</span>
                         @endif
                         <span class="lib-recent__time">{{ $book['updated_at'] }}</span>
                     </div>
@@ -130,49 +129,21 @@
         </div>
         @endisset
 
-        {{-- ── 三、栏目导航 ── --}}
+        {{-- ── 三、工具箱 ── --}}
         <div class="lib-section">
             <div class="lib-section__header">
                 <h2 class="lib-section__title">
-                    <i class="ti ti-layout-grid"></i>
-                    全部栏目
+                    <i class="ti ti-tools"></i>
+                    {{ __('labels.toolbox') }}
                 </h2>
             </div>
 
             <div class="row g-3">
-                <div class="col-6 col-sm-4 col-md">
-                    <a href="{{ route('library.tipitaka.index') }}" class="lib-nav-card">
-                        <i class="ti ti-books lib-nav-card__icon"></i>
-                        <div class="lib-nav-card__name">三藏</div>
-                        <div class="lib-nav-card__desc">巴利文原典及译文</div>
-                    </a>
-                </div>
-                <div class="col-6 col-sm-4 col-md">
-                    <a href="{{ route('library.wiki.home') }}" class="lib-nav-card">
-                        <i class="ti ti-world lib-nav-card__icon"></i>
-                        <div class="lib-nav-card__name">百科</div>
-                        <div class="lib-nav-card__desc">佛法术语词典</div>
-                    </a>
-                </div>
-                <div class="col-6 col-sm-4 col-md">
-                    <a href="{{ route('library.anthology.index') }}" class="lib-nav-card">
-                        <i class="ti ti-notebook lib-nav-card__icon"></i>
-                        <div class="lib-nav-card__name">文集</div>
-                        <div class="lib-nav-card__desc">法义探讨与注疏</div>
-                    </a>
-                </div>
-                <div class="col-6 col-sm-4 col-md">
-                    <a href="{{ route('library.course') }}" class="lib-nav-card">
-                        <i class="ti ti-school lib-nav-card__icon"></i>
-                        <div class="lib-nav-card__name">课程</div>
-                        <div class="lib-nav-card__desc">系统学习路径</div>
-                    </a>
-                </div>
-                <div class="col-6 col-sm-4 col-md">
-                    <a href="{{ route('library.download') }}" class="lib-nav-card">
-                        <i class="ti ti-download lib-nav-card__icon"></i>
-                        <div class="lib-nav-card__name">下载</div>
-                        <div class="lib-nav-card__desc">离线阅读资源</div>
+                <div class="col-6 col-sm-4 col-md-3">
+                    <a href="{{ route('library.tools.script-convertor') }}" class="lib-nav-card">
+                        <i class="ti ti-transform lib-nav-card__icon"></i>
+                        <div class="lib-nav-card__name">{{ __('labels.tool_script_convertor') }}</div>
+                        <div class="lib-nav-card__desc">{{ __('labels.tool_script_convertor_desc') }}</div>
                     </a>
                 </div>
             </div>

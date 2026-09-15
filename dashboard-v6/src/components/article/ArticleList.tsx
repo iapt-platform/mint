@@ -32,7 +32,7 @@ import Share from "../share/Share";
 import AnthologySelect from "../anthology/AnthologySelect";
 import StudioName from "../auth/Studio";
 
-import { getSorterUrl } from "../../utils";
+import { articlePath, getSorterUrl } from "../../utils";
 import TransferCreate from "../transfer/TransferCreate";
 import { TransferOutLinedIcon } from "../../assets/icon";
 import type { IStudio, IUser } from "../../api/Auth";
@@ -392,7 +392,7 @@ const ArticleList = ({
                 >
                   <Link
                     key={index}
-                    to={`/article/article/${row.id}`}
+                    to={articlePath("article", row.id)}
                     target="_blank"
                   >
                     {intl.formatMessage({

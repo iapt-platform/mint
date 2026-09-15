@@ -4,7 +4,7 @@ namespace App\DTO\LLMTranslation;
 
 use App\DTO\BaseDTO;
 
-readonly class TranslationPromptTokenDetailsDTO  extends BaseDTO
+readonly class TranslationPromptTokenDetailsDTO extends BaseDTO
 {
     public function __construct(
         public int $cachedTokens,

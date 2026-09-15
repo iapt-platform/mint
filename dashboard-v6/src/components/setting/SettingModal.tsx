@@ -65,7 +65,9 @@ const SettingModal = ({ trigger, open, onClose }: IWidget) => {
             {
               label: "model",
               key: "model",
-              children: <AiModelList studioName={currUser?.realName} />,
+              children: (
+                <AiModelList studioName={currUser?.realName} openInNewTab />
+              ),
             },
           ]}
         />

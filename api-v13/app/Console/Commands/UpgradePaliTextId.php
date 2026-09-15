@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Models\PaliText;
-use Illuminate\Support\Facades\DB;
+use App\Tools\Tools;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
 class UpgradePaliTextId extends Command
@@ -40,26 +40,26 @@ class UpgradePaliTextId extends Command
      */
     public function handle()
     {
-        if(\App\Tools\Tools::isStop()){
+        if (Tools::isStop()) {
             return 0;
         }
-        $this->info("upgrade pali text uuid");
+        $this->info('upgrade pali text uuid');
         $startTime = time();
 
         $bar = $this->output->createProgressBar(PaliText::count());
-        #载入csv数据
-        $csvFile = config("mint.path.pali_title") .'/pali_text_uuid.csv';
-        if (($fp = fopen($csvFile, "r")) === false) {
-            $this->error( "can not open csv file. filename=" . $csvFile. PHP_EOL) ;
-            Log::error( "can not open csv file. filename=" . $csvFile) ;
+        // 载入csv数据
+        $csvFile = config('mint.path.pali_title').'/pali_text_uuid.csv';
+        if (($fp = fopen($csvFile, 'r')) === false) {
+            $this->error('can not open csv file. filename='.$csvFile.PHP_EOL);
+            Log::error('can not open csv file. filename='.$csvFile);
         }
-        Log::info("csv load:" . $csvFile);
-        $inputRow=0;
+        Log::info('csv load:'.$csvFile);
+        $inputRow = 0;
         while (($data = fgetcsv($fp, 0, ',')) !== false) {
             if ($inputRow > 0) {
-                PaliText::where('book',$data[0])
-                        ->where('paragraph',$data[1])
-                        ->update(['uid'=>$data[2]]);
+                PaliText::where('book', $data[0])
+                    ->where('paragraph', $data[1])
+                    ->update(['uid' => $data[2]]);
             }
             $inputRow++;
             $bar->advance();
@@ -67,8 +67,8 @@ class UpgradePaliTextId extends Command
         }
         fclose($fp);
         $bar->finish();
-        $this->info("mission finished. in ". time()-$startTime . "s");
-		Log::info("mission finished. in ". time()-$startTime . "s");
+        $this->info('mission finished. in '.time() - $startTime.'s');
+        Log::info('mission finished. in '.time() - $startTime.'s');
 
         return 0;
     }

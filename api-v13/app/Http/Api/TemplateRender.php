@@ -2,45 +2,45 @@
 
 namespace App\Http\Api;
 
+use App\Http\Controllers\CorpusController;
+use App\Models\BookTitle as BookSeries;
+use App\Models\Channel;
+use App\Models\DhammaTerm;
+use App\Models\Discussion;
+use App\Models\PageNumber;
+use App\Models\PaliText;
+use App\Services\ArticleService;
+use App\Tools\Tools;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Http;
-
-use App\Models\DhammaTerm;
-use App\Models\PaliText;
-use App\Models\Channel;
-use App\Models\PageNumber;
-use App\Models\Discussion;
-use App\Models\BookTitle as BookSeries;
-
-use App\Http\Controllers\CorpusController;
-
-use App\Http\Api\ChannelApi;
-use App\Http\Api\MdRender;
-use App\Http\Api\PaliTextApi;
-
-use App\Tools\Tools;
-
-use App\Services\ArticleService;
 
 class TemplateRender
 {
     protected $param = [];
-    protected $mode = "read";
+
+    protected $mode = 'read';
+
     protected $channel_id = [];
+
     protected $debug = [];
+
     protected $format = 'react';
+
     protected $studioId = null;
+
     protected $lang = 'en';
+
     protected $langFamily = 'en';
+
     protected $glossaryKey = 'glossary';
+
     protected $channelInfo = [];
 
     protected $options = [
         'mode' => 'read',
         'channelType' => 'translation',
-        'contentType' => "markdown",
+        'contentType' => 'markdown',
         'format' => 'react',
         'debug' => [],
         'studioId' => null,
@@ -55,6 +55,7 @@ class TemplateRender
      * Create a new command instance.
      * string $mode  'read' | 'edit'
      * string $format  'react' | 'text' | 'tex' | 'unity'
+     *
      * @return void
      */
     public function __construct(array $param, $channelInfo, string $mode, string $format = 'react', ?string $studioId = null, $debug = [], $lang = 'zh-Hans')
@@ -80,21 +81,24 @@ class TemplateRender
                 $lang = Channel::where('uid', $channelId)->value('lang');
             }
         }
-        if (!empty($lang)) {
+        if (! empty($lang)) {
             $this->lang = $lang;
             $this->langFamily = explode('-', $lang)[0];
         }
     }
+
     public function options($options = [])
     {
         foreach ($options as $key => $value) {
             $this->options[$key] = $value;
         }
     }
+
     public function glossaryKey()
     {
         return $this->glossaryKey;
     }
+
     /**
      * TODO 设置默认语言。在渲染某些内容的时候需要语言信息
      */
@@ -103,23 +107,26 @@ class TemplateRender
         $this->lang = $lang;
         $this->langFamily = explode('-', $lang)[0];
     }
+
     private function info($message, $debug)
     {
         if (in_array($debug, $this->debug)) {
             Log::info($message);
         }
     }
+
     private function error($message, $debug)
     {
         if (in_array($debug, $this->debug)) {
             Log::error($message);
         }
     }
+
     public function render($tpl_name)
     {
         switch ($tpl_name) {
             case 'term':
-                # 术语
+                // 术语
                 $result = $this->render_term();
                 break;
             case 'note':
@@ -170,8 +177,12 @@ class TemplateRender
             case 'category':
                 $result = $this->render_category();
                 break;
+            case 'quality':
+                // 质量标签模版：{{quality|pending}}
+                $result = $this->render_quality();
+                break;
             default:
-                if (mb_substr($tpl_name, 0, 4, "UTF-8") === 'Tpl:') {
+                if (mb_substr($tpl_name, 0, 4, 'UTF-8') === 'Tpl:') {
                     $result = $this->render_tpl($tpl_name);
                 } else {
                     $result = [
@@ -184,6 +195,7 @@ class TemplateRender
 
                 break;
         }
+
         return $result;
     }
 
@@ -192,12 +204,12 @@ class TemplateRender
         $article = app(ArticleService::class)->getRawByTitle($name);
         $content = $article->content;
         if (count($this->param) > 0) {
-            $m = new \Mustache_Engine(array(
+            $m = new \Mustache_Engine([
                 'entity_flags' => ENT_QUOTES,
                 'escape' => function ($value) {
                     return $value;
-                }
-            ));
+                },
+            ]);
             $content = $m->render($content, $this->param);
         }
         $output = [];
@@ -214,15 +226,19 @@ class TemplateRender
                 $output = $content;
                 break;
         }
+
         return $output;
     }
 
     public function render_para()
     {
         $props = [];
-        $props['id'] = $this->get_param($this->param, "id", 1);
-        $props['title'] = $this->get_param($this->param, "title", 2);
-        $props['style'] = $this->get_param($this->param, "style", 3);
+        $props['id'] = $this->get_param($this->param, 'id', 1);
+        $props['title'] = $this->get_param($this->param, 'title', 2);
+        $props['style'] = $this->get_param($this->param, 'style', 3);
+        if (! empty($this->channel_id)) {
+            $props['channel'] = implode('_', $this->channel_id);
+        }
 
         $output = [];
         switch ($this->format) {
@@ -238,13 +254,14 @@ class TemplateRender
                 $output = $props['title'];
                 break;
         }
+
         return $output;
     }
 
     public function render_category()
     {
         $props = [];
-        $props['name'] = $this->get_param($this->param, "name", 1);
+        $props['name'] = $this->get_param($this->param, 'name', 1);
 
         $output = [];
         switch ($this->format) {
@@ -260,12 +277,56 @@ class TemplateRender
                 $output = $props['name'];
                 break;
         }
+
+        return $output;
+    }
+
+    /**
+     * 渲染质量标签模版：{{quality|pending}}
+     *
+     * 合法的取值只有四个：featured | standard | draft | pending
+     * 非法取值统一回退为 pending，避免渲染出未知样式。
+     */
+    public function render_quality()
+    {
+        // 默认值为 pending，同时支持命名参数 {{quality|value=featured}}
+        $value = $this->get_param($this->param, 'value', 1, 'pending');
+
+        // 校验取值是否合法，不合法则回退到默认值
+        $allowed = ['featured', 'standard', 'draft', 'pending'];
+        if (! in_array($value, $allowed, true)) {
+            $value = 'pending';
+        }
+
+        $props = ['value' => $value];
+
+        $output = [];
+        switch ($this->format) {
+            case 'react':
+                // 前端通过 props 解析，使用 antd Tag 按取值渲染不同颜色
+                $output = [
+                    'props' => base64_encode(\json_encode($props)),
+                    'html' => $value,
+                    'tag' => 'span',
+                    'tpl' => 'quality',
+                ];
+                break;
+            case 'html':
+                // 静态 html 输出，class 包含固定前缀 tag-quality 和具体取值
+                $output = "<span class=\"tag-quality {$value}\">{$value}</span>";
+                break;
+            default:
+                // text / tex / simple 等纯文本格式直接输出取值
+                $output = $value;
+                break;
+        }
+
         return $output;
     }
 
     public function getTermProps($word, $tag = null, $channel = null)
     {
-        if ($channel && !empty($channel)) {
+        if ($channel && ! empty($channel)) {
             $channelId = $channel;
         } else {
             if (count($this->channel_id) > 0) {
@@ -276,18 +337,19 @@ class TemplateRender
         }
 
         if (count($this->channelInfo) === 0) {
-            if (!empty($channel)) {
+            if (! empty($channel)) {
                 $channelInfo = Channel::where('uid', $channel)->first();
-                if (!$channelInfo) {
+                if (! $channelInfo) {
                     unset($channelInfo);
                 }
             }
-            if (!isset($channelInfo)) {
+            if (! isset($channelInfo)) {
                 Log::warning('channel is null');
                 $output = [
-                    "word" => $word,
+                    'word' => $word,
                     'innerHtml' => '',
                 ];
+
                 return $output;
             }
         } else {
@@ -296,16 +358,16 @@ class TemplateRender
 
         if (Str::isUuid($channelId)) {
             $lang = Channel::where('uid', $channelId)->value('lang');
-            if (!empty($lang)) {
+            if (! empty($lang)) {
                 $langFamily = explode('-', $lang)[0];
             } else {
                 $langFamily = 'zh';
             }
             $this->info("term:{$word} 先查属于这个channel 的", 'term');
-            $this->info('channel id' . $channelId, 'term');
-            $table = DhammaTerm::where("word", $word)
+            $this->info('channel id'.$channelId, 'term');
+            $table = DhammaTerm::where('word', $word)
                 ->where('channal', $channelId);
-            if ($tag && !empty($tag)) {
+            if ($tag && ! empty($tag)) {
                 $table = $table->where('tag', $tag);
             }
             $tplParam = $table->orderBy('updated_at', 'desc')
@@ -318,7 +380,7 @@ class TemplateRender
             $studioId = $this->studioId;
         }
 
-        if (!$tplParam) {
+        if (! $tplParam) {
             if (Str::isUuid($studioId)) {
                 /**
                  * 没有，再查这个studio的
@@ -326,21 +388,21 @@ class TemplateRender
                  * 完全匹配的优先
                  * 语族匹配也行
                  */
-                $this->info("没有-再查这个studio的", 'term');
-                $table = DhammaTerm::where("word", $word);
-                if (!empty($tag)) {
+                $this->info('没有-再查这个studio的', 'term');
+                $table = DhammaTerm::where('word', $word);
+                if (! empty($tag)) {
                     $table = $table->where('tag', $tag);
                 }
                 $termsInStudio = $table->where('owner', $channelInfo->owner_uid)
                     ->orderBy('updated_at', 'desc')
                     ->get();
                 if (count($termsInStudio) > 0) {
-                    $list = array();
+                    $list = [];
                     foreach ($termsInStudio as $key => $term) {
                         if (empty($term->channal)) {
                             if ($term->language === $lang) {
                                 $list[$term->guid] = 2;
-                            } else if (strpos($term->language, $langFamily) !== false) {
+                            } elseif (strpos($term->language, $langFamily) !== false) {
                                 $list[$term->guid] = 1;
                             }
                         }
@@ -361,11 +423,11 @@ class TemplateRender
             }
         }
 
-        if (!$tplParam) {
-            $this->info("没有，再查社区", 'term');
-            $community_channel = ChannelApi::getSysChannel("_community_term_zh-hans_");
-            $table = DhammaTerm::where("word", $word);
-            if (!empty($tag)) {
+        if (! $tplParam) {
+            $this->info('没有，再查社区', 'term');
+            $community_channel = ChannelApi::getSysChannel('_community_term_zh-hans_');
+            $table = DhammaTerm::where('word', $word);
+            if (! empty($tag)) {
                 $table = $table->where('tag', $tag);
             }
             $tplParam = $table->where('channal', $community_channel)
@@ -373,38 +435,39 @@ class TemplateRender
             if ($tplParam) {
                 $isCommunity = true;
             } else {
-                $this->info("查社区没有", 'term');
+                $this->info('查社区没有', 'term');
             }
         }
         $output = [
-            "word" => $word,
-            "parentChannelId" => $channelId,
-            "parentStudioId" => $channelInfo ? $channelInfo->owner_uid : null,
+            'word' => $word,
+            'parentChannelId' => $channelId,
+            'parentStudioId' => $channelInfo ? $channelInfo->owner_uid : null,
         ];
-        $innerString = $output["word"];
+        $innerString = $output['word'];
         if ($tplParam) {
-            $output["id"] = $tplParam->guid;
-            $output["meaning"] = $tplParam->meaning;
-            $output["channel"] = $tplParam->channal;
-            if (!empty($tplParam->note)) {
+            $output['id'] = $tplParam->guid;
+            $output['meaning'] = $tplParam->meaning;
+            $output['channel'] = $tplParam->channal;
+            if (! empty($tplParam->note)) {
                 $mdRender = new MdRender(['format' => $this->format]);
                 $output['note'] = $mdRender->convert($tplParam->note, $this->channel_id);
             }
             if (isset($isCommunity)) {
-                $output["isCommunity"] = true;
+                $output['isCommunity'] = true;
             }
-            $innerString = "{$output["meaning"]}({$output["word"]})";
-            if (!empty($tplParam->other_meaning)) {
-                $output["meaning2"] = $tplParam->other_meaning;
+            $innerString = "{$output['meaning']}({$output['word']})";
+            if (! empty($tplParam->other_meaning)) {
+                $output['meaning2'] = $tplParam->other_meaning;
             }
         }
         $output['innerHtml'] = $innerString;
+
         return $output;
     }
 
     private function render_term()
     {
-        $word = $this->get_param($this->param, "word", 1);
+        $word = $this->get_param($this->param, 'word', 1);
         if (str_contains($word, '@')) {
             [$wordHead, $tag] = explode('@', $word);
         }
@@ -435,37 +498,37 @@ class TemplateRender
             case 'html':
                 $no = isset($props['id']) ? '' : 'term_invalid';
                 $id = isset($props['id']) ? $props['id'] : '';
-                $output = "<span ";
+                $output = '<span ';
                 $output .= "class='term-ref {$no}' ";
                 $output .= "data-id='{$id}' ";
                 $output .= "data-term='{$props['word']}' ";
-                $output .= ">";
+                $output .= '>';
                 $output .= $props['meaning'] ?? $props['word'];
-                $output .= "</span>";
+                $output .= '</span>';
                 break;
             case 'markdown':
-                if (isset($props["meaning"])) {
-                    $key = 'term-' . $props["word"];
+                if (isset($props['meaning'])) {
+                    $key = 'term-'.$props['word'];
                     if (isset($GLOBALS[$key]) && $GLOBALS[$key] === 1) {
                         $GLOBALS[$key]++;
-                        $output = $props["meaning"];
+                        $output = $props['meaning'];
                     } else {
                         $GLOBALS[$key] = 1;
-                        $output = $props["meaning"] . '(' . $props["word"] . ')';
+                        $output = $props['meaning'].'('.$props['word'].')';
                     }
                 } else {
-                    $output = $props["word"];
+                    $output = $props['word'];
                 }
-                //如果有内容且第一次出现，显示为脚注
-                if (!empty($props["note"]) && $GLOBALS[$key] === 1) {
+                // 如果有内容且第一次出现，显示为脚注
+                if (! empty($props['note']) && $GLOBALS[$key] === 1) {
                     if (isset($GLOBALS['note_sn'])) {
                         $GLOBALS['note_sn']++;
                     } else {
                         $GLOBALS['note_sn'] = 1;
-                        $GLOBALS['note'] = array();
+                        $GLOBALS['note'] = [];
                     }
-                    $content = $props["note"];
-                    $output .= '[^' . $GLOBALS['note_sn'] . ']';
+                    $content = $props['note'];
+                    $output .= '[^'.$GLOBALS['note_sn'].']';
                     $GLOBALS['note'][] = [
                         'sn' => $GLOBALS['note_sn'],
                         'trigger' => '',
@@ -477,22 +540,23 @@ class TemplateRender
                 $output = $props['meaning'] ?? $props['word'];
                 break;
         }
+
         return $output;
     }
 
-    private  function render_note()
+    private function render_note()
     {
-        $note = $this->get_param($this->param, "text", 1);
-        $trigger = $this->get_param($this->param, "trigger", 2, '');
-        $props = ["note" => $note];
-        $innerString = "";
-        if (!empty($trigger)) {
-            $props["trigger"] = $trigger;
-            $innerString = $props["trigger"];
+        $note = $this->get_param($this->param, 'text', 1);
+        $trigger = $this->get_param($this->param, 'trigger', 2, '');
+        $props = ['note' => $note];
+        $innerString = '';
+        if (! empty($trigger)) {
+            $props['trigger'] = $trigger;
+            $innerString = $props['trigger'];
         }
         if ($this->format === 'unity') {
-            $props["note"] = MdRender::render(
-                $props["note"],
+            $props['note'] = MdRender::render(
+                $props['note'],
                 $this->channel_id,
                 null,
                 'read',
@@ -522,10 +586,10 @@ class TemplateRender
                     $GLOBALS['note_sn']++;
                 } else {
                     $GLOBALS['note_sn'] = 1;
-                    $GLOBALS['note'] = array();
+                    $GLOBALS['note'] = [];
                 }
                 $noteContent = MdRender::render(
-                    $props["note"],
+                    $props['note'],
                     $this->channel_id,
                     null,
                     'read',
@@ -539,11 +603,11 @@ class TemplateRender
                     'content' => $noteContent,
                 ];
 
-                $link = "<a href='#footnote-" . $GLOBALS['note_sn'] . "' name='note-" . $GLOBALS['note_sn'] . "'>";
+                $link = "<a href='#footnote-".$GLOBALS['note_sn']."' name='note-".$GLOBALS['note_sn']."'>";
                 if (empty($trigger)) {
-                    $output =  $link . "<sup>[" . $GLOBALS['note_sn'] . "]</sup></a>";
+                    $output = $link.'<sup>['.$GLOBALS['note_sn'].']</sup></a>';
                 } else {
-                    $output = $link . $trigger . "</a>";
+                    $output = $link.$trigger.'</a>';
                 }
                 $output = "<label for=\"sn-{$GLOBALS['note_sn']}\"
                 class=\"margin-toggle sidenote-number\" >{$trigger}</label>
@@ -565,10 +629,10 @@ class TemplateRender
                     $GLOBALS['note_sn']++;
                 } else {
                     $GLOBALS['note_sn'] = 1;
-                    $GLOBALS['note'] = array();
+                    $GLOBALS['note'] = [];
                 }
                 $content = MdRender::render(
-                    $props["note"],
+                    $props['note'],
                     $this->channel_id,
                     null,
                     'read',
@@ -576,29 +640,31 @@ class TemplateRender
                     'markdown',
                     'markdown'
                 );
-                $output = '[^' . $GLOBALS['note_sn'] . ']';
+                $output = '[^'.$GLOBALS['note_sn'].']';
                 $GLOBALS['note'][] = [
                     'sn' => $GLOBALS['note_sn'],
                     'trigger' => $trigger,
                     'content' => $content,
                 ];
-                //$output = '<footnote id="'.$GLOBALS['note_sn'].'">'.$content.'</footnote>';
+                // $output = '<footnote id="'.$GLOBALS['note_sn'].'">'.$content.'</footnote>';
                 break;
             default:
                 $output = '';
                 break;
         }
+
         return $output;
     }
-    private  function render_nissaya()
+
+    private function render_nissaya()
     {
-        $pali =  $this->get_param($this->param, "pali", 1);
-        $meaning = $this->get_param($this->param, "meaning", 2);
-        $innerString = "";
+        $pali = $this->get_param($this->param, 'pali', 1);
+        $meaning = $this->get_param($this->param, 'meaning', 2);
+        $innerString = '';
         $props = [
-            "pali" => $pali,
-            "meaning" => explode('=', $meaning),
-            "lang" => $this->lang,
+            'pali' => $pali,
+            'meaning' => explode('=', $meaning),
+            'lang' => $this->lang,
         ];
         switch ($this->format) {
             case 'react':
@@ -615,30 +681,40 @@ class TemplateRender
                     'tpl' => 'nissaya',
                 ];
                 break;
+            case 'html':
+                if ($this->lang === 'my') {
+                    $output = "<span lang='pi-Mymr'>{$pali}</span>၊ ";
+                } else {
+                    $output = "<span lang='pi-Latn'>{$pali}</span> ";
+                }
+                $output .= "<span lang='{$this->lang}'>{$meaning}</span>";
+                break;
             case 'prompt':
-                $output = Tools::MyToRm($pali) . ':' . end($props["meaning"]);
+                $output = Tools::MyToRm($pali).':'.end($props['meaning']);
                 break;
             default:
-                $output = $pali . '၊' . $meaning;
+                $output = $pali.'၊'.$meaning;
                 break;
         }
+
         return $output;
     }
-    private  function render_exercise()
+
+    private function render_exercise()
     {
 
-        $id = $this->get_param($this->param, "id", 1);
-        $title = $this->get_param($this->param, "title", 1);
+        $id = $this->get_param($this->param, 'id', 1);
+        $title = $this->get_param($this->param, 'title', 1);
         $props = [
-            "id" => $id,
-            "title" => $title,
-            "channel" => $this->channel_id[0],
+            'id' => $id,
+            'title' => $title,
+            'channel' => $this->channel_id[0],
         ];
         switch ($this->format) {
             case 'react':
                 $output = [
                     'props' => base64_encode(\json_encode($props)),
-                    'html' => "",
+                    'html' => '',
                     'tag' => 'span',
                     'tpl' => 'exercise',
                 ];
@@ -662,41 +738,43 @@ class TemplateRender
                 $output = '';
                 break;
         }
+
         return $output;
     }
-    private  function render_article()
+
+    private function render_article()
     {
-        $type = $this->get_param($this->param, "type", 1);
-        $id = $this->get_param($this->param, "id", 2);
-        $title = $this->get_param($this->param, "title", 3);
-        $channel = $this->get_param($this->param, "channel", 4);
-        $style = $this->get_param($this->param, "style", 5);
-        $book = $this->get_param($this->param, "book", 6);
-        $paragraphs = $this->get_param($this->param, "paragraphs", 7);
-        $anthology = $this->get_param($this->param, "anthology", 8);
+        $type = $this->get_param($this->param, 'type', 1);
+        $id = $this->get_param($this->param, 'id', 2);
+        $title = $this->get_param($this->param, 'title', 3);
+        $channel = $this->get_param($this->param, 'channel', 4);
+        $style = $this->get_param($this->param, 'style', 5);
+        $book = $this->get_param($this->param, 'book', 6);
+        $paragraphs = $this->get_param($this->param, 'paragraphs', 7);
+        $anthology = $this->get_param($this->param, 'anthology', 8);
         if ($type === 'chapter' && empty($id)) {
-            $book = (int)$book;
-            $paragraphs = (int)$paragraphs;
+            $book = (int) $book;
+            $paragraphs = (int) $paragraphs;
             $id = "{$book}-{$paragraphs}";
         }
         $props = [
-            "type" => $type,
-            "id" => $id,
+            'type' => $type,
+            'id' => $id,
             'style' => $style,
         ];
-        if (!empty($channel)) {
+        if (! empty($channel)) {
             $props['channel'] = $channel;
         }
-        if (!empty($title)) {
+        if (! empty($title)) {
             $props['title'] = $title;
         }
-        if (!empty($book)) {
+        if (! empty($book)) {
             $props['book'] = $book;
         }
-        if (!empty($paragraphs)) {
+        if (! empty($paragraphs)) {
             $props['paragraphs'] = $paragraphs;
         }
-        if (!empty($anthology)) {
+        if (! empty($anthology)) {
             $props['anthology'] = $anthology;
         }
         if (is_array($this->channel_id)) {
@@ -706,7 +784,7 @@ class TemplateRender
             case 'react':
                 $output = [
                     'props' => base64_encode(\json_encode($props)),
-                    'html' => "",
+                    'html' => '',
                     'text' => $title,
                     'tag' => 'span',
                     'tpl' => 'article',
@@ -731,11 +809,13 @@ class TemplateRender
                 $output = '';
                 break;
         }
+
         return $output;
     }
-    private  function render_quote()
+
+    private function render_quote()
     {
-        $paraId = $this->get_param($this->param, "para", 1);
+        $paraId = $this->get_param($this->param, 'para', 1);
         $channelId = $this->channel_id[0];
         $props = Cache::remember(
             "/quote/{$channelId}/{$paraId}",
@@ -743,23 +823,24 @@ class TemplateRender
             function () use ($paraId, $channelId) {
                 $para = \explode('-', $paraId);
                 $output = [
-                    "paraId" => $paraId,
-                    "channel" => $channelId,
-                    "innerString" => $paraId,
+                    'paraId' => $paraId,
+                    'channel' => $channelId,
+                    'innerString' => $paraId,
                 ];
                 if (count($para) < 2) {
                     return $output;
                 }
-                $PaliText = PaliText::where("book", $para[0])
-                    ->where("paragraph", $para[1])
+                $PaliText = PaliText::where('book', $para[0])
+                    ->where('paragraph', $para[1])
                     ->select(['toc', 'path'])
                     ->first();
 
                 if ($PaliText) {
-                    $output["pali"] = $PaliText->toc;
-                    $output["paliPath"] = \json_decode($PaliText->path);
-                    $output["innerString"] = $PaliText->toc;
+                    $output['pali'] = $PaliText->toc;
+                    $output['paliPath'] = \json_decode((string) $PaliText->path, true);
+                    $output['innerString'] = $PaliText->toc;
                 }
+
                 return $output;
             }
         );
@@ -768,7 +849,7 @@ class TemplateRender
             case 'react':
                 $output = [
                     'props' => base64_encode(\json_encode($props)),
-                    'html' => $props["innerString"],
+                    'html' => $props['innerString'],
                     'tag' => 'span',
                     'tpl' => 'quote',
                 ];
@@ -780,31 +861,32 @@ class TemplateRender
                 ];
                 break;
             case 'text':
-                $output = $props["innerString"];
+                $output = $props['innerString'];
                 break;
             case 'tex':
-                $output = $props["innerString"];
+                $output = $props['innerString'];
                 break;
             case 'simple':
-                $output = $props["innerString"];
+                $output = $props['innerString'];
                 break;
             default:
-                $output = $props["innerString"];
+                $output = $props['innerString'];
                 break;
         }
+
         return $output;
     }
 
-    private  function render_quote_link()
+    private function render_quote_link()
     {
-        $type = $this->get_param($this->param, "type", 1);
-        $title = $this->get_param($this->param, "title", 6, '');
-        $bookName = $this->get_param($this->param, "bookname", 2, '');
-        $volume = $this->get_param($this->param, "volume", 3);
-        $page = $this->get_param($this->param, "page", 4, '');
-        $style = $this->get_param($this->param, "style", 5, 'modal');
-        $book = $this->get_param($this->param, "book", 7, false);
-        $para = $this->get_param($this->param, "para", 8, false);
+        $type = $this->get_param($this->param, 'type', 1);
+        $title = $this->get_param($this->param, 'title', 6, '');
+        $bookName = $this->get_param($this->param, 'bookname', 2, '');
+        $volume = $this->get_param($this->param, 'volume', 3);
+        $page = $this->get_param($this->param, 'page', 4, '');
+        $style = $this->get_param($this->param, 'style', 5, 'modal');
+        $book = $this->get_param($this->param, 'book', 7, false);
+        $para = $this->get_param($this->param, 'para', 8, false);
 
         $props = [
             'type' => $type,
@@ -812,17 +894,17 @@ class TemplateRender
             'found' => true,
         ];
 
-        if (!empty($bookName) && $volume !== '' && !empty($page)) {
+        if (! empty($bookName) && $volume !== '' && ! empty($page)) {
             $props['bookName'] = $bookName;
-            $props['volume'] = (int)$volume;
+            $props['volume'] = (int) $volume;
             $props['page'] = $page;
             $props['found'] = true;
-        } else if ($book && $para) {
+        } elseif ($book && $para) {
             /**
              * 没有指定书名，根据book para 查询
              */
             if ($type === 'c') {
-                //按照章节名称显示
+                // 按照章节名称显示
                 $path = PaliTextApi::getChapterPath($book, $para);
                 if ($path) {
                     $path = json_decode($path, true);
@@ -845,13 +927,12 @@ class TemplateRender
                     $props['found'] = false;
                 }
             }
-        } else if ($title) {
-            //没有书号用title查询
-            //$tmpTitle = explode('။',$title);
+        } elseif ($title) {
+            // 没有书号用title查询
+            // $tmpTitle = explode('။',$title);
             for ($i = mb_strlen($title, 'UTF-8'); $i > 0; $i--) {
                 $mTitle = mb_substr($title, 0, $i);
                 $has = array_search($mTitle, array_column(BookTitle::my(), 'title2'));
-                Log::debug('run', ['title' => $mTitle, 'has' => $has]);
                 if ($has !== false) {
                     $tmpBookTitle = $mTitle;
                     $tmpBookPage = mb_substr($title, $i);
@@ -861,10 +942,9 @@ class TemplateRender
             }
 
             if (isset($tmpBookTitle)) {
-                Log::debug('book title found', ['title' => $tmpBookTitle, 'page' => $tmpBookPage]);
-                //$tmpBookTitle = $tmpTitle[0];
-                //$tmpBookPage = $tmpTitle[1];
-                $tmpBookPage = (int)str_replace(
+                // $tmpBookTitle = $tmpTitle[0];
+                // $tmpBookPage = $tmpTitle[1];
+                $tmpBookPage = (int) str_replace(
                     ['၁', '၂', '၃', '၄', '၅', '၆', '၇', '၈', '၉', '၀'],
                     ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
                     $tmpBookPage
@@ -874,14 +954,14 @@ class TemplateRender
                     $props['bookName'] = BookTitle::my()[$found_key]['bookname'];
                     $props['volume'] = BookTitle::my()[$found_key]['volume'];
                     $props['page'] = $tmpBookPage;
-                    if (!empty($props['bookName'])) {
+                    if (! empty($props['bookName'])) {
                         $found_title = array_search($props['bookName'], array_column(BookTitle::my(), 'bookname'));
                         if ($found_title === false) {
                             $props['found'] = false;
                         }
                     }
                 } else {
-                    //没找到，返回术语和页码
+                    // 没找到，返回术语和页码
                     $props['found'] = false;
                     $props['bookName'] = $tmpBookTitle;
                     $props['page'] = $tmpBookPage;
@@ -889,7 +969,6 @@ class TemplateRender
                 }
             }
         } else {
-            Log::debug('book title not found');
             $props['found'] = false;
         }
 
@@ -931,7 +1010,6 @@ class TemplateRender
             $text .= " {$volume}.{$page}";
         }
 
-
         switch ($this->format) {
             case 'react':
                 $output = [
@@ -951,12 +1029,13 @@ class TemplateRender
                 $output = $text;
                 break;
         }
+
         return $output;
     }
 
     private function pageInfoByPara($type, $book, $para)
     {
-        $output = array();
+        $output = [];
         $pageInfo = PageNumber::where('type', strtoupper($type))
             ->where('book', $book)
             ->where('paragraph', '<=', $para)
@@ -989,16 +1068,19 @@ class TemplateRender
         } else {
             $output['found'] = false;
         }
+
         return $output;
     }
-    private  function render_sent()
+
+    private function render_sent()
     {
 
-        $sid = $this->get_param($this->param, "id", 1);
-        $channel = $this->get_param($this->param, "channel", 2);
-        $show = $this->get_param($this->param, "text", 2, 'both');
+        $sid = $this->get_param($this->param, 'id', 1);
+        $channel = $this->get_param($this->param, 'channel', 2);
+        $show = $this->get_param($this->param, 'text', 2, 'both');
+        $mode = $this->get_param($this->param, 'mode', 3, null);
 
-        if (!empty($channel)) {
+        if (! empty($channel)) {
             $channels = explode(',', $channel);
         } else {
             $channels = $this->channel_id;
@@ -1008,32 +1090,34 @@ class TemplateRender
         if (isset($sentInfo[1])) {
             $channels = [$sentInfo[1]];
         }
-        $Sent = new CorpusController();
+        $Sent = new CorpusController;
+        $currMode = $mode ?? $this->mode;
         $props = $Sent->getSentTpl(
             $sentId,
             $channels,
-            $this->mode,
+            $currMode,
             true,
             $this->format
         );
-        if (!$props) {
-            $props['error'] = "句子模版渲染错误。句子参数个数不符。应该是四个。";
+        if (! $props) {
+            $props['error'] = '句子模版渲染错误。句子参数个数不符。应该是四个。';
             Log::error('句子模版渲染错误。句子参数个数不符。应该是四个。');
         }
-        if ($this->mode === 'read') {
-            $tpl = "sentread";
+        if ($currMode === 'read') {
+            $tpl = 'sentread';
         } else {
-            $tpl = "sentedit";
+            $tpl = 'sentedit';
         }
         if (is_array($props)) {
             $props['show'] = $show;
+            $props['mode'] = $currMode;
         }
 
-        //输出引用
+        // 输出引用
         $arrSid = explode('-', $sid);
         $bookPara = array_slice($arrSid, 0, 2);
-        if (!isset($GLOBALS['ref_sent'])) {
-            $GLOBALS['ref_sent'] = array();
+        if (! isset($GLOBALS['ref_sent'])) {
+            $GLOBALS['ref_sent'] = [];
         }
         $GLOBALS['ref_sent'][] = $bookPara;
 
@@ -1041,7 +1125,7 @@ class TemplateRender
             case 'react':
                 $output = [
                     'props' => base64_encode(\json_encode($props)),
-                    'html' => "",
+                    'html' => '',
                     'tag' => 'span',
                     'tpl' => $tpl,
                 ];
@@ -1088,14 +1172,14 @@ class TemplateRender
                 if ($show === 'both' || $show === 'origin') {
                     if (isset($props['origin']) && is_array($props['origin'])) {
                         foreach ($props['origin'] as $key => $value) {
-                            $output .= '<span class="origin">' . $value['html'] . '</span>';
+                            $output .= '<span class="origin">'.$value['html'].'</span>';
                         }
                     }
                 }
                 if ($show === 'both' || $show === 'translation') {
                     if (isset($props['translation']) && is_array($props['translation'])) {
                         foreach ($props['translation'] as $key => $value) {
-                            $output .= '<span class="translation">' . $value['html'] . '</span>';
+                            $output .= '<span class="translation">'.$value['html'].'</span>';
                         }
                     }
                 }
@@ -1153,8 +1237,8 @@ class TemplateRender
                 }
                 if ($show === 'both' || $show === 'translation') {
                     if (
-                        $this->options['translation']  === true ||
-                        $this->options['translation']  === 'true'
+                        $this->options['translation'] === true ||
+                        $this->options['translation'] === 'true'
                     ) {
                         if (
                             isset($props['translation']) &&
@@ -1166,7 +1250,7 @@ class TemplateRender
                             }
                         } else {
                             if ($show === 'translation') {
-                                //无译文用原文代替
+                                // 无译文用原文代替
                                 if (isset($props['origin']) && is_array($props['origin'])) {
                                     foreach ($props['origin'] as $key => $value) {
                                         $output .= trim($value['html']);
@@ -1181,20 +1265,21 @@ class TemplateRender
                 $output = '';
                 break;
         }
+
         return $output;
     }
 
-    private  function render_mermaid()
+    private function render_mermaid()
     {
-        $text = json_decode(base64_decode($this->get_param($this->param, "text", 1)));
+        $text = json_decode(base64_decode($this->get_param($this->param, 'text', 1)));
 
-        $props = ["text" => implode("\n", $text)];
+        $props = ['text' => implode("\n", $text)];
 
         switch ($this->format) {
             case 'react':
                 $output = [
                     'props' => base64_encode(\json_encode($props)),
-                    'html' => "mermaid",
+                    'html' => 'mermaid',
                     'tag' => 'div',
                     'tpl' => 'mermaid',
                 ];
@@ -1218,18 +1303,19 @@ class TemplateRender
                 $output = 'mermaid';
                 break;
         }
+
         return $output;
     }
 
-    private  function render_qa()
+    private function render_qa()
     {
 
-        $id = $this->get_param($this->param, "id", 1);
-        $style = $this->get_param($this->param, "style", 2);
+        $id = $this->get_param($this->param, 'id', 1);
+        $style = $this->get_param($this->param, 'style', 2);
 
         $props = [
-            "type" => 'qa',
-            "id" => $id,
+            'type' => 'qa',
+            'id' => $id,
             'title' => '',
             'style' => $style,
         ];
@@ -1244,7 +1330,7 @@ class TemplateRender
             case 'react':
                 $output = [
                     'props' => base64_encode(\json_encode($props)),
-                    'html' => "",
+                    'html' => '',
                     'text' => $props['title'],
                     'tag' => 'div',
                     'tpl' => 'qa',
@@ -1260,17 +1346,18 @@ class TemplateRender
                 $output = $props['title'];
                 break;
         }
+
         return $output;
     }
 
     private function render_grammar_lookup()
     {
-        $word = $this->get_param($this->param, "word", 1);
+        $word = $this->get_param($this->param, 'word', 1);
         $props = ['word' => $word];
 
         $localTermChannel = ChannelApi::getSysChannel(
-            "_System_Grammar_Term_" . strtolower($this->lang) . "_",
-            "_System_Grammar_Term_en_"
+            '_System_Grammar_Term_'.strtolower($this->lang).'_',
+            '_System_Grammar_Term_en_'
         );
         $term = $this->getTermProps($word, null, $localTermChannel);
         $props['term'] = $term;
@@ -1278,7 +1365,7 @@ class TemplateRender
             case 'react':
                 $output = [
                     'props' => base64_encode(\json_encode($props)),
-                    'html' => "",
+                    'html' => '',
                     'text' => $props['word'],
                     'tag' => 'span',
                     'tpl' => 'grammar',
@@ -1294,18 +1381,19 @@ class TemplateRender
                 $output = $props['word'];
                 break;
         }
+
         return $output;
     }
 
-    private  function render_video()
+    private function render_video()
     {
 
-        $url = $this->get_param($this->param, "url", 1);
-        $style = $this->get_param($this->param, "style", 2, 'modal');
-        $title = $this->get_param($this->param, "title", 3);
+        $url = $this->get_param($this->param, 'url', 1);
+        $style = $this->get_param($this->param, 'style', 2, 'modal');
+        $title = $this->get_param($this->param, 'title', 3);
 
         $props = [
-            "url" => $url,
+            'url' => $url,
             'title' => $title,
             'style' => $style,
         ];
@@ -1314,7 +1402,7 @@ class TemplateRender
             case 'react':
                 $output = [
                     'props' => base64_encode(\json_encode($props)),
-                    'html' => "",
+                    'html' => '',
                     'text' => $props['title'],
                     'tag' => 'span',
                     'tpl' => 'video',
@@ -1330,41 +1418,42 @@ class TemplateRender
                 $output = $props['title'];
                 break;
         }
+
         return $output;
     }
 
-    //论文后面的参考资料
-    private  function render_ref()
+    // 论文后面的参考资料
+    private function render_ref()
     {
-        $references = array();
+        $references = [];
         $counter = 0;
 
         if (isset($GLOBALS['ref_sent'])) {
-            $hasBooks = array();
+            $hasBooks = [];
             $book_titles = BookSeries::select(['book', 'paragraph', 'title', 'sn'])
                 ->orderBy('sn', 'DESC')->get();
-            $bTitles = array();
+            $bTitles = [];
             foreach ($book_titles as $key => $book) {
                 $bTitles[] = [
                     'book' => $book->book,
                     'paragraph' => $book->paragraph,
-                    'title' => $book->title
+                    'title' => $book->title,
                 ];
             }
             foreach ($GLOBALS['ref_sent'] as $key => $ref) {
                 $books = array_filter($bTitles, function ($value) use ($ref) {
-                    return $value['book'] === (int)$ref[0];
+                    return $value['book'] === (int) $ref[0];
                 });
                 if (count($books) > 0) {
                     foreach ($books as $key => $book) {
-                        if ($book['paragraph'] < (int)$ref[1]) {
-                            if (!isset($hasBooks[$book['title']])) {
+                        if ($book['paragraph'] < (int) $ref[1]) {
+                            if (! isset($hasBooks[$book['title']])) {
                                 $hasBooks[$book['title']] = 1;
                                 $counter++;
                                 $references[] = [
                                     'sn' => $counter,
                                     'title' => $book['title'],
-                                    'copyright' => 'CSCD V4 VRI 2008'
+                                    'copyright' => 'CSCD V4 VRI 2008',
                                 ];
                             }
                         }
@@ -1373,7 +1462,7 @@ class TemplateRender
             }
         }
         $props = [
-            "pali" => $references,
+            'pali' => $references,
         ];
 
         switch ($this->format) {
@@ -1394,27 +1483,29 @@ class TemplateRender
             case 'markdown':
                 $output = '';
                 foreach ($references as $key => $reference) {
-                    $output .= '[' . $reference['sn'] . '] **' . ucfirst($reference['title']) . '** ';
-                    $output .= $reference['copyright'] . "\n\n";
+                    $output .= '['.$reference['sn'].'] **'.ucfirst($reference['title']).'** ';
+                    $output .= $reference['copyright']."\n\n";
                 }
                 break;
             default:
                 $output = '';
                 foreach ($references as $key => $reference) {
-                    $output .= '[' . $reference['sn'] . '] ' . ucfirst($reference['title']) . ' ';
-                    $output .= $reference['copyright'] . "\n";
+                    $output .= '['.$reference['sn'].'] '.ucfirst($reference['title']).' ';
+                    $output .= $reference['copyright']."\n";
                 }
                 break;
         }
+
         return $output;
     }
+
     private function render_dict_pref()
     {
-        $currPage = $this->get_param($this->param, "page", 1, 1);
-        $pageSize = $this->get_param($this->param, "size", 2, 100);
+        $currPage = $this->get_param($this->param, 'page', 1, 1);
+        $pageSize = $this->get_param($this->param, 'size', 2, 100);
 
         $props = [
-            "currPage" => $currPage,
+            'currPage' => $currPage,
             'pageSize' => $pageSize,
         ];
 
@@ -1422,7 +1513,7 @@ class TemplateRender
             case 'react':
                 $output = [
                     'props' => base64_encode(\json_encode($props)),
-                    'html' => "",
+                    'html' => '',
                     'text' => '',
                     'tag' => 'div',
                     'tpl' => 'dict-pref',
@@ -1438,22 +1529,23 @@ class TemplateRender
                 $output = 'dict-pref';
                 break;
         }
+
         return $output;
     }
 
     private function render_ai()
     {
-        $model = $this->get_param($this->param, "model", 1, 1);
+        $model = $this->get_param($this->param, 'model', 1, 1);
 
         $props = [
-            "model" => $model,
+            'model' => $model,
         ];
 
         switch ($this->format) {
             case 'react':
                 $output = [
                     'props' => base64_encode(\json_encode($props)),
-                    'html' => "",
+                    'html' => '',
                     'text' => '',
                     'tag' => 'div',
                     'tpl' => 'ai',
@@ -1475,20 +1567,22 @@ class TemplateRender
                 $output = 'ai';
                 break;
         }
+
         return $output;
     }
-    private  function get_param(array $param, string $name, int $id, string $default = '')
+
+    private function get_param(array $param, string $name, int $id, ?string $default = '')
     {
         if (isset($param[$name])) {
             return trim($param[$name]);
-        } else if (isset($param["{$id}"])) {
+        } elseif (isset($param["{$id}"])) {
             return trim($param["{$id}"]);
         } else {
             return $default;
         }
     }
 
-    private function mb_trim($str, string $character_mask = ' ', $charset = "UTF-8")
+    private function mb_trim($str, string $character_mask = ' ', $charset = 'UTF-8')
     {
         $start = 0;
         $end = mb_strlen($str, $charset) - 1;

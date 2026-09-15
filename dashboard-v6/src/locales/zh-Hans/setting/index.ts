@@ -5,6 +5,10 @@ const items = {
   "setting.layout.direction.description": "横向或者纵向排版",
   "setting.layout.direction.col.label": "纵向排版",
   "setting.layout.direction.row.label": "横向排版",
+  "setting.translate.layout.direction.label": "排版方向",
+  "setting.translate.layout.direction.description":
+    "翻译模式下原文与译文的排版方向（自动时与阅读模式一致）",
+  "setting.translate.layout.direction.auto.label": "自动",
   "setting.layout.paragraph.label": "对照方式",
   "setting.layout.paragraph.description": "逐段或逐句对照（仅阅读模式）",
   "setting.layout.paragraph.paragraph.label": "逐段",

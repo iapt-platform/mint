@@ -2,26 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Wbw;
-use App\Models\WbwBlock;
+use App\Http\Api\ChannelApi;
+use App\Http\Api\Mq;
+use App\Http\Api\ShareApi;
 use App\Models\Channel;
 use App\Models\PaliSentence;
 use App\Models\Sentence;
-
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use App\Tools\Tools;
+use App\Models\Wbw;
+use App\Models\WbwBlock;
 use App\Services\AuthService;
-use App\Http\Api\ShareApi;
-use App\Http\Api\ChannelApi;
-use App\Http\Api\Mq;
+use App\Tools\Tools;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Str;
 
 class WbwController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -32,41 +32,41 @@ class WbwController extends Controller
      * Store a newly created resource in storage.
      * 新建多个
      * 如果存在，修改
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     *
+     * @return Response
      */
     public function store(Request $request)
     {
         //
-        //鉴权
+        // 鉴权
         $user = AuthService::current($request);
-        if (!$user) {
-            //未登录用户
+        if (! $user) {
+            // 未登录用户
             return $this->error(__('auth.failed'), [], 401);
         }
         $channel = Channel::where('uid', $request->input('channel_id'))->first();
-        if (!$channel) {
+        if (! $channel) {
             return $this->error(__('auth.failed'));
         }
-        if ($channel->owner_uid !== $user["user_uid"]) {
-            //判断是否为协作
-            $power = ShareApi::getResPower($user["user_uid"], $channel->uid);
+        if ($channel->owner_uid !== $user['user_uid']) {
+            // 判断是否为协作
+            $power = ShareApi::getResPower($user['user_uid'], $channel->uid);
             if ($power < 20) {
                 return $this->error(__('auth.failed'), [], 403);
             }
         }
-        //查看WbwBlock是否已经建立
+        // 查看WbwBlock是否已经建立
         $wbwBlockId = WbwBlock::where('book_id', $request->input('book'))
             ->where('paragraph', $request->input('para'))
             ->where('channel_uid', $request->input('channel_id'))
             ->value('uid');
-        if (!Str::isUuid($wbwBlockId)) {
-            $wbwBlock = new WbwBlock();
+        if (! Str::isUuid($wbwBlockId)) {
+            $wbwBlock = new WbwBlock;
             $wbwBlockId = Str::uuid();
             $wbwBlock->id = app('snowflake')->id();
             $wbwBlock->uid = $wbwBlockId;
-            $wbwBlock->creator_uid = $user["user_uid"];
-            $wbwBlock->editor_id = $user["user_id"];
+            $wbwBlock->creator_uid = $user['user_uid'];
+            $wbwBlock->editor_id = $user['user_id'];
             $wbwBlock->book_id = $request->input('book');
             $wbwBlock->paragraph = $request->input('para');
             $wbwBlock->channel_uid = $request->input('channel_id');
@@ -81,12 +81,12 @@ class WbwController extends Controller
             ->first();
         $sent = PaliSentence::where('book', $request->input('book'))
             ->where('paragraph', $request->input('para'))
-            ->where('word_begin', "<=", $request->input('sn'))
-            ->where('word_end', ">=", $request->input('sn'))
+            ->where('word_begin', '<=', $request->input('sn'))
+            ->where('word_end', '>=', $request->input('sn'))
             ->first();
-        if (!$wbw) {
-            //建立一个句子的逐词解析数据
-            //找到句子
+        if (! $wbw) {
+            // 建立一个句子的逐词解析数据
+            // 找到句子
 
             $channelId = ChannelApi::getSysChannel('_System_Wbw_VRI_');
             $wbwContent = Sentence::where('book_id', $sent->book)
@@ -97,8 +97,8 @@ class WbwController extends Controller
                 ->value('content');
             $words = json_decode($wbwContent);
             foreach ($words as $word) {
-                # code...
-                $xmlObj = simplexml_load_string("<word></word>");
+                // code...
+                $xmlObj = simplexml_load_string('<word></word>');
                 $xmlObj->addChild('id', "{$sent->book}-{$sent->paragraph}-{$word->sn[0]}");
                 $xmlObj->addChild('pali', $word->word->value)->addAttribute('status', 0);
                 $xmlObj->addChild('real', $word->real->value)->addAttribute('status', 0);
@@ -112,11 +112,11 @@ class WbwController extends Controller
                 $xml = $xmlObj->asXml();
                 $xml = str_replace('<?xml version="1.0"?>', '', $xml);
 
-                $newWbw = new Wbw();
+                $newWbw = new Wbw;
                 $newWbw->id = app('snowflake')->id();
                 $newWbw->uid = Str::uuid();
                 $newWbw->creator_uid = $channel->owner_uid;
-                $newWbw->editor_id = $user["user_id"];
+                $newWbw->editor_id = $user['user_id'];
                 $newWbw->book_id = $request->input('book');
                 $newWbw->paragraph = $request->input('para');
                 $newWbw->wid = $word->sn[0];
@@ -134,13 +134,13 @@ class WbwController extends Controller
         }
 
         $count = 0;
-        $wbwId = array();
+        $wbwId = [];
         foreach ($request->input('data') as $row) {
             $wbw = Wbw::where('block_uid', $wbwBlockId)
                 ->where('wid', $row['sn'])
                 ->first();
             if ($wbw) {
-                $wbwData = "";
+                $wbwData = '';
                 foreach ($row['words'] as $word) {
                     $xml = Tools::JsonToXml($word);
                     $xml = str_replace('<?xml version="1.0"?>', '', $xml);
@@ -153,7 +153,7 @@ class WbwController extends Controller
                 $count++;
             }
         }
-        //获取整个句子数据
+        // 获取整个句子数据
         $corpus = new CorpusController;
         $wbwString = $corpus->getWbw(
             $request->input('book'),
@@ -168,19 +168,17 @@ class WbwController extends Controller
             $wbwSentence = [];
         }
 
-
         if (count($wbwId) > 0) {
             Mq::publish('wbw-analyses', $wbwId);
         }
 
-        return $this->ok(['rows' => $wbwSentence, "count" => $count]);
+        return $this->ok(['rows' => $wbwSentence, 'count' => $count]);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Wbw  $wbw
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(Wbw $wbw)
     {
@@ -190,9 +188,7 @@ class WbwController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Wbw  $wbw
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, Wbw $wbw)
     {
@@ -202,8 +198,7 @@ class WbwController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Wbw  $wbw
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(Wbw $wbw)
     {

@@ -6,6 +6,7 @@ import {
   FolderOutlined,
   FileOutlined,
   SettingOutlined,
+  PlusOutlined,
 } from "@ant-design/icons";
 import { useNavigate, useMatches, type UIMatch } from "react-router";
 import {
@@ -18,12 +19,10 @@ import {
   TipitakaIcon,
 } from "../../assets/icon";
 import React, { useState } from "react";
-import { useAppSelector } from "../../hooks";
-import { currentUser } from "../../reducers/current-user";
-import { useRecent } from "../../hooks/useRecent.ts";
 import RecentModal from "../recent/RecentModal.tsx";
 import SettingModal from "../setting/SettingModal.tsx";
 import { useIntl } from "react-intl";
+import { fullUrl } from "../../utils";
 
 /* ================= 类型 ================= */
 
@@ -33,6 +32,8 @@ interface MenuItem {
   icon?: React.ReactNode;
   type?: "divider";
   children?: MenuItem[];
+  /** 菜单项右侧附加内容（例如“+”按钮） */
+  extra?: React.ReactNode;
 
   /** ⭐ 用于高亮匹配 */
   activeId?: string | string[];
@@ -77,6 +78,17 @@ function findSelectedKey(
   }
 }
 
+/* ================= 最近编辑跳转地址 ================= */
+
+// 巴利三藏文本类型（chapter/para/cs-para/page 等）路由位于 /workspace/tipitaka 下
+const TIPITAKA_TYPES = new Set(["chapter", "para", "cs-para", "page"]);
+
+function recentPath(type: string, id: string): string {
+  return TIPITAKA_TYPES.has(type)
+    ? `/workspace/tipitaka/${type}/${id}`
+    : `/workspace/${type}/${id}`;
+}
+
 /* ================= 找展开父级keys ================= */
 
 function findOpenKeys(
@@ -110,20 +122,9 @@ const Widget = ({ onSearch }: Props) => {
 
   const navigate = useNavigate();
   const routeId = useCurrentRouteId();
-  const currUser = useAppSelector(currentUser);
 
-  const { data } = useRecent(currUser?.id, 5, 0);
   const [recentOpen, setRecentOpen] = useState(false);
   const [openSetting, setOpenSetting] = useState(false);
-
-  const recentList: MenuItem[] = data
-    ? data?.data.rows.map((item, id) => {
-        return {
-          key: `recent-${id}`,
-          label: item.title,
-        };
-      })
-    : [];
 
   /* ================= 菜单配置 ================= */
 
@@ -131,13 +132,30 @@ const Widget = ({ onSearch }: Props) => {
     {
       key: "search",
       icon: <SearchOutlined />,
-      label: "搜索",
+      label: intl.formatMessage({ id: "labels.search" }),
     },
     {
       key: "/workspace",
       icon: <HomeOutlined />,
-      label: "主页",
+      label: intl.formatMessage({ id: "labels.home" }),
       activeId: "workspace.home",
+      extra: (
+        <PlusOutlined
+          role="button"
+          aria-label={intl.formatMessage(
+            { id: "buttons.open.in.new.tab" },
+            { item: intl.formatMessage({ id: "labels.home" }) }
+          )}
+          title={intl.formatMessage(
+            { id: "buttons.open.in.new.tab" },
+            { item: intl.formatMessage({ id: "labels.home" }) }
+          )}
+          onClick={(e) => {
+            e.stopPropagation();
+            window.open(fullUrl("workspace"), "_blank");
+          }}
+        />
+      ),
     },
     {
       key: "/workspace/ai",
@@ -169,19 +187,12 @@ const Widget = ({ onSearch }: Props) => {
       label: intl.formatMessage({
         id: "columns.studio.recent.title",
       }),
-      children: [
-        ...recentList,
-        {
-          key: "/workspace/recent/list",
-          label: "更多……",
-        },
-      ],
     },
 
     {
       key: "/workspace/doc",
       icon: <DocumentIcon />,
-      label: "文档",
+      label: intl.formatMessage({ id: "labels.documents" }),
       children: [
         {
           key: "/workspace/article",
@@ -237,7 +248,7 @@ const Widget = ({ onSearch }: Props) => {
       children: [
         {
           key: "/workspace/task/pending",
-          label: "Pending",
+          label: intl.formatMessage({ id: "labels.task.pending" }),
           activeId: "workspace.task.pending",
         },
         {
@@ -249,7 +260,7 @@ const Widget = ({ onSearch }: Props) => {
         },
         {
           key: "/workspace/task/list",
-          label: "To-Do List",
+          label: intl.formatMessage({ id: "labels.task.mine" }),
           activeId: "workspace.task.list",
         },
         {
@@ -271,7 +282,7 @@ const Widget = ({ onSearch }: Props) => {
     {
       key: "/workspace/tools",
       icon: <CourseOutLinedIcon />,
-      label: "tools",
+      label: intl.formatMessage({ id: "labels.tools" }),
       children: [
         {
           key: "/workspace/tag",
@@ -282,12 +293,16 @@ const Widget = ({ onSearch }: Props) => {
         },
         {
           key: "/workspace/driver",
-          label: "driver",
+          label: intl.formatMessage({
+            id: "columns.studio.attachment.title",
+          }),
           activeId: "workspace.driver",
         },
         {
           key: "/workspace/dict",
-          label: "dict",
+          label: intl.formatMessage({
+            id: "columns.studio.userdict.title",
+          }),
           activeId: "workspace.dict",
         },
       ],
@@ -299,23 +314,28 @@ const Widget = ({ onSearch }: Props) => {
       children: [
         {
           key: "/workspace/team",
-          label: "team",
+          label: intl.formatMessage({
+            id: "columns.studio.group.title",
+          }),
           activeId: "workspace.team",
         },
         {
           key: "/workspace/invite",
-          label: "invite",
+          label: intl.formatMessage({
+            id: "columns.studio.invite.title",
+          }),
           activeId: "workspace.invite",
         },
         {
           key: "/workspace/transfer",
-          label: "transfer",
+          label: intl.formatMessage({
+            id: "columns.studio.transfer.title",
+          }),
           activeId: "workspace.transfer",
         },
       ],
     },
   ];
-  console.log("nav", routeId);
   /** 当前选中 */
   const selectedKey = findSelectedKey(items, routeId);
 
@@ -327,7 +347,7 @@ const Widget = ({ onSearch }: Props) => {
     if (key === "search") {
       onSearch?.();
       return;
-    } else if (key === "/workspace/recent/list") {
+    } else if (key === "/workspace/recent") {
       setRecentOpen(true);
       return;
     } else if (key === "/workspace/setting") {
@@ -350,12 +370,10 @@ const Widget = ({ onSearch }: Props) => {
       <RecentModal
         open={recentOpen}
         onOpenChange={() => setRecentOpen(false)}
-        onSelect={(e, row) => {
-          if (e.ctrlKey || e.metaKey) {
-            window.open("");
-          } else {
-            navigate(`/workspace/${row.type}/${row.articleId}`);
-          }
+        onSelect={(_e, row) => {
+          // 弹窗中的链接一律新标签页打开，避免弹窗被原地跳转关掉
+          window.open(fullUrl(recentPath(row.type, row.articleId)), "_blank");
+          setRecentOpen(false);
         }}
       />
       <SettingModal open={openSetting} onClose={() => setOpenSetting(false)} />

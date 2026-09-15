@@ -2,10 +2,9 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Services\OpenSearchService;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
-
 
 class IndexOpenSearch extends Command
 {

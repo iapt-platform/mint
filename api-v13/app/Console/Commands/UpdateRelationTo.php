@@ -2,8 +2,9 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Models\Relation;
+use App\Tools\Tools;
+use Illuminate\Console\Command;
 
 class UpdateRelationTo extends Command
 {
@@ -38,19 +39,19 @@ class UpdateRelationTo extends Command
      */
     public function handle()
     {
-        if(\App\Tools\Tools::isStop()){
+        if (Tools::isStop()) {
             return 0;
         }
-        $count=0;
-        $all=0;
-        foreach (Relation::select(['id','to'])->cursor() as $relation) {
+        $count = 0;
+        $all = 0;
+        foreach (Relation::select(['id', 'to'])->cursor() as $relation) {
             $all++;
-            if(!empty($relation->to)){
-                $old = json_decode($relation->to,true);
-                if(count(array_filter(array_keys($old),'is_string'))===0){
-                    //索引数组，需要转换
-                    $new = ['case'=>$old];
-                    Relation::where('id',$relation->id)->update(['to'=>json_encode($new)]);
+            if (! empty($relation->to)) {
+                $old = json_decode($relation->to, true);
+                if (count(array_filter(array_keys($old), 'is_string')) === 0) {
+                    // 索引数组，需要转换
+                    $new = ['case' => $old];
+                    Relation::where('id', $relation->id)->update(['to' => json_encode($new)]);
                     $count++;
                 }
             }

@@ -13,10 +13,10 @@ return [
     |
     */
 
-    'reset' => 'Your password has been reset!',
-    'sent' => 'We have emailed your password reset link!',
-    'throttled' => 'Please wait before retrying.',
-    'token' => 'This password reset token is invalid.',
-    'user' => "We can't find a user with that email address.",
+    'reset' => 'သင့်စကားဝှက်ကို ပြန်လည်သတ်မှတ်ပြီးပါပြီ။',
+    'sent' => 'စကားဝှက် ပြန်လည်သတ်မှတ်ရန် လင့်ခ်ကို အီးမေးလ်ပို့ပြီးပါပြီ။',
+    'throttled' => 'ထပ်မံမကြိုးစားမီ ခဏစောင့်ပါ။',
+    'token' => 'ဤစကားဝှက် ပြန်လည်သတ်မှတ်ရေး တိုကင်သည် မမှန်ကန်ပါ။',
+    'user' => 'ထိုအီးမေးလ်လိပ်စာဖြင့် အသုံးပြုသူကို ရှာမတွေ့ပါ။',
 
 ];

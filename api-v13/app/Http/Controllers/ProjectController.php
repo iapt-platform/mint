@@ -2,28 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Project;
-use Illuminate\Http\Request;
-use App\Services\AuthService;
-use App\Http\Api\StudioApi;
 use App\Http\Api\ShareApi;
-
+use App\Http\Api\StudioApi;
 use App\Http\Resources\ProjectResource;
+use App\Models\Project;
+use App\Services\AuthService;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Log;
 
 class ProjectController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
         $user = AuthService::current($request);
-        if (!$user) {
-            Log::error('notification auth failed {request}', ['request' => $request]);
+        if (! $user) {
             return $this->error(__('auth.failed'), 401, 401);
         }
         if ($request->has('studio')) {
@@ -63,27 +61,24 @@ class ProjectController extends Controller
         }
 
         if ($request->has('keyword')) {
-            $table = $table->where('title', 'like', '%' . $request->input('keyword') . '%');
+            $table = $table->where('title', 'like', '%'.$request->input('keyword').'%');
         }
         if ($request->has('status')) {
             $table = $table->whereIn('status', explode(',', $request->input('status')));
         }
         $count = $table->count();
 
-        $sql = $table->toSql();
-        Log::debug('sql', ['sql' => $sql]);
-
         $table = $table->orderBy($request->input('order', 'id'), $request->input('dir', 'asc'));
 
-        $table = $table->skip($request->input("offset", 0))
+        $table = $table->skip($request->input('offset', 0))
             ->take($request->input('limit', 10000));
 
         $result = $table->get();
 
         return $this->ok(
             [
-                "rows" => ProjectResource::collection($result),
-                "count" => $count,
+                'rows' => ProjectResource::collection($result),
+                'count' => $count,
             ]
         );
     }
@@ -96,25 +91,24 @@ class ProjectController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
         //
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'), 401, 401);
         }
         $studioId = StudioApi::getIdByName($request->input('studio_name'));
-        if (!self::canEdit($user['user_uid'], $studioId)) {
+        if (! self::canEdit($user['user_uid'], $studioId)) {
             return $this->error(__('auth.failed'), 403, 403);
         }
         $new = Project::firstOrNew(['uid' => $request->input('id')]);
         if (Str::isUuid($request->input('id'))) {
             $new->uid = $request->input('id');
         } else {
-            $new->uid =  Str::uuid();
+            $new->uid = Str::uuid();
         }
         $new->title = $request->input('title');
         $new->description = $request->input('description');
@@ -123,12 +117,11 @@ class ProjectController extends Controller
         $new->owner_id = $studioId;
         $new->type = $request->input('type', 'instance');
 
-
         if (Str::isUuid($request->input('parent_id'))) {
             $parentPath = Project::where('uid', $request->input('parent_id'))->value('path');
             $parentPath = json_decode($parentPath);
-            if (!is_array($parentPath)) {
-                $parentPath = array();
+            if (! is_array($parentPath)) {
+                $parentPath = [];
             }
             array_push($parentPath, $new->parent_id);
             $new->path = json_encode($parentPath, JSON_UNESCAPED_UNICODE);
@@ -141,8 +134,7 @@ class ProjectController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Project  $project
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(Project $project)
     {
@@ -150,22 +142,19 @@ class ProjectController extends Controller
         return $this->ok(new ProjectResource($project));
     }
 
-
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Project  $project
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, Project $project)
     {
         //
         $user = AuthService::current($request);
-        if (!$user) {
+        if (! $user) {
             return $this->error(__('auth.failed'), 401, 401);
         }
-        if (!self::canEdit($user['user_uid'], $project->owner_id)) {
+        if (! self::canEdit($user['user_uid'], $project->owner_id)) {
             return $this->error(__('auth.failed'), 403, 403);
         }
 
@@ -175,12 +164,11 @@ class ProjectController extends Controller
         $project->editor_id = $user['user_uid'];
         $project->privacy = $request->input('privacy');
 
-
         if (Str::isUuid($request->input('parent_id'))) {
             $parentPath = Project::where('uid', $request->input('parent_id'))->value('path');
             $parentPath = json_decode($parentPath);
-            if (!is_array($parentPath)) {
-                $parentPath = array();
+            if (! is_array($parentPath)) {
+                $parentPath = [];
             }
             array_push($parentPath, $project->parent_id);
             $project->path = json_encode($parentPath, JSON_UNESCAPED_UNICODE);
@@ -193,8 +181,7 @@ class ProjectController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Project  $project
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(Project $project)
     {

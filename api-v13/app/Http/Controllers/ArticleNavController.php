@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Http\Resources\ArticleNavResource;
 use App\Models\PaliText;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class ArticleNavController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
@@ -30,12 +31,12 @@ class ArticleNavController extends Controller
                     ->orderBy('paragraph', 'asc')
                     ->first();
                 if ($prev) {
-                    $nav['prev']['id'] = $prev->book . '-' . $prev->paragraph;
+                    $nav['prev']['id'] = $prev->book.'-'.$prev->paragraph;
                     $nav['prev']['title'] = $prev->toc;
                     $nav['prev']['subtitle'] = $prev->toc;
                 }
                 if ($next) {
-                    $nav['next']['id'] = $next->book . '-' . $next->paragraph;
+                    $nav['next']['id'] = $next->book.'-'.$next->paragraph;
                     $nav['next']['title'] = $next->toc;
                     $nav['next']['subtitle'] = $next->toc;
                 }
@@ -51,12 +52,12 @@ class ArticleNavController extends Controller
                     ->orderBy('paragraph', 'asc')
                     ->first();
                 if ($prev) {
-                    $nav['prev']['id'] = $prev->book . '-' . $prev->paragraph;
+                    $nav['prev']['id'] = $prev->book.'-'.$prev->paragraph;
                     $nav['prev']['title'] = $prev->text;
                     $nav['prev']['subtitle'] = $prev->text;
                 }
                 if ($next) {
-                    $nav['next']['id'] = $next->book . '-' . $next->paragraph;
+                    $nav['next']['id'] = $next->book.'-'.$next->paragraph;
                     $nav['next']['title'] = $next->text;
                     $nav['next']['subtitle'] = $next->text;
                 }
@@ -75,8 +76,7 @@ class ArticleNavController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -87,7 +87,7 @@ class ArticleNavController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show($id)
     {
@@ -97,9 +97,8 @@ class ArticleNavController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, $id)
     {
@@ -110,7 +109,7 @@ class ArticleNavController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {

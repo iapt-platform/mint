@@ -1,3 +1,4 @@
+import { useIntl } from "react-intl";
 import { useAppSelector } from "../../../hooks";
 import { currentUser } from "../../../reducers/current-user";
 import { useSearchParams } from "react-router";
@@ -6,6 +7,7 @@ import ArticleList from "../../../components/article/ArticleList";
 const Widget = () => {
   const user = useAppSelector(currentUser);
   const studioName = user?.realName;
+  const intl = useIntl();
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -34,7 +36,9 @@ const Widget = () => {
   console.debug("article list", studioName);
   return (
     <>
-      <title>article</title>
+      <title>
+        {intl.formatMessage({ id: "columns.studio.article.title" })}
+      </title>
       <ArticleList
         tab={tab}
         page={page}

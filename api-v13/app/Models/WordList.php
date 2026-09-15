@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class WordList extends Model
 {
     use HasFactory;
-	protected $fillable = ['sn','book' , 'paragraph', 'wordindex' , 'bold' , 'weight' ];
 
+    protected $fillable = ['sn', 'book', 'paragraph', 'wordindex', 'bold', 'weight'];
 }

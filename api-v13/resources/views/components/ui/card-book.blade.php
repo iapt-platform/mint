@@ -17,7 +17,7 @@
             :image="$book['cover'] ?? null"
             :gradient="$book['cover_gradient'] ?? 'linear-gradient(135deg, #2d2010 0%, #1a1208 100%)'"
             :title="$book['title'] ?? ''"
-            :subtitle="'义注'"
+            :subtitle="$book['subTitle'] ?? ''"
             size="md"
             :style3d="false" />
 

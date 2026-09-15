@@ -8,12 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Discussion extends Model
 {
     use HasFactory;
+
     protected $primaryKey = 'id';
+
     protected $casts = [
-        'id' => 'string'
+        'id' => 'string',
     ];
 
-    //批量填充
+    // 批量填充
     protected $fillable = [
         'res_id',
         'res_type',
@@ -29,6 +31,6 @@ class Discussion extends Model
     // 设置默认值
     protected $attributes = [
         'content_type' => 'markdown',
-        'type' => 'discussion'
+        'type' => 'discussion',
     ];
 }

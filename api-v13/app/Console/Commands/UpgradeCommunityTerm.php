@@ -2,13 +2,12 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use App\Tools\Tools;
-use App\Models\DhammaTerm;
-use App\Models\UserOperationDaily;
-use App\Models\Sentence;
-
 use App\Http\Api\ChannelApi;
+use App\Models\DhammaTerm;
+use App\Models\Sentence;
+use App\Models\UserOperationDaily;
+use App\Tools\Tools;
+use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 
 class UpgradeCommunityTerm extends Command
@@ -44,19 +43,20 @@ class UpgradeCommunityTerm extends Command
      */
     public function handle()
     {
-        if (\App\Tools\Tools::isStop()) {
+        if (Tools::isStop()) {
             return 0;
         }
         $lang = strtolower($this->argument('lang'));
         $langFamily = explode('-', $lang)[0];
         $localTerm = ChannelApi::getSysChannel("_community_term_{$lang}_");
-        if (!$localTerm) {
+        if (! $localTerm) {
             return 1;
         }
 
         $channelId = ChannelApi::getSysChannel('_System_Pali_VRI_');
         if ($channelId === false) {
             $this->error('no channel');
+
             return 1;
         }
         $table = DhammaTerm::select(['word', 'tag'])
@@ -74,34 +74,34 @@ class UpgradeCommunityTerm extends Command
              * 1. 找到最常见的意思
              * 2. 找到分数最高的
              */
-            $bestNote = "";
+            $bestNote = '';
             $allTerm = DhammaTerm::where('word', $word->word)
                 ->where('tag', $word->tag)
                 ->whereIn('language', [$this->argument('lang'), $lang, $langFamily])
                 ->get();
             $score = [];
-            //$term_exp = [];
+            // $term_exp = [];
             foreach ($allTerm as $key => $term) {
-                //获取经验值
+                // 获取经验值
                 $exp = UserOperationDaily::where('user_id', $term->editor_id)
                     ->where('date_int', '<=', date_timestamp_get(date_create($term->updated_at)) * 1000)
                     ->sum('duration');
-                $iExp = (int)($exp / 1000);
+                $iExp = (int) ($exp / 1000);
                 $noteStrLen = $term->note ? mb_strlen($term->note, 'UTF-8') : 0;
                 $paliStrLen = 0;
                 $tranStrLen = 0;
-                $noteWithoutPali = "";
-                if ($term->note && !empty(trim($term->note))) {
-                    //计算note得分
-                    //查找句子模版
+                $noteWithoutPali = '';
+                if ($term->note && ! empty(trim($term->note))) {
+                    // 计算note得分
+                    // 查找句子模版
                     $pattern = "/\{\{[0-9].+?\}\}/";
-                    //获取去掉句子模版的剩余部分
-                    $noteWithoutPali = preg_replace($pattern, "", $term->note);
+                    // 获取去掉句子模版的剩余部分
+                    $noteWithoutPali = preg_replace($pattern, '', $term->note);
                     $sentences = [];
                     $iSent = preg_match_all($pattern, $term->note, $sentences);
                     if ($iSent > 0) {
-                        foreach ($sentences[0] as  $sentence) {
-                            $sentId = explode("-", trim($sentence, "{}"));
+                        foreach ($sentences[0] as $sentence) {
+                            $sentId = explode('-', trim($sentence, '{}'));
                             if (count($sentId) === 4) {
                                 $hasTran = Sentence::where('book_id', $sentId[0])
                                     ->where('paragraph', $sentId[1])
@@ -113,7 +113,7 @@ class UpgradeCommunityTerm extends Command
                                     ->where('paragraph', $sentId[1])
                                     ->where('word_start', $sentId[2])
                                     ->where('word_end', $sentId[3])
-                                    ->where("channel_uid", $channelId)
+                                    ->where('channel_uid', $channelId)
                                     ->value('strlen');
                                 if ($sentLen) {
                                     $paliStrLen += $sentLen;
@@ -125,14 +125,14 @@ class UpgradeCommunityTerm extends Command
                         }
                     }
                 }
-                //计算该术语note的总得分
+                // 计算该术语note的总得分
                 $score["{$key}"] = $iExp * $noteStrLen;
-                //$term_exp["{$key}"] = $iExp;
-                //$updated_time["{$key}"] = $term->updated_at 先提取，具体如何使用待定
+                // $term_exp["{$key}"] = $iExp;
+                // $updated_time["{$key}"] = $term->updated_at 先提取，具体如何使用待定
 
             }
 
-            //需要过滤掉system_term的数量，把count(*)替换为经验值加合作为基础得分，（基础经验得分之和转化为标准活动周，再加上最近的更新时间，为最终得分）
+            // 需要过滤掉system_term的数量，把count(*)替换为经验值加合作为基础得分，（基础经验得分之和转化为标准活动周，再加上最近的更新时间，为最终得分）
             $hotMeaning = DhammaTerm::selectRaw('meaning,count(*) as co')
                 ->where('word', $word->word)
                 ->whereIn('language', [$this->argument('lang'), $lang, $langFamily])
@@ -140,17 +140,17 @@ class UpgradeCommunityTerm extends Command
                 ->orderBy('co', 'desc')
                 ->first();
             if ($hotMeaning) {
-                $bestNote = "";
+                $bestNote = '';
                 if (count($score) > 0) {
                     arsort($score);
-                    $bestNote = $allTerm[(int)key($score)]->note;
+                    $bestNote = $allTerm[(int) key($score)]->note;
                 }
 
                 $term = DhammaTerm::where('channal', $localTerm)->firstOrNew(
                     [
-                        "word" => $word->word,
-                        "tag" => $word->tag,
-                        "channal" => $localTerm,
+                        'word' => $word->word,
+                        'tag' => $word->tag,
+                        'channal' => $localTerm,
                     ],
                     [
                         'id' => app('snowflake')->id(),
@@ -158,7 +158,7 @@ class UpgradeCommunityTerm extends Command
                         'word_en' => Tools::getWordEn($word->word),
                         'meaning' => '',
                         'language' => $this->argument('lang'),
-                        'owner' => config("mint.admin.root_uuid"),
+                        'owner' => config('mint.admin.root_uuid'),
                         'editor_id' => 0,
                         'create_time' => time() * 1000,
                     ]

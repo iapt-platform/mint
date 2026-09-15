@@ -37,8 +37,8 @@ class InviteMail extends Mailable
     /**
      * Create a new message instance.
      *
-     * @param  string       $uuid          邀请 UUID
-     * @param  string       $lang          邮件语言（默认 en）
+     * @param  string  $uuid  邀请 UUID
+     * @param  string  $lang  邮件语言（默认 en）
      * @param  string|null  $dashboardUrl  Dashboard 基础地址（可选）
      */
     public function __construct(
@@ -74,12 +74,12 @@ class InviteMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.invite.' . $this->lang,
+            view: 'emails.invite.'.$this->lang,
             with: [
                 // 邀请注册链接
                 'url' => $this->dashboardUrl
-                    . '/anonymous/users/sign-up/'
-                    . $this->uuid,
+                    .'/anonymous/users/sign-up/'
+                    .$this->uuid,
             ],
         );
     }

@@ -3,15 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Discussion;
-use Illuminate\Http\Request;
 use App\Services\AuthService;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class InteractiveController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -21,8 +22,7 @@ class InteractiveController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -31,9 +31,8 @@ class InteractiveController extends Controller
 
     /**
      * 获取某个资源，某个用户的权限
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string  $res_id
-     * @return \Illuminate\Http\Response
+     *
+     * @return Response
      */
     public function show(Request $request, string $res_id)
     {
@@ -71,8 +70,6 @@ class InteractiveController extends Controller
                     ->where('status', 'active')
                     ->count();
 
-
-
                 /* discussion */
                 $data['discussion'] = [
                     'can_create' => false,
@@ -95,9 +92,7 @@ class InteractiveController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Discussion  $discussion
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, Discussion $discussion)
     {
@@ -107,8 +102,7 @@ class InteractiveController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Discussion  $discussion
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(Discussion $discussion)
     {

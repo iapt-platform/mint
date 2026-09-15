@@ -9,14 +9,17 @@ const Widget = () => {
   const { token } = useParams(); //url 参数
 
   return (
-    <Card
-      title={intl.formatMessage({
-        id: "buttons.sign-up",
-      })}
-    >
-      <SignUp token={token} />
-      <SharedLinks />
-    </Card>
+    <>
+      <title>{intl.formatMessage({ id: "nut.users.sign-up.title" })}</title>
+      <Card
+        title={intl.formatMessage({
+          id: "buttons.sign-up",
+        })}
+      >
+        <SignUp token={token} />
+        <SharedLinks />
+      </Card>
+    </>
   );
 };
 

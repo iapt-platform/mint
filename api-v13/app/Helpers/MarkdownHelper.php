@@ -2,23 +2,19 @@
 
 namespace App\Helpers;
 
-use Illuminate\Support\Str;
-
 class MarkdownHelper
 {
     /**
      * 将 Markdown 字符串按段落、标题、表格、列表、代码块等规则拆分成数组
-     *
-     * @param string $markdown
-     * @return array
      */
     public static function splitByParagraphs(string $markdown): array
     {
         // 保护代码块内容，防止内部换行被拆分
         $codeBlocks = [];
         $markdown = preg_replace_callback('/```(.*?)```/s', function ($matches) use (&$codeBlocks) {
-            $placeholder = '%%CODE_BLOCK_' . count($codeBlocks) . '%%';
+            $placeholder = '%%CODE_BLOCK_'.count($codeBlocks).'%%';
             $codeBlocks[$placeholder] = $matches[0];
+
             return $placeholder;
         }, $markdown);
 
@@ -55,17 +51,15 @@ class MarkdownHelper
 
     /**
      * 按标题、表格、列表等特殊块进一步拆分
-     *
-     * @param string $text
-     * @return array
      */
     protected static function splitBySpecialBlocks(string $text): array
     {
         // 保护代码块（防止被误拆）
         $codeBlocks = [];
         $text = preg_replace_callback('/```(.*?)```/s', function ($matches) use (&$codeBlocks) {
-            $placeholder = '%%CODE_BLOCK_' . count($codeBlocks) . '%%';
+            $placeholder = '%%CODE_BLOCK_'.count($codeBlocks).'%%';
             $codeBlocks[$placeholder] = $matches[0];
+
             return $placeholder;
         }, $text);
 
@@ -89,9 +83,10 @@ class MarkdownHelper
                         $table[] = $row;
                     }
                 }
-                if (!empty($table)) {
+                if (! empty($table)) {
                     $result[] = implode("\n", $table);
                 }
+
                 continue;
             }
 
@@ -99,6 +94,7 @@ class MarkdownHelper
             if (preg_match('/^(\s*[-*+]\s+|\s*\d+\.\s+)/m', $line)) {
                 // 保留整个列表块（连续列表行）
                 $result[] = $line;
+
                 continue;
             }
 

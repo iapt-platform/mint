@@ -1,4 +1,0 @@
-- name: OpenSearch node
-  hosts: all
-  roles:
-    - opensearch

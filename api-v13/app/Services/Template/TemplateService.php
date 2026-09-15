@@ -2,21 +2,21 @@
 
 namespace App\Services\Template;
 
-use App\Services\Template\TemplateParser;
 use App\Services\Template\Renderers\RendererFactory;
-use App\Services\Template\TemplateRegistry;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class TemplateService
 {
     private TemplateParser $parser;
+
     private bool $cacheEnabled;
+
     private int $cacheTtl;
 
     public function __construct(bool $cacheEnabled = true, int $cacheTtl = 3600)
     {
-        $this->parser = new TemplateParser();
+        $this->parser = new TemplateParser;
         $this->cacheEnabled = $cacheEnabled;
         $this->cacheTtl = $cacheTtl;
     }
@@ -43,7 +43,7 @@ class TemplateService
 
             $result = [
                 'data' => $format === 'json' ? json_decode($renderedContent, true) : $renderedContent,
-                'meta' => $document->meta
+                'meta' => $document->meta,
             ];
 
             // 缓存结果
@@ -56,7 +56,7 @@ class TemplateService
             Log::error('Template parsing failed', [
                 'content' => substr($content, 0, 200),
                 'format' => $format,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
 
             throw $e;
@@ -77,6 +77,7 @@ class TemplateService
     public function render(ParsedDocument $document, string $format): string
     {
         $renderer = RendererFactory::create($format);
+
         return $renderer->render($document);
     }
 
@@ -112,7 +113,7 @@ class TemplateService
                 $templates[$templateName] = [
                     'name' => $templateName,
                     'config' => $template,
-                    'example' => $this->generateTemplateExample($templateName, $template)
+                    'example' => $this->generateTemplateExample($templateName, $template),
                 ];
             }
         }
@@ -129,10 +130,10 @@ class TemplateService
         $defaultParams = $config['defaultParams'] ?? [];
 
         foreach ($defaultParams as $index => $paramName) {
-            $params[] = $paramName . '=示例值' . ($index + 1);
+            $params[] = $paramName.'=示例值'.($index + 1);
         }
 
-        return '{{' . $name . '|' . implode('|', $params) . '}}';
+        return '{{'.$name.'|'.implode('|', $params).'}}';
     }
 
     /**
@@ -140,7 +141,7 @@ class TemplateService
      */
     private function generateCacheKey(string $content, string $format): string
     {
-        return 'template_' . $format . '_' . md5($content);
+        return 'template_'.$format.'_'.md5($content);
     }
 
     /**
@@ -165,7 +166,7 @@ class TemplateService
             } catch (\Exception $e) {
                 $results[$index] = [
                     'success' => false,
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ];
             }
         }
@@ -187,12 +188,12 @@ class TemplateService
             foreach ($document->content as $node) {
                 if ($node instanceof TemplateNode) {
                     $registry = $this->parser->getRegistry();
-                    if (!$registry->hasTemplate($node->name)) {
+                    if (! $registry->hasTemplate($node->name)) {
                         $errors[] = [
                             'type' => 'unknown_template',
                             'template' => $node->name,
                             'position' => $node->position,
-                            'message' => "Unknown template: {$node->name}"
+                            'message' => "Unknown template: {$node->name}",
                         ];
                     }
                 }
@@ -200,7 +201,7 @@ class TemplateService
         } catch (\Exception $e) {
             $errors[] = [
                 'type' => 'parse_error',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ];
         }
 

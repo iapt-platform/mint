@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -20,11 +21,13 @@ class ChatMessage extends Model
         'model_name',
         'tool_calls',
         'tool_call_id',
-        'is_active'
+        'is_active',
     ];
+
     protected $dates = [
-        'deleted_at'
+        'deleted_at',
     ];
+
     protected $casts = [
         'id' => 'string',
         'tool_calls' => 'array',
@@ -47,6 +50,7 @@ class ChatMessage extends Model
             }
         });
     }
+
     /**
      * 关联聊天
      */
@@ -54,6 +58,7 @@ class ChatMessage extends Model
     {
         return $this->belongsTo(Chat::class);
     }
+
     /**
      * 关联父消息
      */
@@ -61,6 +66,7 @@ class ChatMessage extends Model
     {
         return $this->belongsTo(ChatMessage::class, 'parent_id', 'uid');
     }
+
     /**
      * 关联子消息
      */
@@ -68,6 +74,7 @@ class ChatMessage extends Model
     {
         return $this->hasMany(ChatMessage::class, 'parent_id', 'uid');
     }
+
     /**
      * 关联激活状态的子消息
      */
@@ -76,6 +83,7 @@ class ChatMessage extends Model
         return $this->hasMany(ChatMessage::class, 'parent_id', 'uid')
             ->where('is_active', true);
     }
+
     /**
      * Scope: 只查询激活状态的消息
      */
@@ -127,7 +135,7 @@ class ChatMessage extends Model
     /**
      * 获取消息树的所有叶子节点
      */
-    public function getLeaves(): \Illuminate\Database\Eloquent\Collection
+    public function getLeaves(): Collection
     {
         return ChatMessage::where('chat_id', $this->chat_id)
             ->whereNotNull('parent_id')
@@ -177,7 +185,6 @@ class ChatMessage extends Model
             ->where('role', $this->role)
             ->where('id', '!=', $this->id);
     }
-
 
     public function getRouteKeyName()
     {

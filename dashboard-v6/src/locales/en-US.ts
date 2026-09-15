@@ -9,6 +9,7 @@ import course from "./en-US/course";
 import message from "./en-US/message";
 import label from "./en-US/label";
 import error from "./en-US/error";
+import pages from "./en-US/pages";
 
 const items = {
   "columns.library.title": "Library",
@@ -57,6 +58,7 @@ const items = {
   ...message,
   ...label,
   ...error,
+  ...pages,
 };
 
 export default items;

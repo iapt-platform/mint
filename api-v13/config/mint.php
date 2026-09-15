@@ -5,6 +5,12 @@ return [
         'icp_code' => env('APP_ICP_CODE', ''),
         'mps_code' => env('APP_MPS_CODE', ''),
         'jwt_secrets_key' => env('JWT_SECRETS_KEY', ''),
+        /*
+        |--------------------------------------------------------------------------
+        | 运维接口令牌（/api/ops/*），通过 Authorization: Bearer <token> 传递
+        |--------------------------------------------------------------------------
+        */
+        'ops_token' => env('APP_OPS_TOKEN', ''),
 
     ],
     'languages' => [
@@ -14,6 +20,8 @@ return [
         'my' => 'မြန်မာဘာသာ',
         'th' => 'ภาษาไทย',
         'si' => 'සිංහල',
+        'vi' => 'Tiếng Việt',
+        'lo' => 'ພາສາລາວ',
     ],
     'default_language' => 'en',
     'library' => [
@@ -27,50 +35,51 @@ return [
         | snowflake id start date don't modify
         |--------------------------------------------------------------------------
         */
-        'start' => "2021-12-22",
+        'start' => '2021-12-22',
     ],
 
     'server' => [
         'rpc' => [
-            'grpc' =>  env('GRPC_WEB_SERVER', "http://localhost:9999"),
+            'grpc' => env('GRPC_WEB_SERVER', 'http://localhost:9999'),
 
             'morus' => [
-                'host' => env('MORUS_GRPC_HOST', "localhost"),
+                'host' => env('MORUS_GRPC_HOST', 'localhost'),
                 'port' => env('MORUS_GRPC_PORT', 9999),
             ],
 
             'lily' => [
-                'host' => env('LILY_GRPC_HOST', "localhost"),
+                'host' => env('LILY_GRPC_HOST', 'localhost'),
                 'port' => env('LILY_GRPC_PORT', 9000),
             ],
 
             'tulip' => [
-                'host' => env('TULIP_GRPC_HOST', "localhost"),
+                'host' => env('TULIP_GRPC_HOST', 'localhost'),
                 'port' => env('TULIP_GRPC_PORT', 9990),
             ],
         ],
         'api' => [
-            'default' => env('APP_API', "http://localhost:8000/api"),
+            'default' => env('APP_API', 'http://localhost:8000/api'),
             'bamboo' => env('BAMBOO_API_HOST', env('APP_URL') . '/api'),
         ],
-        'assets' => env('ASSETS_SERVER', "localhost:9999"),
+        'assets' => env('ASSETS_SERVER', 'localhost:9999'),
 
-        'dashboard_base_path' => env('DASHBOARD_BASE_PATH', "http://127.0.0.1:3000/my"),
+        'dashboard_base_path' => env('DASHBOARD_BASE_PATH', 'http://127.0.0.1:4000/pcd-v2026'),
+        // TODO v4下线后需要修改
+        'workspace_base_path' => env('DASHBOARD_BASE_PATH', 'http://127.0.0.1:4000/pcd') . '-v2026/workspace',
 
-        'cdn_urls' => explode(',', env('CDN_URLS', "https://www.wikipali.cc/downloads")),
-
+        'cdn_urls' => explode(',', env('CDN_URLS', 'https://www.wikipali.cc/downloads')),
 
     ],
 
     'attachments' => [
         'bucket_name' => [
-            'temporary' => env('ATTACHMENTS_TEMPORARY_BUCKET_NAME', "attachments-staging"),
-            'permanent' => env('ATTACHMENTS_PERMANENT_BUCKET_NAME', "attachments-staging"),
+            'temporary' => env('ATTACHMENTS_TEMPORARY_BUCKET_NAME', 'attachments-staging'),
+            'permanent' => env('ATTACHMENTS_PERMANENT_BUCKET_NAME', 'attachments-staging'),
         ],
     ],
 
     'cache' => [
-        //这个值prod,staging无需设置
+        // 这个值prod,staging无需设置
         'expire' => env('CACHE_EXPIRE', 36000),
     ],
 
@@ -123,13 +132,13 @@ return [
             'Claude' => 'claude-color.png',
             'api.openai.com' => 'openai.png',
             'qwen' => 'qwen-color.png',
-            'deepseek' => 'deepseek-color.png'
-        ]
+            'deepseek' => 'deepseek-color.png',
+        ],
     ],
     'mq' => [
         'loop_limit' => [
-            'ai_translate' => env('MQ_LOOP_LIMIT_AI_TRANSLATE', 0)
-        ]
+            'ai_translate' => env('MQ_LOOP_LIMIT_AI_TRANSLATE', 0),
+        ],
     ],
     'rabbitmq' => [
         'queues' => [
@@ -151,7 +160,7 @@ return [
             'heartbeat_queue' => [
                 'ttl' => 86400000, // 24小时 TTL (毫秒)
                 'max_length' => 10000,
-            ]
+            ],
         ],
 
         // 死信队列配置
@@ -163,7 +172,7 @@ return [
         ],
     ],
     'opensearch' => [
-        'index' => 'wikipali_20260516',
+        'index' => 'wikipali_20260813',
         'config' => [
             'scheme' => env('OPENSEARCH_SCHEME', 'http'),
             'host' => env('OPENSEARCH_HOST', '127.0.0.1'),
@@ -171,6 +180,7 @@ return [
             'username' => env('OPENSEARCH_USERNAME', ''),
             'password' => env('OPENSEARCH_PASSWORD', ''),
             'ssl_verification' => env('OPENSEARCH_SSL_VERIFICATION', false),
+            'synonyms_path' => env('OPENSEARCH_SYNONYMS_PATH', '/opt/opensearch/config/analysis'),
         ],
 
     ],

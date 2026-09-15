@@ -1,18 +1,18 @@
 {{-- resources/views/library/anthology/show.blade.php --}}
 @extends('layouts.library')
 
-@section('title', $anthology['title'] . ' · 巴利书库')
+@section('title', $anthology['title'] . ' · ' . __('library.site_name'))
 
 @push('styles')
-    @vite('resources/css/modules/_anthology.css')
+@vite('resources/css/modules/anthology.css')
 @endpush
 
 @section('breadcrumb')
 <li class="breadcrumb-item">
-    <a href="{{ route('library.home') }}">首页</a>
+    <a href="{{ route('library.home') }}">{{ __('library.home') }}</a>
 </li>
 <li class="breadcrumb-item">
-    <a href="{{ route('library.anthology.index') }}">文集</a>
+    <a href="{{ route('library.anthology.index') }}">{{ __('library.anthology') }}</a>
 </li>
 <li class="breadcrumb-item active">{{ $anthology['title'] }}</li>
 @endsection
@@ -29,8 +29,7 @@
                 :title="$anthology['title']"
                 :subtitle="$anthology['subtitle'] ?? ''"
                 size="lg"
-                :style3d="true"
-            />
+                :style3d="true" />
 
             {{-- 文集信息 --}}
             <div class="hero-content">
@@ -55,28 +54,27 @@
                             :color="$anthology['author']['color']"
                             :initials="$anthology['author']['initials']"
                             :name="$anthology['author']['name']"
-                            size="sm"
-                        />
+                            size="sm" />
                         <div>
-                            <span class="hi-label">作者</span>
+                            <span class="hi-label">{{ __('library.author') }}</span>
                             <span class="hi-value">{{ $anthology['author']['name'] }}</span>
                         </div>
                     </div>
                     <div class="hi-item">
                         <div>
-                            <span class="hi-label">最后更新</span>
+                            <span class="hi-label">{{ __('library.last_updated') }}</span>
                             <span class="hi-value">{{ $anthology['updated_at'] }}</span>
                         </div>
                     </div>
                     <div class="hi-item">
                         <div>
-                            <span class="hi-label">章节数</span>
-                            <span class="hi-value">{{ $anthology['children_number'] }} 章节</span>
+                            <span class="hi-label">{{ __('library.chapter_count') }}</span>
+                            <span class="hi-value">{{ $anthology['children_number'] }} {{ __('library.chapters') }}</span>
                         </div>
                     </div>
                     <div class="hi-item">
                         <div>
-                            <span class="hi-label">创建时间</span>
+                            <span class="hi-label">{{ __('library.created_at') }}</span>
                             <span class="hi-value">{{ $anthology['created_at'] }}</span>
                         </div>
                     </div>
@@ -92,15 +90,15 @@
                             'anthology' => $anthology['id'],
                             'article'   => $anthology['articles'][0]['id']
                         ]) }}"
-                       class="btn-read-primary">
+                        class="btn-read-primary">
                         <i class="ti ti-book-2"></i>
-                        在线阅读
+                        {{ __('library.read_online') }}
                     </a>
                     @endif
                     <a href="{{ config('mint.server.dashboard_base_path') }}/workspace/anthology/{{ $anthology['id'] }}"
-                       class="btn-outline-hero">
+                        class="btn-outline-hero">
                         <i class="ti ti-pencil"></i>
-                        在编辑器中打开
+                        {{ __('library.open_in_editor') }}
                     </a>
                 </div>
             </div>
@@ -123,13 +121,13 @@
                 <div class="sec-card">
                     <div class="sec-header">
                         <div class="sec-bar"></div>
-                        <div class="sec-title">关于本文集</div>
+                        <div class="sec-title">{{ __('library.about_anthology') }}</div>
                     </div>
                     <div class="sec-body">
                         @foreach(explode("\n", $anthology['about']) as $para)
-                            @if(trim($para))
-                            <p>{{ trim($para) }}</p>
-                            @endif
+                        @if(trim($para))
+                        <p>{{ trim($para) }}</p>
+                        @endif
                         @endforeach
                     </div>
                 </div>
@@ -139,8 +137,8 @@
                 <div class="sec-card">
                     <div class="sec-header">
                         <div class="sec-bar"></div>
-                        <div class="sec-title">目录</div>
-                        <div class="sec-count">{{ $anthology['children_number'] }} 章节</div>
+                        <div class="sec-title">{{ __('library.toc') }}</div>
+                        <div class="sec-count">{{ $anthology['children_number'] }} {{ __('library.chapters') }}</div>
                     </div>
                     <ul class="toc-ul">
                         @foreach($anthology['articles'] as $article)
@@ -165,34 +163,34 @@
 
                 {{-- 文集信息 --}}
                 <div class="sb-card">
-                    <div class="sb-head">文集信息</div>
+                    <div class="sb-head">{{ __('library.anthology_info') }}</div>
                     <div class="smeta-row">
-                        <span class="smeta-label">作者</span>
+                        <span class="smeta-label">{{ __('library.author') }}</span>
                         <span class="smeta-value">
                             <a href="#">{{ $anthology['author']['name'] }}</a>
                         </span>
                     </div>
                     @if(!empty($anthology['language']))
                     <div class="smeta-row">
-                        <span class="smeta-label">语言</span>
+                        <span class="smeta-label">{{ __('library.language') }}</span>
                         <span class="smeta-value">{{ $anthology['language'] }}</span>
                     </div>
                     @endif
                     <div class="smeta-row">
-                        <span class="smeta-label">章节</span>
-                        <span class="smeta-value">{{ $anthology['children_number'] }} 章节</span>
+                        <span class="smeta-label">{{ __('library.chapters') }}</span>
+                        <span class="smeta-value">{{ $anthology['children_number'] }} {{ __('library.chapters') }}</span>
                     </div>
                     <div class="smeta-row">
-                        <span class="smeta-label">创建</span>
+                        <span class="smeta-label">{{ __('library.created') }}</span>
                         <span class="smeta-value">{{ $anthology['created_at'] }}</span>
                     </div>
                     <div class="smeta-row">
-                        <span class="smeta-label">更新</span>
+                        <span class="smeta-label">{{ __('library.updated') }}</span>
                         <span class="smeta-value">{{ $anthology['updated_at'] }}</span>
                     </div>
                     @if(!empty($anthology['category']))
                     <div class="smeta-row">
-                        <span class="smeta-label">分类</span>
+                        <span class="smeta-label">{{ __('library.category') }}</span>
                         <span class="smeta-value">{{ $anthology['category'] }}</span>
                     </div>
                     @endif
@@ -200,19 +198,18 @@
 
                 {{-- 作者 --}}
                 <div class="sb-card">
-                    <div class="sb-head">作者</div>
+                    <div class="sb-head">{{ __('library.author') }}</div>
                     <div class="author-block">
                         <x-ui.author-avatar
                             :avatar="$anthology['author']['avatar'] ?? null"
                             :color="$anthology['author']['color']"
                             :initials="$anthology['author']['initials']"
-                            size="lg"
-                        />
+                            size="lg" />
                         <div>
                             <div class="author-block-name">{{ $anthology['author']['name'] }}</div>
                             <div class="author-block-stats">
                                 @if($anthology['author']['article_count'])
-                                {{ $anthology['author']['article_count'] }} 篇文章
+                                {{ $anthology['author']['article_count'] }} {{ __('library.articles_suffix') }}
                                 @endif
                             </div>
                         </div>
@@ -225,7 +222,7 @@
                 {{-- 相关文集 --}}
                 @if($related->count())
                 <div class="sb-card">
-                    <div class="sb-head">相关文集</div>
+                    <div class="sb-head">{{ __('library.related_anthology') }}</div>
                     <ul class="related-ul">
                         @foreach($related as $rel)
                         <li>
@@ -235,8 +232,7 @@
                                     :gradient="$rel['cover_gradient']"
                                     :title="mb_substr($rel['title'], 0, 4)"
                                     size="sm"
-                                    :style3d="false"
-                                />
+                                    :style3d="false" />
                                 <div>
                                     <div class="related-t">{{ $rel['title'] }}</div>
                                     <div class="related-a">{{ $rel['author_name'] }}</div>

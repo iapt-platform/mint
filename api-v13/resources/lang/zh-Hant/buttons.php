@@ -1,5 +1,5 @@
 <?php
 return [
     'more' => '更多',
-    'online-read' =>  '在线阅读',
+    'online-read' =>  '線上閱讀',
 ];

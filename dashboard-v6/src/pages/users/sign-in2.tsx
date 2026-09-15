@@ -3,6 +3,7 @@ import { LoginForm, ProFormText } from "@ant-design/pro-components";
 import { message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router";
+import { useIntl } from "react-intl";
 
 interface loginRequest {
   username: string;
@@ -23,6 +24,7 @@ const fakeLogin = async (values: loginRequest) => {
 const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const intl = useIntl();
   const handleSubmit = async (values: loginRequest) => {
     setLoading(true);
     const ok = await fakeLogin(values);
@@ -47,6 +49,7 @@ const Login: React.FC = () => {
           "linear-gradient(135deg,#f0f5ff 0%, #ffffff 50%, #f0f5ff 100%)",
       }}
     >
+      <title>{intl.formatMessage({ id: "nut.users.sign-in.title" })}</title>
       <LoginForm
         title="登陆"
         subTitle="wikipali 巴利语文献编辑平台"

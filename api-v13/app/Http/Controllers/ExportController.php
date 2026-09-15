@@ -2,23 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Storage;
-
-use App\Services\AuthService;
 use App\Http\Api\Mq;
-use Illuminate\Support\Facades\Cache;
+use App\Services\AuthService;
 use App\Tools\ExportDownload;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ExportController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
@@ -57,7 +54,7 @@ class ExportController extends Controller
                 Mq::publish('export_article', $data);
                 break;
             default:
-                return $this->error('unknown type ' . $request->input('type'), 400, 400);
+                return $this->error('unknown type '.$request->input('type'), 400, 400);
                 break;
         }
 
@@ -67,8 +64,7 @@ class ExportController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -79,7 +75,7 @@ class ExportController extends Controller
      * Display the specified resource.
      *
      * @param  string  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show($filename)
     {
@@ -88,22 +84,22 @@ class ExportController extends Controller
         $exportStatus = $exportChapter->getStatus();
         if (empty($exportStatus)) {
             return $this->error('no file', 200, 200);
-        };
+        }
 
-        $output = array();
+        $output = [];
         $output['status'] = $exportStatus;
         if ($exportStatus['progress'] === 1) {
             $output['url'] = $exportStatus['url'];
         }
+
         return $this->ok($output);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, $id)
     {
@@ -114,7 +110,7 @@ class ExportController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {

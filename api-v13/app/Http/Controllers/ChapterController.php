@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PaliText;
-use Illuminate\Http\Request;
 use App\Http\Resources\ChapterResource;
+use App\Models\PaliText;
 use App\Services\PaliTextService;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class ChapterController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
@@ -30,28 +31,28 @@ class ChapterController extends Controller
                     ->select(['book', 'paragraph', 'level', 'text', 'chapter_len', 'chapter_strlen', 'parent']);
                 break;
         }
-        //获取记录总条数
+        // 获取记录总条数
         $count = $table->count();
-        //处理排序
+        // 处理排序
         $table = $table->orderBy(
-            $request->input("order", 'paragraph'),
-            $request->input("dir", 'asc')
+            $request->input('order', 'paragraph'),
+            $request->input('dir', 'asc')
         );
-        //处理分页
-        $table = $table->skip($request->input("offset", 0))
-            ->take($request->input("limit", 1000));
+        // 处理分页
+        $table = $table->skip($request->input('offset', 0))
+            ->take($request->input('limit', 1000));
         $result = $table->get();
+
         return $this->ok([
-            "rows" => ChapterResource::collection($result),
-            "count" => $count
+            'rows' => ChapterResource::collection($result),
+            'count' => $count,
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -61,8 +62,7 @@ class ChapterController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  string  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(string $id)
     {
@@ -72,15 +72,14 @@ class ChapterController extends Controller
         }
         $paliTextService = app(PaliTextService::class);
         $paragraph = $paliTextService->getCurrChapter($para[0], $para[1]);
+
         return $this->ok(new ChapterResource($paragraph));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\PaliText  $paliText
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, PaliText $paliText)
     {
@@ -90,8 +89,7 @@ class ChapterController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\PaliText  $paliText
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(PaliText $paliText)
     {

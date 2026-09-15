@@ -1,9 +1,0 @@
-- name: Ping
-  hosts: all
-  tasks:
-    - name: Test ssh connection
-      ansible.builtin.ping:
-
-    - name: Show facts available on the system
-      ansible.builtin.debug:
-        var: ansible_facts

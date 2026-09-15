@@ -2,14 +2,16 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Http\Api\Mq;
+use App\Tools\Tools;
+use Illuminate\Console\Command;
 
 class MqIssues extends Command
 {
     /**
      * The name and signature of the console command.
      * php artisan mq:issues
+     *
      * @var string
      */
     protected $signature = 'mq:issues';
@@ -38,16 +40,18 @@ class MqIssues extends Command
      */
     public function handle()
     {
-        if(\App\Tools\Tools::isStop()){
+        if (Tools::isStop()) {
             return 0;
         }
         $exchange = 'router';
         $queue = 'issues';
         $this->info(" [*] Waiting for {$queue}. To exit press CTRL+C");
-        Mq::worker($exchange,$queue,function ($message){
+        Mq::worker($exchange, $queue, function ($message) {
             print_r($message);
+
             return 0;
         });
+
         return 0;
     }
 }

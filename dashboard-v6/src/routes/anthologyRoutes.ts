@@ -1,7 +1,7 @@
 // src/routes/anthologyRoutes.ts
 import { lazy } from "react";
 import type { RouteObject } from "react-router";
-import { anthologyLoader } from "../api/article";
+import { anthologyLoader, articleLoader } from "../api/article";
 
 const WorkspaceAnthologyList = lazy(
   () => import("../pages/workspace/anthology")
@@ -40,6 +40,7 @@ const anthologyRoutes: RouteObject[] = [
           },
           {
             path: ":articleId",
+            loader: articleLoader,
             handle: { id: "workspace.anthology.article", crumb: "article" },
             Component: WorkspaceArticleShow,
           },

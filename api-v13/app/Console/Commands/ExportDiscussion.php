@@ -2,10 +2,11 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 use App\Http\Api\ChannelApi;
 use Carbon\Carbon;
+use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class ExportDiscussion extends Command
 {
@@ -40,8 +41,9 @@ class ExportDiscussion extends Command
 
         // 1. 获取巴利原文 channel_uid
         $this->orgChannelId = ChannelApi::getSysChannel('_System_Pali_VRI_');
-        if (!$this->orgChannelId) {
+        if (! $this->orgChannelId) {
             $this->error('Failed to retrieve Pali source channel ID.');
+
             return self::FAILURE;
         }
         $this->info("Pali channel ID: {$this->orgChannelId}");
@@ -54,24 +56,26 @@ class ExportDiscussion extends Command
 
         if ($total === 0) {
             $this->warn("No discussions found for editor: {$editorUid}");
+
             return self::SUCCESS;
         }
 
         $this->info("Found {$total} discussion(s). Processing...");
 
         // 3. 打开文件句柄（流式写入，不在内存中拼接整个 Markdown）
-        $filename = "discussion_export_{$editorUid}_" . now()->format('YmdHis') . '.md';
+        $filename = "discussion_export_{$editorUid}_".now()->format('YmdHis').'.md';
         $this->outputPath = storage_path("app/tmp/{$filename}");
         $this->fileHandle = fopen($this->outputPath, 'w');
-        if (!$this->fileHandle) {
+        if (! $this->fileHandle) {
             $this->error("Cannot open file for writing: {$this->outputPath}");
+
             return self::FAILURE;
         }
 
         // 写文件头
         $this->writeLine("# 讨论导出报告\n");
         $this->writeLine("- **Editor UID**: {$editorUid}");
-        $this->writeLine("- **导出时间**: " . now()->toDateTimeString());
+        $this->writeLine('- **导出时间**: '.now()->toDateTimeString());
         $this->writeLine("\n---\n");
 
         // 4. 分批处理（每批 50 条），避免内存溢出
@@ -104,7 +108,7 @@ class ExportDiscussion extends Command
     /**
      * 处理一批 discussions。
      */
-    private function processChunk(\Illuminate\Support\Collection $discussions): void
+    private function processChunk(Collection $discussions): void
     {
         // --- 批量查译文 sentences ---
         $resIds = $discussions->pluck('res_id')->unique()->values()->all();
@@ -145,21 +149,21 @@ class ExportDiscussion extends Command
 
         // --- 写 Markdown ---
         foreach ($discussions as $discussion) {
-            $sentUid     = $discussion->res_id;
+            $sentUid = $discussion->res_id;
             $translation = $translationMap->get($sentUid);
-            if (!$translation) {
+            if (! $translation) {
                 continue;
             }
 
-            $coordKey    = "{$translation->book_id}_{$translation->paragraph}_{$translation->word_start}_{$translation->word_end}";
-            $pali        = $paliMap[$coordKey] ?? null;
+            $coordKey = "{$translation->book_id}_{$translation->paragraph}_{$translation->word_start}_{$translation->word_end}";
+            $pali = $paliMap[$coordKey] ?? null;
             $paliContent = $pali ? trim($pali->content ?? '（无原文）') : '（未找到巴利原文）';
 
             $discussionCreatedAt = $discussion->created_at
                 ? Carbon::parse($discussion->created_at)
                 : null;
 
-            $histories      = $historiesMap[$sentUid] ?? [];
+            $histories = $historiesMap[$sentUid] ?? [];
             $matchedHistory = $this->findClosestHistory($histories, $discussionCreatedAt);
             $translationAtTime = $matchedHistory
                 ? trim($matchedHistory->content)
@@ -167,7 +171,7 @@ class ExportDiscussion extends Command
 
             $this->writeLine("# {$paliContent}\n");
             $this->writeLine("  - **历史译文**: {$translationAtTime}");
-            $this->writeLine("  - **评论**: " . trim($discussion->title ?? '') . trim($discussion->content ?? ''));
+            $this->writeLine('  - **评论**: '.trim($discussion->title ?? '').trim($discussion->content ?? ''));
             $this->writeLine("  - **当前译文**: {$translation->content}");
             $this->writeLine('');
         }
@@ -179,7 +183,7 @@ class ExportDiscussion extends Command
     /**
      * 批量查询巴利原文，每组最多 30 个坐标，避免超大 SQL。
      *
-     * @param array<string, object> $coordKeys  key="{book_id}_{paragraph}_{word_start}_{word_end}"
+     * @param  array<string, object>  $coordKeys  key="{book_id}_{paragraph}_{word_start}_{word_end}"
      * @return array<string, object>
      */
     private function fetchPaliSentences(array $coordKeys): array
@@ -192,10 +196,10 @@ class ExportDiscussion extends Command
                 ->where(function ($q) use ($group) {
                     foreach ($group as $t) {
                         $q->orWhere(function ($sub) use ($t) {
-                            $sub->where('book_id',    $t->book_id)
-                                ->where('paragraph',  $t->paragraph)
+                            $sub->where('book_id', $t->book_id)
+                                ->where('paragraph', $t->paragraph)
                                 ->where('word_start', $t->word_start)
-                                ->where('word_end',   $t->word_end);
+                                ->where('word_end', $t->word_end);
                         });
                     }
                 })
@@ -218,15 +222,15 @@ class ExportDiscussion extends Command
      */
     private function writeLine(string $line): void
     {
-        fwrite($this->fileHandle, $line . "\n");
+        fwrite($this->fileHandle, $line."\n");
     }
 
     /**
      * 在历史记录中找评论发布时间之前最近的那条。
      * 若全部在评论之后，则退而取最早一条。
      *
-     * @param array       $histories           sent_histories（已按 create_time ASC 排序）
-     * @param Carbon|null $discussionCreatedAt 评论发布时间
+     * @param  array  $histories  sent_histories（已按 create_time ASC 排序）
+     * @param  Carbon|null  $discussionCreatedAt  评论发布时间
      */
     private function findClosestHistory(array $histories, ?Carbon $discussionCreatedAt): ?object
     {
@@ -234,12 +238,12 @@ class ExportDiscussion extends Command
             return null;
         }
 
-        if (!$discussionCreatedAt) {
+        if (! $discussionCreatedAt) {
             return end($histories) ?: null;
         }
 
         $discussionTimestamp = $discussionCreatedAt->timestamp;
-        $best     = null;
+        $best = null;
         $bestDiff = PHP_INT_MAX;
 
         foreach ($histories as $h) {
@@ -248,7 +252,7 @@ class ExportDiscussion extends Command
                 $diff = $discussionTimestamp - $historyTime;
                 if ($diff < $bestDiff) {
                     $bestDiff = $diff;
-                    $best     = $h;
+                    $best = $h;
                 }
             }
         }

@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Routing\Controller as BaseController;
 
 class Controller extends BaseController
 {
@@ -17,8 +17,8 @@ class Controller extends BaseController
     protected function ok(mixed $data = null, string $message = ''): JsonResponse
     {
         return response()->json([
-            'ok'      => true,
-            'data'    => $data,
+            'ok' => true,
+            'data' => $data,
             'message' => $message,
         ], 200, [], JSON_UNESCAPED_UNICODE);
     }
@@ -32,8 +32,8 @@ class Controller extends BaseController
         int $status = 400
     ): JsonResponse {
         return response()->json([
-            'ok'      => false,
-            'data'    => $data,
+            'ok' => false,
+            'data' => $data,
             'message' => $message,
         ], $status, [], JSON_UNESCAPED_UNICODE);
     }

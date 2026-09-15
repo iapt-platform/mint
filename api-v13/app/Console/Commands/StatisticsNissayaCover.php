@@ -2,10 +2,11 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Models\Channel;
-use App\Models\Sentence;
 use App\Models\PaliSentence;
+use App\Models\Sentence;
+use App\Tools\Tools;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
 
 class StatisticsNissayaCover extends Command
@@ -13,9 +14,11 @@ class StatisticsNissayaCover extends Command
     /**
      * The name and signature of the console command.
      * php artisan statistics:nissaya.cover
+     *
      * @var string
      */
     protected $signature = 'statistics:nissaya.cover';
+
     protected $types = [
         'mula' => [
             69,
@@ -177,7 +180,7 @@ class StatisticsNissayaCover extends Command
             211,
             212,
         ],
-        'vinaya' => [138, 139, 140, 141, 142, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217,],
+        'vinaya' => [138, 139, 140, 141, 142, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217],
         'sutta' => [
             82,
             83,
@@ -281,8 +284,9 @@ class StatisticsNissayaCover extends Command
             198,
             199,
         ],
-        'abhidhamma' => [69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 96, 97, 98, 172, 173, 174, 175, 176, 177, 178, 179, 180,],
+        'abhidhamma' => [69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 96, 97, 98, 172, 173, 174, 175, 176, 177, 178, 179, 180],
     ];
+
     /**
      * The console command description.
      *
@@ -307,16 +311,16 @@ class StatisticsNissayaCover extends Command
      */
     public function handle()
     {
-        if (\App\Tools\Tools::isStop()) {
+        if (Tools::isStop()) {
             return 0;
         }
         $nissaya_channels = Channel::where('type', 'nissaya')
             ->where('lang', 'my')
             ->select('uid')->get();
-        $this->info('channel:' . count($nissaya_channels));
+        $this->info('channel:'.count($nissaya_channels));
         $output = [];
         foreach ($this->types as $type => $books) {
-            # code...
+            // code...
             $pali = PaliSentence::whereIn('book', $books)->sum('length');
             $nissayaSentences = Sentence::whereIn('channel_uid', $nissaya_channels)
                 ->whereIn('book_id', $books)
@@ -325,10 +329,10 @@ class StatisticsNissayaCover extends Command
                 ->get();
             $sentences = [];
             $final = 0;
-            $this->info($type . count($nissayaSentences) . " sentences");
+            $this->info($type.count($nissayaSentences).' sentences');
             if (count($nissayaSentences) > 0) {
                 $count = 0;
-                foreach ($nissayaSentences as  $value) {
+                foreach ($nissayaSentences as $value) {
                     $sentences[] = [
                         $value->book_id,
                         $value->paragraph,
@@ -346,10 +350,11 @@ class StatisticsNissayaCover extends Command
                 }
             }
 
-            $this->info($type . '=' . $pali . '=' . $final);
+            $this->info($type.'='.$pali.'='.$final);
             $output[] = ['type' => $type, 'total' => $pali, 'final' => $final];
         }
         Cache::put('/statistics/nissaya/cover', $output, 48 * 3600);
+
         return 0;
     }
 }

@@ -45,13 +45,20 @@ const RecentModal = ({
       <Modal
         width={"80%"}
         title={intl.formatMessage({
-          id: `labels.recent-scan`,
+          id: `columns.studio.recent.title`,
         })}
         footer={false}
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
         destroyOnHidden
+        style={{ top: 10 }}
+        styles={{
+          body: {
+            maxHeight: "calc(100vh - 160px)",
+            overflowY: "auto",
+          },
+        }}
       >
         <RecentList onSelect={onSelect} />
       </Modal>

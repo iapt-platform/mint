@@ -3,13 +3,11 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\App;
-
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Process\Process;
-use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class ExportZip extends Command
 {
@@ -49,7 +47,7 @@ class ExportZip extends Command
         $exportFile = $this->argument('filename');
         $filename = basename($exportFile);
         if ($filename === $exportFile) {
-            $exportFullFileName = $defaultExportPath . '/' . $filename;
+            $exportFullFileName = $defaultExportPath.'/'.$filename;
             $exportPath = $defaultExportPath;
         } else {
             $exportFullFileName = $exportFile;
@@ -66,29 +64,30 @@ class ExportZip extends Command
         );
         switch ($this->argument('format')) {
             case '7z':
-                $zipFile = $filename . ".7z";
+                $zipFile = $filename.'.7z';
                 break;
             case 'lzma':
-                $zipFile = $filename . ".lzma";
+                $zipFile = $filename.'.lzma';
                 break;
             default:
-                $zipFile = $filename . ".gz";
+                $zipFile = $filename.'.gz';
                 break;
         }
         //
-        if (!file_exists($exportFullFileName)) {
+        if (! file_exists($exportFullFileName)) {
             Log::error('export offline: no  file {filename}', ['filename' => $exportFullFileName]);
-            $this->error('export offline: no  file {filename}' . $exportFullFileName);
+            $this->error('export offline: no  file {filename}'.$exportFullFileName);
+
             return 1;
         }
 
-        $zipFullFileName = $exportPath . '/' . $zipFile;
+        $zipFullFileName = $exportPath.'/'.$zipFile;
         if (file_exists($zipFullFileName)) {
-            Log::debug('export offline: delete old zip file:' . $zipFullFileName);
+            Log::debug('export offline: delete old zip file:'.$zipFullFileName);
             unlink($zipFullFileName);
         }
 
-        shell_exec("cd " . $exportPath);
+        shell_exec('cd '.$exportPath);
         switch ($this->argument('format')) {
             case '7z':
                 $command = [
@@ -101,7 +100,7 @@ class ExportZip extends Command
                     '-md=32m',
                     '-ms=on',
                     $zipFullFileName,
-                    $exportFullFileName
+                    $exportFullFileName,
                 ];
                 break;
             case 'lzma':
@@ -123,27 +122,27 @@ class ExportZip extends Command
             'zip file {filename} in {format} saved.',
             [
                 'filename' => $exportFile,
-                'format' => $this->argument('format')
+                'format' => $this->argument('format'),
             ]
         );
 
-        $url = array();
+        $url = [];
         foreach (config('mint.server.cdn_urls') as $key => $cdn) {
             $url[] = [
-                'link' => $cdn . '/' . $zipFile,
-                'hostname' => 'china cdn-' . $key,
+                'link' => $cdn.'/'.$zipFile,
+                'hostname' => 'china cdn-'.$key,
             ];
         }
 
         $bucket = config('mint.attachments.bucket_name.temporary');
-        $tmpFile =  $bucket . '/' . $zipFile;
+        $tmpFile = $bucket.'/'.$zipFile;
 
-        $this->info('upload file=' . $tmpFile);
+        $this->info('upload file='.$tmpFile);
         Log::debug('export offline: upload file {filename}', ['filename' => $tmpFile]);
 
         Storage::put($tmpFile, file_get_contents($zipFullFileName));
 
-        $this->info('upload done file=' . $tmpFile);
+        $this->info('upload done file='.$tmpFile);
         Log::debug('export offline: upload done {filename}', ['filename' => $tmpFile]);
 
         if (App::environment('local')) {
@@ -157,30 +156,31 @@ class ExportZip extends Command
                     'export offline: generate temporaryUrl fail {Exception}',
                     [
                         'exception' => $e,
-                        'file' => $tmpFile
+                        'file' => $tmpFile,
                     ]
                 );
+
                 return 1;
             }
         }
-        $this->info('link = ' . $link);
-        Log::info('export offline: link=' . $link);
+        $this->info('link = '.$link);
+        Log::info('export offline: link='.$link);
 
         $url[] = [
             'link' => $link,
             'hostname' => 'Amazon cloud storage(Hongkong)',
         ];
         $info = Cache::get('/offline/index');
-        if (!is_array($info)) {
-            $info = array();
+        if (! is_array($info)) {
+            $info = [];
         }
         $info[] = [
             'id' => $this->argument('id'),
             'title' => $this->argument('title'),
             'filename' => $zipFile,
             'url' => $url,
-            'create_at' => date("Y-m-d H:i:s"),
-            'chapter' => Cache::get("/export/chapter/count"),
+            'create_at' => date('Y-m-d H:i:s'),
+            'chapter' => Cache::get('/export/chapter/count'),
             'filesize' => filesize($zipFullFileName),
             'min_app_ver' => '1.3',
         ];
@@ -193,7 +193,7 @@ class ExportZip extends Command
                 'export offline: delete  file fail {Exception}',
                 [
                     'exception' => $th,
-                    'file' => $exportFullFileName
+                    'file' => $exportFullFileName,
                 ]
             );
         }

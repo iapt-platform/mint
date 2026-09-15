@@ -2,9 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Tools\Export;
+use App\Tools\Tools;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
-use App\Tools\Export;
 
 class TestTex extends Command
 {
@@ -39,10 +40,10 @@ class TestTex extends Command
      */
     public function handle()
     {
-        if(\App\Tools\Tools::isStop()){
+        if (Tools::isStop()) {
             return 0;
         }
-        $tex = array();
+        $tex = [];
         $content = <<<'EOF'
 % 导言区
 \documentclass[a4paper, 12pt, fontset=ubuntu]{article} % book, report, letter
@@ -65,8 +66,8 @@ class TestTex extends Command
 \end{document}
 
 EOF;
-$tex[] = ['name'=>'main.tex','content'=>$content];
-$content = <<<'EOF'
+        $tex[] = ['name' => 'main.tex', 'content' => $content];
+        $content = <<<'EOF'
 \section{三十位经}
 
 住在王舍城的竹林园。
@@ -76,9 +77,9 @@ $content = <<<'EOF'
 \subsection{子章节1.2 标题}
 子章节1-2 正文
 EOF;
-$tex[] = ['name'=>'section-1.tex','content'=>$content];
+        $tex[] = ['name' => 'section-1.tex', 'content' => $content];
 
-$content = <<<'EOF'
+        $content = <<<'EOF'
 \section{章节2 标题}
 章节2 正文
 \subsection{子章节2.1 标题}
@@ -87,16 +88,17 @@ $content = <<<'EOF'
 子章节2-2 正文
 EOF;
 
-$tex[] = ['name'=>'section-2.tex','content'=>$content];
+        $tex[] = ['name' => 'section-2.tex', 'content' => $content];
 
         $data = Export::ToPdf($tex);
-        if($data['ok']){
-            $filename = "export/test.pdf";
+        if ($data['ok']) {
+            $filename = 'export/test.pdf';
             $this->info($data['content-type']);
             Storage::disk('local')->put($filename, $data['data']);
-        }else{
+        } else {
             $this->error($data['code'].'-'.$data['message']);
         }
+
         return 0;
     }
 }

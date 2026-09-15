@@ -1,0 +1,33 @@
+/* resources/css/base/typography.css
+   全站基础排版。无副作用，不覆盖组件样式。
+   Noto Serif 字体已在 library.css 入口 @import，此处只声明使用规则。
+*/
+
+/* ── 标题 ── */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    line-height: 1.3;
+    font-weight: 600;
+}
+
+/* ── 链接基础 ── */
+a {
+    text-underline-offset: 0.15em;
+    text-decoration-thickness: 0.05em;
+}
+
+/* ── 行内代码 ── */
+code {
+    font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+    font-size: 0.875em;
+}
+
+/* ── 图片 ── */
+img {
+    max-width: 100%;
+    height: auto;
+}

@@ -2,16 +2,13 @@
 
 namespace App\Services\Template\Renderers;
 
-use Illuminate\Support\Str;
-
-use App\Services\Template\Contracts\RendererInterface;
-use App\Services\Template\ParsedDocument;
 use App\Services\Template\ContentNode;
-use App\Services\Template\TextNode;
+use App\Services\Template\Contracts\RendererInterface;
 use App\Services\Template\MarkdownNode;
+use App\Services\Template\ParsedDocument;
 use App\Services\Template\TemplateNode;
-
-
+use App\Services\Template\TextNode;
+use Illuminate\Support\Str;
 
 // ================== HTML 渲染器 ==================
 
@@ -40,6 +37,7 @@ class HtmlRenderer implements RendererInterface
                 };
 
                 $titleHtml = $title ? "<h6 class='alert-heading'>$title</h6>" : '';
+
                 return "<div class='alert $typeClass' role='alert'>$titleHtml$text</div>";
             },
 
@@ -48,6 +46,7 @@ class HtmlRenderer implements RendererInterface
                 $title = $params['title'] ?? '';
 
                 $titleHtml = $title ? "<h6 class='alert-heading'>$title</h6>" : '';
+
                 return "<div class='alert alert-info' role='alert'>$titleHtml$content</div>";
             },
 
@@ -56,8 +55,9 @@ class HtmlRenderer implements RendererInterface
                 $title = $params['title'] ?? '';
 
                 $titleHtml = $title ? "<h6 class='alert-heading'>$title</h6>" : '';
+
                 return "<div class='alert alert-warning' role='alert'>$titleHtml$message</div>";
-            }
+            },
         ];
     }
 
@@ -109,7 +109,7 @@ class HtmlRenderer implements RendererInterface
 
     public function renderTemplate(TemplateNode $template): string
     {
-        if (!isset($this->templateMappings[$template->name])) {
+        if (! isset($this->templateMappings[$template->name])) {
             // 未知模板，返回原始内容
             return htmlspecialchars($template->raw, ENT_QUOTES, 'UTF-8');
         }

@@ -71,7 +71,6 @@ const PaliChapterHeadWidget = ({ para, onChange }: IWidget) => {
             }
           }
         }}
-        link={"none"}
       />
       <ChapterHead data={chapterData} />
     </>

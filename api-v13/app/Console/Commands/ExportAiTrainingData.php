@@ -2,21 +2,23 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
-use App\Models\Sentence;
-use App\Models\PaliSentence;
-use App\Http\Api\MdRender;
-use Illuminate\Support\Facades\File;
 use App\Http\Api\ChannelApi;
+use App\Http\Api\MdRender;
+use App\Models\PaliSentence;
+use App\Models\Sentence;
 use App\Services\PaliTextService;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 
 class ExportAiTrainingData extends Command
 {
     private $ShortTrans = 0.17;
+
     /**
      * The name and signature of the console command.
      * php artisan export:ai.training.data
+     *
      * @var string
      */
     protected $signature = 'export:ai.training.data {--format=gz  : zip file format 7z,lzma,gz } {--test}';
@@ -46,33 +48,35 @@ class ExportAiTrainingData extends Command
     public function handle()
     {
         Log::info('task export offline sentence-table start');
-        //创建文件夹
+        // 创建文件夹
         $base = 'app/tmp/export/offline';
         $exportDir = storage_path($base);
-        if (!is_dir($exportDir)) {
+        if (! is_dir($exportDir)) {
             $res = mkdir($exportDir, 0755, true);
-            if (!$res) {
-                $this->error('mkdir fail path=' . $exportDir);
+            if (! $res) {
+                $this->error('mkdir fail path='.$exportDir);
+
                 return 1;
             } else {
-                $this->info('make dir successful ' . $exportDir);
+                $this->info('make dir successful '.$exportDir);
             }
         }
 
-        //创建临时文件夹\
-        $dirname = $exportDir . '/' . 'wikipali-offline-ai-training-' . date("YmdHis");
+        // 创建临时文件夹\
+        $dirname = $exportDir.'/'.'wikipali-offline-ai-training-'.date('YmdHis');
 
         $tmp = mkdir($dirname, 0755, true);
-        if (!$tmp) {
-            $this->error('mkdir fail path=' . $dirname);
+        if (! $tmp) {
+            $this->error('mkdir fail path='.$dirname);
+
             return 1;
         } else {
-            $this->info('make dir successful ' . $dirname);
+            $this->info('make dir successful '.$dirname);
         }
 
-        $fpIndex = fopen($dirname . '/index.md', 'w');
+        $fpIndex = fopen($dirname.'/index.md', 'w');
         if ($fpIndex === false) {
-            die('无法创建索引文件');
+            exit('无法创建索引文件');
         }
 
         $channels = [
@@ -97,12 +101,12 @@ class ExportAiTrainingData extends Command
                 fwrite($fpIndex, "- 语言：{$channelInfo['lang']}\n");
             }
             // 创建文件
-            $this->info('export start' . $channel);
-            $filename = $channel . '.jsonl';
-            $exportFile = $dirname . '/' . $filename;
+            $this->info('export start'.$channel);
+            $filename = $channel.'.jsonl';
+            $exportFile = $dirname.'/'.$filename;
             $fp = fopen($exportFile, 'w');
             if ($fp === false) {
-                die('无法创建文件');
+                exit('无法创建文件');
             }
 
             $db = Sentence::where('channel_uid', $channel);
@@ -115,7 +119,7 @@ class ExportAiTrainingData extends Command
                 'word_end',
                 'content',
                 'content_type',
-                'updated_at'
+                'updated_at',
             ])
                 ->whereNotNull('content')
                 ->orderBy('book_id')
@@ -127,15 +131,16 @@ class ExportAiTrainingData extends Command
                 if (isset($done[$id])) {
                     continue;
                 }
-                //获取原文
+                // 获取原文
                 $origin = PaliSentence::where('book', $sent->book_id)
                     ->where('paragraph', $sent->paragraph)
                     ->where('word_begin', $sent->word_start)
                     ->where('word_end', $sent->word_end)
                     ->value('text');
-                //忽略空的原文
+                // 忽略空的原文
                 if (self::isEmpty($origin)) {
-                    Log::warning('origin is empty id=' . $id);
+                    Log::warning('origin is empty id='.$id);
+
                     continue;
                 }
                 // 渲染译文
@@ -151,20 +156,22 @@ class ExportAiTrainingData extends Command
                 $translation = trim($translation);
                 // 忽略空的译文
                 if (self::isEmpty($translation)) {
-                    Log::warning('translation is empty id=' . $id);
+                    Log::warning('translation is empty id='.$id);
+
                     continue;
                 }
 
-                //忽略过短的译文
+                // 忽略过短的译文
                 /*
                 if (mb_strlen($translation) / mb_strlen($origin) < $this->ShortTrans) {
                     Log::warning('translation is short id=' . $id);
                     continue;
                 }
                 */
-                //原文与翻译完全相同
+                // 原文与翻译完全相同
                 if ($translation === $origin) {
-                    Log::warning('translation is same id=' . $id);
+                    Log::warning('translation is same id='.$id);
+
                     continue;
                 }
                 // 获取分类标签
@@ -177,10 +184,10 @@ class ExportAiTrainingData extends Command
                     'translation' => $translation,
                     'category' => $tags,
                     'path' => $path,
-                    'updated_at' => $sent->updated_at
+                    'updated_at' => $sent->updated_at,
                 ];
 
-                fwrite($fp, json_encode($currData, JSON_UNESCAPED_UNICODE) . "\n");
+                fwrite($fp, json_encode($currData, JSON_UNESCAPED_UNICODE)."\n");
                 $bar->advance();
                 $done[$id] = 1;
             }
@@ -188,7 +195,7 @@ class ExportAiTrainingData extends Command
         }
         fclose($fpIndex);
 
-        $this->info((time() - $start) . ' seconds');
+        $this->info((time() - $start).' seconds');
         $this->call('export:zip2', [
             'id' => 'ai-translating-training-data',
             'filename' => $dirname,
@@ -208,6 +215,7 @@ class ExportAiTrainingData extends Command
             return true;
         }
         $result = preg_replace('/[\s\d\p{P}]/u', '', $input);
+
         return empty($result);
     }
 }

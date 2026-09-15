@@ -1,4 +1,4 @@
-import { initReader } from './modules/_reader.js';
+import { initReader } from './modules/reader.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     initReader();

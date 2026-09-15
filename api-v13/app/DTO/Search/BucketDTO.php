@@ -16,6 +16,7 @@ class BucketDTO
             doc_count: $data['doc_count'],
         );
     }
+
     public function toArray(): array
     {
         return [

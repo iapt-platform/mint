@@ -2,6 +2,16 @@
 $currentLocale = app()->getLocale();
 $languages = config('mint.languages');
 $currentLanguage = $languages[$currentLocale] ?? 'en';
+// 首页等无名路由用当前 URL 追加 ?lang= ，具名路由仍按路由参数生成，保持原有链接形式
+$localeUrl = function (string $locale) {
+    $routeName = Route::currentRouteName();
+
+    if ($routeName) {
+        return route($routeName, array_merge(request()->route()->parameters(), ['lang' => $locale]));
+    }
+
+    return request()->fullUrlWithQuery(['lang' => $locale]);
+};
 @endphp
 
 <div class="language-switcher">
@@ -20,7 +30,7 @@ $currentLanguage = $languages[$currentLocale] ?? 'en';
     <ul class="language-dropdown">
         @foreach ($languages as $locale => $language)
         <li>
-            <a href="{{ route(Route::currentRouteName(), array_merge(request()->route()->parameters(), ['lang' => $locale])) }}"
+            <a href="{{ $localeUrl($locale) }}"
                 class="language-dropdown-item {{ $locale === $currentLocale ? 'active' : '' }}">
                 {{ $language }}
             </a>

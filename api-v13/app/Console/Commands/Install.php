@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Tools\Tools;
 use Illuminate\Console\Command;
 
 class Install extends Command
@@ -35,31 +36,30 @@ class Install extends Command
      *
      * @return int
      */
-
     public function handle()
     {
-        if(\App\Tools\Tools::isStop()){
+        if (Tools::isStop()) {
             return 0;
         }
-		$isTest = $this->option('test');
-		if($isTest){
-			$this->call('install:wbwtemplate', ['from' => 1]);
-		}else{
-			$this->call('install:wbwtemplate');
-			$this->call('install:palitext');
-			$this->call('install:wordbook');
-			$this->call('install:wordall');
-			$this->call('install:wordindex');
+        $isTest = $this->option('test');
+        if ($isTest) {
+            $this->call('install:wbwtemplate', ['from' => 1]);
+        } else {
+            $this->call('install:wbwtemplate');
+            $this->call('install:palitext');
+            $this->call('install:wordbook');
+            $this->call('install:wordall');
+            $this->call('install:wordindex');
 
-			$this->call('upgrade:palitext');
-			$this->call('upgrade:palitoc',['lang'=>'pali']);
-			$this->call('upgrade:palitoc',['lang'=>'zh-hans']);
-			$this->call('upgrade:palitoc',['lang'=>'zh-hant']);
+            $this->call('upgrade:palitext');
+            $this->call('upgrade:palitoc', ['lang' => 'pali']);
+            $this->call('upgrade:palitoc', ['lang' => 'zh-hans']);
+            $this->call('upgrade:palitoc', ['lang' => 'zh-hant']);
 
-			$this->call('install:paliseries');
-			$this->call('install:wordstatistics');
+            $this->call('install:paliseries');
+            $this->call('install:wordstatistics');
 
-		}
+        }
 
         return 0;
     }

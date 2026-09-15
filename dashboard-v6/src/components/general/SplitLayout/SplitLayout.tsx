@@ -1,6 +1,11 @@
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { Affix, Button, Popover, Splitter } from "antd";
-import { useCallback, useState, type ReactNode } from "react";
+import {
+  useCallback,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
 import RightToolbar, { type RightToolbarTab } from "./RightToolbar";
 import styles from "./SplitLayout.module.css";
 import {
@@ -60,12 +65,25 @@ export interface SplitLayoutProps {
    */
   rightTabs?: RightToolbarTab[];
 
-  /** 右边栏面板默认宽度（px），默认 500 */
+  /**
+   * 外部请求打开某个 tab（业务层通过 redux 等触发）。
+   * `seq` 每次递增代表一次新请求，内部据此去重并打开对应 key 的 tab。
+   */
+  openRequest?: { key: string; seq: number };
+
+  /** 右边栏面板默认宽度（px），默认 400 */
   defaultRightSize?: number;
   /** 右边栏面板最小宽度（px），默认 280 */
   minRightSize?: number;
   /** 右边栏面板最大宽度（px），默认 800 */
   maxRightSize?: number;
+
+  /**
+   * 正文区最大宽度（px），默认 1000。
+   * 正文居中显示，宽屏时两侧留白，右边栏弹出/收起不会导致正文重排。
+   * 传 0 或负数表示不限制（占满可用宽度）。
+   */
+  contentMaxWidth?: number;
 }
 
 // ─────────────────────────────────────────────
@@ -77,9 +95,11 @@ export default function SplitLayout({
   sidebar,
   children,
   rightTabs,
-  defaultRightSize = 500,
+  openRequest,
+  defaultRightSize = 400,
   minRightSize = 280,
   maxRightSize = 800,
+  contentMaxWidth = 1000,
 }: SplitLayoutProps) {
   // ── 左侧收起状态（持久化）──
   const [collapsed, setCollapsed] = useState<boolean>(() => {
@@ -133,6 +153,14 @@ export default function SplitLayout({
 
   const closeRightPanel = useCallback(() => setRightActiveKey(null), []);
 
+  // ── 外部打开请求（去重后打开对应 tab）──
+  // 采用 React 官方推荐的「render 阶段调整 state」方式，避免 effect 内同步 setState。
+  const [handledOpenSeq, setHandledOpenSeq] = useState<number | null>(null);
+  if (openRequest && openRequest.seq !== handledOpenSeq) {
+    setHandledOpenSeq(openRequest.seq);
+    setRightActiveKey(openRequest.key);
+  }
+
   // ── Context ──
   const ctx: SplitLayoutContextValue = {
     collapsed,
@@ -145,6 +173,12 @@ export default function SplitLayout({
 
   const centerContent =
     typeof children === "function" ? children({ expandButton }) : children;
+
+  // 正文最大宽度（<=0 表示不限制）
+  const contentMaxWidthStyle = {
+    "--split-layout-content-max-width":
+      contentMaxWidth > 0 ? `${contentMaxWidth}px` : "none",
+  } as CSSProperties;
 
   // ── 右边栏面板宽度（持久化）──
   const [rightPanelWidth, setRightPanelWidth] = useState<number>(() => {
@@ -219,10 +253,13 @@ export default function SplitLayout({
               lazy
               className={styles.splitter}
               onResize={handleSplitterResize}
+              onResizeEnd={handleSplitterResize}
             >
               {/* 中间内容 */}
               <Splitter.Panel className={styles.centerPanel}>
-                {centerContent}
+                <div className={styles.centerInner} style={contentMaxWidthStyle}>
+                  {centerContent}
+                </div>
               </Splitter.Panel>
 
               {/* 右边栏：RightToolbar 内部管理面板的懒创建与隐藏 */}
@@ -244,7 +281,11 @@ export default function SplitLayout({
               </Splitter.Panel>
             </Splitter>
           ) : (
-            <div className={styles.centerPanel}>{centerContent}</div>
+            <div className={styles.centerPanel}>
+              <div className={styles.centerInner} style={contentMaxWidthStyle}>
+                {centerContent}
+              </div>
+            </div>
           )}
         </div>
       </div>

@@ -51,10 +51,13 @@ export default function ParaEditor({
   useEffect(() => {
     if (!currUser?.id || !chapterId) return;
 
+    const paramObj = search
+      ? Object.fromEntries(new URLSearchParams(search))
+      : undefined;
     save({
       type: "chapter",
       article_id: chapterId,
-      param: search || undefined,
+      param: JSON.stringify(paramObj),
     });
   }, [currUser?.id, chapterId, search, save]);
 

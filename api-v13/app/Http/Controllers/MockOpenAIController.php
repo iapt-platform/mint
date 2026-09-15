@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class MockOpenAIController extends Controller
@@ -17,7 +17,7 @@ class MockOpenAIController extends Controller
         $this->randomDelay($request->query('delay', 'h'));
 
         // 随机返回错误
-        if ($errorResponse = $this->randomError($request->query('error', "h"))) {
+        if ($errorResponse = $this->randomError($request->query('error', 'h'))) {
             return $errorResponse;
         }
 
@@ -25,7 +25,7 @@ class MockOpenAIController extends Controller
         $messages = $request->input('messages', []);
 
         return response()->json([
-            'id' => 'chatcmpl-' . Str::random(29),
+            'id' => 'chatcmpl-'.Str::random(29),
             'object' => 'chat.completion',
             'created' => time(),
             'model' => $model,
@@ -34,16 +34,16 @@ class MockOpenAIController extends Controller
                     'index' => 0,
                     'message' => [
                         'role' => 'assistant',
-                        'content' => $this->generateMockResponse($messages)
+                        'content' => $this->generateMockResponse($messages),
                     ],
-                    'finish_reason' => 'stop'
-                ]
+                    'finish_reason' => 'stop',
+                ],
             ],
             'usage' => [
                 'prompt_tokens' => rand(10, 100),
                 'completion_tokens' => rand(20, 200),
-                'total_tokens' => rand(30, 300)
-            ]
+                'total_tokens' => rand(30, 300),
+            ],
         ]);
     }
 
@@ -56,7 +56,7 @@ class MockOpenAIController extends Controller
         $this->randomDelay($request->query('delay', 'h'));
 
         // 随机返回错误
-        if ($errorResponse = $this->randomError($request->query('error', "h"))) {
+        if ($errorResponse = $this->randomError($request->query('error', 'h'))) {
             return $errorResponse;
         }
 
@@ -64,7 +64,7 @@ class MockOpenAIController extends Controller
         $prompt = $request->input('prompt', '');
 
         return response()->json([
-            'id' => 'cmpl-' . Str::random(29),
+            'id' => 'cmpl-'.Str::random(29),
             'object' => 'text_completion',
             'created' => time(),
             'model' => $model,
@@ -73,14 +73,14 @@ class MockOpenAIController extends Controller
                     'text' => $this->generateMockTextResponse($prompt),
                     'index' => 0,
                     'logprobs' => null,
-                    'finish_reason' => 'stop'
-                ]
+                    'finish_reason' => 'stop',
+                ],
             ],
             'usage' => [
                 'prompt_tokens' => rand(10, 100),
                 'completion_tokens' => rand(20, 200),
-                'total_tokens' => rand(30, 300)
-            ]
+                'total_tokens' => rand(30, 300),
+            ],
         ]);
     }
 
@@ -97,21 +97,21 @@ class MockOpenAIController extends Controller
                     'id' => 'gpt-4',
                     'object' => 'model',
                     'created' => 1687882411,
-                    'owned_by' => 'openai'
+                    'owned_by' => 'openai',
                 ],
                 [
                     'id' => 'gpt-3.5-turbo',
                     'object' => 'model',
                     'created' => 1677610602,
-                    'owned_by' => 'openai'
+                    'owned_by' => 'openai',
                 ],
                 [
                     'id' => 'text-davinci-003',
                     'object' => 'model',
                     'created' => 1669599635,
-                    'owned_by' => 'openai-internal'
-                ]
-            ]
+                    'owned_by' => 'openai-internal',
+                ],
+            ],
         ]);
     }
 
@@ -175,6 +175,7 @@ class MockOpenAIController extends Controller
                 return null;
                 break;
         }
+
         return null;
     }
 
@@ -188,8 +189,8 @@ class MockOpenAIController extends Controller
                 'message' => 'Invalid request: missing required parameter',
                 'type' => 'invalid_request_error',
                 'param' => null,
-                'code' => null
-            ]
+                'code' => null,
+            ],
         ], 400);
     }
 
@@ -203,8 +204,8 @@ class MockOpenAIController extends Controller
                 'message' => 'The server had an error while processing your request. Sorry about that!',
                 'type' => 'server_error',
                 'param' => null,
-                'code' => null
-            ]
+                'code' => null,
+            ],
         ], 500);
     }
 
@@ -218,8 +219,8 @@ class MockOpenAIController extends Controller
                 'message' => 'Rate limit reached for requests',
                 'type' => 'requests',
                 'param' => null,
-                'code' => 'rate_limit_exceeded'
-            ]
+                'code' => 'rate_limit_exceeded',
+            ],
         ], 429);
     }
 
@@ -229,15 +230,15 @@ class MockOpenAIController extends Controller
     private function generateMockResponse(array $messages): string
     {
         $responses = [
-            "这是一个模拟的AI响应。我正在模拟OpenAI的API服务器。",
-            "感谢您的问题！这是一个测试响应，用于模拟真实的AI助手。",
-            "我是一个模拟的AI助手。您的请求已被处理，这是模拟生成的回复。",
-            "模拟Hello! This is a mock response from the simulated OpenAI API server.",
-            "模拟Thank you for your message. This is a simulated response for testing purposes.",
-            "模拟I understand your question. This is a mock reply generated by the test API server.",
+            '这是一个模拟的AI响应。我正在模拟OpenAI的API服务器。',
+            '感谢您的问题！这是一个测试响应，用于模拟真实的AI助手。',
+            '我是一个模拟的AI助手。您的请求已被处理，这是模拟生成的回复。',
+            '模拟Hello! This is a mock response from the simulated OpenAI API server.',
+            '模拟Thank you for your message. This is a simulated response for testing purposes.',
+            '模拟I understand your question. This is a mock reply generated by the test API server.',
         ];
 
-        return $responses[array_rand($responses)] . " (响应时间: " . date('Y-m-d H:i:s') . ")";
+        return $responses[array_rand($responses)].' (响应时间: '.date('Y-m-d H:i:s').')';
     }
 
     /**
@@ -246,11 +247,11 @@ class MockOpenAIController extends Controller
     private function generateMockTextResponse(string $prompt): string
     {
         $responses = [
-            " 这是对您提示的模拟补全回复。",
-            " Mock completion response for your prompt.",
-            " 模拟的文本补全结果，用于测试目的。",
-            " This is a simulated text completion.",
-            " 基于您的输入生成的模拟响应。",
+            ' 这是对您提示的模拟补全回复。',
+            ' Mock completion response for your prompt.',
+            ' 模拟的文本补全结果，用于测试目的。',
+            ' This is a simulated text completion.',
+            ' 基于您的输入生成的模拟响应。',
         ];
 
         return $responses[array_rand($responses)];

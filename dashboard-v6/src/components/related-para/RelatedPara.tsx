@@ -127,7 +127,7 @@ const RelatedParaWidget = ({ book, para, trigger }: IWidget) => {
                     <Card
                       title={
                         <Link
-                          to={`/article/para/${item.book}-${firstPara}?book=${item.book}&par=${item.para}`}
+                          to={`/workspace/tipitaka/para/${item.book}-${firstPara}?book=${item.book}&par=${item.para}`}
                           target="_blank"
                         >
                           {item.book_title_pali}

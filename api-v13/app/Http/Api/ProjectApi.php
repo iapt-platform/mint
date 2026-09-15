@@ -3,16 +3,14 @@
 namespace App\Http\Api;
 
 use App\Models\Project;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\App;
 
 class ProjectApi
 {
     public static function getById($id)
     {
-        if (!$id) {
+        if (! $id) {
             return null;
-        };
+        }
         $project = Project::find($id);
         if ($project) {
             return [
@@ -30,11 +28,11 @@ class ProjectApi
 
     public static function getListByIds($ids)
     {
-        if (!$ids) {
+        if (! $ids) {
             return null;
-        };
+        }
         $projects = Project::whereIn('uid', $ids)->get();
-        $output = array();
+        $output = [];
         foreach ($ids as $key => $id) {
             foreach ($projects as $project) {
                 if ($project->uid === $id) {
@@ -46,10 +44,12 @@ class ProjectApi
                         'weight' => $project->weight,
                         'description' => $project->description,
                     ];
+
                     continue;
-                };
+                }
             }
         }
+
         return $output;
     }
 }

@@ -2,46 +2,57 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use App\Models\Vocabulary;
 use App\Http\Resources\VocabularyResource;
+use App\Models\Vocabulary;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
 
 class VocabularyController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
         //
-        switch ($request->input("view")) {
+        switch ($request->input('view')) {
             case 'key':
-                $key = $request->input("key");
-                $result = Cache::remember(
-                    "/dict_vocabulary/{$key}",
+                $key = (string) $request->input('key', '');
+                if ($key === '') {
+                    return $this->ok(['rows' => [], 'count' => 0]);
+                }
+
+                $payload = Cache::remember(
+                    'v13:dict_vocabulary:'.md5($key),
                     config('mint.cache.expire'),
                     function () use ($key) {
-                        $query = Vocabulary::where('word', 'like', $key . "%")
-                            ->orWhere('word_en', 'like', $key . "%")
+                        $rows = Vocabulary::where('word', 'like', $key.'%')
+                            ->orWhere('word_en', 'like', $key.'%')
                             ->orderBy('strlen')
                             ->orderBy('word')
-                            ->take(50);
-                        return $query->get();
+                            ->take(50)
+                            ->get();
+
+                        return [
+                            'rows' => VocabularyResource::collection($rows)->resolve(),
+                            'count' => $rows->count(),
+                        ];
                     }
                 );
-                return $this->ok(['rows' => VocabularyResource::collection($result), 'count' => count($result)]);
-                break;
+
+                return $this->ok($payload);
         }
+
+        return $this->ok(['rows' => [], 'count' => 0]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -51,8 +62,7 @@ class VocabularyController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Vocabulary  $vocabulary
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(Vocabulary $vocabulary)
     {
@@ -62,9 +72,7 @@ class VocabularyController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Vocabulary  $vocabulary
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, Vocabulary $vocabulary)
     {
@@ -74,8 +82,7 @@ class VocabularyController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Vocabulary  $vocabulary
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(Vocabulary $vocabulary)
     {

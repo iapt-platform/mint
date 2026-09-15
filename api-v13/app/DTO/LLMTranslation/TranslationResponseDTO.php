@@ -16,7 +16,7 @@ use App\DTO\BaseDTO;
 readonly class TranslationResponseDTO extends BaseDTO
 {
     /**
-     * @param TranslationItemDTO[] $data
+     * @param  TranslationItemDTO[]  $data
      */
     public function __construct(
         public bool $success,
@@ -31,7 +31,7 @@ readonly class TranslationResponseDTO extends BaseDTO
             success: $payload['success'],
             error: '',
             data: array_map(
-                fn(array $item) => TranslationItemDTO::fromArray($item),
+                fn (array $item) => TranslationItemDTO::fromArray($item),
                 $payload['data']
             ),
 

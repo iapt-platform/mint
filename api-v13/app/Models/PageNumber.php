@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class PageNumber extends Model
 {
     use HasFactory;
-	protected $fillable = ['type','volume','page',
-                            'book','paragraph','wid','pcd_book_id'];
 
+    protected $fillable = ['type', 'volume', 'page',
+        'book', 'paragraph', 'wid', 'pcd_book_id'];
 }

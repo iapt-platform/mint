@@ -2,14 +2,15 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Services\AIAssistant\ArticleTranslateService;
+use Illuminate\Console\Command;
 
 class TestAIArticleTranslate extends Command
 {
     /**
      * The name and signature of the console command.
      * php artisan test:ai.article.translate
+     *
      * @var string
      */
     protected $signature = 'test:ai.article.translate {--article=} {--anthology=} {--model=}  {--channel=}';
@@ -27,10 +28,11 @@ class TestAIArticleTranslate extends Command
     public function handle()
     {
         if (
-            !$this->option('model') ||
-            !$this->option('channel')
+            ! $this->option('model') ||
+            ! $this->option('channel')
         ) {
             $this->error('model,article,channel is requested');
+
             return;
         }
         //

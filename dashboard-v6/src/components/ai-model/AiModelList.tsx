@@ -19,8 +19,10 @@ import { EResType } from "../share/utils";
 
 interface IWidget {
   studioName?: string;
+  /** 在弹层（Modal/Drawer/Popover）中使用时置为 true，链接改为新标签页打开 */
+  openInNewTab?: boolean;
 }
-const AiModelList = ({ studioName }: IWidget) => {
+const AiModelList = ({ studioName, openInNewTab }: IWidget) => {
   const intl = useIntl(); //i18n
 
   const [openCreate, setOpenCreate] = useState(false);
@@ -41,7 +43,10 @@ const AiModelList = ({ studioName }: IWidget) => {
               return (
                 <Space>
                   <PublicityIcon value={entity.privacy} />
-                  <Link to={`/workspace/settings/ai-model/${entity.uid}/edit`}>
+                  <Link
+                    to={`/workspace/settings/ai-model/${entity.uid}/edit`}
+                    target={openInNewTab ? "_blank" : undefined}
+                  >
                     {entity.name}
                   </Link>
                 </Space>
@@ -70,7 +75,10 @@ const AiModelList = ({ studioName }: IWidget) => {
             render(_dom, entity) {
               return (
                 <Space>
-                  <Link to={`/workspace/settings/ai-model/${entity.uid}/log`}>
+                  <Link
+                    to={`/workspace/settings/ai-model/${entity.uid}/log`}
+                    target={openInNewTab ? "_blank" : undefined}
+                  >
                     logs
                   </Link>
                   <ShareModal

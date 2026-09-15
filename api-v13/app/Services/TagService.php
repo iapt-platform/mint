@@ -17,6 +17,7 @@ class TagService
         foreach ($tagsName as $key => $value) {
             $output[] = $value->name;
         }
+
         return $output;
     }
 }

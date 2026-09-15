@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ProgressChapter;
 use App\Models\Channel;
+use App\Models\ProgressChapter;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class ChapterIndexController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
@@ -22,32 +23,32 @@ class ChapterIndexController extends Controller
                 $table = ProgressChapter::whereIn('channel_id', $channels);
                 break;
         }
-        if ($request->has("updated_at")) {
-            $table = $table->where('updated_at', '>', $request->input("updated_at"));
+        if ($request->has('updated_at')) {
+            $table = $table->where('updated_at', '>', $request->input('updated_at'));
         }
-        if ($request->has("created_at")) {
-            $table = $table->where('created_at', '>', $request->input("created_at"));
+        if ($request->has('created_at')) {
+            $table = $table->where('created_at', '>', $request->input('created_at'));
         }
-        //获取记录总条数
+        // 获取记录总条数
         $count = $table->count();
-        //处理排序
+        // 处理排序
         $table = $table->orderBy(
-            $request->input("order", 'created_at'),
-            $request->input("dir", 'desc')
+            $request->input('order', 'created_at'),
+            $request->input('dir', 'desc')
         );
-        //处理分页
-        $table = $table->skip($request->input("offset", 0))
-            ->take($request->input("limit", 200));
-        //获取数据
+        // 处理分页
+        $table = $table->skip($request->input('offset', 0))
+            ->take($request->input('limit', 200));
+        // 获取数据
         $result = $table->get();
-        return $this->ok(["rows" => $result, "count" => $count]);
+
+        return $this->ok(['rows' => $result, 'count' => $count]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -57,8 +58,7 @@ class ChapterIndexController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\ProgressChapter  $progressChapter
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(ProgressChapter $progressChapter)
     {
@@ -68,9 +68,7 @@ class ChapterIndexController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\ProgressChapter  $progressChapter
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, ProgressChapter $progressChapter)
     {
@@ -80,8 +78,7 @@ class ChapterIndexController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\ProgressChapter  $progressChapter
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(ProgressChapter $progressChapter)
     {

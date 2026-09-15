@@ -2,34 +2,35 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
-use App\Models\ProgressChapter;
+use App\Http\Api\StudioApi;
 use App\Models\Channel;
+use App\Models\Like;
+use App\Models\PaliText;
+use App\Models\ProgressChapter;
 use App\Models\Tag;
 use App\Models\TagMap;
-use App\Models\PaliText;
 use App\Models\View;
-use App\Models\Like;
 use Illuminate\Http\Request;
-use App\Http\Api\StudioApi;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class ProgressChapterController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
 
-        $minProgress = (float)$request->input('progress', 0.8);
+        $minProgress = (float) $request->input('progress', 0.8);
 
-        $offset = (int)$request->input('offset', 0);
+        $offset = (int) $request->input('offset', 0);
 
-        $limit = (int)$request->input('limit', 20);
+        $limit = (int) $request->input('limit', 20);
 
         $channel_id = $request->input('channel');
 
@@ -39,24 +40,24 @@ class ProgressChapterController extends Controller
         switch ($request->input('view')) {
             case 'ids':
                 $aChannel = explode(',', $request->input('channel'));
-                $chapters = ProgressChapter::select("channel_id")->selectRaw("uid as id")
-                    ->with(['channel' => function ($query) {  //city对应上面province模型中定义的city方法名  闭包内是子查询
+                $chapters = ProgressChapter::select('channel_id')->selectRaw('uid as id')
+                    ->with(['channel' => function ($query) {  // city对应上面province模型中定义的city方法名  闭包内是子查询
                         return $query->select('*');
                     }])
-                    ->where("book", $request->input('book'))
-                    ->where("para", $request->input('par'))
+                    ->where('book', $request->input('book'))
+                    ->where('para', $request->input('par'))
                     ->whereIn('channel_id', $aChannel)->get();
                 $all_count = count($chapters);
                 break;
             case 'studio':
-                #查询该studio的channel
+                // 查询该studio的channel
                 $name = $request->input('name');
                 $studioId = StudioApi::getIdByName($request->input('name'));
                 if ($studioId === false) {
                     return $this->error('no user');
                 }
                 $table = Channel::where('owner_uid', $studioId);
-                if ($request->input('public') === "true") {
+                if ($request->input('public') === 'true') {
                     $table = $table->where('status', 30);
                 }
                 $channels = $table->select('uid')->get();
@@ -67,8 +68,8 @@ class ProgressChapterController extends Controller
                     })
                     ->where('progress', '>', 0.85)
                     ->orderby('progress_chapters.created_at', 'desc')
-                    ->skip($request->input("offset", 0))
-                    ->take($request->input("limit", 1000))
+                    ->skip($request->input('offset', 0))
+                    ->take($request->input('limit', 1000))
                     ->get();
                 $all_count = ProgressChapter::whereIn('progress_chapters.channel_id', $channels)
                     ->where('progress', '>', 0.85)->count();
@@ -94,8 +95,8 @@ class ProgressChapterController extends Controller
                 if ($request->input('tags') && $request->input('tags') !== '') {
                     $tags = explode(',', $request->input('tags'));
                     foreach ($tags as $tag) {
-                        # code...
-                        if (!empty($tag)) {
+                        // code...
+                        if (! empty($tag)) {
                             $tagNames[] = $tag;
                         }
                     }
@@ -106,18 +107,18 @@ class ProgressChapterController extends Controller
                 $pt = (new PaliText)->getTable();
                 $param[] = $minProgress;
                 if (isset($tagNames)) {
-                    $where1 = " where co = " . count($tagNames);
-                    $a = implode(",", array_fill(0, count($tagNames), '?'));
+                    $where1 = ' where co = '.count($tagNames);
+                    $a = implode(',', array_fill(0, count($tagNames), '?'));
                     $in1 = "and t.name in ({$a})";
-                    $param  = array_merge($param, $tagNames);
+                    $param = array_merge($param, $tagNames);
                 } else {
-                    $where1 = " ";
-                    $in1 = " ";
+                    $where1 = ' ';
+                    $in1 = ' ';
                 }
                 if (Str::isUuid($channel_id)) {
                     $channel = "and channel_id = '{$channel_id}' ";
                 } else {
-                    $channel = "";
+                    $channel = '';
                 }
 
                 $query = "
@@ -154,7 +155,7 @@ class ProgressChapterController extends Controller
 
                 $chapters = ProgressChapter::select('lang')
                     ->selectRaw('count(*) as count')
-                    ->where("progress", ">", $minProgress)
+                    ->where('progress', '>', $minProgress)
                     ->groupBy('lang')
                     ->get();
                 $all_count = count($chapters);
@@ -171,15 +172,15 @@ class ProgressChapterController extends Controller
                         return $query->select('*');
                     }])
                     ->leftJoin('channels', 'progress_chapters.channel_id', '=', 'channels.uid')
-                    ->where("progress", ">", $minProgress)
+                    ->where('progress', '>', $minProgress)
                     ->where('channels.status', '>=', 30);
-                if (!empty($request->input('channel_type'))) {
-                    $chapters =  $chapters->where('channels.type', $request->input('channel_type'));
+                if (! empty($request->input('channel_type'))) {
+                    $chapters = $chapters->where('channels.type', $request->input('channel_type'));
                 }
-                if (!empty($request->input('lang'))) {
-                    $chapters =  $chapters->where('progress_chapters.lang', $request->input('lang'));
+                if (! empty($request->input('lang'))) {
+                    $chapters = $chapters->where('progress_chapters.lang', $request->input('lang'));
                 }
-                $chapters =  $chapters->groupBy('channel_id')
+                $chapters = $chapters->groupBy('channel_id')
                     ->orderBy('count', 'desc')
                     ->get();
                 foreach ($chapters as $key => $chapter) {
@@ -191,7 +192,6 @@ class ProgressChapterController extends Controller
                 /**
                  * 某个章节 有多少channel
                  */
-
                 $chapters = ProgressChapter::select(
                     'book',
                     'para',
@@ -204,26 +204,26 @@ class ProgressChapterController extends Controller
                     'progress_chapters.updated_at'
                 )
                     ->leftJoin('channels', 'progress_chapters.channel_id', '=', 'channels.uid')
-                    ->where("book", $request->input('book'))
-                    ->where("para", $request->input('par'))
+                    ->where('book', $request->input('book'))
+                    ->where('para', $request->input('par'))
                     ->orderBy('progress', 'desc')
                     ->get();
                 foreach ($chapters as $key => $value) {
-                    # code...
-                    $chapters[$key]->views = View::where("target_id", $value->uid)->count();
+                    // code...
+                    $chapters[$key]->views = View::where('target_id', $value->uid)->count();
 
-                    $likes = Like::where("target_id", $value->uid)
-                        ->groupBy("type")
-                        ->select("type")
-                        ->selectRaw("count(*)")
+                    $likes = Like::where('target_id', $value->uid)
+                        ->groupBy('type')
+                        ->select('type')
+                        ->selectRaw('count(*)')
                         ->get();
-                    if (isset($_COOKIE["user_uid"])) {
+                    if (isset($_COOKIE['user_uid'])) {
                         foreach ($likes as $key1 => $like) {
-                            # 查看这些点赞里有没有我点的
+                            // 查看这些点赞里有没有我点的
                             $myLikeId = Like::where([
-                                "target_id" => $value->uid,
+                                'target_id' => $value->uid,
                                 'type' => $like->type,
-                                'user_id' => $_COOKIE["user_uid"]
+                                'user_id' => $_COOKIE['user_uid'],
                             ])->value('id');
                             if ($myLikeId) {
                                 $likes[$key1]->selected = $myLikeId;
@@ -245,69 +245,68 @@ class ProgressChapterController extends Controller
                 $tg = (new Tag)->getTable();
                 $pt = (new PaliText)->getTable();
 
-                //标签过滤
-                if ($request->has('tags') && !empty($request->input('tags'))) {
+                // 标签过滤
+                if ($request->has('tags') && ! empty($request->input('tags'))) {
                     $tags = explode(',', $request->input('tags'));
                     foreach ($tags as $tag) {
-                        # code...
-                        if (!empty($tag)) {
+                        // code...
+                        if (! empty($tag)) {
                             $tagNames[] = $tag;
                         }
                     }
                 }
                 if (isset($tagNames)) {
-                    $where1 = " where co = " . count($tagNames);
-                    $a = implode(",", array_fill(0, count($tagNames), '?'));
+                    $where1 = ' where co = '.count($tagNames);
+                    $a = implode(',', array_fill(0, count($tagNames), '?'));
                     $in1 = "and t.name in ({$a})";
                     $param = $tagNames;
                 } else {
-                    $where1 = " ";
-                    $in1 = " ";
+                    $where1 = ' ';
+                    $in1 = ' ';
                 }
                 if ($request->has('studio')) {
                     $studioId = StudioApi::getIdByName($request->input('studio'));
                     $table = Channel::where('owner_uid', $studioId);
-                    if ($request->input('public') === "true") {
+                    if ($request->input('public') === 'true') {
                         $table = $table->where('status', 30);
                     }
                     $channels = $table->select('uid')->get();
                     $arrChannel = [];
                     foreach ($channels as $oneChannel) {
-                        # code...
+                        // code...
                         if (Str::isUuid($oneChannel->uid)) {
                             $arrChannel[] = "'{$oneChannel->uid}'";
                         }
                     }
-                    $channel = "and channel_id in (" . implode(',', $arrChannel) . ") ";
+                    $channel = 'and channel_id in ('.implode(',', $arrChannel).') ';
                 } else {
                     if (Str::isUuid($channel_id)) {
                         $channel = "and channel_id = '{$channel_id}' ";
                     } else {
-                        $channel = "";
+                        $channel = '';
                     }
                 }
 
-                //完成度过滤
+                // 完成度过滤
                 $param[] = $minProgress;
 
-                //语言过滤
-                if (!empty($request->input('lang'))) {
-                    $whereLang = " and pc.lang = ? ";
+                // 语言过滤
+                if (! empty($request->input('lang'))) {
+                    $whereLang = ' and pc.lang = ? ';
                     $param[] = $request->input('lang');
                 } else {
-                    $whereLang = "   ";
+                    $whereLang = '   ';
                 }
-                //channel type过滤
-                if ($request->has('channel_type') && !empty($request->input('channel_type'))) {
-                    $channel_type = "and ch.type = ? ";
+                // channel type过滤
+                if ($request->has('channel_type') && ! empty($request->input('channel_type'))) {
+                    $channel_type = 'and ch.type = ? ';
                     $param[] = $request->input('channel_type');
                 } else {
-                    $channel_type = "";
+                    $channel_type = '';
                 }
 
                 $param_count = $param;
                 $param[] = $offset;
-
 
                 $query = "
                 select tpc.pc_uid as uid, tpc.book ,tpc.para,tpc.channel_id,tpc.title,pt.toc,pt.path,tpc.progress,tpc.summary,tpc.created_at,tpc.updated_at
@@ -339,19 +338,19 @@ class ProgressChapterController extends Controller
                     left join $pt as pt on tpc.book = pt.book and tpc.para = pt.paragraph;";
                 $chapters = DB::select($query, $param);
                 foreach ($chapters as $key => $chapter) {
-                    # code...
+                    // code...
                     $chapter->channel = Channel::where('uid', $chapter->channel_id)->select(['name', 'owner_uid'])->first();
-                    $chapter->studio = StudioApi::getById($chapter->channel["owner_uid"]);
-                    $chapter->views = View::where("target_id", $chapter->uid)->count();
-                    $chapter->likes = Like::where(["type" => "like", "target_id" => $chapter->uid])->count();
-                    $chapter->tags = TagMap::where("anchor_id", $chapter->uid)
+                    $chapter->studio = StudioApi::getById($chapter->channel['owner_uid']);
+                    $chapter->views = View::where('target_id', $chapter->uid)->count();
+                    $chapter->likes = Like::where(['type' => 'like', 'target_id' => $chapter->uid])->count();
+                    $chapter->tags = TagMap::where('anchor_id', $chapter->uid)
                         ->leftJoin('tags', 'tag_maps.tag_id', '=', 'tags.id')
                         ->select(['tags.id', 'tags.name', 'tags.description'])
                         ->get();
                 }
 
-                //计算按照这个条件搜索到的总数
-                $query  = "
+                // 计算按照这个条件搜索到的总数
+                $query = "
                          select count(*) as count
 							from (
 								select *
@@ -383,50 +382,50 @@ class ProgressChapterController extends Controller
             case 'search':
                 $key = $request->input('key');
                 $table = ProgressChapter::where('title', 'like', "%{$key}%");
-                //获取记录总条数
+                // 获取记录总条数
                 $all_count = $table->count();
-                //处理排序
-                if ($request->has("order") && $request->has("dir")) {
-                    $table = $table->orderBy($request->input("order"), $request->input("dir"));
+                // 处理排序
+                if ($request->has('order') && $request->has('dir')) {
+                    $table = $table->orderBy($request->input('order'), $request->input('dir'));
                 } else {
-                    //默认排序
+                    // 默认排序
                     $table = $table->orderBy('updated_at', 'desc');
                 }
-                //处理分页
-                if ($request->has("limit")) {
-                    if ($request->has("offset")) {
-                        $offset = $request->input("offset");
+                // 处理分页
+                if ($request->has('limit')) {
+                    if ($request->has('offset')) {
+                        $offset = $request->input('offset');
                     } else {
                         $offset = 0;
                     }
-                    $table = $table->skip($offset)->take($request->input("limit"));
+                    $table = $table->skip($offset)->take($request->input('limit'));
                 }
-                //获取数据
+                // 获取数据
                 $chapters = $table->get();
-                //TODO 移到resource
+                // TODO 移到resource
                 foreach ($chapters as $key => $chapter) {
-                    # code...
+                    // code...
                     $chapter->toc = PaliText::where('book', $chapter->book)->where('paragraph', $chapter->para)->value('toc');
                     $chapter->path = PaliText::where('book', $chapter->book)->where('paragraph', $chapter->para)->value('path');
                     $chapter->channel = Channel::where('uid', $chapter->channel_id)->select(['name', 'owner_uid'])->first();
                     if ($chapter->channel) {
-                        $chapter->studio = StudioApi::getById($chapter->channel["owner_uid"]);
+                        $chapter->studio = StudioApi::getById($chapter->channel['owner_uid']);
                     } else {
                         $chapter->channel = [
-                            'name' => "unknown",
-                            'owner_uid' => "unknown",
+                            'name' => 'unknown',
+                            'owner_uid' => 'unknown',
                         ];
                         $chapter->studio = [
-                            'id' => "",
-                            'nickName' => "unknown",
-                            'realName' => "unknown",
+                            'id' => '',
+                            'nickName' => 'unknown',
+                            'realName' => 'unknown',
                             'avatar' => '',
                         ];
                     }
 
-                    $chapter->views = View::where("target_id", $chapter->uid)->count();
-                    $chapter->likes = Like::where(["type" => "like", "target_id" => $chapter->uid])->count();
-                    $chapter->tags = TagMap::where("anchor_id", $chapter->uid)
+                    $chapter->views = View::where('target_id', $chapter->uid)->count();
+                    $chapter->likes = Like::where(['type' => 'like', 'target_id' => $chapter->uid])->count();
+                    $chapter->tags = TagMap::where('anchor_id', $chapter->uid)
                         ->leftJoin('tags', 'tag_maps.tag_id', '=', 'tags.id')
                         ->select(['tags.id', 'tags.name', 'tags.description'])
                         ->get();
@@ -437,16 +436,16 @@ class ProgressChapterController extends Controller
         }
 
         if ($chapters) {
-            return $this->ok(["rows" => $chapters, "count" => $all_count]);
+            return $this->ok(['rows' => $chapters, 'count' => $all_count]);
         } else {
-            return $this->error("no data");
+            return $this->error('no data');
         }
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -456,8 +455,7 @@ class ProgressChapterController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -467,8 +465,7 @@ class ProgressChapterController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\ProgressChapter  $progressChapter
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(ProgressChapter $progressChapter)
     {
@@ -478,8 +475,7 @@ class ProgressChapterController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\ProgressChapter  $progressChapter
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit(ProgressChapter $progressChapter)
     {
@@ -489,9 +485,7 @@ class ProgressChapterController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\ProgressChapter  $progressChapter
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, ProgressChapter $progressChapter)
     {
@@ -501,8 +495,7 @@ class ProgressChapterController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\ProgressChapter  $progressChapter
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(ProgressChapter $progressChapter)
     {

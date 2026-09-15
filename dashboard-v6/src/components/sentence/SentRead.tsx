@@ -119,10 +119,10 @@ const SentReadFrame = ({
           __html: `<span class="pcd_sent" id="sent_${book}-${para}-${wordStart}-${wordEnd}"></span>`,
         }}
       />
-      <Flex vertical={layoutCommentary === "row"}>
+      <Flex vertical={layoutCommentary === "column"}>
         <Flex
           gap="middle"
-          vertical={layoutDirection === "row"}
+          vertical={layoutDirection === "column"}
           style={{ flex: 5 }}
         >
           {/* 原文 */}

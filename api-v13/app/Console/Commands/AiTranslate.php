@@ -2,13 +2,12 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use App\Models\Sentence;
 use App\Models\PaliSentence;
 use App\Models\PaliText;
-
-use Illuminate\Support\Facades\Log;
+use App\Models\Sentence;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class AiTranslate extends Command
 {
@@ -16,9 +15,10 @@ class AiTranslate extends Command
      * The name and signature of the console command.
      * php artisan ai:sentence.translate --type=chapter --api=deepseek --model=deepseek-chat --sid=107-2357
      * php artisan ai:sentence.translate --type=sentence --api=kimi --model=moonshot-v1-8k --sid=107-2357-9-47
+     *
      * @var string
      */
-    protected $signature = <<<command
+    protected $signature = <<<'command'
     ai:sentence.translate 
     {--type=sentence  : sentence|paragraph|chapter} 
     {--api=  : ai engin url} 
@@ -52,8 +52,8 @@ class AiTranslate extends Command
      */
     public function handle()
     {
-        //句子号列表
-        $sentences = array();
+        // 句子号列表
+        $sentences = [];
         $totalLen = 0;
         switch ($this->option('type')) {
             case 'sentence':
@@ -83,37 +83,39 @@ class AiTranslate extends Command
                 return 1;
                 break;
         }
-        //获取句子总长度
+        // 获取句子总长度
 
         foreach ($sentences as $key => $sentence) {
             $totalLen += $this->sentLen($sentence);
         }
         //
         foreach ($sentences as $key => $sentence) {
-            # 获取巴利句子
+            // 获取巴利句子
             $pali = PaliSentence::where('book', $sentence[0])
                 ->where('paragraph', $sentence[1])
                 ->where('word_begin', $sentence[2])
                 ->where('word_end', $sentence[3])
                 ->value('text');
-            //获取nissaya
+            // 获取nissaya
             $nissaya = Sentence::where('channel_uid', $this->option('nissaya'))
                 ->where('book_id', $sentence[0])
                 ->where('paragraph', $sentence[1])
                 ->where('word_start', $sentence[2])
                 ->where('word_end', $sentence[3])
                 ->value('content');
-            //获取ai结果
+            // 获取ai结果
             $api = $this->getEngin($this->option('api'));
-            if (!$api) {
+            if (! $api) {
                 $this->error('ai translate no api');
+
                 return 1;
             }
             $json = $this->fetch($api, $this->option('model'), $pali, $nissaya);
             Log::info('ai translate', ['json' => $json]);
             $this->info($json['choices'][0]['message']['content']);
-            //写入
+            // 写入
         }
+
         return 0;
     }
 
@@ -125,41 +127,44 @@ class AiTranslate extends Command
             ->where('word_end', $id[3])
             ->value('length');
     }
+
     private function getEngin($engin)
     {
         $api = config('mint.ai.accounts');
         $selected = array_filter($api, function ($value) use ($engin) {
             return $value['name'] === $engin;
         });
-        if (!is_array($selected) || count($selected) === 0) {
+        if (! is_array($selected) || count($selected) === 0) {
             return null;
         }
+
         return $selected[0];
     }
 
-    private function fetch($api, $model, $origin,  $nissaya = null)
+    private function fetch($api, $model, $origin, $nissaya = null)
     {
         $prompt = '翻译上面的巴利文为中文';
         if ($nissaya) {
-            $prompt = '根据下面的解释，' . $prompt;
+            $prompt = '根据下面的解释，'.$prompt;
         }
         $message = "{$origin}\n\n{$prompt}\n\n{$nissaya}";
 
         $url = $api['api_url'];
         $param = [
-            "model" => $model,
-            "messages" => [
-                ["role" => "system", "content" => "你是翻译人工智能助手.bhikkhu 为专有名词，不可翻译成其他语言。"],
-                ["role" => "user", "content" => $message],
+            'model' => $model,
+            'messages' => [
+                ['role' => 'system', 'content' => '你是翻译人工智能助手.bhikkhu 为专有名词，不可翻译成其他语言。'],
+                ['role' => 'user', 'content' => $message],
             ],
-            "temperature" => 0.3,
-            "stream" => false
+            'temperature' => 0.3,
+            'stream' => false,
         ];
         $response = Http::withToken($api['token'])
             ->post($url, $param);
         if ($response->failed()) {
-            $this->error('http request error' . $response->json('message'));
+            $this->error('http request error'.$response->json('message'));
             Log::error('http request error', ['data' => $response->json()]);
+
             return null;
         } else {
             return $response->json();

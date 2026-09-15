@@ -2,22 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Http\Api\StudioApi;
-
+use App\Models\Course;
+use App\Models\DhammaTerm;
+use App\Models\Sentence;
 use App\Models\UserInfo;
 use App\Models\Wbw;
-use App\Models\Sentence;
-use App\Models\DhammaTerm;
-use App\Models\Course;
-
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class UserMilestoneController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -27,8 +26,7 @@ class UserMilestoneController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -39,7 +37,7 @@ class UserMilestoneController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show($studioName)
     {
@@ -53,7 +51,7 @@ class UserMilestoneController extends Controller
                 'date' => Wbw::where('creator_uid', $user_uid)
                     ->orderBy('created_at')
                     ->value('created_at'),
-                'event' => 'first-wbw'
+                'event' => 'first-wbw',
             ];
         }
         if (Sentence::where('editor_uid', $user_uid)->exists()) {
@@ -61,7 +59,7 @@ class UserMilestoneController extends Controller
                 'date' => Sentence::where('editor_uid', $user_uid)
                     ->orderBy('created_at')
                     ->value('created_at'),
-                'event' => 'first-translation'
+                'event' => 'first-translation',
             ];
         }
         if (DhammaTerm::where('owner', $user_uid)->exists()) {
@@ -69,7 +67,7 @@ class UserMilestoneController extends Controller
                 'date' => DhammaTerm::where('owner', $user_uid)
                     ->orderBy('created_at')
                     ->value('created_at'),
-                'event' => 'first-term'
+                'event' => 'first-term',
             ];
         }
         if (Course::where('studio_id', $user_uid)->exists()) {
@@ -77,10 +75,9 @@ class UserMilestoneController extends Controller
                 'date' => Course::where('studio_id', $user_uid)
                     ->orderBy('created_at')
                     ->value('created_at'),
-                'event' => 'first-course'
+                'event' => 'first-course',
             ];
         }
-
 
         return $this->ok($milestone);
     }
@@ -88,9 +85,8 @@ class UserMilestoneController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, $id)
     {
@@ -101,7 +97,7 @@ class UserMilestoneController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {

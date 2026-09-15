@@ -1,4 +1,5 @@
 <?php
+
 // app/Support/WikiContentParser.php
 
 namespace App\Helpers;
@@ -23,21 +24,21 @@ class WikiContentParser
                     $id = $m[1];
                 } else {
                     $text = strip_tags($inner);
-                    $id   = self::slugify($text);
+                    $id = self::slugify($text);
 
                     if (isset($slugCount[$id])) {
                         $slugCount[$id]++;
-                        $id .= '-' . $slugCount[$id];
+                        $id .= '-'.$slugCount[$id];
                     } else {
                         $slugCount[$id] = 0;
                     }
 
-                    $attrs .= ' id="' . $id . '"';
+                    $attrs .= ' id="'.$id.'"';
                 }
 
                 $toc[] = [
-                    'id'    => $id,
-                    'text'  => strip_tags($inner),
+                    'id' => $id,
+                    'text' => strip_tags($inner),
                     'level' => (int) substr($tag, 1),
                 ];
 
@@ -47,7 +48,7 @@ class WikiContentParser
         );
 
         // 归一化层级：找最小 level，所有条目 level = level - minLevel + 1
-        if (!empty($toc)) {
+        if (! empty($toc)) {
             $minLevel = min(array_column($toc, 'level'));
             foreach ($toc as &$item) {
                 $item['level'] = $item['level'] - $minLevel + 1;
@@ -62,6 +63,7 @@ class WikiContentParser
     {
         // 保留中文、字母、数字，其余转连字符
         $slug = preg_replace('/[^\p{L}\p{N}]+/u', '-', trim($text));
+
         return strtolower(trim($slug, '-')) ?: 'section';
     }
 }

@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\SentSim;
-use App\Models\PaliSentence;
-use Illuminate\Http\Request;
 use App\Http\Resources\SentSimResource;
+use App\Models\PaliSentence;
+use App\Models\SentSim;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class SentSimController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
@@ -24,8 +25,8 @@ class SentSimController extends Controller
                     ->where('word_begin', $request->input('start'))
                     ->where('word_end', $request->input('end'))
                     ->value('id');
-                if (!$sentId) {
-                    return $this->error("no sent");
+                if (! $sentId) {
+                    return $this->error('no sent');
                 }
                 $table = SentSim::where('sent1', $sentId)
                     ->orderBy('sim', 'desc');
@@ -33,20 +34,20 @@ class SentSimController extends Controller
         }
         $table->where('sim', '>=', $request->input('sim', 0));
         $count = $table->count();
-        $table->skip($request->input("offset", 0))
+        $table->skip($request->input('offset', 0))
             ->take($request->input('limit', 20));
         $result = $table->get();
         if ($result) {
-            return $this->ok(["rows" => SentSimResource::collection($result), "count" => $count]);
+            return $this->ok(['rows' => SentSimResource::collection($result), 'count' => $count]);
         } else {
-            return $this->error("no data");
+            return $this->error('no data');
         }
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -56,8 +57,7 @@ class SentSimController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -67,8 +67,7 @@ class SentSimController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\SentSim  $sentSim
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(SentSim $sentSim)
     {
@@ -78,8 +77,7 @@ class SentSimController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\SentSim  $sentSim
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit(SentSim $sentSim)
     {
@@ -89,9 +87,7 @@ class SentSimController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\SentSim  $sentSim
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, SentSim $sentSim)
     {
@@ -101,8 +97,7 @@ class SentSimController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\SentSim  $sentSim
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(SentSim $sentSim)
     {

@@ -1,8 +1,6 @@
 import { useIntl } from "react-intl";
-import { Button, Card, Form } from "antd";
-import { message } from "antd";
+import { App, Button, Card, Col, Form, Row, Space } from "antd";
 import { ProForm, ProFormText } from "@ant-design/pro-components";
-import { Col, Row, Space } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 
 import { put } from "../../request";
@@ -17,6 +15,7 @@ interface IWidget {
 }
 const DiscussionEditWidget = ({ data, onUpdated, onClose }: IWidget) => {
   const intl = useIntl();
+  const { message } = App.useApp();
 
   return (
     <Card

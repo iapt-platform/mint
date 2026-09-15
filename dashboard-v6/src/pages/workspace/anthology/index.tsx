@@ -1,3 +1,4 @@
+import { useIntl } from "react-intl";
 import { useAppSelector } from "../../../hooks";
 import { currentUser } from "../../../reducers/current-user";
 import AnthologyList from "../../../components/anthology/AnthologyList";
@@ -7,6 +8,7 @@ const Widget = () => {
   const user = useAppSelector(currentUser);
   const studioName = user?.realName;
   const navigate = useNavigate();
+  const intl = useIntl();
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -35,7 +37,9 @@ const Widget = () => {
   console.debug("anthology list", studioName);
   return (
     <>
-      <title>anthology</title>
+      <title>
+        {intl.formatMessage({ id: "columns.studio.anthology.title" })}
+      </title>
       <AnthologyList
         tab={tab}
         page={page}

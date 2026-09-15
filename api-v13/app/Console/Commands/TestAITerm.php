@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Services\AIAssistant\AITermService;
+use Illuminate\Console\Command;
 
 class TestAITerm extends Command
 {

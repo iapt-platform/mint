@@ -12,12 +12,12 @@ class RendererFactory
 
     public static function create(string $format): RendererInterface
     {
-        if (!isset(self::$renderers[$format])) {
+        if (! isset(self::$renderers[$format])) {
             self::$renderers[$format] = match ($format) {
-                'json' => new JsonRenderer(),
-                'html' => new HtmlRenderer(),
-                'markdown' => new MarkdownRenderer(),
-                'text' => new TextRenderer(),
+                'json' => new JsonRenderer,
+                'html' => new HtmlRenderer,
+                'markdown' => new MarkdownRenderer,
+                'text' => new TextRenderer,
                 default => throw new \InvalidArgumentException("Unsupported format: $format")
             };
         }

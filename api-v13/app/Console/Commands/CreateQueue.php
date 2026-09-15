@@ -2,11 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Services\RabbitMQService;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
-
-use App\Services\RabbitMQService;
 
 #[Signature('app:create-queue')]
 #[Description('create queues')]
@@ -18,7 +17,7 @@ class CreateQueue extends Command
     public function handle()
     {
         //
-        $this->info("queues create start");
+        $this->info('queues create start');
         $created = app(RabbitMQService::class)->createQueue();
         $total = count($created);
         $this->info("[{$total}] queues created");

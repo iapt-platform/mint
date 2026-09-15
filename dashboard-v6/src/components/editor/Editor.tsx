@@ -1,5 +1,5 @@
 import { CommentOutlined, SearchOutlined } from "@ant-design/icons";
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import SplitLayout, { type RightToolbarTab } from "../general/SplitLayout";
 import ChannelPanel from "./panels/ChannelPanel";
 import DictPanel from "./panels/DictPanel";
@@ -14,8 +14,24 @@ import {
 import ChatPanel from "./panels/ChatPanel";
 import SuggestionPanel from "./panels/SuggestionPanel";
 import GrammarBookPanel from "./panels/GrammarBookPanel";
+import DiscussionBox from "../discussion/DiscussionBox";
 import type { ArticleType } from "../../api/article";
 import type { IChannel } from "../../api/channel";
+import { useAppSelector } from "../../hooks";
+import { openPanel, rightPanel } from "../../reducers/right-panel";
+import store from "../../store";
+
+/**
+ * redux openPanel 面板名 → 右边栏 tab key。
+ * v4 中这些值通过 `openPanel("xxx")` 触发对应面板打开。
+ */
+const OPENABLE_TABS = new Set([
+  "dict",
+  "channel",
+  "discussion",
+  "suggestion",
+  "grammar",
+]);
 
 // ─────────────────────────────────────────────
 // Props
@@ -69,6 +85,28 @@ export default function Editor({
 }: EditorProps) {
   const channels = channelId ? channelId.split("_") : undefined;
 
+  // ── 响应业务层 openPanel 触发（对齐 v4）──
+  // 例如点击句子/wbw 上的讨论按钮 → openDiscussion → openPanel("discussion")
+  const panel = useAppSelector(rightPanel);
+  const [openRequest, setOpenRequest] = useState<{ key: string; seq: number }>();
+  const [prevPanel, setPrevPanel] = useState<string | undefined>(panel);
+
+  // render 阶段把 redux 信号转换为一次性「打开请求」
+  // （React 官方「prop 变化时调整 state」模式，避免 effect 内同步 setState）
+  if (panel !== prevPanel) {
+    setPrevPanel(panel);
+    if (panel !== undefined && OPENABLE_TABS.has(panel)) {
+      setOpenRequest((prev) => ({ key: panel, seq: (prev?.seq ?? 0) + 1 }));
+    }
+  }
+
+  // 消费后复位信号（副作用：更新外部 store，保证下一次相同触发仍能命中）
+  useEffect(() => {
+    if (panel !== undefined) {
+      store.dispatch(openPanel(undefined));
+    }
+  }, [panel]);
+
   // ── 右边栏 tabs（固定业务定义）──
   // content 用独立组件而非内联 JSX，保证 articleId 等 props 变化时正常 re-render
   const rightTabs: RightToolbarTab[] = [
@@ -104,7 +142,7 @@ export default function Editor({
       key: "discussion",
       icon: <CommentOutlined />,
       label: "讨论",
-      content: <SearchPanel articleId={articleId} anthologyId={anthologyId} />,
+      content: <DiscussionBox />,
     },
     {
       key: "suggestion",
@@ -135,6 +173,7 @@ export default function Editor({
       sidebarTitle={sidebarTitle}
       sidebar={sidebar}
       rightTabs={rightTabs}
+      openRequest={openRequest}
     >
       {({ expandButton }) => children({ expandButton })}
     </SplitLayout>

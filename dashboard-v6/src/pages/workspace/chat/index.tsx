@@ -10,6 +10,7 @@ import {
   XRequest,
 } from "@ant-design/x-sdk";
 import { Button, Flex, Tooltip } from "antd";
+import { useIntl } from "react-intl";
 import React from "react";
 
 /**
@@ -80,6 +81,7 @@ const role: BubbleListProps["role"] = {
 };
 
 const App = () => {
+  const intl = useIntl();
   const [content, setContent] = React.useState("");
   // 创建OpenAI聊天提供者：配置请求参数和模型
   // Create OpenAI chat provider: configure request parameters and model
@@ -199,7 +201,9 @@ const App = () => {
   };
 
   return (
-    <Flex vertical gap="middle">
+    <>
+      <title>{intl.formatMessage({ id: "labels.ai-assistant" })}</title>
+      <Flex vertical gap="middle">
       {/* 状态和控制区域：显示当前状态并提供操作按钮 */}
       {/* Status and control area: display current status and provide action buttons */}
       <Flex vertical gap="middle">
@@ -296,7 +300,8 @@ const App = () => {
           setContent("");
         }}
       />
-    </Flex>
+      </Flex>
+    </>
   );
 };
 

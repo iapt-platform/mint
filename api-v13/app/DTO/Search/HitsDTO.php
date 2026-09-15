@@ -5,7 +5,7 @@ namespace App\DTO\Search;
 class HitsDTO
 {
     /**
-     * @param HitItemDTO[] $items
+     * @param  HitItemDTO[]  $items
      */
     public function __construct(
         public int $total,
@@ -17,7 +17,7 @@ class HitsDTO
         return new self(
             total: $data['total']['value'],
             items: array_map(
-                fn($item) => HitItemDTO::fromArray($item),
+                fn ($item) => HitItemDTO::fromArray($item),
                 $data['hits']
             )
         );

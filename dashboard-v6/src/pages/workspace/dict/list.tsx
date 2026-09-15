@@ -1,3 +1,4 @@
+import { useIntl } from "react-intl";
 import UserDictList from "../../../components/dict/UserDictList";
 import { useAppSelector } from "../../../hooks";
 import { currentUser } from "../../../reducers/current-user";
@@ -5,9 +6,12 @@ import { currentUser } from "../../../reducers/current-user";
 const Widget = () => {
   const user = useAppSelector(currentUser);
   const studioName = user?.realName;
+  const intl = useIntl();
   return (
     <div>
-      <title>dict</title>
+      <title>
+        {intl.formatMessage({ id: "columns.studio.userdict.title" })}
+      </title>
       <UserDictList studioName={studioName} />
     </div>
   );

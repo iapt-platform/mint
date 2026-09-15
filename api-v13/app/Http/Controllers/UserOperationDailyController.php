@@ -2,53 +2,55 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UserOperationDaily;
-use Illuminate\Http\Request;
-use App\Services\AuthService;
 use App\Http\Api\UserApi;
+use App\Models\UserOperationDaily;
+use App\Services\AuthService;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class UserOperationDailyController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
         //
         switch ($request->input('view')) {
-            case "user-all":
+            case 'user-all':
                 $queryUserUuid = UserApi::getIdByName($request->input('studio_name'));
                 $user = AuthService::current($request);
-                if (!$user) {
+                if (! $user) {
                     return $this->error(__('auth.failed'));
                 }
-                //TODO 判断是否有查看权限
-                if ($queryUserUuid !== $user["user_uid"]) {
+                // TODO 判断是否有查看权限
+                if ($queryUserUuid !== $user['user_uid']) {
                     return $this->error(__('auth.failed'));
                 }
-                $result = UserOperationDaily::where('user_id', $user["user_id"])
+                $result = UserOperationDaily::where('user_id', $user['user_id'])
                     ->select(['date_int', 'duration', 'hit'])
-                    ->orderBy("date_int")
+                    ->orderBy('date_int')
                     ->get();
                 break;
-            case "user-year":
+            case 'user-year':
                 $queryUserId = UserApi::getIntIdByName($request->input('studio_name'));
-                //TODO 判断是否有查看权限
+                // TODO 判断是否有查看权限
                 $result = UserOperationDaily::where('user_id', $queryUserId)
                     ->select(['date_int', 'duration'])
-                    ->orderBy("date_int")
+                    ->orderBy('date_int')
                     ->get();
                 break;
         }
-        return $this->ok(["rows" => $result, "count" => count($result)]);
+
+        return $this->ok(['rows' => $result, 'count' => count($result)]);
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -58,8 +60,7 @@ class UserOperationDailyController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -69,8 +70,7 @@ class UserOperationDailyController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\UserOperationDaily  $userOperationDaily
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(UserOperationDaily $userOperationDaily)
     {
@@ -80,8 +80,7 @@ class UserOperationDailyController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\UserOperationDaily  $userOperationDaily
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit(UserOperationDaily $userOperationDaily)
     {
@@ -91,9 +90,7 @@ class UserOperationDailyController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\UserOperationDaily  $userOperationDaily
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, UserOperationDaily $userOperationDaily)
     {
@@ -103,8 +100,7 @@ class UserOperationDailyController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\UserOperationDaily  $userOperationDaily
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(UserOperationDaily $userOperationDaily)
     {

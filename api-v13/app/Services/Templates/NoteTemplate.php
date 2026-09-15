@@ -10,17 +10,17 @@ class NoteTemplate extends AbstractTemplate
 
     public function render(): array
     {
-        $note = $this->getParam("text", 1);
-        $trigger = $this->getParam("trigger", 2);
-        $props = ["note" => $note];
-        $innerString = "";
-        if (!empty($trigger)) {
-            $props["trigger"] = $trigger;
-            $innerString = $props["trigger"];
+        $note = $this->getParam('text', 1);
+        $trigger = $this->getParam('trigger', 2);
+        $props = ['note' => $note];
+        $innerString = '';
+        if (! empty($trigger)) {
+            $props['trigger'] = $trigger;
+            $innerString = $props['trigger'];
         }
         if ($this->options['format'] === 'unity') {
-            $props["note"] = MdRender::render(
-                $props["note"],
+            $props['note'] = MdRender::render(
+                $props['note'],
                 $this->options['channel_id'],
                 null,
                 'read',
@@ -50,13 +50,13 @@ class NoteTemplate extends AbstractTemplate
                     $GLOBALS['note_sn']++;
                 } else {
                     $GLOBALS['note_sn'] = 1;
-                    $GLOBALS['note'] = array();
+                    $GLOBALS['note'] = [];
                 }
                 $GLOBALS['note'][] = [
                     'sn' => $GLOBALS['note_sn'],
                     'trigger' => $trigger,
                     'content' => MdRender::render(
-                        $props["note"],
+                        $props['note'],
                         $this->options['channel_id'],
                         null,
                         'read',
@@ -66,11 +66,11 @@ class NoteTemplate extends AbstractTemplate
                     ),
                 ];
 
-                $link = "<a href='#footnote-" . $GLOBALS['note_sn'] . "' name='note-" . $GLOBALS['note_sn'] . "'>";
+                $link = "<a href='#footnote-".$GLOBALS['note_sn']."' name='note-".$GLOBALS['note_sn']."'>";
                 if (empty($trigger)) {
-                    $output =  $link . "<sup>[" . $GLOBALS['note_sn'] . "]</sup></a>";
+                    $output = $link.'<sup>['.$GLOBALS['note_sn'].']</sup></a>';
                 } else {
-                    $output = $link . $trigger . "</a>";
+                    $output = $link.$trigger.'</a>';
                 }
                 break;
             case 'text':
@@ -87,10 +87,10 @@ class NoteTemplate extends AbstractTemplate
                     $GLOBALS['note_sn']++;
                 } else {
                     $GLOBALS['note_sn'] = 1;
-                    $GLOBALS['note'] = array();
+                    $GLOBALS['note'] = [];
                 }
                 $content = MdRender::render(
-                    $props["note"],
+                    $props['note'],
                     $this->options['channel_id'],
                     null,
                     'read',
@@ -98,18 +98,19 @@ class NoteTemplate extends AbstractTemplate
                     'markdown',
                     'markdown'
                 );
-                $output = '[^' . $GLOBALS['note_sn'] . ']';
+                $output = '[^'.$GLOBALS['note_sn'].']';
                 $GLOBALS['note'][] = [
                     'sn' => $GLOBALS['note_sn'],
                     'trigger' => $trigger,
                     'content' => $content,
                 ];
-                //$output = '<footnote id="'.$GLOBALS['note_sn'].'">'.$content.'</footnote>';
+                // $output = '<footnote id="'.$GLOBALS['note_sn'].'">'.$content.'</footnote>';
                 break;
             default:
                 $output = '';
                 break;
         }
+
         return $output;
     }
 }

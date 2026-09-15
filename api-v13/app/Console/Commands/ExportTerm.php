@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Storage;
 use App\Models\DhammaTerm;
+use App\Tools\Tools;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
 class ExportTerm extends Command
@@ -42,59 +42,77 @@ class ExportTerm extends Command
     {
         Log::info('task export offline term-table start');
         $startAt = time();
-        if(\App\Tools\Tools::isStop()){
+        if (Tools::isStop()) {
             return 0;
         }
-        $exportFile = storage_path('app/public/export/offline/wikipali-offline-'.date("Y-m-d").'.db3');
-        $dbh = new \PDO('sqlite:'.$exportFile, "", "", array(\PDO::ATTR_PERSISTENT => true));
+        $exportFile = storage_path('app/public/export/offline/wikipali-offline-'.date('Y-m-d').'.db3');
+        $dbh = new \PDO('sqlite:'.$exportFile, '', '', [\PDO::ATTR_PERSISTENT => true]);
         $dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING);
         $dbh->beginTransaction();
 
-        $query = "INSERT INTO dhamma_terms ( uuid , word , word_en , meaning ,
+        $query = 'INSERT INTO dhamma_terms ( uuid , word , word_en , meaning ,
                                     other_meaning , note , tag , channel_id,
                                     language, owner, editor_id,
                                     created_at,updated_at,deleted_at)
                                     VALUES ( ? , ? , ? , ? ,
                                             ? , ? , ? , ? ,
                                             ?, ?, ?,
-                                            ?, ?, ? )";
-        try{
+                                            ?, ?, ? )';
+        try {
             $stmt = $dbh->prepare($query);
-        }catch(PDOException $e){
-            Log::info($e);
+        } catch (\PDOException $e) {
+            Log::error($e->getMessage(), ['exception' => $e]);
+
             return 1;
         }
 
-        $bar = $this->output->createProgressBar(DhammaTerm::count());
-        foreach (DhammaTerm::select(['guid','word','word_en','meaning',
-                          'other_meaning','note','tag','channal',
-                          'language',"owner","editor_id",
-                          "created_at","updated_at","deleted_at"
-                          ])
-                          ->cursor() as $row) {
-                $currData = array(
-                            $row->guid,
-                            $row->word,
-                            $row->word_en,
-                            $row->meaning,
-                            $row->other_meaning,
-                            $row->note,
-                            $row->tag,
-                            $row->channal,
-                            $row->language,
-                            $row->owner,
-                            $row->editor_id,
-                            $row->created_at,
-                            $row->updated_at,
-                            $row->deleted_at,
-                            );
+        $total = DhammaTerm::count();
+        $channels = DhammaTerm::select([
+            'guid',
+            'word',
+            'word_en',
+            'meaning',
+            'other_meaning',
+            'note',
+            'tag',
+            'channal',
+            'language',
+            'owner',
+            'editor_id',
+            'created_at',
+            'updated_at',
+            'deleted_at',
+        ])
+            ->cursor();
+        foreach ($channels as $key => $row) {
+            $currData = [
+                $row->guid,
+                $row->word,
+                $row->word_en,
+                $row->meaning,
+                $row->other_meaning,
+                $row->note,
+                $row->tag,
+                $row->channal,
+                $row->language,
+                $row->owner,
+                $row->editor_id,
+                $row->created_at,
+                $row->updated_at,
+                $row->deleted_at,
+            ];
             $stmt->execute($currData);
-            $bar->advance();
+
+            if ($key % 1000 === 0) {
+                $precent = (int) ($key * 100 / $total);
+                $this->line("[{$precent}%]");
+            }
         }
         $dbh->commit();
         $bar->finish();
-        $this->info(' time='.(time()-$startAt).'s');
+        $this->info(' time='.(time() - $startAt).'s');
         Log::info('task export offline term-table finished');
+
         return 0;
     }
 }

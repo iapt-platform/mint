@@ -2,22 +2,18 @@
 
 namespace App\Providers;
 
+use App\Services\RomanizeService;
+use App\Tools\QueryBuilderMacro;
+use App\View\Composers\BlogViewComposer;
 use Carbon\CarbonImmutable;
+use Godruoyi\Snowflake\LaravelSequenceResolver;
+use Godruoyi\Snowflake\Snowflake;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
-
-use Godruoyi\Snowflake\Snowflake;
-use Godruoyi\Snowflake\LaravelSequenceResolver;
-
-use App\Tools\QueryBuilderMacro;
-use Illuminate\Database\Query\Builder as QueryBuilder;
-
-use App\Services\RomanizeService;
-
-use Illuminate\Support\Facades\View;
-use App\View\Composers\BlogViewComposer;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -111,13 +107,13 @@ class AppServiceProvider extends ServiceProvider
         |--------------------------------------------------------------------------
         */
         Password::defaults(
-            fn(): ?Password => app()->isProduction()
+            fn (): ?Password => app()->isProduction()
                 ? Password::min(12)
-                ->mixedCase()
-                ->letters()
-                ->numbers()
-                ->symbols()
-                ->uncompromised()
+                    ->mixedCase()
+                    ->letters()
+                    ->numbers()
+                    ->symbols()
+                    ->uncompromised()
                 : null,
         );
     }

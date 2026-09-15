@@ -2,7 +2,6 @@
 
 namespace App\Services\Template;
 
-
 // ================== 模板注册表 ==================
 
 class TemplateRegistry
@@ -21,38 +20,38 @@ class TemplateRegistry
                 'defaultParams' => ['text', 'type'],
                 'paramMapping' => [
                     '0' => 'text',
-                    '1' => 'type'
+                    '1' => 'type',
                 ],
                 'defaultValues' => [
-                    'type' => 'info'
+                    'type' => 'info',
                 ],
                 'validation' => [
                     'required' => ['text'],
-                    'optional' => ['type', 'title']
-                ]
+                    'optional' => ['type', 'title'],
+                ],
             ],
             'info' => [
                 'defaultParams' => ['content'],
                 'paramMapping' => [
-                    '0' => 'content'
+                    '0' => 'content',
                 ],
                 'defaultValues' => [],
                 'validation' => [
                     'required' => ['content'],
-                    'optional' => ['title']
-                ]
+                    'optional' => ['title'],
+                ],
             ],
             'warning' => [
                 'defaultParams' => ['message'],
                 'paramMapping' => [
-                    '0' => 'message'
+                    '0' => 'message',
                 ],
                 'defaultValues' => [],
                 'validation' => [
                     'required' => ['message'],
-                    'optional' => ['title']
-                ]
-            ]
+                    'optional' => ['title'],
+                ],
+            ],
         ];
     }
 

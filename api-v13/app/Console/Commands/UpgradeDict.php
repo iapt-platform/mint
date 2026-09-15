@@ -2,19 +2,20 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Support\Str;
+use App\Models\DictInfo;
+use App\Models\UserDict;
+use App\Tools\Tools;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
-
-use App\Models\UserDict;
-use App\Models\DictInfo;
+use Illuminate\Support\Str;
 
 class UpgradeDict extends Command
 {
     /**
      * The name and signature of the console command.
      * php artisan upgrade:dict
+     *
      * @var string
      */
     protected $signature = 'upgrade:dict {uuid?} {--part}';
@@ -27,6 +28,7 @@ class UpgradeDict extends Command
     protected $description = '导入csv字典';
 
     protected $dictInfo;
+
     protected $cols;
 
     /**
@@ -42,41 +44,42 @@ class UpgradeDict extends Command
     private function scanDict(string $dir)
     {
         if (is_dir($dir)) {
-            $this->info("scan:" . $dir);
+            $this->info('scan:'.$dir);
             if ($files = scandir($dir)) {
-                //进入目录搜索字典或子目录
+                // 进入目录搜索字典或子目录
                 foreach ($files as $file) {
-                    //进入语言目录循环搜索
-                    $fullPath = $dir . "/" . $file;
+                    // 进入语言目录循环搜索
+                    $fullPath = $dir.'/'.$file;
                     if (is_dir($fullPath) && $file !== '.' && $file !== '..') {
-                        //是目录继续搜索
+                        // 是目录继续搜索
                         $this->scanDict($fullPath);
                     } else {
-                        //是文件，查看是否是字典信息文件
+                        // 是文件，查看是否是字典信息文件
                         $infoFile = $fullPath;
                         if (pathinfo($infoFile, PATHINFO_EXTENSION) === 'ini') {
                             $this->dictInfo = parse_ini_file($infoFile, true);
                             if (isset($this->dictInfo['meta']['dictname'])) {
-                                //是字典信息文件
+                                // 是字典信息文件
                                 $this->info($this->dictInfo['meta']['dictname']);
                                 if (Str::isUuid($this->argument('uuid'))) {
                                     if ($this->argument('uuid') !== $this->dictInfo['meta']['uuid']) {
                                         continue;
                                     }
                                 }
-                                if (!Str::isUuid($this->dictInfo['meta']['uuid'])) {
-                                    $this->error("not uuid");
+                                if (! Str::isUuid($this->dictInfo['meta']['uuid'])) {
+                                    $this->error('not uuid');
+
                                     continue;
                                 }
-                                //读取 description
-                                $desFile = $dir . "/description.md";
+                                // 读取 description
+                                $desFile = $dir.'/description.md';
                                 if (file_exists($desFile)) {
                                     $description = file_get_contents($desFile);
                                 } else {
                                     $description = $this->dictInfo['meta']['description'];
                                 }
                                 $tableDict = DictInfo::firstOrNew([
-                                    "id" => $this->dictInfo['meta']['uuid']
+                                    'id' => $this->dictInfo['meta']['uuid'],
                                 ]);
                                 $tableDict->id = $this->dictInfo['meta']['uuid'];
                                 $tableDict->name = $this->dictInfo['meta']['dictname'];
@@ -85,55 +88,54 @@ class UpgradeDict extends Command
                                 $tableDict->src_lang = $this->dictInfo['meta']['src_lang'];
                                 $tableDict->dest_lang = $this->dictInfo['meta']['dest_lang'];
                                 $tableDict->rows = $this->dictInfo['meta']['rows'];
-                                $tableDict->owner_id = config("mint.admin.root_uuid");
+                                $tableDict->owner_id = config('mint.admin.root_uuid');
                                 $tableDict->meta = json_encode($this->dictInfo['meta']);
                                 $tableDict->save();
 
                                 if ($this->option('part')) {
-                                    $this->info(" dict id = " . $this->dictInfo['meta']['uuid']);
+                                    $this->info(' dict id = '.$this->dictInfo['meta']['uuid']);
                                 } else {
-                                    $del = UserDict::where("dict_id", $this->dictInfo['meta']['uuid'])->delete();
-                                    $this->info("delete {$del} rows dict id = " . $this->dictInfo['meta']['uuid']);
+                                    $del = UserDict::where('dict_id', $this->dictInfo['meta']['uuid'])->delete();
+                                    $this->info("delete {$del} rows dict id = ".$this->dictInfo['meta']['uuid']);
                                 }
                                 /**
                                  * 允许一个字典拆成若干个小文件
                                  * 文件名 为 ***.csv , ***-1.csv , ***-2.csv
-                                 *
                                  */
-                                $filename = $dir . '/' . pathinfo($infoFile, PATHINFO_FILENAME);
-                                $csvFile = $filename . ".csv";
+                                $filename = $dir.'/'.pathinfo($infoFile, PATHINFO_FILENAME);
+                                $csvFile = $filename.'.csv';
                                 $count = 0;
                                 $bar = $this->output->createProgressBar($this->dictInfo['meta']['rows']);
                                 while (file_exists($csvFile)) {
-                                    # code...
+                                    // code...
                                     $this->info("runing:{$csvFile}");
                                     $inputRow = 0;
-                                    if (($fp = fopen($csvFile, "r")) !== false) {
-                                        $this->cols = array();
+                                    if (($fp = fopen($csvFile, 'r')) !== false) {
+                                        $this->cols = [];
                                         while (($data = fgetcsv($fp, 0, ',')) !== false) {
                                             if ($inputRow == 0) {
                                                 foreach ($data as $key => $colname) {
-                                                    # 列名列表
+                                                    // 列名列表
                                                     $this->cols[$colname] = $key;
                                                 }
                                             } else {
                                                 if ($this->option('part')) {
-                                                    //仅仅提取拆分零件
+                                                    // 仅仅提取拆分零件
                                                     $word = $this->get($data, 'word');
                                                     $factor1 = $this->get($data, 'factors');
-                                                    $factor1 = \str_replace([' ', '(', ')', '=', '-', '$'], "+", $factor1);
-                                                    foreach (\explode('+', $factor1)  as $part) {
-                                                        # code...
+                                                    $factor1 = \str_replace([' ', '(', ')', '=', '-', '$'], '+', $factor1);
+                                                    foreach (\explode('+', $factor1) as $part) {
+                                                        // code...
                                                         if (empty($part)) {
                                                             continue;
                                                         }
                                                         if (isset($newPart[$part])) {
                                                             $newPart[$part][0]++;
                                                         } else {
-                                                            $partExists = Cache::remember('dict/part/' . $part, config('cache.expire', 1000), function () use ($part) {
+                                                            $partExists = Cache::remember('dict/part/'.$part, config('cache.expire', 1000), function () use ($part) {
                                                                 return UserDict::where('word', $part)->exists();
                                                             });
-                                                            if (!$partExists) {
+                                                            if (! $partExists) {
                                                                 $count++;
                                                                 $newPart[$part] = [1, $word];
                                                                 $this->info("{$count}:{$part}-{$word}");
@@ -141,7 +143,7 @@ class UpgradeDict extends Command
                                                         }
                                                     }
                                                 } else {
-                                                    $newDict = new UserDict();
+                                                    $newDict = new UserDict;
                                                     $newDict->id = app('snowflake')->id();
                                                     $newDict->word = $data[$this->cols['word']];
                                                     $newDict->type = $this->get($data, 'type');
@@ -155,7 +157,7 @@ class UpgradeDict extends Command
                                                     $newDict->language = $this->get($data, 'language');
                                                     $newDict->confidence = $this->get($data, 'confidence');
                                                     $newDict->source = $this->get($data, 'source');
-                                                    $newDict->create_time = (int)(microtime(true) * 1000);
+                                                    $newDict->create_time = (int) (microtime(true) * 1000);
                                                     $newDict->creator_id = 0;
                                                     $newDict->dict_id = $this->dictInfo['meta']['uuid'];
                                                     $newDict->save();
@@ -167,30 +169,33 @@ class UpgradeDict extends Command
                                         }
                                     }
                                     $count++;
-                                    $csvFile = $filename . "-{$count}.csv";
+                                    $csvFile = $filename."-{$count}.csv";
                                 }
                                 $bar->finish();
-                                Storage::disk('local')->put("tmp/pm-part.csv", "part,count,word");
+                                Storage::disk('local')->put('tmp/pm-part.csv', 'part,count,word');
                                 if (isset($newPart)) {
                                     foreach ($newPart as $part => $info) {
-                                        # 写入磁盘文件
-                                        Storage::disk('local')->append("tmp/pm-part.csv", "{$part},{$info[0]},{$info[1]}");
+                                        // 写入磁盘文件
+                                        Storage::disk('local')->append('tmp/pm-part.csv', "{$part},{$info[0]},{$info[1]}");
                                     }
                                 }
-                                $this->info("done");
+                                $this->info('done');
                             }
                         }
                     }
                 }
-                //子目录搜素完毕
+
+                // 子目录搜素完毕
                 return;
             } else {
-                //获取子目录失败
-                $this->error("scandir fail");
+                // 获取子目录失败
+                $this->error('scandir fail');
+
                 return;
             }
         } else {
             $this->error("this is not dir input={$dir}");
+
             return;
         }
     }
@@ -198,16 +203,17 @@ class UpgradeDict extends Command
     /**
      * 获取列的值
      */
-    protected function get(array $data, string $colName, $default = "")
+    protected function get(array $data, string $colName, $default = '')
     {
         if (isset($this->cols[$colName])) {
             return $data[$this->cols[$colName]];
-        } else if (isset($this->dictInfo['cols'][$colName])) {
+        } elseif (isset($this->dictInfo['cols'][$colName])) {
             return $this->dictInfo['cols'][$colName];
         } else {
             return $default;
         }
     }
+
     /**
      * Execute the console command.
      *
@@ -215,12 +221,12 @@ class UpgradeDict extends Command
      */
     public function handle()
     {
-        if (\App\Tools\Tools::isStop()) {
+        if (Tools::isStop()) {
             return 0;
         }
-        $this->info("upgrade dict start");
-        $this->scanDict(config("mint.path.dict_text"));
-        $this->info("upgrade dict done");
+        $this->info('upgrade dict start');
+        $this->scanDict(config('mint.path.dict_text'));
+        $this->info('upgrade dict done');
 
         return 0;
     }

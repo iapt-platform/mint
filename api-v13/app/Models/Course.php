@@ -8,11 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Course extends Model
 {
     use HasFactory;
+
     protected $primaryKey = 'id';
+
     protected $casts = [
-        'id' => 'string'
+        'id' => 'string',
     ];
-    public  $incrementing = false;
+
+    public $incrementing = false;
 
     protected $dates = [
         'created_at',
@@ -22,5 +25,4 @@ class Course extends Model
         'sign_up_start_at',
         'sign_up_end_at',
     ];
-
 }

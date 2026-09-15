@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\SearchTitleIndexResource;
 use App\Models\PaliText;
 use Illuminate\Http\Request;
-use App\Http\Resources\SearchTitleIndexResource;
+use Illuminate\Http\Response;
 
 class SearchTitleController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
@@ -24,18 +25,18 @@ class SearchTitleController extends Controller
             });
         $count = $table->count();
         $table = $table->orderBy('title_en');
-        $table = $table->skip($request->input("offset", 0))
+        $table = $table->skip($request->input('offset', 0))
             ->take($request->input('limit', 10));
 
         $result = $table->get();
-        return $this->ok(["rows" => SearchTitleIndexResource::collection($result), "count" => $count]);
+
+        return $this->ok(['rows' => SearchTitleIndexResource::collection($result), 'count' => $count]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -45,8 +46,7 @@ class SearchTitleController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\PaliText  $paliText
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(PaliText $paliText)
     {
@@ -56,9 +56,7 @@ class SearchTitleController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\PaliText  $paliText
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, PaliText $paliText)
     {
@@ -68,8 +66,7 @@ class SearchTitleController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\PaliText  $paliText
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(PaliText $paliText)
     {
