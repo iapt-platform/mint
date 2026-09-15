@@ -257,7 +257,7 @@ class PaliContentService
                          */
                         $newSent['forkAt'] = $row->fork_at; //
                         $newSent['updateAt'] = $row->updated_at; //
-                        $newSent['updateAt'] = date('Y-m-d H:i:s.', $row->modify_time / 1000).($row->modify_time % 1000).' UTC';
+                        $newSent['updateAt'] = date('Y-m-d H:i:s.', $row->modify_time / 1000) . ($row->modify_time % 1000) . ' UTC';
 
                         $newSent['createdAt'] = $row->created_at;
                         if ($mode !== 'read') {
@@ -421,7 +421,7 @@ class PaliContentService
             $wbw = str_replace('&nbsp;', ' ', $wbwrow->data);
             $wbw = str_replace('<br>', ' ', $wbw);
 
-            $xmlString = '<root>'.$wbw.'</root>';
+            $xmlString = '<root>' . $wbw . '</root>';
             try {
                 $xmlWord = simplexml_load_string($xmlString);
             } catch (\Exception $e) {
@@ -560,7 +560,7 @@ class PaliContentService
             $channelInfo = Channel::where('uid', $channelId)
                 ->select(['uid', 'type', 'name', 'lang', 'owner_uid'])->first();
             if (! $channelInfo) {
-                Log::error('no channel id'.$channelId);
+                Log::error('no channel id' . $channelId);
 
                 continue;
             }
@@ -656,9 +656,13 @@ class PaliContentService
         // 缓存句子，段落外壳与标题级别有关，不进缓存
         $key = self::paragraphCacheKey($book, $para, $channelUid, $format);
         $cached = Cache::tags([self::paragraphCacheTag($book, $para, $channelUid)])
-            ->rememberForever($key, function () use ($book, $para, $channelUid, $format) {
-                return $this->renderReadSentences($book, $para, $channelUid, $format);
-            });
+            ->remember(
+                $key,
+                config('mint.cache.expire'),
+                function () use ($book, $para, $channelUid, $format) {
+                    return $this->renderReadSentences($book, $para, $channelUid, $format);
+                }
+            );
 
         $result = [
             'para' => $para,
