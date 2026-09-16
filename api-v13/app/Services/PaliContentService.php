@@ -257,7 +257,7 @@ class PaliContentService
                          */
                         $newSent['forkAt'] = $row->fork_at; //
                         $newSent['updateAt'] = $row->updated_at; //
-                        $newSent['updateAt'] = date('Y-m-d H:i:s.', $row->modify_time / 1000) . ($row->modify_time % 1000) . ' UTC';
+                        $newSent['updateAt'] = date('Y-m-d H:i:s.', $row->modify_time / 1000).($row->modify_time % 1000).' UTC';
 
                         $newSent['createdAt'] = $row->created_at;
                         if ($mode !== 'read') {
@@ -421,7 +421,7 @@ class PaliContentService
             $wbw = str_replace('&nbsp;', ' ', $wbwrow->data);
             $wbw = str_replace('<br>', ' ', $wbw);
 
-            $xmlString = '<root>' . $wbw . '</root>';
+            $xmlString = '<root>'.$wbw.'</root>';
             try {
                 $xmlWord = simplexml_load_string($xmlString);
             } catch (\Exception $e) {
@@ -560,7 +560,7 @@ class PaliContentService
             $channelInfo = Channel::where('uid', $channelId)
                 ->select(['uid', 'type', 'name', 'lang', 'owner_uid'])->first();
             if (! $channelInfo) {
-                Log::error('no channel id' . $channelId);
+                Log::error('no channel id'.$channelId);
 
                 continue;
             }
@@ -677,7 +677,7 @@ class PaliContentService
             // html 格式加段落外壳
             $content = implode('', $cached['display']);
             $inner = $level > 0 ? "<h{$level}>{$content}</h{$level}>" : "<div class='para-block'>{$content}</div>";
-            $result['display'] = "<div class='{$cached['area']}' data-para='{$para}'>{$inner}</div>";
+            $result['display'] = "<div id='para-{$para}' class='{$cached['area']}' data-para='{$para}'>{$inner}</div>";
         } else {
             // 其他格式一行一句
             $result['display'] = implode("\n", $cached['display']);

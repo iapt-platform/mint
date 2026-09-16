@@ -18,8 +18,8 @@ article.reader-body {
 article.reader-body div.sentence {
     display: inline;
 }
-article.reader-body div.translation .para-block {
-    margin-bottom: 0.75em;
+article.reader-body .para-block {
+    margin-bottom: 1em;
 }
 /* ── 段落 ── */
 article.reader-body p {

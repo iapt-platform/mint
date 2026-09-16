@@ -32,7 +32,7 @@ it('renders every sentence of a paragraph wrapped in divs', function () {
     // 默认只输出 display
     expect($data)->not->toHaveKey('sentences');
     expect($data['display'])
-        ->toContain("<div class='translation' data-para='1'>")
+        ->toContain("<div id='para-1' class='translation' data-para='1'>")
         ->toContain("<div class='sentence' data-sid='9001-1-1-1'>")
         ->toContain("<div class='sentence' data-sid='9001-1-2-2'>")
         ->toContain("<div class='para-block'>");

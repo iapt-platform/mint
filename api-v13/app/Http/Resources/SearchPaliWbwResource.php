@@ -31,10 +31,16 @@ class SearchPaliWbwResource extends JsonResource
             $data['path'] = json_decode($paliText->path);
             if ($paliText->level < 100) {
                 $data['paliTitle'] = $paliText->toc;
+                $book = $this->book;
+                $para = $this->paragraph;
+                $data['link'] = config('app.url')."/library/tipitaka/{$book}-{$para}/read";
             } else {
                 $data['paliTitle'] = PaliText::where('book', $this->book)
                     ->where('paragraph', $paliText->parent)
                     ->value('toc');
+                $book = end($data['path'])['book'];
+                $para = end($data['path'])['paragraph'];
+                $data['link'] = config('app.url')."/library/tipitaka/{$book}-{$para}/read#{$this->paragraph}";
             }
             $keyWords = explode(',', $request->input('key'));
             $keyWordsUpper = $keyWords;
