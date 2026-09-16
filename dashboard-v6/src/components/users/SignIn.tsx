@@ -5,7 +5,7 @@ import { useNavigate, useSearchParams } from "react-router";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 
 import { useAppDispatch } from "../../hooks";
-import { type IUser, signIn, TO_HOME } from "../../reducers/current-user";
+import { type IUser, signIn, TO_WORKSPACE } from "../../reducers/current-user";
 import { get, post } from "../../request";
 import { useState } from "react";
 import { set } from "../../reducers/session";
@@ -65,7 +65,7 @@ const Widget = () => {
                 if (url) {
                   window.location.href = atob(url);
                 } else {
-                  navigate(TO_HOME);
+                  navigate(TO_WORKSPACE);
                 }
               } else {
                 setError("用户名或密码错误");

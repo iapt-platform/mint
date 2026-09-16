@@ -7,6 +7,8 @@ import {
   FileOutlined,
   SettingOutlined,
   PlusOutlined,
+  ToolOutlined,
+  TeamOutlined,
 } from "@ant-design/icons";
 import { useNavigate, useMatches, type UIMatch } from "react-router";
 import {
@@ -281,7 +283,7 @@ const Widget = ({ onSearch }: Props) => {
     },
     {
       key: "/workspace/tools",
-      icon: <CourseOutLinedIcon />,
+      icon: <ToolOutlined />,
       label: intl.formatMessage({ id: "labels.tools" }),
       children: [
         {
@@ -309,7 +311,7 @@ const Widget = ({ onSearch }: Props) => {
     },
     {
       key: "/workspace/collaboration",
-      icon: <CourseOutLinedIcon />,
+      icon: <TeamOutlined />,
       label: intl.formatMessage({ id: "labels.collaboration" }),
       children: [
         {

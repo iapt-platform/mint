@@ -9,6 +9,7 @@ export const ROLE_ADMINISTRATOR = "administrator";
 export const TO_SIGN_IN = "/anonymous/sign-in";
 export const TO_PROFILE = "/dashboard/users/logs";
 export const TO_HOME = "/";
+export const TO_WORKSPACE = "/workspace";
 
 const KEY = "token";
 const STUDIO_KEY = "studio";
