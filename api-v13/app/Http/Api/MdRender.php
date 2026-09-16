@@ -402,8 +402,26 @@ class MdRender
                 $nissayaWord = [];
                 if (is_array($json)) {
                     foreach ($json as $word) {
-                        if (count($word->sn) === 1) {
-                            // 只输出第一层级
+                        if (isset($word->original)) {
+                            // 对齐后的 nissaya json 格式：
+                            // {original, translation, note, confidence}
+                            // translation 用 ">" 分隔多层意思，转成 wiki 模版使用的 "=" 分隔符
+                            $str = '{{nissaya|';
+                            $str .= $word->original;
+                            $str .= '|';
+                            $str .= str_replace(
+                                '>',
+                                '=',
+                                isset($word->translation) ? $word->translation : ''
+                            );
+                            $str .= '}}';
+                            $nissayaWord[] = $str;
+
+                            if (! empty($word->note)) {
+                                $nissayaWord[] = '{{note|'.$word->note.'|[nt]}}';
+                            }
+                        } elseif (isset($word->sn) && count($word->sn) === 1) {
+                            // 逐词解析 wbw json 格式，只输出第一层级
                             $str = '{{nissaya|';
                             if (isset($word->word->value)) {
                                 $str .= $word->word->value;

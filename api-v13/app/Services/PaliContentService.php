@@ -330,19 +330,15 @@ class PaliContentService
                                     "/sent/{$channelId}/{$ids}/{$format}",
                                     config('mint.cache.expire'),
                                     function () use ($row, $mode, $format) {
-                                        if ($row->content_type === 'markdown') {
-                                            return MdRender::render(
-                                                $row->content,
-                                                [$row->channel_uid],
-                                                null,
-                                                $mode,
-                                                'nissaya',
-                                                $row->content_type,
-                                                $format
-                                            );
-                                        } else {
-                                            return null;
-                                        }
+                                        return MdRender::render(
+                                            $row->content,
+                                            [$row->channel_uid],
+                                            null,
+                                            $mode,
+                                            'nissaya',
+                                            $row->content_type,
+                                            $format
+                                        );
                                     }
                                 );
                                 break;
