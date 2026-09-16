@@ -113,15 +113,14 @@ it('caches the paragraph and drops the cache when a sentence changes', function 
     $url = "/api/v3/tipitaka-read-para/9001-1?channel={$channel}";
     $this->getJson($url)->assertOk();
 
-    $tag = PaliContentService::paragraphCacheTag(9001, 1, $channel);
     $key = PaliContentService::paragraphCacheKey(9001, 1, $channel, 'html');
-    expect(Cache::tags([$tag])->has($key))->toBeTrue();
+    expect(Cache::has($key))->toBeTrue();
 
     $sentence = Sentence::where('book_id', 9001)->where('paragraph', 1)->orderBy('word_start')->first();
     $sentence->content = 'changed sentence';
     $sentence->save();
 
-    expect(Cache::tags([$tag])->has($key))->toBeFalse();
+    expect(Cache::has($key))->toBeFalse();
     expect($this->getJson($url)->json('data.display'))->toContain('changed sentence');
 });
 

@@ -655,14 +655,13 @@ class PaliContentService
         $level = $this->paragraphLevel($book, $para);
         // 缓存句子，段落外壳与标题级别有关，不进缓存
         $key = self::paragraphCacheKey($book, $para, $channelUid, $format);
-        $cached = Cache::tags([self::paragraphCacheTag($book, $para, $channelUid)])
-            ->remember(
-                $key,
-                config('mint.cache.expire'),
-                function () use ($book, $para, $channelUid, $format) {
-                    return $this->renderReadSentences($book, $para, $channelUid, $format);
-                }
-            );
+        $cached = Cache::remember(
+            $key,
+            config('mint.cache.expire'),
+            function () use ($book, $para, $channelUid, $format) {
+                return $this->renderReadSentences($book, $para, $channelUid, $format);
+            }
+        );
 
         $result = [
             'para' => $para,
@@ -700,6 +699,13 @@ class PaliContentService
     }
 
     /**
+     * 阅读模式支持的全部格式。forgetParagraph 需要逐格式清除缓存 key。
+     *
+     * @var array<int, string>
+     */
+    private const FORMATS = ['html', 'markdown', 'react', 'text'];
+
+    /**
      * 段落阅读模式缓存的 key
      */
     public static function paragraphCacheKey(int $book, int $para, string $channelUid, string $format): string
@@ -708,19 +714,13 @@ class PaliContentService
     }
 
     /**
-     * 段落缓存的 tag。一个段落一个 channel 的全部格式共用一个 tag
-     */
-    public static function paragraphCacheTag(int $book, int $para, string $channelUid): string
-    {
-        return "read-para:{$book}-{$para}:{$channelUid}";
-    }
-
-    /**
      * 删除某个段落的阅读模式缓存。句子有增改删时调用，下次 readParagraph 自动重建。
      */
     public static function forgetParagraph(int $book, int $para, string $channelUid): void
     {
-        Cache::tags([self::paragraphCacheTag($book, $para, $channelUid)])->flush();
+        foreach (self::FORMATS as $format) {
+            Cache::forget(self::paragraphCacheKey($book, $para, $channelUid, $format));
+        }
     }
 
     /**
