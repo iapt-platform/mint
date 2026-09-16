@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\PageNumber;
 use App\Models\PaliText;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
@@ -31,10 +32,16 @@ class SearchPaliWbwResource extends JsonResource
             $data['path'] = json_decode($paliText->path);
             if ($paliText->level < 100) {
                 $data['paliTitle'] = $paliText->toc;
+                $book = $this->book;
+                $para = $this->paragraph;
+                $data['link'] = config('app.url')."/library/tipitaka/{$book}-{$para}/read";
             } else {
                 $data['paliTitle'] = PaliText::where('book', $this->book)
                     ->where('paragraph', $paliText->parent)
                     ->value('toc');
+                $book = end($data['path'])['book'];
+                $para = end($data['path'])['paragraph'];
+                $data['link'] = config('app.url')."/library/tipitaka/{$book}-{$para}/read#{$this->paragraph}";
             }
             $keyWords = explode(',', $request->input('key'));
             $keyWordsUpper = $keyWords;
@@ -53,6 +60,22 @@ class SearchPaliWbwResource extends JsonResource
                 $keyReplace[] = "<span class='hl'>{$word}</span>";
             }
             $data['highlight'] = str_replace($keyWordsUpper, $keyReplace, $paliText->html);
+        }
+
+        $pageNumbers = PageNumber::where('book', $this->book)
+            ->where('paragraph', $this->paragraph)
+            ->orderBy('wid')
+            ->get()
+            ->unique('type')
+            ->map(fn ($pageNumber) => [
+                'type' => $pageNumber->type,
+                'page' => $pageNumber->page,
+            ])
+            ->values()
+            ->all();
+
+        if ($pageNumbers !== []) {
+            $data['ref'] = $pageNumbers;
         }
 
         return $data;

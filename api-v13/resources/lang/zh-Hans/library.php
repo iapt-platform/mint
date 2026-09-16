@@ -114,6 +114,7 @@ return [
     'versions' => '版本',
     'logout' => '退出',
     'select_version' => '选择版本',
+    'default_version_notice' => '未选择版本，默认展示巴利原文。',
     'no_content' => '没有内容',
     'prev_article' => '上一篇',
     'next_article' => '下一篇',
