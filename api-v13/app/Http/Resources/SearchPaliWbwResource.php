@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\PageNumber;
 use App\Models\PaliText;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
@@ -59,6 +60,22 @@ class SearchPaliWbwResource extends JsonResource
                 $keyReplace[] = "<span class='hl'>{$word}</span>";
             }
             $data['highlight'] = str_replace($keyWordsUpper, $keyReplace, $paliText->html);
+        }
+
+        $pageNumbers = PageNumber::where('book', $this->book)
+            ->where('paragraph', $this->paragraph)
+            ->orderBy('wid')
+            ->get()
+            ->unique('type')
+            ->map(fn ($pageNumber) => [
+                'type' => $pageNumber->type,
+                'page' => $pageNumber->page,
+            ])
+            ->values()
+            ->all();
+
+        if ($pageNumbers !== []) {
+            $data['ref'] = $pageNumbers;
         }
 
         return $data;
