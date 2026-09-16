@@ -8,6 +8,7 @@ npm install --save \
     jose dayjs video.js \
     remark-gfm react-markdown @uiw/react-md-editor @mdxeditor/editor \
     slate slate-history slate-react \
+    qrcode @types/qrcode \
     lodash @types/lodash js-cookie @types/js-cookie diff @types/diff marked @types/marked \
     antd @ant-design/x @ant-design/x-sdk @ant-design/x-markdown @ant-design/charts @ant-design/plots @ant-design/pro-components@beta
 
