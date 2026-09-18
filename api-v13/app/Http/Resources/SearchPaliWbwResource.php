@@ -30,7 +30,7 @@ class SearchPaliWbwResource extends JsonResource
             ->where('paragraph', $this->paragraph)
             ->first();
         if ($paliText) {
-            $data['path'] = json_decode($paliText->path);
+            $data['path'] = json_decode($paliText->path, true);
             if ($paliText->level < 100) {
                 $data['paliTitle'] = $paliText->toc;
                 $book = $this->book;
