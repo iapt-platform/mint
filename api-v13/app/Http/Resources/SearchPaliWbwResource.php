@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Models\PageNumber;
 use App\Models\PaliText;
+use App\Services\PaliSeriesesService;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -62,7 +63,9 @@ class SearchPaliWbwResource extends JsonResource
             $data['highlight'] = str_replace($keyWordsUpper, $keyReplace, $paliText->html);
         }
 
-        $pageNumbers = PageNumber::where('book', $this->book)
+        $series = app(PaliSeriesesService::class)->find((int) $this->book, (int) $this->paragraph);
+
+        $ref = PageNumber::where('book', $this->book)
             ->where('paragraph', $this->paragraph)
             ->orderBy('wid')
             ->get()
@@ -70,13 +73,22 @@ class SearchPaliWbwResource extends JsonResource
             ->map(fn ($pageNumber) => [
                 'type' => $pageNumber->type,
                 'page' => $pageNumber->page,
+                'title' => match ($pageNumber->type) {
+                    'M' => $series['abbr_my'] ?? null,
+                    'P' => $series['abbr_pts'] ?? null,
+                    default => null,
+                },
             ])
             ->values()
             ->all();
 
-        if ($pageNumbers !== []) {
-            $data['ref'] = $pageNumbers;
-        }
+        $ref[] = [
+            'type' => 'wp',
+            'page' => $this->paragraph,
+            'title' => $series['abbr_wp'] ?? null,
+        ];
+
+        $data['ref'] = $ref;
 
         return $data;
     }

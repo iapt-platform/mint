@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\PaliSeriesesService;
 use App\Services\RomanizeService;
 use App\Tools\QueryBuilderMacro;
 use App\View\Composers\BlogViewComposer;
@@ -48,6 +49,13 @@ class AppServiceProvider extends ServiceProvider
         |--------------------------------------------------------------------------
         */
         $this->app->singleton(RomanizeService::class);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Pali Serieses Service
+        |--------------------------------------------------------------------------
+        */
+        $this->app->singleton(PaliSeriesesService::class);
     }
 
     /**

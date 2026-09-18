@@ -1,10 +1,12 @@
 <?php
 
 /**
- * search-pali-wbw 的资源里要带上 page_numbers 的页码引用。
+ * search-pali-wbw 的资源里要带上页码引用 ref。
  *
  * 每个 (book, paragraph) 在 page_numbers 里可能因为 wid 不同而有多行，
- * 输出时每个 type 只保留 wid 最小的那一行，并且只暴露 type / page 两个字段。
+ * 输出时每个 type 只保留 wid 最小的那一行，并且暴露 type / page / title 三个字段；
+ * title 是书缩写：type 为 M 时取 abbr_my、为 P 时取 abbr_pts。
+ * 另外恒有一条 type='wp' 的条目，page 为段落号、title 为 abbr_wp。
  */
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
@@ -50,14 +52,14 @@ function paliTextRow(int $paragraph = 1): array
 /**
  * 造一行 page_numbers。
  */
-function pageNumberRow(string $type, int $wid, int $page): array
+function pageNumberRow(string $type, int $wid, int $page, int $paragraph = 1): array
 {
     return [
         'type' => $type,
         'volume' => 1,
         'page' => $page,
         'book' => 1,
-        'paragraph' => 1,
+        'paragraph' => $paragraph,
         'wid' => $wid,
         'pcd_book_id' => 1,
     ];
@@ -78,20 +80,41 @@ it('adds ref with the smallest wid page for each type', function () {
         ->assertOk();
 
     $ref = $response->json('data.rows.0.ref');
-    expect($ref)->toHaveCount(2);
-
     $byType = collect($ref)->keyBy('type');
 
-    expect($byType->get('a'))->toBe(['type' => 'a', 'page' => 222])
-        ->and($byType->get('b'))->toBe(['type' => 'b', 'page' => 555]);
+    expect($byType->get('a'))->toBe(['type' => 'a', 'page' => 222, 'title' => null])
+        ->and($byType->get('b'))->toBe(['type' => 'b', 'page' => 555, 'title' => null])
+        ->and($byType->get('wp'))->toBe(['type' => 'wp', 'page' => 1, 'title' => null]);
 });
 
-it('omits ref when there are no page_numbers rows', function () {
-    DB::table('wbw_templates')->insert([wbwRow()]);
-    DB::table('pali_texts')->insert([paliTextRow()]);
+it('adds the series abbreviation as title for M and P types', function () {
+    DB::table('wbw_templates')->insert([wbwRow(10)]);
+    DB::table('pali_texts')->insert([paliTextRow(10)]);
+    DB::table('page_numbers')->insert([
+        pageNumberRow('M', 1, 111, 10),
+        pageNumberRow('P', 2, 222, 10),
+        pageNumberRow('V', 3, 333, 10),
+    ]);
 
     $response = $this->getJson('/api/v2/search-pali-wbw?key=dhammo')
         ->assertOk();
 
-    expect($response->json('data.rows.0'))->not->toHaveKey('ref');
+    $byType = collect($response->json('data.rows.0.ref'))->keyBy('type');
+
+    expect($byType->get('M'))->toBe(['type' => 'M', 'page' => 111, 'title' => 'namakkāra'])
+        ->and($byType->get('P'))->toBe(['type' => 'P', 'page' => 222, 'title' => 'Nam'])
+        ->and($byType->get('V'))->toBe(['type' => 'V', 'page' => 333, 'title' => null])
+        ->and($byType->get('wp'))->toBe(['type' => 'wp', 'page' => 10, 'title' => 'namakkāra.']);
+});
+
+it('adds the wp entry even when there are no page_numbers rows', function () {
+    DB::table('wbw_templates')->insert([wbwRow(10)]);
+    DB::table('pali_texts')->insert([paliTextRow(10)]);
+
+    $response = $this->getJson('/api/v2/search-pali-wbw?key=dhammo')
+        ->assertOk();
+
+    expect($response->json('data.rows.0.ref'))->toBe([
+        ['type' => 'wp', 'page' => 10, 'title' => 'namakkāra.'],
+    ]);
 });
