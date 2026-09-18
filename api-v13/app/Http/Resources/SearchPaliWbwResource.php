@@ -12,6 +12,19 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class SearchPaliWbwResource extends JsonResource
 {
     /**
+     * page_numbers.type 单字母代号到缩写/名称的映射。
+     *
+     * @var array<string, string>
+     */
+    private const TYPE_ABBR = [
+        'M' => 'My',
+        'P' => 'PTS',
+        'V' => 'VRI',
+        'T' => 'Thai',
+        'O' => 'Other',
+    ];
+
+    /**
      * Transform the resource into an array.
      *
      * @param  Request  $request
@@ -71,7 +84,7 @@ class SearchPaliWbwResource extends JsonResource
             ->get()
             ->unique('type')
             ->map(fn ($pageNumber) => [
-                'type' => $pageNumber->type,
+                'type' => self::TYPE_ABBR[$pageNumber->type] ?? $pageNumber->type,
                 'page' => $pageNumber->page,
                 'title' => match ($pageNumber->type) {
                     'M' => $series['abbr_my'] ?? null,
@@ -83,7 +96,7 @@ class SearchPaliWbwResource extends JsonResource
             ->all();
 
         $ref[] = [
-            'type' => 'wp',
+            'type' => 'WP',
             'page' => $this->paragraph,
             'title' => $series['abbr_wp'] ?? null,
         ];
