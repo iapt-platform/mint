@@ -43,7 +43,7 @@ class UpgradeWeekly extends Command
         }
         $currTime = time();
         // 译文进度
-        $this->call('upgrade:progress');
+        $this->call('upgrade:progress.para');
         $time = time() - $currTime;
         $message = "progress time:{$time}; ";
         $this->info($message);
