@@ -669,10 +669,11 @@ class PaliContentService
         }
 
         if ($format === 'html') {
-            // html 格式加段落外壳
+            // html 格式加段落外壳；段后追加段落脚注列表（本段义注/复注条目）
             $content = implode('', $cached['display']);
             $inner = $level > 0 ? "<h{$level}>{$content}</h{$level}>" : "<div class='para-block'>{$content}</div>";
-            $result['display'] = "<div id='para-{$para}' class='{$cached['area']}' data-para='{$para}'>{$inner}</div>";
+            $footnoteList = $this->renderFootnoteList($cached['notes'] ?? []);
+            $result['display'] = "<div id='para-{$para}' class='{$cached['area']}' data-para='{$para}'>{$inner}{$footnoteList}</div>";
         } else {
             // 其他格式一行一句
             $result['display'] = implode("\n", $cached['display']);
@@ -720,6 +721,119 @@ class PaliContentService
     }
 
     /**
+     * 段落注释（义注/复注内嵌）：把锚定到该句子的注释记录渲染成 {{note}} 模板，
+     * 按位置插入句子内容，并在其后追加 <cite> 作为跳转锚点。
+     *
+     * 同一句可能有多条注释，按 pos_end 倒序插入 —— 先插靠后的，避免先插入的
+     * 模板改变后面位置的字符偏移（见 docs/reading-annotations.md §4）。
+     */
+    protected function injectAnnotationNotes(Sentence $row, string $channelType): array
+    {
+        $content = (string) $row->content;
+        $result = ['content' => $content, 'notes' => []];
+        $notes = Discussion::where('res_type', 'sentence')
+            ->where('res_id', $row->uid)
+            ->where('type', 'note')
+            ->orderByDesc('pos_end')
+            ->get();
+
+        if ($notes->isEmpty()) {
+            return $result;
+        }
+
+        $sid = "{$row->book_id}-{$row->paragraph}-{$row->word_start}-{$row->word_end}";
+        $len = mb_strlen($content, 'UTF-8');
+        $collected = [];
+        foreach ($notes as $note) {
+            if (empty($note->content)) {
+                continue;
+            }
+            // 义注实际内容：先用 MdRender 渲染义注句子模板（{{book-para-start-end}}）得到，
+            // 再放进 {{note|text=…}} —— 直接嵌套 {{…}} 会被 wiki2xml 的平铺替换破坏。
+            // 用 text 格式渲染义注内容：避免「1.」被 markdown 解释成有序列表，
+            // 产生 <ol></p></p> 这类坏 HTML 把 sidenote 的闭合结构破坏、吞掉后续正文。
+            // 义注正文只需译文（不要巴利原文）：把裸句模板 {{book-para-start-end}}
+            // 转成 {{sent|id=…|text=translation}}，让 sent 模板只输出 translation。
+            $noteTpl = preg_replace(
+                '/^\{\{(\d+-\d+-\d+-\d+)\}\}$/',
+                '{{sent|id=$1|text=translation}}',
+                trim($note->content)
+            );
+            $noteHtml = MdRender::render(
+                $noteTpl,
+                [$row->channel_uid],
+                null,
+                'read',
+                $channelType,
+                'markdown',
+                'text'
+            );
+            $pos = $note->pos_end;
+            if ($pos === null || $pos < 0 || $pos > $len) {
+                $pos = $len;
+            }
+            // 跳转目标（义注书-段-起-止）：同时挂在 <cite> 和角标 <label> 上，
+            // 前者用于「点链接跳页」，后者用于平板双栏「点角标跨栏高亮」。
+            // 用 {{note}} 模板渲染 tufte sidenote（label + input + span.sidenote），
+            // 复用 render_note() 的结构，不再手拼 sidenote HTML。
+            // text 传已预渲染的纯文本译文（嵌套 {{…}} 会被 wiki2xml 平铺替换破坏）。
+            $citeHtml = '';
+            $target = '';
+            $noteTplInline = '';
+            if (preg_match('/^\{\{(\d+)-(\d+)-(\d+)-(\d+)\}\}$/', trim($note->content), $m)) {
+                $target = ' data-book="'.$m[1].'" data-para="'.$m[2].'" data-start="'.$m[3].'" data-end="'.$m[4].'"';
+                $citeHtml = '<cite class="anno-jump"'.$target.'>义注</cite>';
+                $noteTplInline = '{{note|text='.$noteHtml
+                    .'|cite=义注'
+                    .'|citelink='.$m[1].'-'.$m[2].'-'.$m[3].'-'.$m[4].'}}';
+            }
+            $content = mb_substr($content, 0, $pos, 'UTF-8')
+                .$noteTplInline
+                .mb_substr($content, $pos, null, 'UTF-8');
+            // 收集脚注列表条目（倒序插入，最后反转回阅读顺序）
+            $collected[] = [
+                'fnId' => 'fn-'.$note->id,
+                'noteHtml' => $noteHtml,
+                'citeHtml' => $citeHtml,
+            ];
+        }
+
+        $result['notes'] = array_reverse($collected);
+        $result['content'] = $content;
+
+        Log::info('reading-annotations: inject', [
+            'sid' => $sid,
+            'count' => $notes->count(),
+            'content' => $content,
+        ]);
+
+        return $result;
+    }
+
+    /**
+     * 段落脚注列表：把本段的注释条目逐条列在段后，每条默认收起为可配置行数（见阅读器 CSS）。
+     */
+    protected function renderFootnoteList(array $notes): string
+    {
+        if (empty($notes)) {
+            return '';
+        }
+        $html = '<div class="anno-footnotes">';
+        foreach ($notes as $note) {
+            $html .= '<div class="anno-footnote">'
+                .'<input type="checkbox" id="'.$note['fnId'].'" class="anno-fn-toggle"/>'
+                .'<label for="'.$note['fnId'].'" class="anno-fn-label">'
+                .'<span class="anno-fn-body">'.e($note['noteHtml']).'</span>'
+                .'</label>'
+                .$note['citeHtml']
+                .'</div>';
+        }
+        $html .= '</div>';
+
+        return $html;
+    }
+
+    /**
      * 渲染段落里的句子。不含段落外壳，可直接缓存。
      *
      * @return array{area: string, display: array<int, string>, sentences: array<int, array{sid: string, html: string}>}
@@ -743,9 +857,13 @@ class PaliContentService
             ->orderBy('word_start')
             ->get();
 
+        $allNotes = [];
         foreach ($records as $row) {
+            $injected = $this->injectAnnotationNotes($row, $channelType);
+            $content = $injected['content'];
+            $allNotes = array_merge($allNotes, $injected['notes']);
             $html = MdRender::render(
-                $row->content,
+                $content,
                 [$row->channel_uid],
                 null,
                 'read',
@@ -765,6 +883,7 @@ class PaliContentService
                 $result['display'][] = $html;
             }
         }
+        $result['notes'] = $allNotes;
 
         return $result;
     }
