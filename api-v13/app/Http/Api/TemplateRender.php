@@ -548,11 +548,26 @@ class TemplateRender
     {
         $note = $this->get_param($this->param, 'text', 1);
         $trigger = $this->get_param($this->param, 'trigger', 2, '');
+        // 可选：cite 参数用于在 .sidenote 里追加跳转锚点；citelink 是跳转坐标
+        // （book-para-start-end），同时挂到角标 <label> 与 <cite> 上（前者跨栏高亮，后者跳页）。
+        $cite = $this->get_param($this->param, 'cite', 3, '');
+        $citelink = $this->get_param($this->param, 'citelink', 4, '');
         $props = ['note' => $note];
         $innerString = '';
         if (! empty($trigger)) {
             $props['trigger'] = $trigger;
             $innerString = $props['trigger'];
+        }
+        $target = '';
+        if ($citelink !== '') {
+            $parts = explode('-', $citelink);
+            if (count($parts) === 4) {
+                $target = ' data-book="'.$parts[0].'" data-para="'.$parts[1].'" data-start="'.$parts[2].'" data-end="'.$parts[3].'"';
+            }
+        }
+        $citeHtml = '';
+        if ($cite !== '') {
+            $citeHtml = '<cite class="anno-jump"'.$target.'>'.e($cite).'</cite>';
         }
         if ($this->format === 'unity') {
             $props['note'] = MdRender::render(
@@ -610,10 +625,10 @@ class TemplateRender
                     $output = $link.$trigger.'</a>';
                 }
                 $output = "<label for=\"sn-{$GLOBALS['note_sn']}\"
-                class=\"margin-toggle sidenote-number\" >{$trigger}</label>
+                class=\"margin-toggle sidenote-number\"{$target}>{$trigger}</label>
                 <input type=\"checkbox\" id=\"sn-{$GLOBALS['note_sn']}\"
                 class=\"margin-toggle\"/>
-                <span class=\"sidenote\">{$noteContent}</span>";
+                <span class=\"sidenote\">{$noteContent}{$citeHtml}</span>";
                 break;
             case 'text':
                 $output = $trigger;
@@ -1138,14 +1153,18 @@ class TemplateRender
                 break;
             case 'text':
                 $output = '';
-                if (isset($props['origin']) && is_array($props['origin'])) {
-                    foreach ($props['origin'] as $key => $value) {
-                        $output .= $value['html'];
+                if ($show === 'both' || $show === 'origin') {
+                    if (isset($props['origin']) && is_array($props['origin'])) {
+                        foreach ($props['origin'] as $key => $value) {
+                            $output .= $value['html'];
+                        }
                     }
                 }
-                if (isset($props['translation']) && is_array($props['translation'])) {
-                    foreach ($props['translation'] as $key => $value) {
-                        $output .= $value['html'];
+                if ($show === 'both' || $show === 'translation') {
+                    if (isset($props['translation']) && is_array($props['translation'])) {
+                        foreach ($props['translation'] as $key => $value) {
+                            $output .= $value['html'];
+                        }
                     }
                 }
                 break;
