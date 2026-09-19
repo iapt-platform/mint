@@ -305,18 +305,25 @@ class DiscussionController extends Controller
         // validate
         // read more on validation at http://laravel.com/docs/validation
 
+        $annotationRules = [
+            'pos_start' => 'nullable|integer|min:0',
+            'pos_end' => 'nullable|integer|min:0',
+            'quote_exact' => 'nullable|string',
+            'quote_prefix' => 'nullable|string',
+            'quote_suffix' => 'nullable|string',
+        ];
         if ($request->has('parent')) {
-            $rules = [];
+            $rules = $annotationRules;
             $parentInfo = Discussion::find($request->input('parent'));
             if (! $parentInfo) {
                 return $this->error('no record');
             }
         } else {
-            $rules = [
+            $rules = array_merge([
                 'res_id' => 'required',
                 'res_type' => 'required',
                 'title' => 'required',
-            ];
+            ], $annotationRules);
         }
 
         $validated = $request->validate($rules);
@@ -336,6 +343,11 @@ class DiscussionController extends Controller
         $discussion->content_type = $request->input('content_type', 'markdown');
         $discussion->parent = $request->input('parent', null);
         $discussion->editor_uid = $user['user_uid'];
+        $discussion->pos_start = $request->input('pos_start');
+        $discussion->pos_end = $request->input('pos_end');
+        $discussion->quote_exact = $request->input('quote_exact');
+        $discussion->quote_prefix = $request->input('quote_prefix');
+        $discussion->quote_suffix = $request->input('quote_suffix');
         $discussion->save();
         // 更新parent children_count
         if ($request->has('parent')) {
@@ -452,6 +464,13 @@ class DiscussionController extends Controller
         $discussion->status = $request->input('status', 'active');
         if ($request->has('type')) {
             $discussion->type = $request->input('type');
+        }
+        // 注释锚点字段：增量更新，只改请求里出现的字段，好让前端能显式清空；
+        // 未提交的字段必须原样保留。
+        foreach (['pos_start', 'pos_end', 'quote_exact', 'quote_prefix', 'quote_suffix'] as $field) {
+            if ($request->has($field)) {
+                $discussion->{$field} = $request->input($field);
+            }
         }
         // $discussion->editor_uid = $user['user_uid'];
         $discussion->save();

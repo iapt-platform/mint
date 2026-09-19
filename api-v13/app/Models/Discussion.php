@@ -13,6 +13,8 @@ class Discussion extends Model
 
     protected $casts = [
         'id' => 'string',
+        'pos_start' => 'integer',
+        'pos_end' => 'integer',
     ];
 
     // 批量填充
@@ -26,6 +28,11 @@ class Discussion extends Model
         'content_type',
         'parent',
         'editor_uid',
+        'pos_start',
+        'pos_end',
+        'quote_exact',
+        'quote_prefix',
+        'quote_suffix',
     ];
 
     // 设置默认值
