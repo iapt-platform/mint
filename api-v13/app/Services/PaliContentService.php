@@ -734,7 +734,6 @@ class PaliContentService
         $notes = Discussion::where('res_type', 'sentence')
             ->where('res_id', $row->uid)
             ->where('type', 'note')
-            ->orderByDesc('pos_end')
             ->get();
 
         if ($notes->isEmpty()) {
@@ -743,22 +742,43 @@ class PaliContentService
 
         $sid = "{$row->book_id}-{$row->paragraph}-{$row->word_start}-{$row->word_end}";
         $len = mb_strlen($content, 'UTF-8');
+        // 插入顺序：按插入点倒序（先插靠后的，免得前面的插入改变后面的偏移）；
+        // 插入点相同的，按义注原文的先后倒序——同一位置后插入的排在前面，
+        // 倒序插入后读起来就是义注原文顺序。插入点与下面的越界处理口径一致
+        //（null / 越界都算句尾）。义注坐标取 content 第一句的 book-para-start。
+        $notes = $notes->sort(function ($a, $b) use ($len) {
+            $key = function ($note) use ($len) {
+                $pos = $note->pos_end;
+                if ($pos === null || $pos < 0 || $pos > $len) {
+                    $pos = $len;
+                }
+                preg_match('/\{\{(\d+)-(\d+)-(\d+)-\d+\}\}/', (string) $note->content, $m);
+
+                return [$pos, (int) ($m[1] ?? 0), (int) ($m[2] ?? 0), (int) ($m[3] ?? 0)];
+            };
+
+            return $key($b) <=> $key($a);
+        })->values();
         $collected = [];
         foreach ($notes as $note) {
-            if (empty($note->content)) {
+            // content 是一个或多个义注句子模板 {{book-para-start-end}}（一个词可能由义注
+            // 多句解释，按顺序并列，如 {{135-404-50-54}}{{135-404-55-65}}）。
+            // 不是这种格式的记录不认，跳过——不插角标，也不进脚注列表。
+            $noteContent = trim((string) $note->content);
+            if (! preg_match('/^(?:\{\{\d+-\d+-\d+-\d+\}\}\s*)+$/', $noteContent)) {
                 continue;
             }
-            // 义注实际内容：先用 MdRender 渲染义注句子模板（{{book-para-start-end}}）得到，
+            preg_match_all('/\{\{(\d+)-(\d+)-(\d+)-(\d+)\}\}/', $noteContent, $sents, PREG_SET_ORDER);
+            // 义注实际内容：先用 MdRender 渲染义注句子模板得到，
             // 再放进 {{note|text=…}} —— 直接嵌套 {{…}} 会被 wiki2xml 的平铺替换破坏。
             // 用 text 格式渲染义注内容：避免「1.」被 markdown 解释成有序列表，
             // 产生 <ol></p></p> 这类坏 HTML 把 sidenote 的闭合结构破坏、吞掉后续正文。
-            // 义注正文只需译文（不要巴利原文）：把裸句模板 {{book-para-start-end}}
+            // 义注正文只需译文（不要巴利原文）：把每个裸句模板 {{book-para-start-end}}
             // 转成 {{sent|id=…|text=translation}}，让 sent 模板只输出 translation。
-            $noteTpl = preg_replace(
-                '/^\{\{(\d+-\d+-\d+-\d+)\}\}$/',
-                '{{sent|id=$1|text=translation}}',
-                trim($note->content)
-            );
+            $noteTpl = implode(' ', array_map(
+                fn ($s) => '{{sent|id='.$s[1].'-'.$s[2].'-'.$s[3].'-'.$s[4].'|text=translation}}',
+                $sents
+            ));
             $noteHtml = MdRender::render(
                 $noteTpl,
                 [$row->channel_uid],
@@ -777,16 +797,13 @@ class PaliContentService
             // 用 {{note}} 模板渲染 tufte sidenote（label + input + span.sidenote），
             // 复用 render_note() 的结构，不再手拼 sidenote HTML。
             // text 传已预渲染的纯文本译文（嵌套 {{…}} 会被 wiki2xml 平铺替换破坏）。
-            $citeHtml = '';
-            $target = '';
-            $noteTplInline = '';
-            if (preg_match('/^\{\{(\d+)-(\d+)-(\d+)-(\d+)\}\}$/', trim($note->content), $m)) {
-                $target = ' data-book="'.$m[1].'" data-para="'.$m[2].'" data-start="'.$m[3].'" data-end="'.$m[4].'"';
-                $citeHtml = '<cite class="anno-jump"'.$target.'>义注</cite>';
-                $noteTplInline = '{{note|text='.$noteHtml
-                    .'|cite=义注'
-                    .'|citelink='.$m[1].'-'.$m[2].'-'.$m[3].'-'.$m[4].'}}';
-            }
+            // 多句时跳转到第一句（义注对这个词的解释从那里开始）。
+            $m = $sents[0];
+            $target = ' data-book="'.$m[1].'" data-para="'.$m[2].'" data-start="'.$m[3].'" data-end="'.$m[4].'"';
+            $citeHtml = '<cite class="anno-jump"'.$target.'>义注</cite>';
+            $noteTplInline = '{{note|text='.$noteHtml
+                .'|cite=义注'
+                .'|citelink='.$m[1].'-'.$m[2].'-'.$m[3].'-'.$m[4].'}}';
             $content = mb_substr($content, 0, $pos, 'UTF-8')
                 .$noteTplInline
                 .mb_substr($content, $pos, null, 'UTF-8');
