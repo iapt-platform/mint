@@ -135,6 +135,10 @@ return [
     'cancel' => '取消',
     'confirm' => '確定',
     'no_toc' => '本書無目錄',
+    'share' => '分享',
+    'share_qr' => 'QR 碼',
+    'share_qr_title' => '掃碼分享',
+    'share_qr_hint' => '使用手機掃碼打開本頁',
 
     // course (course/index.blade.php + course/history.blade.php)
     'course' => '課程',

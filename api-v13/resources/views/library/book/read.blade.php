@@ -10,7 +10,7 @@
 
 {{-- 术语抽屉（所有阅读页统一使用 wiki.term-drawer） --}}
 @push('scripts')
-@vite(['resources/js/modules/term-tooltip.js','resources/js/reader.js'])
+@vite(['resources/js/modules/term-tooltip.js','resources/js/reader.js','resources/js/modules/share.js'])
 @endpush
 
 @section('reader-content')
@@ -41,6 +41,30 @@
         </div>
 
         <div class="navbar-nav flex-row order-md-last align-items-center">
+
+            {{-- 分享 --}}
+            <div class="nav-item dropdown me-2">
+                <a href="#"
+                    class="nav-link"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                    aria-label="{{ __('library.share') }}">
+                    <i class="ti ti-share me-1 d-none d-md-inline"></i>
+                    <span class="d-none d-md-inline">{{ __('library.share') }}</span>
+                    <i class="ti ti-share d-md-none"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <button type="button"
+                            class="dropdown-item"
+                            data-bs-toggle="modal"
+                            data-bs-target="#shareQrModal">
+                            <i class="ti ti-qrcode me-2"></i>{{ __('library.share_qr') }}
+                        </button>
+                    </li>
+                </ul>
+            </div>
 
             {{-- 编辑器按钮 --}}
             @if(!empty($editor_link))
@@ -330,6 +354,24 @@
                 <button type="submit" class="btn btn-primary">{{ __('library.confirm') }}</button>
             </div>
         </form>
+    </div>
+</div>
+
+{{-- 分享二维码 Modal --}}
+<div class="modal modal-blur fade" id="shareQrModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ __('library.share_qr_title') }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('library.cancel') }}"></button>
+            </div>
+            <div class="modal-body text-center">
+                <div class="d-inline-block p-3 bg-white rounded-2">
+                    <canvas id="shareQrCanvas" width="240" height="240" class="d-block" aria-label="{{ __('library.share_qr_title') }}"></canvas>
+                </div>
+                <p class="text-muted small mt-3 mb-0">{{ __('library.share_qr_hint') }}</p>
+            </div>
+        </div>
     </div>
 </div>
 

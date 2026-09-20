@@ -21,6 +21,7 @@ export default defineConfig({
                 'resources/js/app.js',
                 'resources/js/reader.js',
                 'resources/js/modules/term-tooltip.js',
+                'resources/js/modules/share.js',
             ],
             refresh: true,
         }),

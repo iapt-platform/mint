@@ -134,6 +134,10 @@ return [
     'cancel' => 'ຍົກເລີກ',
     'confirm' => 'ຕົກລົງ',
     'no_toc' => 'ໜັງສືເຫຼັ້ມນີ້ບໍ່ມີສາລະບານ',
+    'share' => 'ແບ່ງປັນ',
+    'share_qr' => 'QR ລະຫັດ',
+    'share_qr_title' => 'ແບ່ງປັນຜ່ານ QR',
+    'share_qr_hint' => 'ສະແກນດ້ວຍໂທລະສັບເພື່ອເປີດໜ້ານີ້',
 
     // course (course/index.blade.php + course/history.blade.php)
     'course' => 'ຫຼັກສູດ',
