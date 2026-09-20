@@ -135,6 +135,10 @@ return [
     'cancel' => 'Cancel',
     'confirm' => 'OK',
     'no_toc' => 'This book has no table of contents',
+    'share' => 'Share',
+    'share_qr' => 'QR Code',
+    'share_qr_title' => 'Share via QR Code',
+    'share_qr_hint' => 'Scan with your phone to open this page',
 
     // course (course/index.blade.php + course/history.blade.php)
     'course' => 'Courses',

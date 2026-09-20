@@ -134,6 +134,10 @@ return [
     'cancel' => 'Hủy',
     'confirm' => 'Đồng ý',
     'no_toc' => 'Sách này không có mục lục',
+    'share' => 'Chia sẻ',
+    'share_qr' => 'Mã QR',
+    'share_qr_title' => 'Chia sẻ qua mã QR',
+    'share_qr_hint' => 'Quét bằng điện thoại để mở trang này',
 
     // course (course/index.blade.php + course/history.blade.php)
     'course' => 'Khóa học',
