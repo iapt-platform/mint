@@ -49,6 +49,7 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\GroupMemberController;
 use App\Http\Controllers\HealthCheckController;
 use App\Http\Controllers\HeartbeatController;
+use App\Http\Controllers\HeartbeatV3Controller;
 use App\Http\Controllers\InteractiveController;
 use App\Http\Controllers\InviteController;
 use App\Http\Controllers\LikeController;
@@ -343,10 +344,14 @@ Route::group([
     'prefix' => 'v3',
     'as' => 'v3.',
 ], function () {
-    Route::apiResource('search', SearchPlusController::class);
-    Route::apiResource('search-suggest', SearchSuggestController::class);
-    Route::apiResource('upgrade', UpgradeController::class);
-    Route::apiResource('progress', ProgressController::class);
+    // 只注册真正实现了的动作——空方法会在 OpenAPI 里变成幽灵端点
+    Route::apiResource('search', SearchPlusController::class)->only(['index', 'store', 'show']);
+    Route::apiResource('search-suggest', SearchSuggestController::class)->only(['index']);
+    Route::apiResource('upgrade', UpgradeController::class)->only(['index']);
+    Route::apiResource('progress', ProgressController::class)->only(['index']);
     Route::apiResource('tipitaka-read-para', TipitakaReadParaController::class)->only(['index', 'show']);
     Route::apiResource('tipitaka-read-chapter', TipitakaReadChapterController::class)->only(['index', 'show']);
+
+    // 存活检查是单例资源（只有一个实例），不是集合
+    Route::apiSingleton('heartbeat', HeartbeatV3Controller::class)->only(['show']);
 });

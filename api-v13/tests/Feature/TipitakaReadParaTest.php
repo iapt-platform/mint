@@ -75,7 +75,7 @@ it('can output only the sentences or both', function () {
 
     $items = $this->getJson("/api/v3/tipitaka-read-para?book=9001&para=1&channel={$channel}&view=sentences")
         ->assertOk()
-        ->json('data.items');
+        ->json('data');
     expect($items[0])->not->toHaveKey('display');
     expect($items[0]['sentences'])->toHaveCount(2);
 });
@@ -84,7 +84,7 @@ it('lists the paragraphs of a range and skips empty ones', function () {
     $channel = makeParagraphFixture();
     $items = $this->getJson("/api/v3/tipitaka-read-para?book=9001&para=1&to=3&channel={$channel}")
         ->assertOk()
-        ->json('data.items');
+        ->json('data');
 
     expect(array_column($items, 'para'))->toBe([1, 2]);
 });
@@ -100,12 +100,17 @@ it('outputs one line per sentence for non html formats', function () {
 
 it('rejects an invalid id or channel', function () {
     $channel = makeParagraphFixture();
+    // v3 用真实状态码 + RFC 9457 Problem Details，不再看 ok 字段
     $this->getJson("/api/v3/tipitaka-read-para/bad-id?channel={$channel}")
-        ->assertJsonPath('ok', false);
+        ->assertStatus(422)
+        ->assertJsonStructure(['type', 'title', 'status', 'detail'])
+        ->assertJsonPath('errors.id.0', __('site.invalid_parameter'));
     $this->getJson('/api/v3/tipitaka-read-para/9001-1?channel=not-a-uuid')
-        ->assertJsonPath('ok', false);
+        ->assertStatus(422)
+        ->assertJsonPath('errors.channel.0', __('site.invalid_parameter'));
     $this->getJson("/api/v3/tipitaka-read-para/9001-9?channel={$channel}")
-        ->assertJsonPath('ok', false);
+        ->assertStatus(404)
+        ->assertJsonPath('title', 'Resource not found.');
 });
 
 it('caches the paragraph and drops the cache when a sentence changes', function () {

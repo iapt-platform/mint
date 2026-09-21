@@ -4,17 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUpgradeRequest;
 use App\Http\Requests\UpdateUpgradeRequest;
+use App\Http\Resources\V3Resource;
 use App\Models\Upgrade;
 
 class UpgradeController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * 客户端升级检查
+     *
+     * 目前只回报服务可用，尚未接入版本比对逻辑。
+     *
+     * @unauthenticated
      */
     public function index()
     {
         //
-        return $this->ok(['data' => 'ok']);
+        return V3Resource::make(['status' => 'ok']);
     }
 
     /**
