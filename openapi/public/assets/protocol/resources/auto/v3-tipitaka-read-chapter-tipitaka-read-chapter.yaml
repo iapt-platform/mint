@@ -5,8 +5,8 @@ get:
     - tipitaka-read-chapter
   operationId: get_api_v3_tipitaka_read_chapter_tipitaka_read_chapter_
   description: |-
-    与 index 等价，只是把 book 与 para 合成一个路径参数。格式不对或 channel
-    不是 uuid 返回 422。
+    与 index 等价，只是把 book 与 para 合成一个路径参数；游标 `from` 仍走
+    查询参数。格式不对或 channel 不是 uuid 返回 422。
 
     实现：`TipitakaReadChapterController@show`
   parameters:
@@ -25,6 +25,12 @@ get:
         type: string
       description: '译文 channel 的 uuid'
       required: true
+    -
+      name: from
+      in: query
+      schema:
+        type: integer
+      description: '起点游标，从这一段开始取；不传则从章节开头取起。 超出章节区间返回 422'
     -
       name: format
       in: query
@@ -52,16 +58,19 @@ get:
       name: pagesize
       in: query
       schema:
-        type: string
-        default: 20000b
-      description: '每页大小，两种写法：`20000b` 按字节累加段落长度 （每页至少一段），`10p` 按段落数'
+        type: integer
+        default: '10'
+      description: '每块大小，含义由 unit 决定。上限 unit=para 时 200、 unit=byte 时 5000，超出不报错按上限算，meta.page_size 回实际 生效的值'
     -
-      name: page
+      name: unit
       in: query
       schema:
-        type: integer
-        default: '1'
-      description: '页码，从 1 开始。超出范围返回 422'
+        type: string
+        enum:
+          - para
+          - byte
+        default: para
+      description: '每块大小的单位：para 按段落数，byte 按段落长度累加。 两种单位下每块都至少一段、至多 200 段'
   responses:
     200:
       description: 成功
