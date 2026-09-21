@@ -21,7 +21,8 @@ npm run lint                  # redocly 校验，应为 0 error
    - `$request->input()/query()/has()/boolean()/integer()` → 查询参数与默认值
    - `switch ($request->input('view'))` 的 case → 参数枚举
    - `validate([...])` / `Validator::make()` → 请求体字段、必填与类型
-   - 返回的 `App\Http\Resources\*Resource::toArray()` 的键 → 响应 schema
+   - 返回的 `App\Http\Resources\*Resource::toArray()` → 响应 schema。
+     该方法上写了 `@return array{...}` 就按声明取类型；没写则退回按字段名猜
 3. 写出 `main.yaml` + 每个 path 一个 `resources/auto/<slug>.yaml`。
 
 ## 在控制器里写参数说明（首选做法）
@@ -50,6 +51,35 @@ npm run lint                  # redocly 校验，应为 0 error
 - 描述换行时续行要缩进，会自动并入上一个参数。
 - 标注过的参数覆盖源码推断的结果；没标注的参数仍然按源码推断输出，不会丢。
 - `@deprecated` 会把该 operation 标成废弃。
+
+## 让响应类型来自声明，而不是猜测
+
+没有声明时，生成器只能按字段名猜类型（`_at` 结尾→string、`is_` 开头→boolean、
+`_id` / `status` / `type` 等→integer），会猜错——比如 `channels.type` 其实是
+varchar，却被猜成 integer。
+
+给 Resource 的 `toArray()` 补一个 `@return array{...}` 就能让类型变成真声明：
+
+```php
+/**
+ * @return array{
+ *     uid: string,
+ *     type: string,
+ *     summary: string|null,
+ *     studio: array{id: string, nickName: string}|false,
+ *     status: int,
+ *     progress?: float
+ * }
+ */
+public function toArray($request)
+```
+
+- `string|null`、`|false` → 标成 `nullable: true`，联合类型取第一个具体类型
+- `key?:` → 该键只在部分口径下返回，会在描述里注明
+- 支持嵌套 `array{...}`、`array<T>`、`T[]`
+- 解析不出形状时自动退回按字段名猜，不会报错
+
+范例见 `api-v13/app/Http/Resources/ChannelResource.php`。
 
 ## 目录
 

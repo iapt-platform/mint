@@ -356,6 +356,12 @@ function resourceSchema(?string $class): ?array
         if ($m->name->toString() !== 'toArray') {
             continue;
         }
+        // 声明优先：toArray 上写了 @return array{...} 就用它，类型是真声明而非按字段名猜
+        if ($doc = $m->getDocComment()) {
+            if ($shape = parseArrayShape($doc->getText())) {
+                return $shape;
+            }
+        }
         foreach ($finder->findInstanceOf($m, Node\Expr\Array_::class) as $array) {
             foreach ($array->items as $item) {
                 if ($item && $item->key instanceof Node\Scalar\String_) {
@@ -373,6 +379,180 @@ function resourceSchema(?string $class): ?array
     }
 
     return $props ?: null;
+}
+
+/**
+ * 解析 PHPDoc 里的 `@return array{uid: string, studio: array{...}|false, progress?: float}`。
+ *
+ * 支持嵌套 array{}、联合类型（取第一个具体类型，含 null/false 则标 nullable）、
+ * `key?:` 表示该键只在部分口径下出现。解析不出形状时返回 null，调用方回落到按字段名猜。
+ *
+ * @return array<string, array>|null
+ */
+function parseArrayShape(string $docText): ?array
+{
+    if (! preg_match('/@return\s+array\s*\{/s', $docText, $m, PREG_OFFSET_CAPTURE)) {
+        return null;
+    }
+    // 去掉每行开头的 * 再找花括号，避免注释前缀干扰
+    $body = preg_replace('#^\s*\*\s?#m', '', $docText);
+    if (! preg_match('/@return\s+array\s*\{(.*)/s', $body, $mm)) {
+        return null;
+    }
+    $inner = extractBraced($mm[1]);
+
+    return $inner === null ? null : shapeToProperties($inner);
+}
+
+/** 从 `{` 之后的文本里取出配平的内容 */
+function extractBraced(string $text): ?string
+{
+    $depth = 1;
+    $out = '';
+    $len = strlen($text);
+    for ($i = 0; $i < $len; $i++) {
+        $ch = $text[$i];
+        if ($ch === '{') {
+            $depth++;
+        } elseif ($ch === '}') {
+            $depth--;
+            if ($depth === 0) {
+                return $out;
+            }
+        }
+        $out .= $ch;
+    }
+
+    return null;
+}
+
+/** 按顶层逗号切分，忽略嵌套花括号与尖括号里的逗号 */
+function splitTopLevel(string $text): array
+{
+    $parts = [];
+    $buf = '';
+    $depth = 0;
+    $len = strlen($text);
+    for ($i = 0; $i < $len; $i++) {
+        $ch = $text[$i];
+        if ($ch === '{' || $ch === '<') {
+            $depth++;
+        } elseif ($ch === '}' || $ch === '>') {
+            $depth--;
+        }
+        if ($ch === ',' && $depth === 0) {
+            $parts[] = $buf;
+            $buf = '';
+
+            continue;
+        }
+        $buf .= $ch;
+    }
+    if (trim($buf) !== '') {
+        $parts[] = $buf;
+    }
+
+    return $parts;
+}
+
+/** array shape 的内容 → OpenAPI properties */
+function shapeToProperties(string $inner): array
+{
+    $props = [];
+    foreach (splitTopLevel($inner) as $part) {
+        $part = trim($part);
+        if ($part === '' || ! str_contains($part, ':')) {
+            continue;
+        }
+        [$key, $type] = explode(':', $part, 2);
+        $key = trim($key);
+        $optional = str_ends_with($key, '?');
+        $key = rtrim($key, '?');
+        if ($key === '') {
+            continue;
+        }
+        $schema = phpTypeToSchema(trim($type));
+        if ($optional) {
+            $schema['description'] = trim(($schema['description'] ?? '').' 仅在部分查询口径下返回。');
+        }
+        $props[$key] = $schema;
+    }
+
+    return $props;
+}
+
+/** PHPDoc 类型 → OpenAPI schema */
+function phpTypeToSchema(string $type): array
+{
+    $type = trim($type);
+    $nullable = false;
+    if (str_starts_with($type, '?')) {
+        $nullable = true;
+        $type = substr($type, 1);
+    }
+    // 联合类型：null / false 视为可空，取第一个具体类型
+    $members = splitTopLevel(str_replace('|', ',', preg_replace('/\|/', '|', $type)));
+    if (count($members) > 1) {
+        $concrete = [];
+        foreach ($members as $mem) {
+            $mem = trim($mem);
+            if (in_array(strtolower($mem), ['null', 'false', 'true'], true)) {
+                $nullable = true;
+
+                continue;
+            }
+            $concrete[] = $mem;
+        }
+        $type = $concrete ? $concrete[0] : 'mixed';
+    }
+    $type = trim($type);
+
+    // 嵌套 array{...}
+    if (preg_match('/^array\s*\{(.*)$/s', $type, $m)) {
+        $innerText = extractBraced($m[1]);
+        $schema = ['type' => 'object'];
+        if ($innerText !== null && ($p = shapeToProperties($innerText))) {
+            $schema['properties'] = $p;
+        }
+        if ($nullable) {
+            $schema['nullable'] = true;
+        }
+
+        return $schema;
+    }
+    // 列表：array<T> / T[] / list<T>
+    if (preg_match('/^(?:array|list)\s*<(.+)>$/s', $type, $m)) {
+        $args = splitTopLevel($m[1]);
+        $itemType = trim(end($args));
+        $schema = ['type' => 'array', 'items' => phpTypeToSchema($itemType)];
+        if ($nullable) {
+            $schema['nullable'] = true;
+        }
+
+        return $schema;
+    }
+    if (str_ends_with($type, '[]')) {
+        $schema = ['type' => 'array', 'items' => phpTypeToSchema(substr($type, 0, -2))];
+        if ($nullable) {
+            $schema['nullable'] = true;
+        }
+
+        return $schema;
+    }
+
+    $schema = match (strtolower($type)) {
+        'int', 'integer' => ['type' => 'integer'],
+        'float', 'double' => ['type' => 'number'],
+        'bool', 'boolean' => ['type' => 'boolean'],
+        'array' => ['type' => 'array', 'items' => ['type' => 'string']],
+        'object', 'mixed', '' => ['type' => 'object'],
+        default => ['type' => 'string'],
+    };
+    if ($nullable) {
+        $schema['nullable'] = true;
+    }
+
+    return $schema;
 }
 
 function guessType(string $field): string

@@ -34,10 +34,17 @@ get:
                     type: string
                   summary:
                     type: string
+                    nullable: true
                   type:
-                    type: integer
-                  studio:
                     type: string
+                  studio:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      realName: { type: string }
+                      studioName: { type: string }
+                    nullable: true
                   lang:
                     type: string
                   is_system:
@@ -50,12 +57,16 @@ get:
                     type: string
                   source_type:
                     type: string
+                    nullable: true
                   source_id:
-                    type: integer
+                    type: string
+                    nullable: true
                   progress:
-                    type: integer
+                    type: number
+                    description: 仅在部分查询口径下返回。
                   role:
                     type: string
+                    description: 仅在部分查询口径下返回。
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
