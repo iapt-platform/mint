@@ -16,14 +16,29 @@ use App\Models\Wbw;
 use App\Models\WbwBlock;
 use App\Services\AuthService;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 class DiscussionController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * 列出讨论 / 批注
      *
-     * @return Response
+     * 按 view 指定的口径返回 discussion 列表，支持状态过滤、分页与排序。
+     * 权限：未登录用户请求 type=discussion 时直接返回空结果；basic 角色用户在自己无编辑权限的
+     * channel 上只能看到自己发表的 discussion；view=topic-by-user 必须登录，否则返回 403。
+     * 返回 rows、count（当前口径总数）、active/close（顶级节点的活跃与关闭数）、
+     * can_create/can_reply（当前用户能否发起与回复，按 type 与 res_type 计算）。
+     *
+     * @queryParam view string required 查询口径。question=按资源查顶级讨论；question-by-topic=按某条讨论所属资源查同资源讨论；answer=查某讨论的回复；res_id=某资源的顶级节点及其直接子节点；topic-by-user=当前用户发表的全部顶级讨论；all=全部顶级讨论。Enum: question,question-by-topic,answer,res_id,topic-by-user,all
+     * @queryParam id string required 资源 uid（question/res_id）、讨论 id（question-by-topic/answer）
+     * @queryParam type string 讨论类型。Enum: discussion,qa,help,note Default: discussion
+     * @queryParam res_type string 资源类型，影响权限判断与学员提问聚合。Enum: sentence,wbw,article
+     * @queryParam status string 状态过滤；res_id 与 topic-by-user 口径支持逗号分隔多选。Enum: active,close Default: active
+     * @queryParam course string 课程 uid，配合 show_student 聚合学员提问
+     * @queryParam show_student string 是否把学员 channel 上的同位置提问一并返回。Enum: true,false
+     * @queryParam order string 排序字段。Default: created_at
+     * @queryParam dir string 排序方向。Enum: asc,desc Default: desc
+     * @queryParam offset integer 跳过的记录数。Default: 0
+     * @queryParam limit integer 返回条数上限。Default: 100
      */
     public function index(Request $request)
     {
@@ -34,6 +49,9 @@ class DiscussionController extends Controller
         }
         switch ($request->input('view')) {
             case 'question-by-topic':
+                // FIXME: $topic 拿到的是 Builder 而不是模型，->first() 的结果被丢弃，
+                // 因此下面的 if (! $topic) 永远为 false，$topic->res_id 走的是 Builder 魔术属性。
+                // 应写成 $topic = Discussion::where('id', ...)->where('status', ...)->select('res_id')->first();
                 $topic = Discussion::where('id', $request->input('id'));
                 $topic->where('status', $request->input('status', 'active'))
                     ->select('res_id')->first();
@@ -197,9 +215,13 @@ class DiscussionController extends Controller
                     ->where('status', 'close')->count();
                 break;
         }
+        // FIXME: $search 从未定义，这段标题搜索是永不执行的死代码。
+        // 应改为从 $request->input('search') 取值，或直接删除。
         if (! empty($search)) {
             $table = $table->where('title', 'like', $search.'%');
         }
+        // FIXME: view 不在枚举内（含缺省）时 $table 从未被赋值，这里会 fatal error。
+        // 建议 switch 补 default 分支直接返回参数错误。
         $count = $table->count();
 
         $table = $table->orderBy($request->input('order', 'created_at'), $request->input('dir', 'desc'));
@@ -253,6 +275,20 @@ class DiscussionController extends Controller
         ]);
     }
 
+    /**
+     * 按句子批量查询讨论概览
+     *
+     * 对传入的每个句子定位（book/paragraph/word_start/word_end/channel_id）先查到 sentence，
+     * 再取该句上全部顶级讨论（title、children_count、editor_uid，按创建时间倒序）。
+     * 没有讨论的句子会被跳过，不做登录与权限校验。返回 rows 与 count。
+     *
+     * @bodyParam data array required 句子定位数组
+     * @bodyParam data[].book integer required 卷号
+     * @bodyParam data[].paragraph integer required 段号
+     * @bodyParam data[].word_start integer required 句子起始词序号
+     * @bodyParam data[].word_end integer required 句子结束词序号
+     * @bodyParam data[].channel_id string required 译文集 channel uid
+     */
     public function discussion_tree(Request $request)
     {
         $output = [];
@@ -291,9 +327,28 @@ class DiscussionController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * 发表讨论 / 批注或回复
      *
-     * @return Response
+     * 必须登录，未登录返回 401。传了 parent 即为回复：res_id 与 res_type 继承自父节点，
+     * 无需再传，父节点不存在返回 no record，保存后父节点 children_count 自增；
+     * 不传 parent 为顶级节点，此时 res_id、res_type、title 均为必填。
+     * 锚点字段（pos_start/pos_end/quote_exact/quote_prefix/quote_suffix）两种情况都可选。
+     * 默认会向消息队列 discussion 推送通知，可用 notification=false 关闭。
+     *
+     * @bodyParam parent string 父讨论 id，传入表示这是一条回复
+     * @bodyParam res_id string required 关联资源 uid（有 parent 时忽略并继承父节点）
+     * @bodyParam res_type string required 关联资源类型（有 parent 时忽略并继承父节点）。Enum: sentence,wbw,article
+     * @bodyParam title string required 标题（有 parent 时非必填）
+     * @bodyParam content string 正文内容
+     * @bodyParam content_type string 正文格式。Default: markdown
+     * @bodyParam type string 讨论类型。Enum: discussion,qa,help,note Default: discussion
+     * @bodyParam tpl_id string 模板 id
+     * @bodyParam pos_start integer 锚点在资源文本中的起始偏移，非负整数
+     * @bodyParam pos_end integer 锚点在资源文本中的结束偏移，非负整数
+     * @bodyParam quote_exact string 锚定的原文片段
+     * @bodyParam quote_prefix string 锚定片段前的上下文，用于重新定位
+     * @bodyParam quote_suffix string 锚定片段后的上下文，用于重新定位
+     * @bodyParam notification boolean 是否推送消息队列通知。Default: true
      */
     public function store(Request $request)
     {
@@ -362,9 +417,11 @@ class DiscussionController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * 查询单条讨论
      *
-     * @return Response
+     * 按路径参数做路由模型绑定并直接返回，不做登录与权限校验。
+     *
+     * @urlParam discussion string required 讨论 id
      */
     public function show(Discussion $discussion)
     {
@@ -373,10 +430,13 @@ class DiscussionController extends Controller
     }
 
     /**
-     * 获取discussion 锚点的数据。以句子为最小单位，逐词解析也要显示单词所在的句子
+     * 获取 discussion 锚点的数据
      *
-     * @param  string  $id
-     * @return Response
+     * 以句子为最小单位返回锚点上下文：res_type=wbw 时，由单词定位到所属 wbw block 与巴利句子，
+     * 再用该 block 的 channel 渲染出句子内容的 markdown。其他 res_type 暂返回空字符串。
+     * 不做登录与权限校验；wbw、wbw block 或句子任一查不到时分别返回 no wbw data / no wbwBlock data / no sent data。
+     *
+     * @urlParam id string required 讨论 id
      */
     public function anchor($id)
     {
@@ -416,9 +476,25 @@ class DiscussionController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * 修改讨论 / 批注
      *
-     * @return Response
+     * 必须登录，未登录返回 403。作者本人可改；非作者则要求是资源所属 channel 的可编辑者
+     * （res_type=sentence 取 sentence.channel_uid，res_type=wbw 经 wbw block 取 channel_uid），
+     * 两者都不满足返回 403。
+     * title、content、status 按请求覆盖，未提交时分别回落为 null、null、active；
+     * type 与五个锚点字段为增量更新，只改请求里出现的字段，未提交的原样保留。
+     *
+     * @urlParam discussion string required 讨论 id
+     *
+     * @bodyParam title string 标题，未提交会被清空
+     * @bodyParam content string 正文内容，未提交会被清空
+     * @bodyParam status string 状态，未提交会重置为 active。Enum: active,close Default: active
+     * @bodyParam type string 讨论类型，仅在提交时更新。Enum: discussion,qa,help,note
+     * @bodyParam pos_start integer 锚点起始偏移，仅在提交时更新
+     * @bodyParam pos_end integer 锚点结束偏移，仅在提交时更新
+     * @bodyParam quote_exact string 锚定的原文片段，仅在提交时更新
+     * @bodyParam quote_prefix string 锚定片段前的上下文，仅在提交时更新
+     * @bodyParam quote_suffix string 锚定片段后的上下文，仅在提交时更新
      */
     public function update(Request $request, Discussion $discussion)
     {
@@ -459,6 +535,8 @@ class DiscussionController extends Controller
             return $this->error(__('auth.failed'), [403], 403);
         }
 
+        // FIXME: 未提交 title/content/status 时会被覆盖成 null/active，与下方锚点字段的增量更新策略不一致，
+        // 前端只想改单个字段时容易误清内容。建议统一改为 $request->has() 判断后再赋值。
         $discussion->title = $request->input('title', null);
         $discussion->content = $request->input('content', null);
         $discussion->status = $request->input('status', 'active');
@@ -479,9 +557,12 @@ class DiscussionController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * 删除讨论 / 批注
      *
-     * @return Response
+     * 必须登录，未登录返回 401。目前只允许作者本人删除，其他人返回 403。
+     * 不会级联删除子回复，也不会回退父节点的 children_count。
+     *
+     * @urlParam discussion string required 讨论 id
      */
     public function destroy(Request $request, Discussion $discussion)
     {
@@ -494,6 +575,8 @@ class DiscussionController extends Controller
         if ($discussion->editor_uid !== $user['user_uid']) {
             return $this->error(__('auth.failed'), [403], 403);
         }
+        // FIXME: 删除时既不级联删除子回复（产生孤儿节点），也不回退父节点的 children_count，计数会漂移。
+        // 建议在事务里一并删除子节点并 decrement 父节点计数。
         $delete = $discussion->delete();
 
         return $this->ok($delete);

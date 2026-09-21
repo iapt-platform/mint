@@ -22,9 +22,26 @@ use Illuminate\Support\Facades\DB;
 class ChannelController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * 列出 channel（译文集）
      *
-     * @return Response
+     * 按 view 指定的口径返回 channel 列表，支持关键字搜索、分页、排序。
+     * 需要登录的口径：studio、studio-all、user-edit、user-in-chapter。
+     *
+     * @queryParam view string required 查询口径。
+     *             Enum: public,studio,studio-all,user-edit,user-in-chapter,system,paragraphs,id
+     * @queryParam name string studio 名称，view=studio / studio-all 时必填
+     * @queryParam view2 string view=studio 时的二级口径：my=我的，其余值=协作的。Default: my
+     * @queryParam collaborator string view=studio 且 view2 为协作时，按协作者 uid 过滤。Default: all
+     * @queryParam id string view=id 时的 channel uid 列表，逗号分隔
+     * @queryParam book integer view=user-in-chapter 时的典籍 id；传入后会联查该章节的翻译进度
+     * @queryParam para string view=user-in-chapter 时的段落号
+     * @queryParam book_id integer view=paragraphs 时的典籍 id
+     * @queryParam paragraph string 联查 progress_chapters 时的段落号，与 book 配合使用
+     * @queryParam progress string 传入则在每行附带 final 逐句完成情况，依赖 book 与 para
+     * @queryParam type integer 按 channel 类型过滤
+     * @queryParam updated_at string 只返回该时间之后更新的记录，用于离线包增量同步。
+     *             Example: 2023-09-18T05:39:51.000000Z
+     * @queryParam created_at string 只返回该时间之后新建的记录
      */
     public function index(Request $request)
     {
@@ -47,6 +64,8 @@ class ChannelController extends Controller
         if ($request->has('book')) {
             $indexCol[] = 'progress_chapters.progress';
         }
+        // FIXME: switch 没有 default 分支，view 缺失或不在枚举内时 $table 始终未定义，
+        // 下面的 $table->count() 会直接 500。应补 default 返回参数错误。
         switch ($request->input('view')) {
             case 'public':
                 $table = Channel::select($indexCol)
@@ -183,6 +202,8 @@ class ChannelController extends Controller
                     $table = Channel::select($indexCol)
                         ->whereIn('uid', $channelIds);
                 } else {
+                    // FIXME: whereIsNull 不是 Eloquent 方法，会被动态 where 解析成 where('is_null', 'uid')，
+                    // 查不存在的列直接报 SQL 错误。本意应是返回空结果集，改用 ->whereRaw('1 = 0') 或 whereNull('uid')。
                     $table = Channel::select($indexCol)->whereIsNull('uid');
                 }
                 break;
@@ -533,19 +554,29 @@ class ChannelController extends Controller
             }
         }
 
+        // FIXME: 第二个元素漏写了键名，实际返回的是 {rows: [...], 0: n} 而不是 {rows, count}，
+        // 与本控制器其他列表接口的返回结构不一致。应为 'count' => count($result)。
         return $this->ok(['rows' => $result, count($result)]);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * 新建 channel
      *
-     * @return Response
+     * 在指定 studio 下新建译文集。同一 studio 内不允许重名。
+     * 调用者必须对该 studio 有管理权限。
+     *
+     * @bodyParam studio string required 所属 studio 名称
+     * @bodyParam name string required channel 名称，在同一 studio 内唯一
+     * @bodyParam type integer required channel 类型
+     * @bodyParam lang string required 译文语言代码。Example: zh-Hans
      */
     public function store(Request $request)
     {
         //
         $user = AuthService::current($request);
         if (! $user) {
+            // FIXME: error() 的签名是 error(string $message, mixed $data, int $status)，
+            // 这里把 401 当成了 data 传进去，响应体的 data 会变成数字 401。本文件多处同样写法。
             return $this->error(__('auth.failed'), 401, 401);
         }
         // 判断当前用户是否有指定的studio的权限
@@ -582,10 +613,11 @@ class ChannelController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * 获取单个 channel
      *
-     * @param  int  $id
-     * @return Response
+     * 返回 channel 详情，附带所属 studio 与作者信息。
+     *
+     * @urlParam channel string required channel uid
      */
     public function show($id)
     {
@@ -602,9 +634,9 @@ class ChannelController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * 按名称获取 channel
      *
-     * @return Response
+     * @urlParam name string required channel 名称
      */
     public function showByName(string $name)
     {
@@ -619,9 +651,20 @@ class ChannelController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * 整体更新 channel
      *
-     * @return Response
+     * 覆盖式更新，未传的字段会被写成 null；只改部分字段请用 PATCH /channel。
+     * 系统 channel 不可修改；非 owner 需要 30 以上的协作权限。
+     *
+     * @urlParam channel string required channel uid
+     *
+     * @bodyParam name string required channel 名称
+     * @bodyParam type integer required channel 类型
+     * @bodyParam summary string required 简介
+     * @bodyParam lang string required 译文语言代码
+     * @bodyParam status integer required 状态。30 为全网公开
+     * @bodyParam source_type string 来源类型，传入才会更新
+     * @bodyParam source_id string 来源 id，传入才会更新
      */
     public function update(Request $request, Channel $channel)
     {
@@ -657,9 +700,16 @@ class ChannelController extends Controller
     }
 
     /**
-     * patch the specified resource in storage.
+     * 局部更新 channel
      *
-     * @return Response
+     * 只更新请求体中出现的字段。系统 channel 不可修改；非 owner 需要 30 以上的协作权限。
+     *
+     * @bodyParam name string channel 名称
+     * @bodyParam type integer channel 类型
+     * @bodyParam summary string 简介
+     * @bodyParam lang string 译文语言代码
+     * @bodyParam status integer 状态。30 为全网公开
+     * @bodyParam config string channel 配置
      */
     public function patch(Request $request, Channel $channel)
     {
@@ -702,9 +752,11 @@ class ChannelController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * 删除 channel
      *
-     * @return Response
+     * 只有 owner 可以删除。channel 下已有译文、术语或逐词解析数据时拒绝删除。
+     *
+     * @urlParam channel string required channel uid
      */
     public function destroy(Request $request, Channel $channel)
     {
@@ -727,6 +779,8 @@ class ChannelController extends Controller
         if (WbwBlock::where('channel_uid', $channel->uid)->exists()) {
             return $this->error('逐词解析有数据无法删除');
         }
+        // FIXME: $delete 按值捕获，闭包内的赋值传不出来，接口永远返回 0。
+        // 应改为 use (&$delete) 或让闭包 return 删除结果。
         $delete = 0;
         DB::transaction(function () use ($channel, $delete) {
             // TODO 删除相关资源
