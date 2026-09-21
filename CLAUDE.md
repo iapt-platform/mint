@@ -114,6 +114,16 @@ npm run lint               # redocly 校验，应为 0 error
 - **后端路由或控制器有改动，就重跑生成器**，否则规格立刻过时。
 - 细节见 `openapi/README.md`。
 
+### 为什么是自研脚本，什么时候该换掉
+
+社区有成熟方案（Scribe、swagger-php / L5-Swagger、Dedoc Scramble），当初没用是因为
+v2 有三个它们处理不了的形态：`switch ($request->input('view'))` 抽枚举、
+`{ok, message, data}` 信封、业务失败也返回 HTTP 200。
+
+v3 的规范正在消除这三点。**等 v3 资源铺开，就评估换成 Scramble**（零注解、自动推断
+FormRequest 与 Resource），自研脚本退化为只服务 v2 遗留部分；v4 下线、v2 删完后
+一并删掉。在那之前不要提议换工具，也不要在 v3 成熟后还抱着自研脚本不放。
+
 ## 过渡期：v2 是线上冻结面（最高优先级，先读这节）
 
 **`dashboard-v4` 正在线上运行，已冻结不再升级，它依赖 161 条 v2 路径。**

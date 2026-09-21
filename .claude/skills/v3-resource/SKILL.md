@@ -92,9 +92,38 @@ v3 端点可以自由改：v4 那两处 v3 引用（`ChatInput.tsx:127`、`agent
 
 新端点必须满足，不满足就不要写：
 
-1. **不准有 `view=` 万能开关。** 语义不同 → 拆成独立端点
-   （`GET /v3/channels/editable`）；只是过滤 → 用 `filter[owner]=me`（JSON:API 风格）。
-   每个 view 是独立业务路径，挤在一个端点里就必须逐个测、switch 漏 default 就 500。
+1. **一个 index 只服务一个契约。**
+
+   契约 = 三件事：**同一套权限模型、同一套必填参数、同一种响应结构**。
+   三条里破任意一条，就说明那不是同一个端点，必须拆。三条都满足则留在同一个 index。
+
+   **过滤是允许的，而且是正常的**——同一个 index 挂十几个 `filter[]` 是常态
+   （用 `spatie/laravel-query-builder` 把 Model 的 local scope 暴露成 filter）。
+   要禁止的是 v2 那种必填、互斥、还各自带不同必填伙伴参数的 `view=` 开关。
+
+   **判断某个参数是过滤还是业务路径开关**，问一句：*去掉它，查询还成立吗？*
+   - 成立 → 可选叠加的过滤，留在 index，写成 `filter[xxx]`
+   - 不成立（必填 + 各值互斥）→ 业务路径开关，拆出去
+
+   **最可靠的机械检验是必填参数那条**：一个 FormRequest 的 `rules()` 能不能干净地
+   描述它？如果得写成下面这样，这串 `required_if` 就是在说「这里其实是三个端点」：
+
+   ```php
+   'name'    => 'required_if:view,studio,studio-all',
+   'book'    => 'required_if:view,user-in-chapter',
+   'book_id' => 'required_if:view,paragraphs',
+   ```
+
+   纯过滤永远是一串互不依赖的 `sometimes`，写起来很平。
+
+   响应结构那条有灰区：传了 `filter[book]` 才多返回一个 `progress` 字段**不算**结构
+   不同，只要 schema 里声明成可选（`progress?: float`）。结构不同指**顶层形状变了**，
+   比如有的返回 `{rows, count}`、有的直接返回数组。
+
+   拆出去的部分按 Laravel 官方形态落地（见下面「路由怎么设计」）。
+
+   > 别把这条读成「一个 index 只能走一个分支」。Laravel 官方没有这句话，
+   > index 内部有多少 `where` 条件分支都无所谓，那叫过滤。
 2. **真实 HTTP 状态码。** 禁用 v2 的 `ok:false` + HTTP 200。401 未登录、403 无权限、
    404 不存在、422 校验失败。
 3. **错误体用 RFC 9457 Problem Details**：`{type, title, status, detail, errors}`。
@@ -104,6 +133,47 @@ v3 端点可以自由改：v4 那两处 v3 引用（`ChatInput.tsx:127`、`agent
 5. **分页统一**：用 Laravel 自带 paginator，返回 `data` + `meta{page, per_page, total}`。
 6. **时间一律 ISO 8601 UTC；ID 一律字符串。** 不要让同一字段在不同端点类型摇摆。
 7. **认证统一 Sanctum bearer。** 不准从 cookie 里摸 user_id 这类旁路。
+
+## 路由怎么设计（Laravel 官方形态）
+
+官方对这件事只有一句话，在 Supplementing Resource Controllers 一节：
+
+> Remember to keep your controllers focused. If you find yourself routinely needing
+> methods outside of the typical set of resource actions, consider splitting your
+> controller into two, smaller controllers.
+
+拆出去的部分按下面四种形态落地，不要自创：
+
+| 形态 | 路由 | 什么时候用 |
+| --- | --- | --- |
+| **留在 index 用过滤** | `GET /v3/channels?filter[lang]=zh` | 可选叠加的筛选条件 |
+| **补充路由 + 单动作控制器** | `GET /v3/channels/editable` | 权限模型独特的集合（`--invokable` 生成） |
+| **嵌套资源** | `GET /v3/studios/{studio}/channels` | 从属关系；`->scoped()` 自动校验归属，权限代码少一半 |
+| **单例资源** | `GET /v3/courses/{c}/members/me` | 只有一个实例（当前用户的成员记录、profile、summary） |
+
+**路由顺序陷阱**（官方明确警告）：补充路由必须写在 `apiResource` **之前**，
+否则 `/channels/{channel}` 会把 `/channels/editable` 吃掉，`editable` 被当成 id。
+
+```php
+Route::get('channels/editable', EditableChannelsController::class);   // 必须在前
+Route::apiResource('channels', ChannelController::class);
+Route::apiResource('studios.channels', StudioChannelController::class)->scoped()->shallow();
+Route::apiSingleton('courses.members.channel', MemberChannelController::class);
+```
+
+动词化端点的统一处理：
+
+| v2 模式 | v3 |
+| --- | --- |
+| `*-my-number`、`*-count`（纯计数） | 读 index 的 `meta.total`，或 `GET /v3/studios/{s}/summary` 单例 |
+| `*-export` | `GET /v3/terms` + `Accept: text/csv`（内容协商） |
+| `*-import` | `POST /v3/terms/imports`（导入作业资源化） |
+| `*-tree` | `GET /v3/projects/{p}/tree` 或 `?include=descendants` |
+| `sign-in` / `sign-up` / `auth/current` | `POST /v3/sessions` / `POST /v3/users` / `GET /v3/me` |
+
+控制器内部：每个原 view 分支变成 Model 的 local scope（`scopePublic`、`scopeEditableBy`），
+index 用 `spatie/laravel-query-builder` 把 scope 暴露成 `filter[]`，
+控制器方法回到 10 行以内（官方 Keep Controllers Thin）。
 
 ## 迁移七步
 
