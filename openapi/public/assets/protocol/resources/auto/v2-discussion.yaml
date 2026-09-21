@@ -54,6 +54,7 @@ get:
           - qa
           - help
           - note
+          - commentary
         default: discussion
       description: 讨论类型
     -
@@ -185,13 +186,14 @@ post:
                 - qa
                 - help
                 - note
+                - commentary
               default: discussion
             tpl_id:
               type: string
               description: '模板 id'
             title:
               type: string
-              description: '标题（有 parent 时非必填）'
+              description: 标题（可选）
             content:
               type: string
               description: 正文内容
@@ -221,7 +223,6 @@ post:
           required:
             - res_id
             - res_type
-            - title
   responses:
     200:
       description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'

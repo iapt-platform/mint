@@ -16267,7 +16267,7 @@ export interface operations {
                 /** @description 状态过滤；res_id 与 topic-by-user 口径支持逗号分隔多选 */
                 status?: "active" | "close";
                 /** @description 讨论类型 */
-                type?: "discussion" | "qa" | "help" | "note";
+                type?: "discussion" | "qa" | "help" | "note" | "commentary";
                 /** @description 资源类型，影响权限判断与学员提问聚合 */
                 res_type?: "sentence" | "wbw" | "article";
                 /** @description 课程 uid，配合 show_student 聚合学员提问 */
@@ -16357,11 +16357,11 @@ export interface operations {
                      * @default discussion
                      * @enum {string}
                      */
-                    type?: "discussion" | "qa" | "help" | "note";
+                    type?: "discussion" | "qa" | "help" | "note" | "commentary";
                     /** @description 模板 id */
                     tpl_id?: string;
-                    /** @description 标题（有 parent 时非必填） */
-                    title: string;
+                    /** @description 标题（可选） */
+                    title?: string;
                     /** @description 正文内容 */
                     content?: string;
                     /**
@@ -16733,7 +16733,7 @@ export interface operations {
                      * @description 讨论类型，仅在提交时更新
                      * @enum {string}
                      */
-                    type?: "discussion" | "qa" | "help" | "note";
+                    type?: "discussion" | "qa" | "help" | "note" | "commentary";
                     /** @description 锚点起始偏移，仅在提交时更新 */
                     pos_start?: number;
                     /** @description 锚点结束偏移，仅在提交时更新 */
@@ -16843,7 +16843,7 @@ export interface operations {
                      * @description 讨论类型，仅在提交时更新
                      * @enum {string}
                      */
-                    type?: "discussion" | "qa" | "help" | "note";
+                    type?: "discussion" | "qa" | "help" | "note" | "commentary";
                     /** @description 锚点起始偏移，仅在提交时更新 */
                     pos_start?: number;
                     /** @description 锚点结束偏移，仅在提交时更新 */
@@ -32257,7 +32257,10 @@ export interface operations {
             query: {
                 /**
                  * @description 要删除的词条 id 数组的 JSON 字符串
-                 * @example ["123","456"]
+                 * @example [
+                 *       "123",
+                 *       "456"
+                 *     ]
                  */
                 id: string;
             };
@@ -32374,7 +32377,10 @@ export interface operations {
             query?: {
                 /**
                  * @description 要批量删除的词条 id 数组的 JSON 字符串
-                 * @example ["123","456"]
+                 * @example [
+                 *       "123",
+                 *       "456"
+                 *     ]
                  */
                 id?: string;
             };
@@ -33983,12 +33989,18 @@ export interface operations {
                 tags?: string;
                 /**
                  * @description 页码标记
-                 * @example ["V3.81","M3.58"]
+                 * @example [
+                 *       "V3.81",
+                 *       "M3.58"
+                 *     ]
                  */
                 page_refs?: unknown[];
                 /**
                  * @description 关联 id
-                 * @example ["chapter_93-5","m.n. 38"]
+                 * @example [
+                 *       "chapter_93-5",
+                 *       "m.n. 38"
+                 *     ]
                  */
                 related_id?: unknown[];
                 /** @description 按作者或译者过滤 */
