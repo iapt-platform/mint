@@ -68,7 +68,7 @@ class TaskController extends Controller
             $table = $table->whereIn('id', $assigneesTasks);
         }
         if ($request->has('assignees_id_not-includes')) {
-            $assigneesId = explode(',', $request->input('assignees_id_includes'));
+            $assigneesId = explode(',', $request->input('assignees_id_not-includes'));
             $assigneesTasks = TaskAssignee::whereIn('assignee_id', $assigneesId)
                 ->select('task_id')->get();
             $table = $table->whereNotIn('id', $assigneesTasks);
@@ -96,7 +96,7 @@ class TaskController extends Controller
         }
 
         if ($request->has('participants_id_not-includes')) {
-            $id = explode(',', $request->input('participants_id_includes'));
+            $id = explode(',', $request->input('participants_id_not-includes'));
             $tasks_id = TaskAssignee::whereIn('assignee_id', $id)->select('task_id')->get();
             $table = $table->where(function ($query) use ($id, $tasks_id) {
                 $query->whereNotIn('executor_id', $id)

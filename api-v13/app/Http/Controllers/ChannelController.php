@@ -30,6 +30,8 @@ class ChannelController extends Controller
     {
         //
         $result = false;
+        // $chapter 只有 view=user-in-chapter 会赋值，下面按进度取数时要先判断
+        $chapter = null;
         $indexCol = [
             'channels.uid',
             'name',
@@ -229,7 +231,7 @@ class ChannelController extends Controller
         $result = $table->get();
         // TODO 将下面代码转移到resource
         if ($result) {
-            if ($request->has('progress')) {
+            if ($request->has('progress') && $chapter) {
                 // 获取进度
                 // 获取单句长度
                 $sentLen = PaliSentence::where('book', $request->input('book'))
@@ -239,7 +241,7 @@ class ChannelController extends Controller
                     ->get();
             }
             foreach ($result as $key => $value) {
-                if ($request->has('progress')) {
+                if ($request->has('progress') && $chapter) {
                     // 获取进度
                     $finalTable = Sentence::where('book_id', $request->input('book'))
                         ->whereBetween('paragraph', $chapter)
@@ -692,7 +694,7 @@ class ChannelController extends Controller
             $channel->status = $request->input('status');
         }
         if ($request->has('config')) {
-            $channel->status = $request->input('config');
+            $channel->config = $request->input('config');
         }
         $channel->save();
 
