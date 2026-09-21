@@ -1,0 +1,102 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-chapter.yaml
+get:
+  summary: '列出 chapter'
+  tags:
+    - chapter
+  operationId: get_api_v2_chapter
+  description: 实现：`ChapterController@index`
+  parameters:
+    -
+      name: view
+      in: query
+      schema:
+        type: string
+        enum:
+          - toc
+    -
+      name: book
+      in: query
+      schema:
+        type: string
+    -
+      name: para
+      in: query
+      schema:
+        type: string
+    -
+      name: order
+      in: query
+      schema:
+        type: string
+        default: paragraph
+    -
+      name: dir
+      in: query
+      schema:
+        type: string
+        default: asc
+    -
+      name: offset
+      in: query
+      schema:
+        type: string
+    -
+      name: limit
+      in: query
+      schema:
+        type: string
+    -
+      name: search
+      in: query
+      description: 搜索关键字
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  rows:
+                    type: array
+                    items:
+                      type: object
+                  count:
+                    type: integer
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+post:
+  summary: '新建 chapter'
+  tags:
+    - chapter
+  operationId: post_api_v2_chapter
+  description: 实现：`ChapterController@store`
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

@@ -1,0 +1,179 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-search.yaml
+get:
+  summary: '处理搜索请求，支持 fuzzy / exact / semantic / hybrid 四种模式。'
+  tags:
+    - search
+  operationId: get_api_v3_search
+  description: |-
+    接收查询参数并调用 OpenSearchService 执行搜索。
+    支持 GET 和 POST 请求
+    - q (string): 搜索关键词
+    - resource_type (string): 资源类型 (article|term|dictionary|translation|origin_text|nissaya)
+    - granularity (string): 文档颗粒度 (book|chapter|sutta|section|paragraph|sentence)
+    - language (string): 语言，如 pali, zh-Hans, zh-Hant, en-US, my
+    - category (string): 文档分类 (pali|commentary|subcommentary)
+    - tags (array): 标签过滤
+    - page_refs (array): 页码标记 ["V3.81","M3.58"]
+    - related_id (array): 关联 ID，如 ["chapter_93-5","m.n. 38"]
+    - author (string): 作者或译者 (metadata.author)
+    - channel (string): 来源渠道 (metadata.channel)
+    - page (int): 页码，默认 1
+    - page_size (int): 每页数量，默认 20，最大 100
+    - search_mode (string): fuzzy|exact|semantic|hybrid，默认 fuzzy
+
+    实现：`SearchPlusController@index`
+  parameters:
+    -
+      name: q
+      in: query
+      schema:
+        type: string
+        default: ''
+    -
+      name: page
+      in: query
+      schema:
+        type: string
+    -
+      name: page_size
+      in: query
+      schema:
+        type: string
+    -
+      name: search_mode
+      in: query
+      schema:
+        type: string
+        default: fuzzy
+    -
+      name: resource_type
+      in: query
+      schema:
+        type: string
+    -
+      name: resource_id
+      in: query
+      schema:
+        type: string
+    -
+      name: granularity
+      in: query
+      schema:
+        type: string
+    -
+      name: language
+      in: query
+      schema:
+        type: string
+    -
+      name: category
+      in: query
+      schema:
+        type: string
+    -
+      name: tags
+      in: query
+      schema:
+        type: string
+    -
+      name: page_refs
+      in: query
+      schema:
+        type: string
+    -
+      name: related_id
+      in: query
+      schema:
+        type: string
+    -
+      name: author
+      in: query
+      schema:
+        type: string
+    -
+      name: channel
+      in: query
+      schema:
+        type: string
+    -
+      name: search
+      in: query
+      description: 搜索关键字
+      schema:
+        type: string
+    -
+      name: order
+      in: query
+      description: 排序字段
+      schema:
+        type: string
+    -
+      name: dir
+      in: query
+      description: 排序方向
+      schema:
+        type: string
+        enum:
+          - desc
+          - asc
+    -
+      name: limit
+      in: query
+      description: 每页记录数
+      schema:
+        type: number
+    -
+      name: offset
+      in: query
+      description: 从第几条记录开始提取
+      schema:
+        type: number
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  rows:
+                    type: array
+                    items:
+                      type: object
+                  count:
+                    type: integer
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+post:
+  summary: 'POST 方式调用搜索接口（与 index 方法功能相同）'
+  tags:
+    - search
+  operationId: post_api_v3_search
+  description: 实现：`SearchPlusController@store`
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

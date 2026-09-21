@@ -1,0 +1,236 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-discussion-discussion.yaml
+get:
+  summary: 查询单条讨论
+  tags:
+    - discussion
+  operationId: get_api_v2_discussion_discussion_
+  description: |-
+    按路径参数做路由模型绑定并直接返回，不做登录与权限校验。
+
+    实现：`DiscussionController@show`
+  parameters:
+    -
+      name: discussion
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '讨论 id'
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+put:
+  summary: '修改讨论 / 批注'
+  tags:
+    - discussion
+  operationId: put_api_v2_discussion_discussion_
+  description: |-
+    必须登录，未登录返回 403。作者本人可改；非作者则要求是资源所属 channel 的可编辑者
+    （res_type=sentence 取 sentence.channel_uid，res_type=wbw 经 wbw block 取 channel_uid），
+    两者都不满足返回 403。
+    title、content、status 按请求覆盖，未提交时分别回落为 null、null、active；
+    type 与五个锚点字段为增量更新，只改请求里出现的字段，未提交的原样保留。
+
+    实现：`DiscussionController@update`
+  parameters:
+    -
+      name: discussion
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '讨论 id'
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            title:
+              type: string
+              description: 标题，未提交会被清空
+            content:
+              type: string
+              description: 正文内容，未提交会被清空
+            status:
+              type: string
+              description: '状态，未提交会重置为 active'
+              enum:
+                - active
+                - close
+              default: active
+            type:
+              type: string
+              description: 讨论类型，仅在提交时更新
+              enum:
+                - discussion
+                - qa
+                - help
+                - note
+            pos_start:
+              type: integer
+              description: 锚点起始偏移，仅在提交时更新
+            pos_end:
+              type: integer
+              description: 锚点结束偏移，仅在提交时更新
+            quote_exact:
+              type: string
+              description: 锚定的原文片段，仅在提交时更新
+            quote_prefix:
+              type: string
+              description: 锚定片段前的上下文，仅在提交时更新
+            quote_suffix:
+              type: string
+              description: 锚定片段后的上下文，仅在提交时更新
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+patch:
+  summary: '修改讨论 / 批注'
+  tags:
+    - discussion
+  operationId: patch_api_v2_discussion_discussion_
+  description: |-
+    必须登录，未登录返回 403。作者本人可改；非作者则要求是资源所属 channel 的可编辑者
+    （res_type=sentence 取 sentence.channel_uid，res_type=wbw 经 wbw block 取 channel_uid），
+    两者都不满足返回 403。
+    title、content、status 按请求覆盖，未提交时分别回落为 null、null、active；
+    type 与五个锚点字段为增量更新，只改请求里出现的字段，未提交的原样保留。
+
+    实现：`DiscussionController@update`
+  parameters:
+    -
+      name: discussion
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '讨论 id'
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            title:
+              type: string
+              description: 标题，未提交会被清空
+            content:
+              type: string
+              description: 正文内容，未提交会被清空
+            status:
+              type: string
+              description: '状态，未提交会重置为 active'
+              enum:
+                - active
+                - close
+              default: active
+            type:
+              type: string
+              description: 讨论类型，仅在提交时更新
+              enum:
+                - discussion
+                - qa
+                - help
+                - note
+            pos_start:
+              type: integer
+              description: 锚点起始偏移，仅在提交时更新
+            pos_end:
+              type: integer
+              description: 锚点结束偏移，仅在提交时更新
+            quote_exact:
+              type: string
+              description: 锚定的原文片段，仅在提交时更新
+            quote_prefix:
+              type: string
+              description: 锚定片段前的上下文，仅在提交时更新
+            quote_suffix:
+              type: string
+              description: 锚定片段后的上下文，仅在提交时更新
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+delete:
+  summary: '删除讨论 / 批注'
+  tags:
+    - discussion
+  operationId: delete_api_v2_discussion_discussion_
+  description: |-
+    必须登录，未登录返回 401。目前只允许作者本人删除，其他人返回 403。
+    不会级联删除子回复，也不会回退父节点的 children_count。
+
+    实现：`DiscussionController@destroy`
+  parameters:
+    -
+      name: discussion
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '讨论 id'
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

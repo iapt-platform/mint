@@ -1,0 +1,33 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-channel-name-name.yaml
+get:
+  summary: '按名称获取 channel'
+  tags:
+    - channel-name
+  operationId: get_api_v2_channel_name_name_
+  description: 实现：`ChannelController@showByName`
+  parameters:
+    -
+      name: name
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 'channel 名称'
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

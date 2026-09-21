@@ -1,0 +1,71 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-tipitaka-read-chapter.yaml
+get:
+  summary: '阅读模式章节内容。输入章节起始 book/para，按 pagesize 分批返回段落。'
+  tags:
+    - tipitaka-read-chapter
+  operationId: get_api_v3_tipitaka_read_chapter
+  description: |-
+    pagesize 两种写法：
+    - `20000b` 按字节，累加 pali_texts.lenght 直到超过上限（每页至少一段）
+    - `10p`    按段落数
+
+    实现：`TipitakaReadChapterController@index`
+  parameters:
+    -
+      name: search
+      in: query
+      description: 搜索关键字
+      schema:
+        type: string
+    -
+      name: order
+      in: query
+      description: 排序字段
+      schema:
+        type: string
+    -
+      name: dir
+      in: query
+      description: 排序方向
+      schema:
+        type: string
+        enum:
+          - desc
+          - asc
+    -
+      name: limit
+      in: query
+      description: 每页记录数
+      schema:
+        type: number
+    -
+      name: offset
+      in: query
+      description: 从第几条记录开始提取
+      schema:
+        type: number
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  rows:
+                    type: array
+                    items:
+                      type: object
+                  count:
+                    type: integer
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

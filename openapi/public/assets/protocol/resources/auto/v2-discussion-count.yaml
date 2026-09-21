@@ -1,0 +1,121 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-discussion-count.yaml
+get:
+  summary: '列出 discussion-count'
+  tags:
+    - discussion-count
+  operationId: get_api_v2_discussion_count
+  description: 实现：`DiscussionCountController@index`
+  parameters:
+    -
+      name: search
+      in: query
+      description: 搜索关键字
+      schema:
+        type: string
+    -
+      name: order
+      in: query
+      description: 排序字段
+      schema:
+        type: string
+    -
+      name: dir
+      in: query
+      description: 排序方向
+      schema:
+        type: string
+        enum:
+          - desc
+          - asc
+    -
+      name: limit
+      in: query
+      description: 每页记录数
+      schema:
+        type: number
+    -
+      name: offset
+      in: query
+      description: 从第几条记录开始提取
+      schema:
+        type: number
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  rows:
+                    type: array
+                    items:
+                      type: object
+                  count:
+                    type: integer
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+post:
+  summary: 课程模式业务逻辑
+  tags:
+    - discussion-count
+  operationId: post_api_v2_discussion_count
+  description: |-
+    标准答案channel:学生提问
+    学生channel: 老师批改作业
+    老师：
+    标准答案channel: 本期学生，老师（区分已经回复，未回复）
+    学生channel: 本期学生，老师
+    学生：
+    标准答案channel：我自己topic(区分已经回复，未回复)
+    学生自己channel: 我自己，本期老师
+    输入：
+    句子列表
+    courseId
+    返回数据
+    resId
+    type:'discussion':
+    my:number
+    myReplied:number
+    all:number
+    allReplied:number
+
+    实现：`DiscussionCountController@store`
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            course_id:
+              type: string
+            sentences:
+              type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

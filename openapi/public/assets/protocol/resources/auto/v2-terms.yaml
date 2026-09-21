@@ -1,0 +1,236 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-terms.yaml
+get:
+  summary: '列出术语（dhamma term）'
+  tags:
+    - terms
+  operationId: get_api_v2_terms
+  description: |-
+    按 view 指定的口径返回术语列表。studio、channel、user 三个口径需要登录；
+    studio 要求 name 指向的 studio 属于当前用户，否则 403；channel 要求当前用户是
+    channel owner 或协作者（ShareApi 权限值非 0），否则 403。
+    create-by-channel、show、hot-meaning 三个口径直接返回各自的数据结构，
+    不走后面的搜索/排序/分页；其余口径统一返回 {rows, count}。
+    hot-meaning 结果会按 config('mint.cache.expire') 缓存在 term/hot_meaning 键下。
+    未指定 view（或给了无法识别的值）时没有任何基础查询，会直接报错，调用方必须传 view。
+
+    实现：`DhammaTermController@index`
+  parameters:
+    -
+      name: view
+      in: query
+      schema:
+        type: string
+        enum:
+          - create-by-channel
+          - studio
+          - channel
+          - show
+          - user
+          - word
+          - tag
+          - hot-meaning
+      description: 查询口径
+      required: true
+    -
+      name: channel
+      in: query
+      schema:
+        type: string
+      description: 'view=create-by-channel 时必填，目标 channel 的 uid， 用于确定语言、同 studio 的 channel 列表与 studio 信息'
+    -
+      name: word
+      in: query
+      schema:
+        type: string
+      description: 'view=create-by-channel 时为要新建的术语词形； view=word 时为逗号分隔的词或义项列表，按 word 或 meaning 命中'
+    -
+      name: name
+      in: query
+      schema:
+        type: string
+      description: 'view=studio 时必填，studio 名称，须与当前用户的 studio 一致'
+    -
+      name: id
+      in: query
+      schema:
+        type: string
+      description: 'view=channel 时为 channel id（uid）；view=show 时为术语主键 id'
+    -
+      name: search
+      in: query
+      schema:
+        type: string
+      description: '关键字，按 word、word_en 前缀匹配或 meaning 模糊匹配'
+    -
+      name: tag
+      in: query
+      schema:
+        type: string
+      description: 'view=tag 时必填，逗号分隔的 tag 列表'
+    -
+      name: language
+      in: query
+      schema:
+        type: string
+      description: 'view=hot-meaning 时必填，统计该语言下每个词出现次数最多的义项'
+    -
+      name: order
+      in: query
+      schema:
+        type: string
+        default: updated_at
+      description: 排序字段
+    -
+      name: dir
+      in: query
+      schema:
+        type: string
+        enum:
+          - asc
+          - desc
+        default: desc
+      description: 排序方向
+    -
+      name: offset
+      in: query
+      schema:
+        type: integer
+        default: '0'
+      description: 分页偏移量
+    -
+      name: limit
+      in: query
+      schema:
+        type: integer
+        default: '1000'
+      description: 每页条数
+    -
+      name: mode
+      in: query
+      schema:
+        type: string
+        default: read
+      description: '渲染 note/summary 的模式，透传给 Markdown 渲染器'
+    -
+      name: format
+      in: query
+      schema:
+        type: string
+        enum:
+          - react
+          - html
+          - text
+        default: react
+      description: 'note 的渲染输出格式'
+    -
+      name: community_summary
+      in: query
+      schema:
+        type: boolean
+      description: '传入该参数时，自身没有 note 的术语会回落到社区 channel 的解释作为 summary'
+    -
+      name: exp
+      in: query
+      schema:
+        type: boolean
+      description: 传入该参数时附带编辑者截至本条更新时间的累计经验值（秒）
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  rows:
+                    type: array
+                    items:
+                      type: object
+                  count:
+                    type: integer
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+post:
+  summary: 新建术语
+  tags:
+    - terms
+  operationId: post_api_v2_terms
+  description: |-
+    需要登录。传了 channel 则建 channel 级术语，owner 取该 channel 所属 studio、
+    language 取该 channel 的语言（请求里的 language 被覆盖），并要求当前身份对该
+    channel 有编辑权（owner / 协作者 / channel access token），否则 403。
+    不传 channel 则建 studio 级术语，只允许 studio 本人创建（studioId 必须等于当前
+    用户 uid，否则 403）；AI 模型身份一律禁止（403），因为 access token 只能代持
+    channel 级权限。
+    唯一性：channel 级按 channel+word+tag 查重，studio 级按 owner+word+tag+language
+    且 channal 为空查重；重复时返回 'word existed'，HTTP 状态仍是 200。
+    写入成功后清除该词的 term 缓存并重建 OpenSearch 索引（索引失败只记日志）。
+
+    实现：`DhammaTermController@store`
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            word:
+              type: string
+              description: '术语词形，同时用于生成 word_en'
+            meaning:
+              type: string
+              description: 主要义项
+            tag:
+              type: string
+              description: 标签，参与查重
+            channel:
+              type: string
+              description: 'channel uid。给出则建 channel 级术语，否则建 studio 级术语'
+            language:
+              type: string
+              description: '语言。仅 studio 级术语生效，channel 级会被 channel 语言覆盖'
+            other_meaning:
+              type: string
+              description: 其他义项，逗号分隔
+            note:
+              type: string
+              description: 术语解释，Markdown
+            access_token:
+              type: string
+              description: 'channel access token，供 AI 模型等非 owner 身份验证 channel 编辑权'
+            studioId:
+              type: string
+              description: 'studio 的 uuid，不传 channel 时必填（或改用 studioName）'
+            studioName:
+              type: string
+              description: 'studio 名称，未给 studioId 时用它换取 studioId'
+          required:
+            - word
+            - meaning
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

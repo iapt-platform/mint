@@ -1,0 +1,238 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-article-article.yaml
+get:
+  summary: '查看单篇 article（文章）'
+  tags:
+    - article
+  operationId: get_api_v2_article_article_
+  description: |-
+    前端阅读页最常用的接口。允许匿名访问：status=30（公开）的文章任何人可读；
+    非公开文章需要登录，且满足以下之一——是文章 owner、对该文章有只读以上共享权限（power>=10）、
+    或对该文章所在的（同一 owner 的）文集有只读以上共享权限，否则返回 403。
+
+    实现：`ArticleController@show`
+  parameters:
+    -
+      name: article
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '文章 uid（路由模型绑定到 Article，主键即 uid）'
+    -
+      name: anthology
+      in: query
+      schema:
+        type: string
+      description: '所在文集 uid，用于在返回结果里渲染文集路径（path）'
+    -
+      name: channel
+      in: query
+      schema:
+        type: string
+      description: '渲染标题所用的 channel uid，多个用下划线分隔；不传则回退到文集的默认 channel'
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+put:
+  summary: '更新 article（文章）'
+  tags:
+    - article
+  operationId: put_api_v2_article_article_
+  description: |-
+    需要登录。权限：必须是文章 owner，或对文章有编辑以上共享权限（power>=20），
+    或对文章所在的同 owner 文集有编辑以上权限，否则返回 401。
+    字段会整体覆盖：title/subtitle 截断到 128 字，summary 截断到 1024 字，
+    status 未传时会被重置为 10（非公开），即部分更新也必须带全字段。
+    副作用：to_tpl=true 时把正文转成模版——按行切句，正文中的句子被替换成 {{book-para-start-end}} 占位，
+    同时把原文逐句写入 sentences 表（必要时为文集新建 CustomBook 与 channel），该过程需要对应 channel 的写权限。
+
+    实现：`ArticleController@update`
+  parameters:
+    -
+      name: article
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '文章 uid（路由模型绑定）'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            content:
+              type: string
+              description: 正文（markdown）
+            to_tpl:
+              type: boolean
+              description: '是否把正文转换为模版并把原文切句入库，必须是布尔 true 才生效'
+            anthology_id:
+              type: string
+              description: 'to_tpl=true 时必填，文集 uid，用于定位/创建书号与 channel'
+            title:
+              type: string
+              description: '标题，最多 128 字'
+            subtitle:
+              type: string
+              description: '副标题，最多 128 字'
+            summary:
+              type: string
+              description: '摘要，最多 1024 字'
+            lang:
+              type: string
+              description: 语言代码
+            status:
+              type: integer
+              description: '公开状态，30 表示公开'
+              default: '10'
+          required:
+            - title
+            - content
+            - lang
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+patch:
+  summary: '更新 article（文章）'
+  tags:
+    - article
+  operationId: patch_api_v2_article_article_
+  description: |-
+    需要登录。权限：必须是文章 owner，或对文章有编辑以上共享权限（power>=20），
+    或对文章所在的同 owner 文集有编辑以上权限，否则返回 401。
+    字段会整体覆盖：title/subtitle 截断到 128 字，summary 截断到 1024 字，
+    status 未传时会被重置为 10（非公开），即部分更新也必须带全字段。
+    副作用：to_tpl=true 时把正文转成模版——按行切句，正文中的句子被替换成 {{book-para-start-end}} 占位，
+    同时把原文逐句写入 sentences 表（必要时为文集新建 CustomBook 与 channel），该过程需要对应 channel 的写权限。
+
+    实现：`ArticleController@update`
+  parameters:
+    -
+      name: article
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '文章 uid（路由模型绑定）'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            content:
+              type: string
+              description: 正文（markdown）
+            to_tpl:
+              type: boolean
+              description: '是否把正文转换为模版并把原文切句入库，必须是布尔 true 才生效'
+            anthology_id:
+              type: string
+              description: 'to_tpl=true 时必填，文集 uid，用于定位/创建书号与 channel'
+            title:
+              type: string
+              description: '标题，最多 128 字'
+            subtitle:
+              type: string
+              description: '副标题，最多 128 字'
+            summary:
+              type: string
+              description: '摘要，最多 1024 字'
+            lang:
+              type: string
+              description: 语言代码
+            status:
+              type: integer
+              description: '公开状态，30 表示公开'
+              default: '10'
+          required:
+            - title
+            - content
+            - lang
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+delete:
+  summary: '删除 article（文章）'
+  tags:
+    - article
+  operationId: delete_api_v2_article_article_
+  description: |-
+    需要登录，且只有文章 owner 本人可以删除（协作者不行），否则返回鉴权失败。
+    副作用：在事务中删除文章记录，并同步把该文章从所有文集目录（article_collections）中摘除。
+
+    实现：`ArticleController@destroy`
+  parameters:
+    -
+      name: article
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '文章 uid（路由模型绑定）'
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

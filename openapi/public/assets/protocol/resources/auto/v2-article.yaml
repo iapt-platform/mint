@@ -1,0 +1,191 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-article.yaml
+get:
+  summary: '列出 article（文章）'
+  tags:
+    - article
+  operationId: get_api_v2_article
+  description: |-
+    按 view 指定的口径返回文章列表，支持关键字搜索、分页、排序。
+    默认只返回列表字段（uid、title、subtitle、summary、owner、lang、status、editor_id、时间），
+    content=true 时才附带正文与正文类型。
+    view=studio 需要登录，且当前登录用户必须就是 name 指定的 studio 的拥有者，否则返回 401/403。
+
+    实现：`ArticleController@index`
+  parameters:
+    -
+      name: content
+      in: query
+      schema:
+        type: string
+      description: '是否返回文章正文。传 true 时结果附带 content 与 content_type'
+      example: 'true'
+    -
+      name: view
+      in: query
+      schema:
+        type: string
+        enum:
+          - template
+          - studio
+          - public
+      description: '查询口径。template=按 studio_name 取该 studio 的全部文章（模版库）；studio=取某 studio 内的文章，需要登录；public=只取已公开（status=30）的文章'
+      required: true
+    -
+      name: studio_name
+      in: query
+      schema:
+        type: string
+      description: 'view=template 时使用，指定 studio 的名称'
+    -
+      name: name
+      in: query
+      schema:
+        type: string
+      description: 'view=studio 时使用，指定 studio 的名称，必须与当前登录用户一致'
+    -
+      name: view2
+      in: query
+      schema:
+        type: string
+        default: my
+      description: 'view=studio 时的二级口径：my=我创建的（owner 为该 studio），其余值=协作的（别人共享给我的，res_type=3）'
+    -
+      name: anthology
+      in: query
+      schema:
+        type: string
+        enum:
+          - all
+          - none
+      description: 'view=studio 时按文集过滤。all=不过滤；none=不属于我任何文集的文章；其余值按文集 uid 过滤'
+    -
+      name: search
+      in: query
+      schema:
+        type: string
+      description: '按标题模糊搜索（title like %search%）'
+    -
+      name: subtitle
+      in: query
+      schema:
+        type: string
+      description: '按副标题过滤（subtitle like，需自行带通配符）'
+    -
+      name: order
+      in: query
+      schema:
+        type: string
+        default: updated_at
+      description: 排序字段
+    -
+      name: dir
+      in: query
+      schema:
+        type: string
+        enum:
+          - asc
+          - desc
+        default: desc
+      description: 排序方向
+    -
+      name: offset
+      in: query
+      schema:
+        type: integer
+        default: '0'
+      description: 分页起始位置
+    -
+      name: limit
+      in: query
+      schema:
+        type: integer
+        default: '1000'
+      description: 每页条数
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  rows:
+                    type: array
+                    items:
+                      type: object
+                  count:
+                    type: integer
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+post:
+  summary: '新建 article（文章）'
+  tags:
+    - article
+  operationId: post_api_v2_article
+  description: |-
+    需要登录。权限：当前用户必须是 studio 的拥有者；若不是，则必须对 anthologyId 指定的文集
+    拥有大于只读的权限（power>10），否则返回 403。
+    副作用：整个新建过程在事务中执行——写入 articles 表，若给了 anthologyId 则同时把文章挂进文集；
+    若再给了 parentNode，会按目录树重建该文集的 article_collections 记录（删除后整表重插）并刷新文集缓存。
+    标题超过 128 字会被截断。
+
+    实现：`ArticleController@store`
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            studio:
+              type: string
+              description: 'studio 名称，文章归属的 studio'
+            anthologyId:
+              type: string
+              description: '文集 uid，传入则把新文章加入该文集'
+            title:
+              type: string
+              description: '文章标题，最多 128 字，超出截断'
+            lang:
+              type: string
+              description: 文章语言代码
+            status:
+              type: integer
+              description: '公开状态，30 表示公开。不传则用数据库默认值'
+            parentId:
+              type: string
+              description: '父文章 uid，写入 articles.parent'
+            parentNode:
+              type: string
+              description: '文集目录中的挂接点文章 uid，新文章作为它的子节点插入； 不传则作为一级节点（level=1）追加到文集末尾'
+          required:
+            - studio
+            - title
+            - lang
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

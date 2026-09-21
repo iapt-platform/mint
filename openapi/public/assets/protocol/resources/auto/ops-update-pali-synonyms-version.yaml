@@ -1,0 +1,37 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/ops-update-pali-synonyms-version.yaml
+put:
+  summary: '更新索引使用的 pali 同义词文件版本'
+  tags:
+    - update-pali-synonyms
+  operationId: put_api_ops_update_pali_synonyms_version_
+  description: |-
+    将 pali_synonyms filter 的 synonyms_path 指向
+    analysis/pali-synonyms-{$version}.txt，该文件须已上传到
+    OpenSearch 各节点的 config 目录。
+
+    实现：`UpdatePaliSynonymsController@update`
+  parameters:
+    -
+      name: version
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

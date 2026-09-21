@@ -1,0 +1,57 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-article-preview-id.yaml
+put:
+  summary: 预览文章正文
+  tags:
+    - article-preview
+  operationId: put_api_v2_article_preview_id_
+  description: |-
+    PUT /api/v2/article-preview/{id}。用请求体里的 content 覆盖文章正文后走一遍渲染再返回，
+    不写数据库，用于编辑器里的即时预览。
+    权限与查看文章一致：公开文章匿名可预览，否则需要读权限，无权限返回 401。
+    未传 content 时返回 error('no content')，但 HTTP 状态码仍是 200。
+
+    实现：`ArticleController@preview`
+  parameters:
+    -
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '文章 uid'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            content:
+              type: string
+              description: 待预览的正文内容（markdown）
+            anthology:
+              type: string
+              description: '所在文集 uid，用于渲染文集路径'
+            channel:
+              type: string
+              description: '渲染所用 channel uid，多个用下划线分隔'
+          required:
+            - content
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

@@ -1,0 +1,125 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-user.yaml
+get:
+  summary: 列出用户
+  tags:
+    - user
+  operationId: get_api_v2_user
+  description: |-
+    按 view 指定的口径返回用户列表，支持按昵称搜索、按角色过滤、分页与排序。
+    注意：view 只识别 key 和 all 两个值，传其他值或不传会因为查询对象未初始化而报错。
+
+    实现：`UserController@index`
+  parameters:
+    -
+      name: view
+      in: query
+      schema:
+        type: string
+        enum:
+          - key
+          - all
+      description: 查询口径。key=按关键字匹配用户名或昵称；all=全部用户
+      required: true
+    -
+      name: key
+      in: query
+      schema:
+        type: string
+      description: 'view=key 时的关键字，同时模糊匹配 username 与 nickname'
+    -
+      name: search
+      in: query
+      schema:
+        type: string
+      description: '按昵称再做一次模糊过滤（nickname like %search%）'
+    -
+      name: role
+      in: query
+      schema:
+        type: string
+      description: '按角色过滤，匹配 role 这个 JSON 数组中是否包含该值'
+      example: admin
+    -
+      name: order
+      in: query
+      schema:
+        type: string
+        default: username
+      description: 排序字段
+    -
+      name: dir
+      in: query
+      schema:
+        type: string
+        enum:
+          - asc
+          - desc
+        default: desc
+      description: 排序方向
+    -
+      name: offset
+      in: query
+      schema:
+        type: integer
+        default: '0'
+      description: 分页起始位置
+    -
+      name: limit
+      in: query
+      schema:
+        type: integer
+        default: '20'
+      description: 每页条数
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  rows:
+                    type: array
+                    items:
+                      type: object
+                  count:
+                    type: integer
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+post:
+  summary: 新建用户（未实现）
+  tags:
+    - user
+  operationId: post_api_v2_user
+  description: |-
+    路由已注册 POST /api/v2/user，但方法体为空，不做任何事也不返回内容。
+    用户注册走认证相关接口，不走这里。
+
+    实现：`UserController@store`
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

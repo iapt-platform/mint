@@ -1,0 +1,203 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-course-course.yaml
+get:
+  summary: '获取单个 course/{course}'
+  tags:
+    - course
+  operationId: get_api_v2_course_course_
+  description: 实现：`CourseController@show`
+  parameters:
+    -
+      name: course
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+put:
+  summary: '更新 course/{course}'
+  tags:
+    - course
+  operationId: put_api_v2_course_course_
+  description: 实现：`CourseController@update`
+  parameters:
+    -
+      name: course
+      in: path
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            title:
+              type: string
+            subtitle:
+              type: string
+            summary:
+              type: string
+            number:
+              type: string
+            cover:
+              type: string
+            content:
+              type: string
+            sign_up_message:
+              type: string
+            teacher_id:
+              type: string
+            anthology_id:
+              type: string
+            channel_id:
+              type: string
+            publicity:
+              type: string
+            start_at:
+              type: string
+            end_at:
+              type: string
+            sign_up_start_at:
+              type: string
+            sign_up_end_at:
+              type: string
+            join:
+              type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+patch:
+  summary: '更新 course/{course}'
+  tags:
+    - course
+  operationId: patch_api_v2_course_course_
+  description: 实现：`CourseController@update`
+  parameters:
+    -
+      name: course
+      in: path
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            title:
+              type: string
+            subtitle:
+              type: string
+            summary:
+              type: string
+            number:
+              type: string
+            cover:
+              type: string
+            content:
+              type: string
+            sign_up_message:
+              type: string
+            teacher_id:
+              type: string
+            anthology_id:
+              type: string
+            channel_id:
+              type: string
+            publicity:
+              type: string
+            start_at:
+              type: string
+            end_at:
+              type: string
+            sign_up_start_at:
+              type: string
+            sign_up_end_at:
+              type: string
+            join:
+              type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+delete:
+  summary: '删除 course/{course}'
+  tags:
+    - course
+  operationId: delete_api_v2_course_course_
+  description: 实现：`CourseController@destroy`
+  parameters:
+    -
+      name: course
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

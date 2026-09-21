@@ -1,0 +1,210 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-userdict.yaml
+delete:
+  summary: 批量删除用户词典记录（旧接口）
+  tags:
+    - userdict
+  operationId: delete_api_v2_userdict
+  description: |-
+    不走 AuthService，凭据取自 cookie 中的 user_id，只删除该用户创建的记录。
+    每删一条都会同步刷新 _SYS_USER_WBW_ 汇总与该单词的 Redis 缓存 dict/user。
+    返回 deleted（实际删除条数）。
+
+    实现：`UserDictController@delete`
+  parameters:
+    -
+      name: id
+      in: query
+      schema:
+        type: string
+      description: '要删除的词条 id 数组的 JSON 字符串'
+      required: true
+      example: '["123","456"]'
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+get:
+  summary: 列出用户词典条目
+  tags:
+    - userdict
+  operationId: get_api_v2_userdict
+  description: |-
+    按 view 指定的口径返回 user_dict 记录，支持按单词、词根、词典过滤，以及分页与排序。
+    需要登录的口径：all、studio；studio 口径还要求 name 指定的 studio 属于当前用户，否则返回 auth.failed。
+    community 口径只返回 status>5 且来源为 _USER_WBW_/_USER_DICT_ 的社区公开数据。
+    返回 rows 与 count（过滤后总数）。
+
+    实现：`UserDictController@index`
+  parameters:
+    -
+      name: view
+      in: query
+      schema:
+        type: string
+        enum:
+          - all
+          - studio
+          - user
+          - word
+          - community
+          - compound
+          - dict
+      description: '查询口径。all=全部；studio=某 studio 创建者的用户词条；user=cookie 中用户的词条（排除系统汇总）；word=按单词查全部；community=社区公开词条；compound=复合词机器人词典；dict=指定词典'
+      required: true
+    -
+      name: name
+      in: query
+      schema:
+        type: string
+      description: 'studio 口径为 studio 名；dict 口径为系统词典短名'
+      example: robot_compound
+    -
+      name: word
+      in: query
+      schema:
+        type: string
+      description: '要查询的单词，word/community/compound 口径必填；其他口径传入时也会追加过滤'
+    -
+      name: id
+      in: query
+      schema:
+        type: string
+      description: 'dict 口径下直接指定的词典 uid（与 name 二选一）'
+    -
+      name: search
+      in: query
+      schema:
+        type: string
+      description: 按单词前缀模糊搜索
+    -
+      name: parent
+      in: query
+      schema:
+        type: string
+      description: 按词根（parent）过滤
+    -
+      name: dict
+      in: query
+      schema:
+        type: string
+      description: '按词典短名（dict_info.shortname）过滤，解析为 uuid 后才生效'
+    -
+      name: order
+      in: query
+      schema:
+        type: string
+        default: updated_at
+      description: 排序字段
+    -
+      name: dir
+      in: query
+      schema:
+        type: string
+        enum:
+          - asc
+          - desc
+        default: desc
+      description: 排序方向
+    -
+      name: offset
+      in: query
+      schema:
+        type: integer
+        default: '0'
+      description: 跳过的记录数
+    -
+      name: limit
+      in: query
+      schema:
+        type: integer
+        default: '200'
+      description: 返回条数上限
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  rows:
+                    type: array
+                    items:
+                      type: object
+                  count:
+                    type: integer
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+post:
+  summary: 批量新增/更新用户词典条目
+  tags:
+    - userdict
+  operationId: post_api_v2_userdict
+  description: |-
+    需要登录。data 是 JSON 字符串，解码后逐条处理：以 creator_id + word 以及请求中给出的
+    type/grammar/parent/mean/factors 组合判重，不存在则插入（自动生成雪花 id、按 view 写入 source、
+    记录 create_time 与 creator_id），已存在则只更新 note 与 confidence。
+    新增且 status>5 时会同步刷新系统汇总词典 _SYS_USER_WBW_；每次新增都会刷新该单词的 Redis 缓存 dict/user。
+    返回 [新增条数, 汇总表更新结果]。
+
+    实现：`UserDictController@store`
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            data:
+              type: string
+              description: '词条数组的 JSON 字符串，每项含 word（必填）及可选 type、grammar、parent、mean、factors、factormean、note、confidence、status、language'
+            view:
+              type: string
+              description: '数据来源口径，决定写入的 source：dict=_USER_DICT_，wbw=_USER_WBW_'
+              enum:
+                - dict
+                - wbw
+          required:
+            - view
+            - data
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

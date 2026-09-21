@@ -1,0 +1,256 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-terms-term.yaml
+get:
+  summary: 查询单条术语
+  tags:
+    - terms
+  operationId: get_api_v2_terms_term_
+  description: |-
+    按 guid（不是自增 id）查找，公开接口，不需要登录。查不到返回错误 '没有查询到数据'。
+
+    实现：`DhammaTermController@show`
+  parameters:
+    -
+      name: term
+      in: path
+      required: true
+      schema:
+        type: string
+    -
+      name: channel
+      in: query
+      schema:
+        type: string
+      description: '渲染 note 时使用的 channel 列表，多个用下划线分隔； 不传则按术语自身的 channel 或对应语言的社区 channel 渲染'
+    -
+      name: mode
+      in: query
+      schema:
+        type: string
+        default: read
+      description: 渲染模式
+    -
+      name: format
+      in: query
+      schema:
+        type: string
+        enum:
+          - react
+          - html
+          - text
+        default: react
+      description: 'note 的渲染输出格式'
+    -
+      name: community_summary
+      in: query
+      schema:
+        type: boolean
+      description: '传入该参数时，没有 note 的术语回落到社区解释作为 summary'
+    -
+      name: exp
+      in: query
+      schema:
+        type: boolean
+      description: 传入该参数时附带编辑者累计经验值（秒）
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+put:
+  summary: 修改术语
+  tags:
+    - terms
+  operationId: put_api_v2_terms_term_
+  description: |-
+    需要登录（未登录 401），按主键 id 查找，不存在返回 '404'。
+    权限：studio 级术语（channal 为空）只有 owner 本人能改，AI 模型一律 403；
+    channel 级术语要求对该 channel 有编辑权（owner / 协作者 / access token），否则 403。
+    增量更新——只有请求里出现的字段才会被写入，未提交的字段保持原值；
+    提交 word 时会同步重算 word_en。create_time 不变，只刷新 modify_time。
+    保存后清除该词的 term 缓存并重建 OpenSearch 索引（索引失败只记日志）。
+
+    实现：`DhammaTermController@update`
+  parameters:
+    -
+      name: term
+      in: path
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            access_token:
+              type: string
+              description: 'channel access token，供非 owner 身份验证 channel 编辑权'
+            word:
+              type: string
+              description: '术语词形，提交时同步重算 word_en'
+            meaning:
+              type: string
+              description: 主要义项
+            other_meaning:
+              type: string
+              description: 其他义项，逗号分隔
+            note:
+              type: string
+              description: 术语解释，Markdown
+            tag:
+              type: string
+              description: 标签
+            language:
+              type: string
+              description: 语言
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+patch:
+  summary: 修改术语
+  tags:
+    - terms
+  operationId: patch_api_v2_terms_term_
+  description: |-
+    需要登录（未登录 401），按主键 id 查找，不存在返回 '404'。
+    权限：studio 级术语（channal 为空）只有 owner 本人能改，AI 模型一律 403；
+    channel 级术语要求对该 channel 有编辑权（owner / 协作者 / access token），否则 403。
+    增量更新——只有请求里出现的字段才会被写入，未提交的字段保持原值；
+    提交 word 时会同步重算 word_en。create_time 不变，只刷新 modify_time。
+    保存后清除该词的 term 缓存并重建 OpenSearch 索引（索引失败只记日志）。
+
+    实现：`DhammaTermController@update`
+  parameters:
+    -
+      name: term
+      in: path
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            access_token:
+              type: string
+              description: 'channel access token，供非 owner 身份验证 channel 编辑权'
+            word:
+              type: string
+              description: '术语词形，提交时同步重算 word_en'
+            meaning:
+              type: string
+              description: 主要义项
+            other_meaning:
+              type: string
+              description: 其他义项，逗号分隔
+            note:
+              type: string
+              description: 术语解释，Markdown
+            tag:
+              type: string
+              description: 标签
+            language:
+              type: string
+              description: 语言
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+delete:
+  summary: 批量删除术语
+  tags:
+    - terms
+  operationId: delete_api_v2_terms_term_
+  description: |-
+    需要登录。一次可以删除多条，返回实际删除的条数；无权限的条目被跳过而不报错。
+    传了 uuid 参数时，id 按数组处理：owner 本人可删，非 owner 且术语属于某个 channel 时
+    需要该 channel 的协作权限达到 20（编辑）才可删，studio 级术语非 owner 一律跳过。
+    未传 uuid 时，id 按 JSON 字符串数组处理，且只能删除 owner 是当前用户的术语。
+    每删一条都会清除该词对应的 term 缓存。
+
+    实现：`DhammaTermController@destroy`
+  parameters:
+    -
+      name: term
+      in: path
+      required: true
+      schema:
+        type: string
+    -
+      name: uuid
+      in: query
+      schema:
+        type: string
+      description: '存在该参数即表示 id 以数组形式提交，并启用 channel 协作者删除权限判定'
+    -
+      name: id
+      in: query
+      schema:
+        type: array
+      description: '要删除的术语 id 列表。带 uuid 时为数组，否则为 JSON 数组字符串'
+      required: true
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

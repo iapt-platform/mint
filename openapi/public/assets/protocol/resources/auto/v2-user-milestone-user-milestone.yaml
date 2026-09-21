@@ -1,0 +1,125 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-user-milestone-user-milestone.yaml
+get:
+  summary: '获取单个 user-milestone/{user_milestone}'
+  tags:
+    - user-milestone
+  operationId: get_api_v2_user_milestone_user_milestone_
+  description: 实现：`UserMilestoneController@show`
+  parameters:
+    -
+      name: user_milestone
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+put:
+  summary: '更新 user-milestone/{user_milestone}'
+  tags:
+    - user-milestone
+  operationId: put_api_v2_user_milestone_user_milestone_
+  description: 实现：`UserMilestoneController@update`
+  parameters:
+    -
+      name: user_milestone
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+patch:
+  summary: '更新 user-milestone/{user_milestone}'
+  tags:
+    - user-milestone
+  operationId: patch_api_v2_user_milestone_user_milestone_
+  description: 实现：`UserMilestoneController@update`
+  parameters:
+    -
+      name: user_milestone
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+delete:
+  summary: '删除 user-milestone/{user_milestone}'
+  tags:
+    - user-milestone
+  operationId: delete_api_v2_user_milestone_user_milestone_
+  description: 实现：`UserMilestoneController@destroy`
+  parameters:
+    -
+      name: user_milestone
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

@@ -1,0 +1,38 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-course-member-export.yaml
+get:
+  summary: '导出课程成员名单为 Excel'
+  tags:
+    - course-member-export
+  operationId: get_api_v2_course_member_export
+  description: |-
+    导出该课程全部 is_current 成员，表头为 nickname、username、role、status、created_at，
+    昵称与用户名通过 UserApi 按 user_id 逐条查询。
+    直接以 xlsx 附件（course_member.xlsx）写入输出流，不返回 JSON，且不做登录与权限校验。
+
+    实现：`CourseMemberController@export`
+  parameters:
+    -
+      name: course_id
+      in: query
+      schema:
+        type: string
+      description: 'course uid'
+      required: true
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

@@ -1,0 +1,150 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-sentence-info-sentence-info.yaml
+get:
+  summary: '获取单个 sentence-info/{sentence_info}'
+  tags:
+    - sentence-info
+  operationId: get_api_v2_sentence_info_sentence_info_
+  description: 实现：`SentenceInfoController@show`
+  parameters:
+    -
+      name: sentence_info
+      in: path
+      required: true
+      schema:
+        type: string
+    -
+      name: book
+      in: query
+      schema:
+        type: string
+    -
+      name: par
+      in: query
+      schema:
+        type: string
+    -
+      name: start
+      in: query
+      schema:
+        type: string
+    -
+      name: end
+      in: query
+      schema:
+        type: string
+    -
+      name: channel
+      in: query
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+put:
+  summary: '更新 sentence-info/{sentence_info}'
+  tags:
+    - sentence-info
+  operationId: put_api_v2_sentence_info_sentence_info_
+  description: 实现：`SentenceInfoController@update`
+  parameters:
+    -
+      name: sentence_info
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+patch:
+  summary: '更新 sentence-info/{sentence_info}'
+  tags:
+    - sentence-info
+  operationId: patch_api_v2_sentence_info_sentence_info_
+  description: 实现：`SentenceInfoController@update`
+  parameters:
+    -
+      name: sentence_info
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+delete:
+  summary: '删除 sentence-info/{sentence_info}'
+  tags:
+    - sentence-info
+  operationId: delete_api_v2_sentence_info_sentence_info_
+  description: 实现：`SentenceInfoController@destroy`
+  parameters:
+    -
+      name: sentence_info
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

@@ -1,0 +1,183 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-project.yaml
+get:
+  summary: 列出工程（project）
+  tags:
+    - project
+  operationId: get_api_v2_project
+  description: |-
+    按 view 指定的口径返回工程列表，支持关键字搜索、状态过滤、排序和分页。
+    必须登录，否则返回 401；view 缺失或不在枚举内时返回错误提示 view。
+    未传 studio 时，studio 默认取当前用户自己。
+
+    实现：`ProjectController@index`
+  parameters:
+    -
+      name: studio
+      in: query
+      schema:
+        type: string
+      description: 'studio 名称；不传则使用当前登录用户'
+    -
+      name: view
+      in: query
+      schema:
+        type: string
+        enum:
+          - studio
+          - project-tree
+          - shared
+          - community
+      description: '查询口径：studio=某 studio 下的顶层工程，project-tree=某工程及其所有子工程，shared=分享给该 studio 的工程，community=其他 studio 的公开顶层工程'
+      required: true
+    -
+      name: type
+      in: query
+      schema:
+        type: string
+        enum:
+          - instance
+          - article
+        default: instance
+      description: '工程类型，用于 studio/shared/community 口径'
+    -
+      name: project_id
+      in: query
+      schema:
+        type: string
+      description: 'view=project-tree 时必填，工程 uid；同时匹配该工程本身及 path 中包含它的子工程'
+    -
+      name: keyword
+      in: query
+      schema:
+        type: string
+      description: 标题模糊搜索关键字
+    -
+      name: status
+      in: query
+      schema:
+        type: string
+      description: 工程状态，逗号分隔可多选
+    -
+      name: order
+      in: query
+      schema:
+        type: string
+        default: id
+      description: 排序字段
+    -
+      name: dir
+      in: query
+      schema:
+        type: string
+        enum:
+          - asc
+          - desc
+        default: asc
+      description: 排序方向
+    -
+      name: offset
+      in: query
+      schema:
+        type: integer
+        default: '0'
+      description: 分页偏移量
+    -
+      name: limit
+      in: query
+      schema:
+        type: integer
+        default: '10000'
+      description: 每页条数
+    -
+      name: search
+      in: query
+      description: 搜索关键字
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  rows:
+                    type: array
+                    items:
+                      type: object
+                  count:
+                    type: integer
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+post:
+  summary: 新建工程
+  tags:
+    - project
+  operationId: post_api_v2_project
+  description: |-
+    在指定 studio 下创建工程。必须登录（否则 401），且当前用户必须是该 studio 本人
+    （studio_name 解析出的 id 等于当前用户 uid），否则返回 403。
+    传入 parent_id 时会读取父工程的 path 并追加父工程 id，写入本工程的 path，
+    以便按树查询子工程。
+
+    实现：`ProjectController@store`
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            studio_name:
+              type: string
+              description: 'studio 名称，用于解析归属 studio 并做权限校验'
+            id:
+              type: string
+              description: '工程 uid；为合法 uuid 时用它（已存在则更新该工程），否则服务端生成新 uuid'
+            title:
+              type: string
+              description: 工程标题
+            description:
+              type: string
+              description: 工程描述
+            parent_id:
+              type: string
+              description: '父工程 uid，填写后作为子工程并自动计算 path'
+            type:
+              type: string
+              description: 工程类型
+              enum:
+                - instance
+                - article
+              default: instance
+          required:
+            - studio_name
+            - title
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
