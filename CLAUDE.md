@@ -42,6 +42,10 @@ wikipali —— 开放的、基于语料库的巴利语学习与翻译平台。�
 - 改完 PHP 跑 `vendor/bin/pint --dirty --format agent`；测试 `php artisan test --compact`，
   测试连独立的 `mint_test` 库（不要让 `RefreshDatabase` 打到开发库）。
 - `storage/resources` 是 git submodule（clove）。
+- 面向用户的文案一律走 `__()`。翻译文件在 **`resources/lang/{locale}/`**（不是
+  `lang/`），共 8 个语言。**不要新建语言文件，合并进已有的 11 个**
+  （`site`/`labels`/`buttons`/`home`/`library`/`auth`/… 没有 `messages.php`）；
+  服务状态类文案放 `site.php`。至少补 `en` 与 `zh-Hans`，其余自动回退 en。
 
 ## 前端 dashboard-v6
 
@@ -87,9 +91,18 @@ type ChannelListQuery = paths["/v2/channel"]["get"]["parameters"]["query"];
 后端改了字段而前端没跟 → `npm run build` 直接报错。
 验证类型时用 `npx tsc -b --force`（`tsc -b` 有增量缓存，不加 `--force` 可能不重新检查）。
 
-**`openapi-fetch` 尚未引入。** 计划中要加（它能把路径字面量和 HTTP 方法也纳入类型
-检查，现在手写 URL 拼错了编译器抓不到），但**由用户自己安装**。在用户确认装好之前，
-调用照旧走 `src/request.ts`，只是类型从 `schema.d.ts` 取。
+**v3 的调用走 `src/api/client.ts`**（基于 `openapi-fetch`，已安装）：
+
+```ts
+import { api, unwrap } from "./client";
+const data = unwrap(await api.GET("/v3/heartbeat"));
+```
+
+路径字面量、HTTP 方法、路径参数名、响应字段类型全部编译期检查。client 的
+baseUrl 是 `/api`，所以路径写规格里的 path；token 由中间件注入；非 2xx 时
+`openapi-fetch` 不抛异常，用 `unwrap()` 转成 `HttpError`。
+
+**v2 的调用继续用 `src/request.ts`，不要动。**
 
 ## OpenAPI 规格
 
@@ -183,15 +196,44 @@ v6 全量稳定 → 下线 v4 → 删掉 C 类与 B 类的 v2 残留 → v2 前�
 FormRequest 定入参、Resource 的 `@return array{...}` 定出参、契约测试卡住漂移、
 spec 与前端类型全部生成。v3 端点不准有 `view=` 开关、不准 `ok:false` + HTTP 200。
 
-**迁移不等于删 v2。** 过渡期内 v2 原地保留，v3 是并存的新端点，v6 按资源灰度切换：
+**后端 v2 原地保留，前端切干净。** v2 与 v3 在后端共存到 v4 下线；但前端每迁
+一个资源就要**彻底**切过去——删掉该资源的 v2 调用，不留开关、不留双分支、
+不写抹平两种响应的归一化层。**重构是为了提升，不是为了兼容**；兼容代码以后
+删起来很麻烦，没人敢确认还有没有人在用。
 
-```ts
-// src/api/channel.ts
-const USE_V3 = import.meta.env.VITE_V3_RESOURCES?.split(',') ?? [];
-const base = USE_V3.includes('channel') ? '/api/v3/channels' : '/api/v2/channel';
-```
+回退靠 `git revert` 那个 commit，不靠代码里的开关——这也是「一次只迁一个资源、
+一个资源一个 commit」的理由。生产上本来也没有「运行时切换」这回事：前端是静态
+构建产物，改代码、改 `.env`、改 ops 配置都得重新构建部署，没有热更新。
 
-出问题把资源名从环境变量里摘掉即可秒级回滚。v4 永远走 v2，不受影响。
+v3 前端代码不要 import v2 的东西：v3 用 `src/api/error.ts` 的 `ApiError`，
+v2 用 `src/request.ts` 的 `HttpError`。等 v2 调用点全部消失，`request.ts`
+整个删掉，不牵连 v3。
+
+**v3 响应信封（已定死）**：就是 Laravel Resource 的原生形状——单个 `{data: {...}}`，
+列表 `{data: [...], meta: {...}}`，失败 `{type, title, status, detail, instance, errors?}`
++ `application/problem+json`。**判断成败只看 HTTP 状态码。**
+
+控制器里**没有任何响应 helper**：成功直接 `return XxxV3Resource::make()/::collection()`，
+失败 `abort()` / `throw ValidationException` / `throw BusinessException`，
+由 `bootstrap/app.php` 统一渲染（只接管 `api/v3/*`）。
+`*V3Resource` 继承 `App\Http\Resources\V3Resource`，它负责裁掉分页里的绝对 URL。
+**v2 的 `ok()` / `error()` 不准出现在 v3 控制器里。**
+
+前端对应（**只管 v3**，v2 的 `request.ts` 错误语义不同，迁移期内不碰）：
+
+- `unwrap()` —— 失败时弹提示并抛出。业务代码只写成功路径，**不用 try/catch、
+  不用判断 `ok` 字段**（v2 那套在全仓库重复了 221 处）
+- `unwrapQuiet()` —— 只抛不弹，给自己渲染失败状态的调用用（如心跳轮询）
+- `ApiError` —— v3 专用错误类型，与 v2 的 `HttpError` 互不依赖
+- `src/api/error.ts` —— 提示的唯一出口，将来换 Notification 只改这里；
+  `installApiErrorHandler()` 在 `main.tsx` 装全局兜底，消掉未捕获 promise 的噪音
+- 表单要字段级错误时自己 catch，用 `fieldErrorsOf(e)` 取 422 的 `errors`
+
+**类名约定：`<v2 资源名>V3Controller`**（`HeartbeatController` → `HeartbeatV3Controller`），
+Resource / FormRequest / 测试同理。新旧长期共存，名字带上 v2 资源名才能一眼看出父子
+关系；不要按新端点语义另起名。**URL 同样沿用 v2 资源名**，只换版本前缀
+（`/v2/heartbeat` → `/v3/heartbeat`），唯一允许的调整是集合复数化
+（`/v2/channel` → `/v3/channels`）。
 
 **做迁移时使用 `v3-resource` skill**，里面有完整的七步链路与模板。
 一次只迁一个资源。试点顺序：先 A 类 3 条（零线上风险，用来打磨样板与 CI 三道闸），
@@ -241,6 +283,21 @@ const base = USE_V3.includes('channel') ? '/api/v3/channels' : '/api/v2/channel'
   的写法，没有 `assertExactJson` / `assertJsonStructure`，多返回一个字段不会打破谁。
 - 需要改已有测试的只有：改了现有字段的名字或类型、改了权限规则、改了现有 view 的返回口径。
 - 测试连独立的 `mint_test` 库，`RefreshDatabase` 不会清开发库。
+
+## 分支与发布（先读这条）
+
+**线上生产跑的就是本仓库的 `development` 分支。** 没有单独的发布分支，
+也没有 CI 部署流程（`api-v13/.github/workflows/` 只有 lint 和 tests）。
+
+所以：**提交到 `development` 就等于把代码推向生产路径**。这让下面两条约定
+不只是习惯问题，而是安全边界：
+
+- 改完留在工作区，**永远不要自动 `git commit`**，等用户 review
+- **永远不要 `git push`**，除非用户明确要求
+
+`dashboard-v4/deploy/` 里那套 ansible 是 v4 时代的遗留：它指向
+`iapt-platform/mint` 的 `laravel` 分支，而本仓库的 remote 是
+`visuddhinanda/mint`。**不要把它当作现在的发布流程依据。**
 
 ## 工作约定
 
