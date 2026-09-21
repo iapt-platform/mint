@@ -1,66 +1,79 @@
 # 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-tipitaka-read-para.yaml
 get:
-  summary: '阅读模式段落内容列表。指定 book 段落区间和 channel'
+  summary: 按段落区间读取译文
   tags:
     - tipitaka-read-para
   operationId: get_api_v3_tipitaka_read_para
-  description: 实现：`TipitakaReadParaController@index`
+  description: |-
+    阅读模式下按 book + 段落区间取内容，空段落会被跳过。区间由 para 到 to，
+    不传 to 则只取一段；to 小于 para 返回 422。
+    这个接口不走 Eloquent 分页，meta 是手工给的：一次请求即一页。
+
+    实现：`TipitakaReadParaController@index`
   parameters:
     -
-      name: search
+      name: book
       in: query
-      description: 搜索关键字
+      schema:
+        type: integer
+      description: '典籍 id'
+      required: true
+    -
+      name: para
+      in: query
+      schema:
+        type: integer
+      description: 起始段落号
+      required: true
+    -
+      name: to
+      in: query
+      schema:
+        type: integer
+      description: '结束段落号（含）。不传则等于 para'
+    -
+      name: channel
+      in: query
       schema:
         type: string
+      description: '译文 channel 的 uuid'
+      required: true
     -
-      name: order
+      name: format
       in: query
-      description: 排序字段
-      schema:
-        type: string
-    -
-      name: dir
-      in: query
-      description: 排序方向
       schema:
         type: string
         enum:
-          - desc
-          - asc
+          - html
+          - markdown
+          - react
+          - text
+        default: html
+      description: 内容格式
     -
-      name: limit
+      name: view
       in: query
-      description: 每页记录数
       schema:
-        type: number
-    -
-      name: offset
-      in: query
-      description: 从第几条记录开始提取
-      schema:
-        type: number
+        type: string
+        enum:
+          - display
+          - sentences
+          - all
+        default: display
+      description: '输出口径：display 整段合并，sentences 逐句，all 两者都给'
   responses:
     200:
-      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      description: 成功
       content:
         application/json:
           schema:
             type: object
             properties:
-              ok:
-                type: boolean
-              message:
-                type: string
               data:
-                type: object
-                properties:
-                  rows:
-                    type: array
-                    items:
-                      type: object
-                  count:
-                    type: integer
-    401:
-      $ref: '../../main.yaml#/components/responses/Unauthorized'
+                type: array
+                items:
+                  type: object
+              meta:
+                $ref: '../../main.yaml#/components/schemas/PaginationMeta'
     422:
-      $ref: '../../main.yaml#/components/responses/ValidationError'
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

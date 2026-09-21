@@ -37,6 +37,18 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Envelope'
+    ProblemUnauthorized:
+      description: 未登录或无权限（v3）
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+    ProblemValidation:
+      description: 参数校验失败（v3）
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
     ValidationError:
       description: 参数校验失败
       content:
@@ -47,6 +59,63 @@ components:
               message: { type: string }
               errors: { type: object, additionalProperties: { type: array, items: { type: string } } }
   schemas:
+    ProblemDetails:
+      type: object
+      description: |-
+        RFC 9457 Problem Details，v3 端点的错误响应体。
+        由 bootstrap/app.php 的异常处理器统一渲染，控制器不自己拼。
+        media type 是 application/problem+json。
+      properties:
+        type:
+          type: string
+          description: '问题类型标识，形如 urn:problem:not-found'
+          example: 'urn:problem:not-found'
+        title:
+          type: string
+          description: 稳定的英文摘要，同类问题恒定，供机器识别
+        status:
+          type: integer
+        detail:
+          type: string
+          description: '面向人的文案，已本地化；5xx 在生产环境会省略以免泄露内部信息'
+        instance:
+          type: string
+          description: '出问题的请求 URI'
+        errors:
+          type: object
+          description: '字段级校验错误，仅 422 时出现'
+          additionalProperties:
+            type: array
+            items:
+              type: string
+      required:
+        - type
+        - title
+        - status
+    PaginationMeta:
+      type: object
+      description: |-
+        v3 列表接口的分页信息，由 Laravel paginator 生成。
+        刻意不含 links / path：那些是 APP_URL 拼出的绝对地址，反代下会拼错，前端也用不到。
+        手工分页的接口会附加自己的字段（如 has_more / first_para / page_size）。
+      properties:
+        current_page:
+          type: integer
+        per_page:
+          type: integer
+        total:
+          type: integer
+        last_page:
+          type: integer
+        from:
+          type: integer
+          nullable: true
+        to:
+          type: integer
+          nullable: true
+      required:
+        - current_page
+        - total
     Envelope:
       type: object
       properties:
@@ -606,16 +675,14 @@ paths:
     $ref: ./resources/auto/v2-webhook.yaml
   '/v2/webhook/{webhook}':
     $ref: ./resources/auto/v2-webhook-webhook.yaml
+  /v3/heartbeat:
+    $ref: ./resources/auto/v3-heartbeat.yaml
   /v3/progress:
     $ref: ./resources/auto/v3-progress.yaml
-  '/v3/progress/{progress}':
-    $ref: ./resources/auto/v3-progress-progress.yaml
   /v3/search:
     $ref: ./resources/auto/v3-search.yaml
   /v3/search-suggest:
     $ref: ./resources/auto/v3-search-suggest.yaml
-  '/v3/search-suggest/{search_suggest}':
-    $ref: ./resources/auto/v3-search-suggest-search-suggest.yaml
   '/v3/search/{search}':
     $ref: ./resources/auto/v3-search-search.yaml
   /v3/tipitaka-read-chapter:
@@ -628,5 +695,3 @@ paths:
     $ref: ./resources/auto/v3-tipitaka-read-para-tipitaka-read-para.yaml
   /v3/upgrade:
     $ref: ./resources/auto/v3-upgrade.yaml
-  '/v3/upgrade/{upgrade}':
-    $ref: ./resources/auto/v3-upgrade-upgrade.yaml

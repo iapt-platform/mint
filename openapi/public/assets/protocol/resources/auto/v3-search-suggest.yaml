@@ -1,18 +1,12 @@
 # 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-search-suggest.yaml
 get:
-  summary: 自动建议接口
+  summary: 搜索建议（自动补全）
   tags:
     - search-suggest
   operationId: get_api_v3_search_suggest
   description: |-
-    基于 OpenSearch completion suggester，支持从不同字段获取建议。
-    - q (string): 输入的部分文本（必填）
-    - fields (string|array): 要查询的字段，可选值：
-    - 不传：查询所有字段 (title, content, page_refs)
-    - 单个字段：'title' | 'content' | 'page_refs'
-    - 多个字段：'title,content' 或 ['title', 'content']
-    - language (string): 语言过滤，可选（如：pali, zh, en）
-    - limit (int): 每个字段返回的建议数量，默认 10，最大 50
+    按前缀给出补全候选，供搜索框实时提示。每个字段各自返回一组建议。
+    q 为空时返回 400。
 
     实现：`SearchSuggestController@index`
   parameters:
@@ -22,94 +16,45 @@ get:
       schema:
         type: string
         default: ''
+      description: 已输入的查询文本
+      required: true
     -
       name: fields
       in: query
       schema:
         type: string
+        enum:
+          - title
+          - content
+          - page_refs
+      description: 在哪些字段上补全，逗号分隔；不传则全查
     -
       name: language
       in: query
       schema:
         type: string
+      description: 语言过滤
+      example: pali
     -
       name: limit
       in: query
       schema:
-        type: string
-    -
-      name: search
-      in: query
-      description: 搜索关键字
-      schema:
-        type: string
-    -
-      name: order
-      in: query
-      description: 排序字段
-      schema:
-        type: string
-    -
-      name: dir
-      in: query
-      description: 排序方向
-      schema:
-        type: string
-        enum:
-          - desc
-          - asc
-    -
-      name: offset
-      in: query
-      description: 从第几条记录开始提取
-      schema:
-        type: number
+        type: integer
+        default: '10'
+      description: '每个字段返回的建议数，上限 50'
   responses:
     200:
-      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      description: 成功
       content:
         application/json:
           schema:
             type: object
             properties:
-              ok:
-                type: boolean
-              message:
-                type: string
               data:
-                type: object
-                properties:
-                  rows:
-                    type: array
-                    items:
-                      type: object
-                  count:
-                    type: integer
-    401:
-      $ref: '../../main.yaml#/components/responses/Unauthorized'
+                type: array
+                items:
+                  type: object
+              meta:
+                $ref: '../../main.yaml#/components/schemas/PaginationMeta'
     422:
-      $ref: '../../main.yaml#/components/responses/ValidationError'
-post:
-  summary: '新建 search-suggest'
-  tags:
-    - search-suggest
-  operationId: post_api_v3_search_suggest
-  description: 实现：`SearchSuggestController@store`
-  responses:
-    200:
-      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              ok:
-                type: boolean
-              message:
-                type: string
-              data:
-                type: object
-    401:
-      $ref: '../../main.yaml#/components/responses/Unauthorized'
-    422:
-      $ref: '../../main.yaml#/components/responses/ValidationError'
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

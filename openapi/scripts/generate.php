@@ -52,7 +52,7 @@ function parseController(string $class, string $method): array
     if (isset($methodCache[$key])) {
         return $methodCache[$key];
     }
-    $empty = ['summary' => null, 'description' => null, 'params' => [], 'validate' => [], 'resource' => null, 'tags' => ['params' => [], 'deprecated' => false]];
+    $empty = ['summary' => null, 'description' => null, 'params' => [], 'validate' => [], 'resource' => null, 'tags' => ['params' => [], 'deprecated' => false, 'unauthenticated' => false, 'responses' => []]];
 
     $file = $api.'/'.str_replace(['App\\', '\\'], ['app/', '/'], $class).'.php';
     if (! is_file($file)) {
@@ -229,10 +229,21 @@ function parseController(string $class, string $method): array
  */
 function parseDocTags(array $tagLines): array
 {
-    $result = ['params' => [], 'deprecated' => false];
+    $result = ['params' => [], 'deprecated' => false, 'unauthenticated' => false, 'responses' => []];
     foreach ($tagLines as $line) {
         if (str_starts_with($line, '@deprecated')) {
             $result['deprecated'] = true;
+
+            continue;
+        }
+        if (str_starts_with($line, '@unauthenticated')) {
+            $result['unauthenticated'] = true;
+
+            continue;
+        }
+        // @responseStatus 503 服务停机维护中
+        if (preg_match('/^@responseStatus\s+(\d{3})\s*(.*)$/u', $line, $r)) {
+            $result['responses'][$r[1]] = trim($r[2]) ?: '';
 
             continue;
         }
@@ -264,7 +275,16 @@ function parseDocTags(array $tagLines): array
             $rest = trim(str_replace($d[0], '', $rest));
         }
         if (preg_match('/\bExample:\s*([^\n]+)/u', $rest, $x)) {
-            $entry['example'] = trim($x[1]);
+            $example = trim($x[1]);
+            // 形如 ["a","b"] 或 {...} 的示例按 JSON 解析，否则数组参数的示例
+            // 会变成字符串，与 schema 的 type 对不上
+            if (preg_match('/^[\[{]/', $example)) {
+                $decoded = json_decode($example, true);
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    $example = $decoded;
+                }
+            }
+            $entry['example'] = $example;
             $rest = trim(str_replace($x[0], '', $rest));
         }
         // trim() 按字节裁剪会把末尾的中文字符截断成非法 UTF-8，这里用 /u 正则
@@ -663,7 +683,9 @@ function buildOperation(array $route, string $httpMethod): array
         }
         $params[] = $param;
     }
-    if ($method === 'index' && $httpMethod === 'GET') {
+    // v2 列表的通用参数（search/order/dir/limit/offset）只属于 v2；
+    // v3 的分页是 page/per_page，且参数一律要在文档注释里写明，不做兜底注入
+    if ($method === 'index' && $httpMethod === 'GET' && ! isV3($route['uri'])) {
         $known = array_column($params, 'name');
         foreach ($listParams as $lp) {
             if (! in_array($lp['name'], $known, true)) {
@@ -737,11 +759,54 @@ function buildOperation(array $route, string $httpMethod): array
         }
     }
 
-    // 响应
+    // 响应。v2 与 v3 的信封不同：v2 是 {ok, message, data} 且业务失败也回 200，
+    // v3 用真实状态码、Laravel 默认的 {data} 包装、错误体是 RFC 9457 Problem Details
     $data = ['type' => 'object'];
     if ($props = resourceSchema($info['resource'])) {
         $data = ['type' => 'object', 'properties' => $props];
     }
+
+    if (isV3($route['uri'])) {
+        // v3 用 Laravel Resource 的原生形状：列表 {data: [...], meta: {...}}，单个 {data: {...}}
+        $success = $method === 'index'
+            ? [
+                'type' => 'object',
+                'properties' => [
+                    'data' => ['type' => 'array', 'items' => $data],
+                    'meta' => ['$ref' => '../../main.yaml#/components/schemas/PaginationMeta'],
+                ],
+            ]
+            : ['type' => 'object', 'properties' => ['data' => $data]];
+
+        $responses = [
+            '200' => [
+                'description' => '成功',
+                'content' => ['application/json' => ['schema' => $success]],
+            ],
+        ];
+        // 无鉴权的端点用 @unauthenticated 标注，就不再挂 401
+        if (empty($info['tags']['unauthenticated'])) {
+            $responses['401'] = ['$ref' => '../../main.yaml#/components/responses/ProblemUnauthorized'];
+        }
+        // 有入参才可能 422
+        if (! empty($op['parameters']) || ! empty($op['requestBody'])) {
+            $responses['422'] = ['$ref' => '../../main.yaml#/components/responses/ProblemValidation'];
+        }
+        // @responseStatus 声明的额外状态码
+        foreach ($info['tags']['responses'] ?? [] as $code => $desc) {
+            $responses[(string) $code] = [
+                'description' => $desc !== '' ? $desc : 'Problem Details',
+                'content' => ['application/problem+json' => [
+                    'schema' => ['$ref' => '../../main.yaml#/components/schemas/ProblemDetails'],
+                ]],
+            ];
+        }
+        ksort($responses);
+        $op['responses'] = $responses;
+
+        return $op;
+    }
+
     if ($method === 'index') {
         $data = [
             'type' => 'object',
@@ -768,6 +833,12 @@ function buildOperation(array $route, string $httpMethod): array
     ];
 
     return $op;
+}
+
+/** v3 路由用新契约：真实状态码 + {data} 包装 + Problem Details */
+function isV3(string $uri): bool
+{
+    return str_starts_with($uri, 'api/v3/');
 }
 
 function defaultSummary(string $method, string $uri): string
@@ -886,6 +957,18 @@ $main = [
                 'description' => '未登录或无权限',
                 'content' => ['application/json' => ['schema' => ['$ref' => '#/components/schemas/Envelope']]],
             ],
+            'ProblemUnauthorized' => [
+                'description' => '未登录或无权限（v3）',
+                'content' => ['application/problem+json' => [
+                    'schema' => ['$ref' => '#/components/schemas/ProblemDetails'],
+                ]],
+            ],
+            'ProblemValidation' => [
+                'description' => '参数校验失败（v3）',
+                'content' => ['application/problem+json' => [
+                    'schema' => ['$ref' => '#/components/schemas/ProblemDetails'],
+                ]],
+            ],
             'ValidationError' => [
                 'description' => '参数校验失败',
                 'content' => ['application/json' => ['schema' => [
@@ -898,6 +981,41 @@ $main = [
             ],
         ],
         'schemas' => [
+            'ProblemDetails' => [
+                'type' => 'object',
+                'description' => "RFC 9457 Problem Details，v3 端点的错误响应体。\n".
+                    "由 bootstrap/app.php 的异常处理器统一渲染，控制器不自己拼。\n".
+                    'media type 是 application/problem+json。',
+                'properties' => [
+                    'type' => ['type' => 'string', 'description' => '问题类型标识，形如 urn:problem:not-found', 'example' => 'urn:problem:not-found'],
+                    'title' => ['type' => 'string', 'description' => '稳定的英文摘要，同类问题恒定，供机器识别'],
+                    'status' => ['type' => 'integer'],
+                    'detail' => ['type' => 'string', 'description' => '面向人的文案，已本地化；5xx 在生产环境会省略以免泄露内部信息'],
+                    'instance' => ['type' => 'string', 'description' => '出问题的请求 URI'],
+                    'errors' => [
+                        'type' => 'object',
+                        'description' => '字段级校验错误，仅 422 时出现',
+                        'additionalProperties' => ['type' => 'array', 'items' => ['type' => 'string']],
+                    ],
+                ],
+                'required' => ['type', 'title', 'status'],
+            ],
+            'PaginationMeta' => [
+                'type' => 'object',
+                'description' => "v3 列表接口的分页信息，由 Laravel paginator 生成。\n".
+                    "刻意不含 links / path：那些是 APP_URL 拼出的绝对地址，反代下会拼错，前端也用不到。\n".
+                    '手工分页的接口会附加自己的字段（如 has_more / first_para / page_size）。',
+                'properties' => [
+                    'current_page' => ['type' => 'integer'],
+                    'per_page' => ['type' => 'integer'],
+                    'total' => ['type' => 'integer'],
+                    'last_page' => ['type' => 'integer'],
+                    'from' => ['type' => 'integer', 'nullable' => true],
+                    'to' => ['type' => 'integer', 'nullable' => true],
+                ],
+                // 手工分页的接口未必有 per_page（例如按字节切页的阅读接口用 page_size）
+                'required' => ['current_page', 'total'],
+            ],
             'Envelope' => [
                 'type' => 'object',
                 'properties' => [

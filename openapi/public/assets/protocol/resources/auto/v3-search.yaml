@@ -1,25 +1,12 @@
 # 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-search.yaml
 get:
-  summary: '处理搜索请求，支持 fuzzy / exact / semantic / hybrid 四种模式。'
+  summary: 全文检索
   tags:
     - search
   operationId: get_api_v3_search
   description: |-
-    接收查询参数并调用 OpenSearchService 执行搜索。
-    支持 GET 和 POST 请求
-    - q (string): 搜索关键词
-    - resource_type (string): 资源类型 (article|term|dictionary|translation|origin_text|nissaya)
-    - granularity (string): 文档颗粒度 (book|chapter|sutta|section|paragraph|sentence)
-    - language (string): 语言，如 pali, zh-Hans, zh-Hant, en-US, my
-    - category (string): 文档分类 (pali|commentary|subcommentary)
-    - tags (array): 标签过滤
-    - page_refs (array): 页码标记 ["V3.81","M3.58"]
-    - related_id (array): 关联 ID，如 ["chapter_93-5","m.n. 38"]
-    - author (string): 作者或译者 (metadata.author)
-    - channel (string): 来源渠道 (metadata.channel)
-    - page (int): 页码，默认 1
-    - page_size (int): 每页数量，默认 20，最大 100
-    - search_mode (string): fuzzy|exact|semantic|hybrid，默认 fuzzy
+    支持 fuzzy / exact / semantic / hybrid 四种检索模式，底层走 OpenSearch。
+    同样的参数也可以用 POST /v3/search 提交（参数多、URL 放不下时用）。
 
     实现：`SearchPlusController@index`
   parameters:
@@ -29,151 +16,210 @@ get:
       schema:
         type: string
         default: ''
+      description: 搜索关键词
+      required: true
     -
       name: page
       in: query
       schema:
-        type: string
+        type: integer
+        default: '1'
+      description: 页码
     -
       name: page_size
       in: query
       schema:
-        type: string
+        type: integer
+        default: '20'
+      description: '每页数量，上限 100'
     -
       name: search_mode
       in: query
       schema:
         type: string
+        enum:
+          - fuzzy
+          - exact
+          - semantic
+          - hybrid
         default: fuzzy
+      description: 检索模式
     -
       name: resource_type
       in: query
       schema:
         type: string
+        enum:
+          - article
+          - term
+          - dictionary
+          - translation
+          - origin_text
+          - nissaya
+      description: 资源类型
     -
       name: resource_id
       in: query
       schema:
         type: string
+      description: '限定某个资源 id'
     -
       name: granularity
       in: query
       schema:
         type: string
+        enum:
+          - book
+          - chapter
+          - sutta
+          - section
+          - paragraph
+          - sentence
+      description: 文档颗粒度
     -
       name: language
       in: query
       schema:
         type: string
+      description: 语言
+      example: zh-Hans
     -
       name: category
       in: query
       schema:
         type: string
+        enum:
+          - pali
+          - commentary
+          - subcommentary
+      description: 文档分类，逗号分隔
     -
       name: tags
       in: query
       schema:
         type: string
+      description: 标签过滤，逗号分隔
     -
       name: page_refs
       in: query
       schema:
-        type: string
+        type: array
+      description: 页码标记
+      example:
+        - V3.81
+        - M3.58
     -
       name: related_id
       in: query
       schema:
-        type: string
+        type: array
+      description: '关联 id'
+      example:
+        - chapter_93-5
+        - 'm.n. 38'
     -
       name: author
       in: query
       schema:
         type: string
+      description: 按作者或译者过滤
     -
       name: channel
       in: query
       schema:
         type: string
-    -
-      name: search
-      in: query
-      description: 搜索关键字
-      schema:
-        type: string
-    -
-      name: order
-      in: query
-      description: 排序字段
-      schema:
-        type: string
-    -
-      name: dir
-      in: query
-      description: 排序方向
-      schema:
-        type: string
-        enum:
-          - desc
-          - asc
-    -
-      name: limit
-      in: query
-      description: 每页记录数
-      schema:
-        type: number
-    -
-      name: offset
-      in: query
-      description: 从第几条记录开始提取
-      schema:
-        type: number
+      description: '按来源 channel 过滤'
   responses:
     200:
-      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      description: 成功
       content:
         application/json:
           schema:
             type: object
             properties:
-              ok:
-                type: boolean
-              message:
-                type: string
               data:
-                type: object
-                properties:
-                  rows:
-                    type: array
-                    items:
-                      type: object
-                  count:
-                    type: integer
-    401:
-      $ref: '../../main.yaml#/components/responses/Unauthorized'
+                type: array
+                items:
+                  type: object
+              meta:
+                $ref: '../../main.yaml#/components/schemas/PaginationMeta'
     422:
-      $ref: '../../main.yaml#/components/responses/ValidationError'
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'
 post:
-  summary: 'POST 方式调用搜索接口（与 index 方法功能相同）'
+  summary: 全文检索（POST）
   tags:
     - search
   operationId: post_api_v3_search
-  description: 实现：`SearchPlusController@store`
+  description: |-
+    与 `GET /v3/search` 完全等价，只是把参数放在请求体里——参数多、
+    尤其是 page_refs / related_id 这类数组时，URL 放不下。
+
+    实现：`SearchPlusController@store`
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            q:
+              type: string
+              description: 搜索关键词
+            search_mode:
+              type: string
+              description: 检索模式
+              enum:
+                - fuzzy
+                - exact
+                - semantic
+                - hybrid
+              default: fuzzy
+            resource_type:
+              type: string
+              description: 资源类型
+            granularity:
+              type: string
+              description: 文档颗粒度
+            language:
+              type: string
+              description: 语言
+            category:
+              type: string
+              description: 文档分类，逗号分隔
+            tags:
+              type: string
+              description: 标签，逗号分隔
+            page_refs:
+              type: array
+              description: 页码标记
+            related_id:
+              type: array
+              description: '关联 id'
+            author:
+              type: string
+              description: 作者或译者
+            channel:
+              type: string
+              description: '来源 channel'
+            page:
+              type: integer
+              description: 页码
+              default: '1'
+            page_size:
+              type: integer
+              description: '每页数量，上限 100'
+              default: '20'
+          required:
+            - q
   responses:
     200:
-      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      description: 成功
       content:
         application/json:
           schema:
             type: object
             properties:
-              ok:
-                type: boolean
-              message:
-                type: string
               data:
                 type: object
-    401:
-      $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
-      $ref: '../../main.yaml#/components/responses/ValidationError'
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

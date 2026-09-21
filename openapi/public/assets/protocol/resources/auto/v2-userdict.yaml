@@ -18,7 +18,9 @@ delete:
         type: string
       description: '要删除的词条 id 数组的 JSON 字符串'
       required: true
-      example: '["123","456"]'
+      example:
+        - '123'
+        - '456'
   responses:
     200:
       description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
