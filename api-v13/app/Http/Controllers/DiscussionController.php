@@ -30,7 +30,7 @@ class DiscussionController extends Controller
      *
      * @queryParam view string required 查询口径。question=按资源查顶级讨论；question-by-topic=按某条讨论所属资源查同资源讨论；answer=查某讨论的回复；res_id=某资源的顶级节点及其直接子节点；topic-by-user=当前用户发表的全部顶级讨论；all=全部顶级讨论。Enum: question,question-by-topic,answer,res_id,topic-by-user,all
      * @queryParam id string required 资源 uid（question/res_id）、讨论 id（question-by-topic/answer）
-     * @queryParam type string 讨论类型。Enum: discussion,qa,help,note Default: discussion
+     * @queryParam type string 讨论类型。Enum: discussion,qa,help,note,commentary Default: discussion
      * @queryParam res_type string 资源类型，影响权限判断与学员提问聚合。Enum: sentence,wbw,article
      * @queryParam status string 状态过滤；res_id 与 topic-by-user 口径支持逗号分隔多选。Enum: active,close Default: active
      * @queryParam course string 课程 uid，配合 show_student 聚合学员提问
@@ -341,7 +341,7 @@ class DiscussionController extends Controller
      * @bodyParam title string required 标题（有 parent 时非必填）
      * @bodyParam content string 正文内容
      * @bodyParam content_type string 正文格式。Default: markdown
-     * @bodyParam type string 讨论类型。Enum: discussion,qa,help,note Default: discussion
+     * @bodyParam type string 讨论类型。Enum: discussion,qa,help,note,commentary Default: discussion
      * @bodyParam tpl_id string 模板 id
      * @bodyParam pos_start integer 锚点在资源文本中的起始偏移，非负整数
      * @bodyParam pos_end integer 锚点在资源文本中的结束偏移，非负整数
@@ -489,7 +489,7 @@ class DiscussionController extends Controller
      * @bodyParam title string 标题，未提交会被清空
      * @bodyParam content string 正文内容，未提交会被清空
      * @bodyParam status string 状态，未提交会重置为 active。Enum: active,close Default: active
-     * @bodyParam type string 讨论类型，仅在提交时更新。Enum: discussion,qa,help,note
+     * @bodyParam type string 讨论类型，仅在提交时更新。Enum: discussion,qa,help,note,commentary
      * @bodyParam pos_start integer 锚点起始偏移，仅在提交时更新
      * @bodyParam pos_end integer 锚点结束偏移，仅在提交时更新
      * @bodyParam quote_exact string 锚定的原文片段，仅在提交时更新
