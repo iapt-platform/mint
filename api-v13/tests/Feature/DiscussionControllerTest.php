@@ -61,6 +61,21 @@ it('leaves annotation selector fields null when not provided', function () {
     expect($saved->quote_suffix)->toBeNull();
 });
 
+it('creates a discussion without a title', function () {
+    $userUid = makeStudio('annotator');
+
+    $this->postJson('/api/v2/discussion', [
+        'res_id' => (string) Str::uuid(),
+        'res_type' => 'sentence',
+        'type' => 'note',
+        'content' => '这里的 dassana 指见到佛陀。',
+        'notification' => false,
+    ], authHeader($userUid))->assertOk();
+
+    // 批注 / 脚注一类正文就是全部，标题可以没有
+    expect(Discussion::where('editor_uid', $userUid)->first()->title)->toBeNull();
+});
+
 it('rejects an invalid annotation selector', function () {
     $userUid = makeStudio('annotator');
 

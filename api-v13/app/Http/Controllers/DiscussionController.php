@@ -338,7 +338,7 @@ class DiscussionController extends Controller
      * @bodyParam parent string 父讨论 id，传入表示这是一条回复
      * @bodyParam res_id string required 关联资源 uid（有 parent 时忽略并继承父节点）
      * @bodyParam res_type string required 关联资源类型（有 parent 时忽略并继承父节点）。Enum: sentence,wbw,article
-     * @bodyParam title string required 标题（有 parent 时非必填）
+     * @bodyParam title string 标题（可选）
      * @bodyParam content string 正文内容
      * @bodyParam content_type string 正文格式。Default: markdown
      * @bodyParam type string 讨论类型。Enum: discussion,qa,help,note,commentary Default: discussion
@@ -377,7 +377,6 @@ class DiscussionController extends Controller
             $rules = array_merge([
                 'res_id' => 'required',
                 'res_type' => 'required',
-                'title' => 'required',
             ], $annotationRules);
         }
 
