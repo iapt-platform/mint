@@ -10,17 +10,20 @@ info:
   version: 2026.9.21
 servers:
   -
+    url: /api
+    description: '同源（预览页里 Try it out 走 vite 代理，避免跨域）'
+  -
+    url: 'http://127.0.0.1:8000/api'
+    description: '本地开发（直连，浏览器里会被 CORS 挡住）'
+  -
+    url: 'https://staging.wikipali.org/api'
+    description: 测试
+  -
     url: 'https://www.wikipali.org/api'
     description: 生产
   -
     url: 'https://www.wikipali.cc/api'
     description: 生产（中国）
-  -
-    url: 'https://staging.wikipali.org/api'
-    description: 测试
-  -
-    url: 'http://127.0.0.1:8000/api'
-    description: 本地开发
 components:
   securitySchemes:
     bearerAuth:

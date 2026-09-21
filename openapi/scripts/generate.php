@@ -689,11 +689,13 @@ $main = [
             "响应统一封装为 `{ok, message, data}`；`ok=false` 时 `message` 为错误信息。",
         'version' => date('Y.n.j'),
     ],
+    // 第一项是 Swagger UI 的默认选择，放同源代理，避免 Try it out 误打生产
     'servers' => [
+        ['url' => '/api', 'description' => '同源（预览页里 Try it out 走 vite 代理，避免跨域）'],
+        ['url' => 'http://127.0.0.1:8000/api', 'description' => '本地开发（直连，浏览器里会被 CORS 挡住）'],
+        ['url' => 'https://staging.wikipali.org/api', 'description' => '测试'],
         ['url' => 'https://www.wikipali.org/api', 'description' => '生产'],
         ['url' => 'https://www.wikipali.cc/api', 'description' => '生产（中国）'],
-        ['url' => 'https://staging.wikipali.org/api', 'description' => '测试'],
-        ['url' => 'http://127.0.0.1:8000/api', 'description' => '本地开发'],
     ],
     'components' => [
         'securitySchemes' => [
