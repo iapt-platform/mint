@@ -5,7 +5,7 @@ set -e
 npm install --save \
     react-router react-intl @reduxjs/toolkit react-redux \
     @graphiql/react usehooks-ts rc-virtual-list styled-components \
-    jose dayjs video.js \
+    jose dayjs video.js openapi-fetch \
     remark-gfm react-markdown @uiw/react-md-editor @mdxeditor/editor \
     slate slate-history slate-react \
     qrcode @types/qrcode \
