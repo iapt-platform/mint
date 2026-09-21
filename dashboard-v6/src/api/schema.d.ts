@@ -7691,6 +7691,36 @@ export interface paths {
         patch: operations["patch_api_v2_webhook_webhook_"];
         trace?: never;
     };
+    "/v3/heartbeat": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 心跳
+         * @description 取代 `GET /v2/heartbeat`（`HeartbeatController@index`）。v2 那份在
+         *     dashboard-v4 下线前原样保留，不要改动。
+         *     **这不是健康检查。** 它不查数据库、不查 OpenSearch / RabbitMQ / Cache，
+         *     只回答一件事：进程还在服务吗、是不是被运维停机了。供前端与负载均衡做
+         *     存活探测（liveness）用，开销接近零，可以高频调用。
+         *     真正的健康检查是 `GET /v2/health-check`（会逐项探测外部依赖并返回 checks
+         *     明细），将来单独迁为 `/v3/health-check`，与本端点是两件事，不要混用。
+         *     仓库根目录存在 `.stop` 文件时返回 503（运维停机开关），此时响应体是
+         *     RFC 9457 Problem Details 而非正常结构。
+         *
+         *     实现：`HeartbeatV3Controller@show`
+         */
+        get: operations["get_api_v3_heartbeat"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v3/progress": {
         parameters: {
             query?: never;
@@ -7699,52 +7729,19 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * 列出 progress
-         * @description 实现：`ProgressController@index`
+         * 列出章节翻译进度
+         * @description 按 channel 查询各章节的翻译完成度。view 目前只支持 channel 一种口径，
+         *     传其它值返回 422。
+         *
+         *     实现：`ProgressController@index`
          */
         get: operations["get_api_v3_progress"];
         put?: never;
-        /**
-         * 新建 progress
-         * @description 实现：`ProgressController@store`
-         */
-        post: operations["post_api_v3_progress"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
-        trace?: never;
-    };
-    "/v3/progress/{progress}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 获取单个 progress/{progress}
-         * @description 实现：`ProgressController@show`
-         */
-        get: operations["get_api_v3_progress_progress_"];
-        /**
-         * 更新 progress/{progress}
-         * @description 实现：`ProgressController@update`
-         */
-        put: operations["put_api_v3_progress_progress_"];
-        post?: never;
-        /**
-         * 删除 progress/{progress}
-         * @description 实现：`ProgressController@destroy`
-         */
-        delete: operations["delete_api_v3_progress_progress_"];
-        options?: never;
-        head?: never;
-        /**
-         * 更新 progress/{progress}
-         * @description 实现：`ProgressController@update`
-         */
-        patch: operations["patch_api_v3_progress_progress_"];
         trace?: never;
     };
     "/v3/search": {
@@ -7755,30 +7752,20 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * 处理搜索请求，支持 fuzzy / exact / semantic / hybrid 四种模式。
-         * @description 接收查询参数并调用 OpenSearchService 执行搜索。
-         *     支持 GET 和 POST 请求
-         *     - q (string): 搜索关键词
-         *     - resource_type (string): 资源类型 (article|term|dictionary|translation|origin_text|nissaya)
-         *     - granularity (string): 文档颗粒度 (book|chapter|sutta|section|paragraph|sentence)
-         *     - language (string): 语言，如 pali, zh-Hans, zh-Hant, en-US, my
-         *     - category (string): 文档分类 (pali|commentary|subcommentary)
-         *     - tags (array): 标签过滤
-         *     - page_refs (array): 页码标记 ["V3.81","M3.58"]
-         *     - related_id (array): 关联 ID，如 ["chapter_93-5","m.n. 38"]
-         *     - author (string): 作者或译者 (metadata.author)
-         *     - channel (string): 来源渠道 (metadata.channel)
-         *     - page (int): 页码，默认 1
-         *     - page_size (int): 每页数量，默认 20，最大 100
-         *     - search_mode (string): fuzzy|exact|semantic|hybrid，默认 fuzzy
+         * 全文检索
+         * @description 支持 fuzzy / exact / semantic / hybrid 四种检索模式，底层走 OpenSearch。
+         *     同样的参数也可以用 POST /v3/search 提交（参数多、URL 放不下时用）。
          *
          *     实现：`SearchPlusController@index`
          */
         get: operations["get_api_v3_search"];
         put?: never;
         /**
-         * POST 方式调用搜索接口（与 index 方法功能相同）
-         * @description 实现：`SearchPlusController@store`
+         * 全文检索（POST）
+         * @description 与 `GET /v3/search` 完全等价，只是把参数放在请求体里——参数多、
+         *     尤其是 page_refs / related_id 这类数组时，URL 放不下。
+         *
+         *     实现：`SearchPlusController@store`
          */
         post: operations["post_api_v3_search"];
         delete?: never;
@@ -7795,61 +7782,19 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * 自动建议接口
-         * @description 基于 OpenSearch completion suggester，支持从不同字段获取建议。
-         *     - q (string): 输入的部分文本（必填）
-         *     - fields (string|array): 要查询的字段，可选值：
-         *     - 不传：查询所有字段 (title, content, page_refs)
-         *     - 单个字段：'title' | 'content' | 'page_refs'
-         *     - 多个字段：'title,content' 或 ['title', 'content']
-         *     - language (string): 语言过滤，可选（如：pali, zh, en）
-         *     - limit (int): 每个字段返回的建议数量，默认 10，最大 50
+         * 搜索建议（自动补全）
+         * @description 按前缀给出补全候选，供搜索框实时提示。每个字段各自返回一组建议。
+         *     q 为空时返回 400。
          *
          *     实现：`SearchSuggestController@index`
          */
         get: operations["get_api_v3_search_suggest"];
         put?: never;
-        /**
-         * 新建 search-suggest
-         * @description 实现：`SearchSuggestController@store`
-         */
-        post: operations["post_api_v3_search_suggest"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
-        trace?: never;
-    };
-    "/v3/search-suggest/{search_suggest}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 获取单个 search-suggest/{search_suggest}
-         * @description 实现：`SearchSuggestController@show`
-         */
-        get: operations["get_api_v3_search_suggest_search_suggest_"];
-        /**
-         * 更新 search-suggest/{search_suggest}
-         * @description 实现：`SearchSuggestController@update`
-         */
-        put: operations["put_api_v3_search_suggest_search_suggest_"];
-        post?: never;
-        /**
-         * 删除 search-suggest/{search_suggest}
-         * @description 实现：`SearchSuggestController@destroy`
-         */
-        delete: operations["delete_api_v3_search_suggest_search_suggest_"];
-        options?: never;
-        head?: never;
-        /**
-         * 更新 search-suggest/{search_suggest}
-         * @description 实现：`SearchSuggestController@update`
-         */
-        patch: operations["patch_api_v3_search_suggest_search_suggest_"];
         trace?: never;
     };
     "/v3/search/{search}": {
@@ -7860,28 +7805,18 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * 获取单个 search/{search}
-         * @description 实现：`SearchPlusController@show`
+         * 按 id 取单条检索结果
+         * @description 直接从 OpenSearch 按文档 id 取回，不走检索。取不到返回 404。
+         *
+         *     实现：`SearchPlusController@show`
          */
         get: operations["get_api_v3_search_search_"];
-        /**
-         * 更新资源
-         * @description 实现：`SearchPlusController@update`
-         */
-        put: operations["put_api_v3_search_search_"];
+        put?: never;
         post?: never;
-        /**
-         * 删除资源
-         * @description 实现：`SearchPlusController@destroy`
-         */
-        delete: operations["delete_api_v3_search_search_"];
+        delete?: never;
         options?: never;
         head?: never;
-        /**
-         * 更新资源
-         * @description 实现：`SearchPlusController@update`
-         */
-        patch: operations["patch_api_v3_search_search_"];
+        patch?: never;
         trace?: never;
     };
     "/v3/tipitaka-read-chapter": {
@@ -7892,10 +7827,12 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * 阅读模式章节内容。输入章节起始 book/para，按 pagesize 分批返回段落。
-         * @description pagesize 两种写法：
-         *     - `20000b` 按字节，累加 pali_texts.lenght 直到超过上限（每页至少一段）
-         *     - `10p`    按段落数
+         * 按章节读取译文
+         * @description 给定 book + 段落号，定位它所属的章节，返回该章节的段落内容并分页。
+         *     章节不存在或没有内容返回 404。
+         *     分页是手工做的：按字节时从头累加 `pali_texts.lenght` 逐页推进，所以 meta
+         *     里用 `page_size`（领域语法，非整数）而不是框架的 `per_page`，并附带
+         *     `first_para` / `last_para` / `has_more`。
          *
          *     实现：`TipitakaReadChapterController@index`
          */
@@ -7916,8 +7853,11 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * 同 index，id 格式 {book}-{para}
-         * @description 实现：`TipitakaReadChapterController@show`
+         * 按 id 读取章节
+         * @description 与 index 等价，只是把 book 与 para 合成一个路径参数。格式不对或 channel
+         *     不是 uuid 返回 422。
+         *
+         *     实现：`TipitakaReadChapterController@show`
          */
         get: operations["get_api_v3_tipitaka_read_chapter_tipitaka_read_chapter_"];
         put?: never;
@@ -7936,8 +7876,12 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * 阅读模式段落内容列表。指定 book 段落区间和 channel
-         * @description 实现：`TipitakaReadParaController@index`
+         * 按段落区间读取译文
+         * @description 阅读模式下按 book + 段落区间取内容，空段落会被跳过。区间由 para 到 to，
+         *     不传 to 则只取一段；to 小于 para 返回 422。
+         *     这个接口不走 Eloquent 分页，meta 是手工给的：一次请求即一页。
+         *
+         *     实现：`TipitakaReadParaController@index`
          */
         get: operations["get_api_v3_tipitaka_read_para"];
         put?: never;
@@ -7956,8 +7900,11 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * 单个段落内容。id 格式 {book}-{para}
-         * @description 实现：`TipitakaReadParaController@show`
+         * 读取单个段落
+         * @description id 是 `{book}-{para}` 复合形式，例如 `9001-1`。格式不对或 channel 不是
+         *     uuid 返回 422；段落无内容返回 404。
+         *
+         *     实现：`TipitakaReadParaController@show`
          */
         get: operations["get_api_v3_tipitaka_read_para_tipitaka_read_para_"];
         put?: never;
@@ -7976,58 +7923,60 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * 列出 upgrade
-         * @description 实现：`UpgradeController@index`
+         * 客户端升级检查
+         * @description 目前只回报服务可用，尚未接入版本比对逻辑。
+         *
+         *     实现：`UpgradeController@index`
          */
         get: operations["get_api_v3_upgrade"];
         put?: never;
-        /**
-         * 新建 upgrade
-         * @description 实现：`UpgradeController@store`
-         */
-        post: operations["post_api_v3_upgrade"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/v3/upgrade/{upgrade}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 获取单个 upgrade/{upgrade}
-         * @description 实现：`UpgradeController@show`
-         */
-        get: operations["get_api_v3_upgrade_upgrade_"];
-        /**
-         * 更新 upgrade/{upgrade}
-         * @description 实现：`UpgradeController@update`
-         */
-        put: operations["put_api_v3_upgrade_upgrade_"];
-        post?: never;
-        /**
-         * 删除 upgrade/{upgrade}
-         * @description 实现：`UpgradeController@destroy`
-         */
-        delete: operations["delete_api_v3_upgrade_upgrade_"];
-        options?: never;
-        head?: never;
-        /**
-         * 更新 upgrade/{upgrade}
-         * @description 实现：`UpgradeController@update`
-         */
-        patch: operations["patch_api_v3_upgrade_upgrade_"];
-        trace?: never;
-    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /**
+         * @description RFC 9457 Problem Details，v3 端点的错误响应体。
+         *     由 bootstrap/app.php 的异常处理器统一渲染，控制器不自己拼。
+         *     media type 是 application/problem+json。
+         */
+        ProblemDetails: {
+            /**
+             * @description 问题类型标识，形如 urn:problem:not-found
+             * @example urn:problem:not-found
+             */
+            type: string;
+            /** @description 稳定的英文摘要，同类问题恒定，供机器识别 */
+            title: string;
+            status: number;
+            /** @description 面向人的文案，已本地化；5xx 在生产环境会省略以免泄露内部信息 */
+            detail?: string;
+            /** @description 出问题的请求 URI */
+            instance?: string;
+            /** @description 字段级校验错误，仅 422 时出现 */
+            errors?: {
+                [key: string]: string[];
+            };
+        };
+        /**
+         * @description v3 列表接口的分页信息，由 Laravel paginator 生成。
+         *     刻意不含 links / path：那些是 APP_URL 拼出的绝对地址，反代下会拼错，前端也用不到。
+         *     手工分页的接口会附加自己的字段（如 has_more / first_para / page_size）。
+         */
+        PaginationMeta: {
+            current_page: number;
+            per_page?: number;
+            total: number;
+            last_page?: number;
+            from?: number | null;
+            to?: number | null;
+        };
         Envelope: {
             ok?: boolean;
             message?: string;
@@ -8043,6 +7992,24 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["Envelope"];
+            };
+        };
+        /** @description 未登录或无权限（v3） */
+        ProblemUnauthorized: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/problem+json": components["schemas"]["ProblemDetails"];
+            };
+        };
+        /** @description 参数校验失败（v3） */
+        ProblemValidation: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/problem+json": components["schemas"]["ProblemDetails"];
             };
         };
         /** @description 参数校验失败 */
@@ -33898,212 +33865,136 @@ export interface operations {
             422: components["responses"]["ValidationError"];
         };
     };
-    get_api_v3_progress: {
+    get_api_v3_heartbeat: {
         parameters: {
-            query?: {
-                view?: "channel";
-                channels?: string;
-                level?: string;
-                lang?: string;
-                book?: string;
-                order?: string;
-                dir?: string;
-                offset?: string;
-                limit?: string;
-                /** @description 搜索关键字 */
-                search?: string;
-            };
+            query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description 成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。 */
+            /** @description 成功 */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        ok?: boolean;
-                        message?: string;
                         data?: {
-                            rows?: Record<string, never>[];
-                            count?: number;
+                            status?: string;
+                            checked_at?: string;
                         };
                     };
                 };
             };
-            401: components["responses"]["Unauthorized"];
-            422: components["responses"]["ValidationError"];
+            /** @description 服务已进入停机维护状态 */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
         };
     };
-    post_api_v3_progress: {
+    get_api_v3_progress: {
         parameters: {
-            query?: never;
+            query: {
+                /** @description 查询口径，目前只有 channel */
+                view: "channel";
+                /** @description channel uid 列表，**下划线分隔**（不是逗号） */
+                channels: string;
+                /** @description 只返回该层级及以上的章节，需联查 pali_texts */
+                level?: number;
+                /**
+                 * @description 按译文语言过滤
+                 * @example zh-Hans
+                 */
+                lang?: string;
+                /** @description 按典籍 id 过滤 */
+                book?: number;
+                /** @description 排序字段（progress_chapters 的列） */
+                order?: string;
+                /** @description 排序方向 */
+                dir?: "asc" | "desc";
+                /** @description 每页数量 */
+                per_page?: number;
+                /** @description 页码 */
+                page?: number;
+            };
             header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description 成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。 */
+            /** @description 成功 */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        ok?: boolean;
-                        message?: string;
-                        data?: Record<string, never>;
+                        data?: {
+                            book?: number;
+                            para?: number;
+                            lang?: string;
+                            progress?: number;
+                            channel_id?: string;
+                            title?: string | null;
+                            last_chapter_completed_at?: string | null;
+                            completed_at?: string | null;
+                            updated_at?: string;
+                        }[];
+                        meta?: components["schemas"]["PaginationMeta"];
                     };
                 };
             };
-            401: components["responses"]["Unauthorized"];
-            422: components["responses"]["ValidationError"];
-        };
-    };
-    get_api_v3_progress_progress_: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                progress: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        ok?: boolean;
-                        message?: string;
-                        data?: Record<string, never>;
-                    };
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            422: components["responses"]["ValidationError"];
-        };
-    };
-    put_api_v3_progress_progress_: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                progress: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        ok?: boolean;
-                        message?: string;
-                        data?: Record<string, never>;
-                    };
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            422: components["responses"]["ValidationError"];
-        };
-    };
-    delete_api_v3_progress_progress_: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                progress: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        ok?: boolean;
-                        message?: string;
-                        data?: Record<string, never>;
-                    };
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            422: components["responses"]["ValidationError"];
-        };
-    };
-    patch_api_v3_progress_progress_: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                progress: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        ok?: boolean;
-                        message?: string;
-                        data?: Record<string, never>;
-                    };
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            422: components["responses"]["ValidationError"];
+            422: components["responses"]["ProblemValidation"];
         };
     };
     get_api_v3_search: {
         parameters: {
-            query?: {
-                q?: string;
-                page?: string;
-                page_size?: string;
-                search_mode?: string;
-                resource_type?: string;
+            query: {
+                /** @description 搜索关键词 */
+                q: string;
+                /** @description 页码 */
+                page?: number;
+                /** @description 每页数量，上限 100 */
+                page_size?: number;
+                /** @description 检索模式 */
+                search_mode?: "fuzzy" | "exact" | "semantic" | "hybrid";
+                /** @description 资源类型 */
+                resource_type?: "article" | "term" | "dictionary" | "translation" | "origin_text" | "nissaya";
+                /** @description 限定某个资源 id */
                 resource_id?: string;
-                granularity?: string;
+                /** @description 文档颗粒度 */
+                granularity?: "book" | "chapter" | "sutta" | "section" | "paragraph" | "sentence";
+                /**
+                 * @description 语言
+                 * @example zh-Hans
+                 */
                 language?: string;
-                category?: string;
+                /** @description 文档分类，逗号分隔 */
+                category?: "pali" | "commentary" | "subcommentary";
+                /** @description 标签过滤，逗号分隔 */
                 tags?: string;
-                page_refs?: string;
-                related_id?: string;
+                /**
+                 * @description 页码标记
+                 * @example ["V3.81","M3.58"]
+                 */
+                page_refs?: unknown[];
+                /**
+                 * @description 关联 id
+                 * @example ["chapter_93-5","m.n. 38"]
+                 */
+                related_id?: unknown[];
+                /** @description 按作者或译者过滤 */
                 author?: string;
+                /** @description 按来源 channel 过滤 */
                 channel?: string;
-                /** @description 搜索关键字 */
-                search?: string;
-                /** @description 排序字段 */
-                order?: string;
-                /** @description 排序方向 */
-                dir?: "desc" | "asc";
-                /** @description 每页记录数 */
-                limit?: number;
-                /** @description 从第几条记录开始提取 */
-                offset?: number;
             };
             header?: never;
             path?: never;
@@ -34111,24 +34002,19 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。 */
+            /** @description 成功 */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        ok?: boolean;
-                        message?: string;
-                        data?: {
-                            rows?: Record<string, never>[];
-                            count?: number;
-                        };
+                        data?: Record<string, never>[];
+                        meta?: components["schemas"]["PaginationMeta"];
                     };
                 };
             };
-            401: components["responses"]["Unauthorized"];
-            422: components["responses"]["ValidationError"];
+            422: components["responses"]["ProblemValidation"];
         };
     };
     post_api_v3_search: {
@@ -34138,40 +34024,77 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description 搜索关键词 */
+                    q: string;
+                    /**
+                     * @description 检索模式
+                     * @default fuzzy
+                     * @enum {string}
+                     */
+                    search_mode?: "fuzzy" | "exact" | "semantic" | "hybrid";
+                    /** @description 资源类型 */
+                    resource_type?: string;
+                    /** @description 文档颗粒度 */
+                    granularity?: string;
+                    /** @description 语言 */
+                    language?: string;
+                    /** @description 文档分类，逗号分隔 */
+                    category?: string;
+                    /** @description 标签，逗号分隔 */
+                    tags?: string;
+                    /** @description 页码标记 */
+                    page_refs?: unknown[];
+                    /** @description 关联 id */
+                    related_id?: unknown[];
+                    /** @description 作者或译者 */
+                    author?: string;
+                    /** @description 来源 channel */
+                    channel?: string;
+                    /**
+                     * @description 页码
+                     * @default 1
+                     */
+                    page?: number;
+                    /**
+                     * @description 每页数量，上限 100
+                     * @default 20
+                     */
+                    page_size?: number;
+                };
+            };
+        };
         responses: {
-            /** @description 成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。 */
+            /** @description 成功 */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        ok?: boolean;
-                        message?: string;
                         data?: Record<string, never>;
                     };
                 };
             };
-            401: components["responses"]["Unauthorized"];
-            422: components["responses"]["ValidationError"];
+            422: components["responses"]["ProblemValidation"];
         };
     };
     get_api_v3_search_suggest: {
         parameters: {
-            query?: {
-                q?: string;
-                fields?: string;
+            query: {
+                /** @description 已输入的查询文本 */
+                q: string;
+                /** @description 在哪些字段上补全，逗号分隔；不传则全查 */
+                fields?: "title" | "content" | "page_refs";
+                /**
+                 * @description 语言过滤
+                 * @example pali
+                 */
                 language?: string;
-                limit?: string;
-                /** @description 搜索关键字 */
-                search?: string;
-                /** @description 排序字段 */
-                order?: string;
-                /** @description 排序方向 */
-                dir?: "desc" | "asc";
-                /** @description 从第几条记录开始提取 */
-                offset?: number;
+                /** @description 每个字段返回的建议数，上限 50 */
+                limit?: number;
             };
             header?: never;
             path?: never;
@@ -34179,162 +34102,19 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。 */
+            /** @description 成功 */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        ok?: boolean;
-                        message?: string;
-                        data?: {
-                            rows?: Record<string, never>[];
-                            count?: number;
-                        };
+                        data?: Record<string, never>[];
+                        meta?: components["schemas"]["PaginationMeta"];
                     };
                 };
             };
-            401: components["responses"]["Unauthorized"];
-            422: components["responses"]["ValidationError"];
-        };
-    };
-    post_api_v3_search_suggest: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        ok?: boolean;
-                        message?: string;
-                        data?: Record<string, never>;
-                    };
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            422: components["responses"]["ValidationError"];
-        };
-    };
-    get_api_v3_search_suggest_search_suggest_: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                search_suggest: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        ok?: boolean;
-                        message?: string;
-                        data?: Record<string, never>;
-                    };
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            422: components["responses"]["ValidationError"];
-        };
-    };
-    put_api_v3_search_suggest_search_suggest_: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                search_suggest: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        ok?: boolean;
-                        message?: string;
-                        data?: Record<string, never>;
-                    };
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            422: components["responses"]["ValidationError"];
-        };
-    };
-    delete_api_v3_search_suggest_search_suggest_: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                search_suggest: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        ok?: boolean;
-                        message?: string;
-                        data?: Record<string, never>;
-                    };
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            422: components["responses"]["ValidationError"];
-        };
-    };
-    patch_api_v3_search_suggest_search_suggest_: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                search_suggest: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        ok?: boolean;
-                        message?: string;
-                        data?: Record<string, never>;
-                    };
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            422: components["responses"]["ValidationError"];
+            422: components["responses"]["ProblemValidation"];
         };
     };
     get_api_v3_search_search_: {
@@ -34342,126 +34122,44 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
+                /** @description OpenSearch 文档 id */
                 search: string;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description 成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。 */
+            /** @description 成功 */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        ok?: boolean;
-                        message?: string;
                         data?: Record<string, never>;
                     };
                 };
             };
-            401: components["responses"]["Unauthorized"];
-            422: components["responses"]["ValidationError"];
-        };
-    };
-    put_api_v3_search_search_: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                search: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        ok?: boolean;
-                        message?: string;
-                        data?: Record<string, never>;
-                    };
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            422: components["responses"]["ValidationError"];
-        };
-    };
-    delete_api_v3_search_search_: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                search: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        ok?: boolean;
-                        message?: string;
-                        data?: Record<string, never>;
-                    };
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            422: components["responses"]["ValidationError"];
-        };
-    };
-    patch_api_v3_search_search_: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                search: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        ok?: boolean;
-                        message?: string;
-                        data?: Record<string, never>;
-                    };
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            422: components["responses"]["ValidationError"];
+            422: components["responses"]["ProblemValidation"];
         };
     };
     get_api_v3_tipitaka_read_chapter: {
         parameters: {
-            query?: {
-                /** @description 搜索关键字 */
-                search?: string;
-                /** @description 排序字段 */
-                order?: string;
-                /** @description 排序方向 */
-                dir?: "desc" | "asc";
-                /** @description 每页记录数 */
-                limit?: number;
-                /** @description 从第几条记录开始提取 */
-                offset?: number;
+            query: {
+                /** @description 典籍 id */
+                book: number;
+                /** @description 章节内任一段落号，用于定位章节 */
+                para: number;
+                /** @description 译文 channel 的 uuid */
+                channel: string;
+                /** @description 内容格式 */
+                format?: "html" | "markdown" | "react" | "text";
+                /** @description 输出口径：display 整段合并，sentences 逐句，all 两者都给 */
+                view?: "display" | "sentences" | "all";
+                /** @description 每页大小，两种写法：`20000b` 按字节累加段落长度 （每页至少一段），`10p` 按段落数 */
+                pagesize?: string;
+                /** @description 页码，从 1 开始。超出范围返回 422 */
+                page?: number;
             };
             header?: never;
             path?: never;
@@ -34469,69 +34167,76 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。 */
+            /** @description 成功 */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        ok?: boolean;
-                        message?: string;
-                        data?: {
-                            rows?: Record<string, never>[];
-                            count?: number;
-                        };
+                        data?: Record<string, never>[];
+                        meta?: components["schemas"]["PaginationMeta"];
                     };
                 };
             };
-            401: components["responses"]["Unauthorized"];
-            422: components["responses"]["ValidationError"];
+            422: components["responses"]["ProblemValidation"];
         };
     };
     get_api_v3_tipitaka_read_chapter_tipitaka_read_chapter_: {
         parameters: {
-            query?: {
-                channel?: string;
+            query: {
+                /** @description 译文 channel 的 uuid */
+                channel: string;
+                /** @description 内容格式 */
+                format?: "html" | "markdown" | "react" | "text";
+                /** @description 输出口径：display 整段合并，sentences 逐句，all 两者都给 */
+                view?: "display" | "sentences" | "all";
+                /** @description 每页大小，两种写法：`20000b` 按字节累加段落长度 （每页至少一段），`10p` 按段落数 */
+                pagesize?: string;
+                /** @description 页码，从 1 开始。超出范围返回 422 */
+                page?: number;
             };
             header?: never;
             path: {
+                /**
+                 * @description 章节 id，格式 {book}-{para}
+                 * @example 9002-1
+                 */
                 tipitaka_read_chapter: string;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description 成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。 */
+            /** @description 成功 */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        ok?: boolean;
-                        message?: string;
                         data?: Record<string, never>;
                     };
                 };
             };
-            401: components["responses"]["Unauthorized"];
-            422: components["responses"]["ValidationError"];
+            422: components["responses"]["ProblemValidation"];
         };
     };
     get_api_v3_tipitaka_read_para: {
         parameters: {
-            query?: {
-                /** @description 搜索关键字 */
-                search?: string;
-                /** @description 排序字段 */
-                order?: string;
-                /** @description 排序方向 */
-                dir?: "desc" | "asc";
-                /** @description 每页记录数 */
-                limit?: number;
-                /** @description 从第几条记录开始提取 */
-                offset?: number;
+            query: {
+                /** @description 典籍 id */
+                book: number;
+                /** @description 起始段落号 */
+                para: number;
+                /** @description 结束段落号（含）。不传则等于 para */
+                to?: number;
+                /** @description 译文 channel 的 uuid */
+                channel: string;
+                /** @description 内容格式 */
+                format?: "html" | "markdown" | "react" | "text";
+                /** @description 输出口径：display 整段合并，sentences 逐句，all 两者都给 */
+                view?: "display" | "sentences" | "all";
             };
             header?: never;
             path?: never;
@@ -34539,100 +34244,59 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。 */
+            /** @description 成功 */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        ok?: boolean;
-                        message?: string;
-                        data?: {
-                            rows?: Record<string, never>[];
-                            count?: number;
-                        };
+                        data?: Record<string, never>[];
+                        meta?: components["schemas"]["PaginationMeta"];
                     };
                 };
             };
-            401: components["responses"]["Unauthorized"];
-            422: components["responses"]["ValidationError"];
+            422: components["responses"]["ProblemValidation"];
         };
     };
     get_api_v3_tipitaka_read_para_tipitaka_read_para_: {
         parameters: {
-            query?: {
-                channel?: string;
-                format?: string;
-                view?: string;
+            query: {
+                /** @description 译文 channel 的 uuid */
+                channel: string;
+                /** @description 内容格式 */
+                format?: "html" | "markdown" | "react" | "text";
+                /** @description 输出口径 */
+                view?: "display" | "sentences" | "all";
             };
             header?: never;
             path: {
+                /**
+                 * @description 段落 id，格式 {book}-{para}
+                 * @example 9001-1
+                 */
                 tipitaka_read_para: string;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description 成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。 */
+            /** @description 成功 */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        ok?: boolean;
-                        message?: string;
                         data?: Record<string, never>;
                     };
                 };
             };
-            401: components["responses"]["Unauthorized"];
-            422: components["responses"]["ValidationError"];
+            422: components["responses"]["ProblemValidation"];
         };
     };
     get_api_v3_upgrade: {
         parameters: {
-            query?: {
-                /** @description 搜索关键字 */
-                search?: string;
-                /** @description 排序字段 */
-                order?: string;
-                /** @description 排序方向 */
-                dir?: "desc" | "asc";
-                /** @description 每页记录数 */
-                limit?: number;
-                /** @description 从第几条记录开始提取 */
-                offset?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        ok?: boolean;
-                        message?: string;
-                        data?: {
-                            rows?: Record<string, never>[];
-                            count?: number;
-                        };
-                    };
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            422: components["responses"]["ValidationError"];
-        };
-    };
-    post_api_v3_upgrade: {
-        parameters: {
             query?: never;
             header?: never;
             path?: never;
@@ -34640,133 +34304,18 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。 */
+            /** @description 成功 */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": {
-                        ok?: boolean;
-                        message?: string;
-                        data?: Record<string, never>;
+                        data?: Record<string, never>[];
+                        meta?: components["schemas"]["PaginationMeta"];
                     };
                 };
             };
-            401: components["responses"]["Unauthorized"];
-            422: components["responses"]["ValidationError"];
-        };
-    };
-    get_api_v3_upgrade_upgrade_: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                upgrade: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        ok?: boolean;
-                        message?: string;
-                        data?: Record<string, never>;
-                    };
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            422: components["responses"]["ValidationError"];
-        };
-    };
-    put_api_v3_upgrade_upgrade_: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                upgrade: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        ok?: boolean;
-                        message?: string;
-                        data?: Record<string, never>;
-                    };
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            422: components["responses"]["ValidationError"];
-        };
-    };
-    delete_api_v3_upgrade_upgrade_: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                upgrade: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        ok?: boolean;
-                        message?: string;
-                        data?: Record<string, never>;
-                    };
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            422: components["responses"]["ValidationError"];
-        };
-    };
-    patch_api_v3_upgrade_upgrade_: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                upgrade: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        ok?: boolean;
-                        message?: string;
-                        data?: Record<string, never>;
-                    };
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            422: components["responses"]["ValidationError"];
         };
     };
 }
