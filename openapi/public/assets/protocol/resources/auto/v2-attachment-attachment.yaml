@@ -26,6 +26,35 @@ get:
                 type: string
               data:
                 type: object
+                properties:
+                  id:
+                    type: integer
+                  user_uid:
+                    type: string
+                  name:
+                    type: string
+                  filename:
+                    type: string
+                  title:
+                    type: string
+                  size:
+                    type: string
+                  content_type:
+                    type: string
+                  status:
+                    type: integer
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  small:
+                    type: string
+                  middle:
+                    type: string
+                  url:
+                    type: string
+                  thumbnail:
+                    type: string
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
@@ -66,6 +95,35 @@ put:
                 type: string
               data:
                 type: object
+                properties:
+                  id:
+                    type: integer
+                  user_uid:
+                    type: string
+                  name:
+                    type: string
+                  filename:
+                    type: string
+                  title:
+                    type: string
+                  size:
+                    type: string
+                  content_type:
+                    type: string
+                  status:
+                    type: integer
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  small:
+                    type: string
+                  middle:
+                    type: string
+                  url:
+                    type: string
+                  thumbnail:
+                    type: string
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
@@ -106,6 +164,35 @@ patch:
                 type: string
               data:
                 type: object
+                properties:
+                  id:
+                    type: integer
+                  user_uid:
+                    type: string
+                  name:
+                    type: string
+                  filename:
+                    type: string
+                  title:
+                    type: string
+                  size:
+                    type: string
+                  content_type:
+                    type: string
+                  status:
+                    type: integer
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  small:
+                    type: string
+                  middle:
+                    type: string
+                  url:
+                    type: string
+                  thumbnail:
+                    type: string
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:

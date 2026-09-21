@@ -109,6 +109,37 @@ post:
                 type: string
               data:
                 type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  case:
+                    type: string
+                  from:
+                    type: string
+                  to:
+                    type: string
+                  match:
+                    type: string
+                  category:
+                    type: string
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  editor:
+                    type: string
+                  category_channel:
+                    type: string
+                  channelId:
+                    type: string
+                  word:
+                    type: string
+                  meaning:
+                    type: string
+                  name_channel:
+                    type: string
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:

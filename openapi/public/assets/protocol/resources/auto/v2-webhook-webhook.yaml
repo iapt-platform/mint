@@ -26,6 +26,29 @@ get:
                 type: string
               data:
                 type: object
+                properties:
+                  id:
+                    type: integer
+                  res_type:
+                    type: string
+                  res_id:
+                    type: integer
+                  url:
+                    type: string
+                  receiver:
+                    type: string
+                  event:
+                    type: string
+                  status:
+                    type: integer
+                  fail:
+                    type: string
+                  success:
+                    type: string
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
@@ -85,6 +108,29 @@ put:
                 type: string
               data:
                 type: object
+                properties:
+                  id:
+                    type: integer
+                  res_type:
+                    type: string
+                  res_id:
+                    type: integer
+                  url:
+                    type: string
+                  receiver:
+                    type: string
+                  event:
+                    type: string
+                  status:
+                    type: integer
+                  fail:
+                    type: string
+                  success:
+                    type: string
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
@@ -144,6 +190,29 @@ patch:
                 type: string
               data:
                 type: object
+                properties:
+                  id:
+                    type: integer
+                  res_type:
+                    type: string
+                  res_id:
+                    type: integer
+                  url:
+                    type: string
+                  receiver:
+                    type: string
+                  event:
+                    type: string
+                  status:
+                    type: integer
+                  fail:
+                    type: string
+                  success:
+                    type: string
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:

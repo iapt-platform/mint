@@ -27,6 +27,35 @@ get:
                 type: string
               data:
                 type: object
+                properties:
+                  uid:
+                    type: string
+                  name:
+                    type: string
+                  summary:
+                    type: string
+                  type:
+                    type: integer
+                  studio:
+                    type: string
+                  lang:
+                    type: string
+                  is_system:
+                    type: boolean
+                  status:
+                    type: integer
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  source_type:
+                    type: string
+                  source_id:
+                    type: integer
+                  progress:
+                    type: integer
+                  role:
+                    type: string
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:

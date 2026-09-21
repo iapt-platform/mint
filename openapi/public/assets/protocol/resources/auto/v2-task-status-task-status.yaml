@@ -73,6 +73,79 @@ put:
                 type: string
               data:
                 type: object
+                properties:
+                  mode:
+                    type: string
+                  format:
+                    type: string
+                  footnote:
+                    type: string
+                  origin:
+                    type: string
+                  paragraph:
+                    type: string
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  description:
+                    type: string
+                  type:
+                    type: integer
+                  category:
+                    type: string
+                  progress:
+                    type: integer
+                  parent_id:
+                    type: integer
+                  parent:
+                    type: string
+                  roles:
+                    type: string
+                  executor_id:
+                    type: integer
+                  executor_relation_task_id:
+                    type: integer
+                  executor_relation_task:
+                    type: string
+                  pre_task:
+                    type: string
+                  next_task:
+                    type: string
+                  is_milestone:
+                    type: boolean
+                  project_id:
+                    type: integer
+                  project:
+                    type: string
+                  owner_id:
+                    type: integer
+                  owner:
+                    type: string
+                  editor_id:
+                    type: integer
+                  editor:
+                    type: string
+                  order:
+                    type: string
+                  status:
+                    type: integer
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  started_at:
+                    type: string
+                  finished_at:
+                    type: string
+                  assignees_id:
+                    type: integer
+                  assignees:
+                    type: string
+                  html:
+                    type: string
+                  executor:
+                    type: string
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
@@ -120,6 +193,79 @@ patch:
                 type: string
               data:
                 type: object
+                properties:
+                  mode:
+                    type: string
+                  format:
+                    type: string
+                  footnote:
+                    type: string
+                  origin:
+                    type: string
+                  paragraph:
+                    type: string
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  description:
+                    type: string
+                  type:
+                    type: integer
+                  category:
+                    type: string
+                  progress:
+                    type: integer
+                  parent_id:
+                    type: integer
+                  parent:
+                    type: string
+                  roles:
+                    type: string
+                  executor_id:
+                    type: integer
+                  executor_relation_task_id:
+                    type: integer
+                  executor_relation_task:
+                    type: string
+                  pre_task:
+                    type: string
+                  next_task:
+                    type: string
+                  is_milestone:
+                    type: boolean
+                  project_id:
+                    type: integer
+                  project:
+                    type: string
+                  owner_id:
+                    type: integer
+                  owner:
+                    type: string
+                  editor_id:
+                    type: integer
+                  editor:
+                    type: string
+                  order:
+                    type: string
+                  status:
+                    type: integer
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  started_at:
+                    type: string
+                  finished_at:
+                    type: string
+                  assignees_id:
+                    type: integer
+                  assignees:
+                    type: string
+                  html:
+                    type: string
+                  executor:
+                    type: string
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:

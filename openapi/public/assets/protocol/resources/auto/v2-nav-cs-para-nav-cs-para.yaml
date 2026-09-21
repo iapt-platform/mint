@@ -26,6 +26,13 @@ get:
                 type: string
               data:
                 type: object
+                properties:
+                  content:
+                    type: string
+                  book:
+                    type: string
+                  start:
+                    type: string
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:

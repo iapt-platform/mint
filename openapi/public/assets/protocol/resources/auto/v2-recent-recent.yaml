@@ -26,6 +26,19 @@ get:
                 type: string
               data:
                 type: object
+                properties:
+                  id:
+                    type: integer
+                  type:
+                    type: integer
+                  article_id:
+                    type: integer
+                  param:
+                    type: string
+                  updated_at:
+                    type: string
+                  title:
+                    type: string
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:

@@ -90,6 +90,7 @@ get:
                     type: array
                     items:
                       type: object
+                      properties: { id: { type: integer }, uid: { type: string }, book: { type: string }, paragraph: { type: string }, word_start: { type: string }, word_end: { type: string }, editor: { type: string }, channel: { type: string }, content: { type: string }, html: { type: string }, role: { type: string }, created_at: { type: string }, updated_at: { type: string } }
                   count:
                     type: integer
     401:
@@ -127,6 +128,33 @@ post:
                 type: string
               data:
                 type: object
+                properties:
+                  id:
+                    type: integer
+                  uid:
+                    type: string
+                  book:
+                    type: string
+                  paragraph:
+                    type: string
+                  word_start:
+                    type: string
+                  word_end:
+                    type: string
+                  editor:
+                    type: string
+                  channel:
+                    type: string
+                  content:
+                    type: string
+                  html:
+                    type: string
+                  role:
+                    type: string
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:

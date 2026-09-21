@@ -81,6 +81,7 @@ get:
                     type: array
                     items:
                       type: object
+                      properties: { id: { type: integer }, collect_id: { type: integer }, article_id: { type: integer }, level: { type: integer }, title: { type: string }, editor: { type: string }, children: { type: string }, status: { type: integer }, deleted_at: { type: string }, created_at: { type: string }, updated_at: { type: string }, format: { type: string }, title_text: { type: string } }
                   count:
                     type: integer
     401:

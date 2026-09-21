@@ -68,6 +68,7 @@ get:
                     type: array
                     items:
                       type: object
+                      properties: { book: { type: string }, para: { type: string }, book_title_pali: { type: string }, cs6_para: { type: string }, tags: { type: string }, path: { type: string } }
                   count:
                     type: integer
     401:

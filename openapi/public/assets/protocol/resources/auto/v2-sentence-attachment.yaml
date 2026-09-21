@@ -58,6 +58,7 @@ get:
                     type: array
                     items:
                       type: object
+                      properties: { uid: { type: string }, sentence_id: { type: integer }, attachment_id: { type: integer }, attachment: { type: string }, editor_id: { type: integer }, url: { type: string } }
                   count:
                     type: integer
     401:

@@ -79,6 +79,7 @@ get:
                     type: array
                     items:
                       type: object
+                      properties: { book: { type: string }, paragraph: { type: string }, content: { type: string }, path: { type: string }, paliTitle: { type: string }, content_type: { type: string } }
                   count:
                     type: integer
     401:

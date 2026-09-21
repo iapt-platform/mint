@@ -63,6 +63,7 @@ get:
                     type: array
                     items:
                       type: object
+                      properties: { id: { type: integer }, sent_uid: { type: string }, editor: { type: string }, content: { type: string }, landmark: { type: string }, pr_from: { type: string }, created_at: { type: string }, fork_from: { type: string }, fork_studio: { type: string }, accepter: { type: string } }
                   count:
                     type: integer
     401:

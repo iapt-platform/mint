@@ -71,6 +71,7 @@ get:
                     type: array
                     items:
                       type: object
+                      properties: { word: { type: string }, count: { type: integer }, strlen: { type: string }, meaning: { type: string } }
                   count:
                     type: integer
     401:

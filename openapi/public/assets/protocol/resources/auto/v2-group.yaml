@@ -71,6 +71,7 @@ get:
                     type: array
                     items:
                       type: object
+                      properties: { uid: { type: string }, name: { type: string }, description: { type: string }, owner: { type: string }, studio: { type: string }, updated_at: { type: string }, created_at: { type: string }, role: { type: string } }
                   count:
                     type: integer
     401:

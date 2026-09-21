@@ -30,6 +30,49 @@ get:
                 type: string
               data:
                 type: object
+                properties:
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  content:
+                    type: string
+                  content_type:
+                    type: string
+                  parent:
+                    type: string
+                  status:
+                    type: integer
+                  editor:
+                    type: string
+                  res_id:
+                    type: integer
+                  res_type:
+                    type: string
+                  type:
+                    type: integer
+                  tpl_id:
+                    type: integer
+                  children_count:
+                    type: integer
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  pos_start:
+                    type: string
+                  pos_end:
+                    type: string
+                  quote_exact:
+                    type: string
+                  quote_prefix:
+                    type: string
+                  quote_suffix:
+                    type: string
+                  html:
+                    type: string
+                  summary:
+                    type: string
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
@@ -112,6 +155,49 @@ put:
                 type: string
               data:
                 type: object
+                properties:
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  content:
+                    type: string
+                  content_type:
+                    type: string
+                  parent:
+                    type: string
+                  status:
+                    type: integer
+                  editor:
+                    type: string
+                  res_id:
+                    type: integer
+                  res_type:
+                    type: string
+                  type:
+                    type: integer
+                  tpl_id:
+                    type: integer
+                  children_count:
+                    type: integer
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  pos_start:
+                    type: string
+                  pos_end:
+                    type: string
+                  quote_exact:
+                    type: string
+                  quote_prefix:
+                    type: string
+                  quote_suffix:
+                    type: string
+                  html:
+                    type: string
+                  summary:
+                    type: string
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
@@ -194,6 +280,49 @@ patch:
                 type: string
               data:
                 type: object
+                properties:
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  content:
+                    type: string
+                  content_type:
+                    type: string
+                  parent:
+                    type: string
+                  status:
+                    type: integer
+                  editor:
+                    type: string
+                  res_id:
+                    type: integer
+                  res_type:
+                    type: string
+                  type:
+                    type: integer
+                  tpl_id:
+                    type: integer
+                  children_count:
+                    type: integer
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  pos_start:
+                    type: string
+                  pos_end:
+                    type: string
+                  quote_exact:
+                    type: string
+                  quote_prefix:
+                    type: string
+                  quote_suffix:
+                    type: string
+                  html:
+                    type: string
+                  summary:
+                    type: string
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:

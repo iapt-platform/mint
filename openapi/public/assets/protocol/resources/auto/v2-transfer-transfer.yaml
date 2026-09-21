@@ -26,6 +26,29 @@ get:
                 type: string
               data:
                 type: object
+                properties:
+                  id:
+                    type: integer
+                  origin_owner:
+                    type: string
+                  res_type:
+                    type: string
+                  res_id:
+                    type: integer
+                  transferor:
+                    type: string
+                  new_owner:
+                    type: string
+                  status:
+                    type: integer
+                  updated_at:
+                    type: string
+                  created_at:
+                    type: string
+                  editor:
+                    type: string
+                  channel:
+                    type: string
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
@@ -70,6 +93,29 @@ put:
                 type: string
               data:
                 type: object
+                properties:
+                  id:
+                    type: integer
+                  origin_owner:
+                    type: string
+                  res_type:
+                    type: string
+                  res_id:
+                    type: integer
+                  transferor:
+                    type: string
+                  new_owner:
+                    type: string
+                  status:
+                    type: integer
+                  updated_at:
+                    type: string
+                  created_at:
+                    type: string
+                  editor:
+                    type: string
+                  channel:
+                    type: string
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
@@ -114,6 +160,29 @@ patch:
                 type: string
               data:
                 type: object
+                properties:
+                  id:
+                    type: integer
+                  origin_owner:
+                    type: string
+                  res_type:
+                    type: string
+                  res_id:
+                    type: integer
+                  transferor:
+                    type: string
+                  new_owner:
+                    type: string
+                  status:
+                    type: integer
+                  updated_at:
+                    type: string
+                  created_at:
+                    type: string
+                  editor:
+                    type: string
+                  channel:
+                    type: string
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:

@@ -89,6 +89,7 @@ get:
                     type: array
                     items:
                       type: object
+                      properties: { id: { type: integer }, userName: { type: string }, nickName: { type: string }, email: { type: string }, role: { type: string }, created_at: { type: string }, updated_at: { type: string }, avatarName: { type: string }, avatar: { type: string } }
                   count:
                     type: integer
     401:

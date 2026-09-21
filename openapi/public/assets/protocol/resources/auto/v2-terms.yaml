@@ -153,6 +153,7 @@ get:
                     type: array
                     items:
                       type: object
+                      properties: { id: { type: integer }, guid: { type: string }, word: { type: string }, word_en: { type: string }, meaning: { type: string }, other_meaning: { type: string }, tag: { type: string }, note: { type: string }, language: { type: string }, channel_id: { type: integer }, channal: { type: string }, studio: { type: string }, editor: { type: string }, created_at: { type: string }, updated_at: { type: string }, mode: { type: string }, format: { type: string }, studioId: { type: string }, channel: { type: string }, html: { type: string }, summary_is_community: { type: string }, summary: { type: string }, role: { type: string }, exp: { type: string } }
                   count:
                     type: integer
     401:
@@ -230,6 +231,55 @@ post:
                 type: string
               data:
                 type: object
+                properties:
+                  id:
+                    type: integer
+                  guid:
+                    type: string
+                  word:
+                    type: string
+                  word_en:
+                    type: string
+                  meaning:
+                    type: string
+                  other_meaning:
+                    type: string
+                  tag:
+                    type: string
+                  note:
+                    type: string
+                  language:
+                    type: string
+                  channel_id:
+                    type: integer
+                  channal:
+                    type: string
+                  studio:
+                    type: string
+                  editor:
+                    type: string
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  mode:
+                    type: string
+                  format:
+                    type: string
+                  studioId:
+                    type: string
+                  channel:
+                    type: string
+                  html:
+                    type: string
+                  summary_is_community:
+                    type: string
+                  summary:
+                    type: string
+                  role:
+                    type: string
+                  exp:
+                    type: string
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:

@@ -65,6 +65,7 @@ get:
                     type: array
                     items:
                       type: object
+                      properties: { id: { type: integer }, from: { type: string }, to: { type: string }, url: { type: string }, content: { type: string }, content_type: { type: string }, res_type: { type: string }, res_id: { type: integer }, status: { type: integer }, created_at: { type: string }, updated_at: { type: string }, 'pr data': { type: string }, channel: { type: string }, title: { type: string }, book_title: { type: string } }
                   count:
                     type: integer
     401:
@@ -110,6 +111,37 @@ post:
                 type: string
               data:
                 type: object
+                properties:
+                  id:
+                    type: integer
+                  from:
+                    type: string
+                  to:
+                    type: string
+                  url:
+                    type: string
+                  content:
+                    type: string
+                  content_type:
+                    type: string
+                  res_type:
+                    type: string
+                  res_id:
+                    type: integer
+                  status:
+                    type: integer
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  'pr data':
+                    type: string
+                  channel:
+                    type: string
+                  title:
+                    type: string
+                  book_title:
+                    type: string
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:

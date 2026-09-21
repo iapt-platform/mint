@@ -58,6 +58,7 @@ get:
                     type: array
                     items:
                       type: object
+                      properties: { id: { type: integer }, word: { type: string }, count: { type: integer }, parent: { type: string }, note: { type: string }, factors: { type: string }, confidence: { type: string }, updated_at: { type: string }, creator_id: { type: integer }, editor: { type: string } }
                   count:
                     type: integer
     401:

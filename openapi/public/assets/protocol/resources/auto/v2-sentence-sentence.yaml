@@ -26,6 +26,43 @@ get:
                 type: string
               data:
                 type: object
+                properties:
+                  data:
+                    type: string
+                  uid:
+                    type: string
+                  id:
+                    type: integer
+                  content:
+                    type: string
+                  content_type:
+                    type: string
+                  html:
+                    type: string
+                  book:
+                    type: string
+                  paragraph:
+                    type: string
+                  word_start:
+                    type: string
+                  word_end:
+                    type: string
+                  editor:
+                    type: string
+                  fork_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  channel:
+                    type: string
+                  studio:
+                    type: string
+                  suggestionCount:
+                    type: string
+                  acceptor:
+                    type: string
+                  pr_edit_at:
+                    type: string
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
@@ -76,6 +113,43 @@ put:
                 type: string
               data:
                 type: object
+                properties:
+                  data:
+                    type: string
+                  uid:
+                    type: string
+                  id:
+                    type: integer
+                  content:
+                    type: string
+                  content_type:
+                    type: string
+                  html:
+                    type: string
+                  book:
+                    type: string
+                  paragraph:
+                    type: string
+                  word_start:
+                    type: string
+                  word_end:
+                    type: string
+                  editor:
+                    type: string
+                  fork_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  channel:
+                    type: string
+                  studio:
+                    type: string
+                  suggestionCount:
+                    type: string
+                  acceptor:
+                    type: string
+                  pr_edit_at:
+                    type: string
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
@@ -126,6 +200,43 @@ patch:
                 type: string
               data:
                 type: object
+                properties:
+                  data:
+                    type: string
+                  uid:
+                    type: string
+                  id:
+                    type: integer
+                  content:
+                    type: string
+                  content_type:
+                    type: string
+                  html:
+                    type: string
+                  book:
+                    type: string
+                  paragraph:
+                    type: string
+                  word_start:
+                    type: string
+                  word_end:
+                    type: string
+                  editor:
+                    type: string
+                  fork_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  channel:
+                    type: string
+                  studio:
+                    type: string
+                  suggestionCount:
+                    type: string
+                  acceptor:
+                    type: string
+                  pr_edit_at:
+                    type: string
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:

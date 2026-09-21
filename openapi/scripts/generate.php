@@ -337,7 +337,13 @@ function resourceSchema(?string $class): ?array
     if (! $class) {
         return null;
     }
-    $file = $api.'/'.str_replace(['App\\', '\\'], ['app/', '/'], ltrim($class, '\\')).'.php';
+    $class = ltrim($class, '\\');
+    $file = $api.'/'.str_replace(['App\\', '\\'], ['app/', '/'], $class).'.php';
+    // 控制器里通常写的是短类名（new ChannelResource(...)），按全名拼不出路径，
+    // 回落到 app/Http/Resources 下同名文件
+    if (! is_file($file) && ! str_contains($class, '\\')) {
+        $file = $api.'/app/Http/Resources/'.$class.'.php';
+    }
     if (! is_file($file)) {
         return null;
     }

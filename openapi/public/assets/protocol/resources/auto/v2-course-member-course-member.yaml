@@ -36,6 +36,31 @@ get:
                 type: string
               data:
                 type: object
+                properties:
+                  id:
+                    type: integer
+                  user_id:
+                    type: integer
+                  course_id:
+                    type: integer
+                  role:
+                    type: string
+                  user:
+                    type: string
+                  editor:
+                    type: string
+                  status:
+                    type: integer
+                  channel_id:
+                    type: integer
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  channel:
+                    type: string
+                  course:
+                    type: string
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
@@ -87,6 +112,31 @@ put:
                 type: string
               data:
                 type: object
+                properties:
+                  id:
+                    type: integer
+                  user_id:
+                    type: integer
+                  course_id:
+                    type: integer
+                  role:
+                    type: string
+                  user:
+                    type: string
+                  editor:
+                    type: string
+                  status:
+                    type: integer
+                  channel_id:
+                    type: integer
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  channel:
+                    type: string
+                  course:
+                    type: string
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
@@ -138,6 +188,31 @@ patch:
                 type: string
               data:
                 type: object
+                properties:
+                  id:
+                    type: integer
+                  user_id:
+                    type: integer
+                  course_id:
+                    type: integer
+                  role:
+                    type: string
+                  user:
+                    type: string
+                  editor:
+                    type: string
+                  status:
+                    type: integer
+                  channel_id:
+                    type: integer
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  channel:
+                    type: string
+                  course:
+                    type: string
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:

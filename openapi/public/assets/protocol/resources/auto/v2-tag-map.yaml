@@ -76,6 +76,7 @@ get:
                     type: array
                     items:
                       type: object
+                      properties: { id: { type: integer }, table_name: { type: string }, anchor_id: { type: integer }, tag_id: { type: integer }, name: { type: string }, color: { type: string }, description: { type: string }, editor: { type: string }, owner: { type: string }, created_at: { type: string }, updated_at: { type: string }, title: { type: string }, tags: { type: string } }
                   count:
                     type: integer
     401:
@@ -119,6 +120,33 @@ post:
                 type: string
               data:
                 type: object
+                properties:
+                  id:
+                    type: integer
+                  table_name:
+                    type: string
+                  anchor_id:
+                    type: integer
+                  tag_id:
+                    type: integer
+                  name:
+                    type: string
+                  color:
+                    type: string
+                  description:
+                    type: string
+                  editor:
+                    type: string
+                  owner:
+                    type: string
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  title:
+                    type: string
+                  tags:
+                    type: string
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:

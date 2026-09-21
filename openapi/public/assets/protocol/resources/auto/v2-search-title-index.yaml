@@ -61,6 +61,7 @@ get:
                     type: array
                     items:
                       type: object
+                      properties: { word: { type: string }, count: { type: integer }, bold: { type: string } }
                   count:
                     type: integer
     401:

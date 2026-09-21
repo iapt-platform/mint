@@ -69,6 +69,7 @@ get:
                     type: array
                     items:
                       type: object
+                      properties: { id: { type: integer }, res_id: { type: integer }, res_type: { type: string }, collaborator_type: { type: string }, power: { type: string }, res_name: { type: string }, owner: { type: string }, created_at: { type: string }, updated_at: { type: string }, user: { type: string }, group: { type: string } }
                   count:
                     type: integer
     401:

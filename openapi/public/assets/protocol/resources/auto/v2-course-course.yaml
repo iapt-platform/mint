@@ -26,6 +26,75 @@ get:
                 type: string
               data:
                 type: object
+                properties:
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  subtitle:
+                    type: string
+                  summary:
+                    type: string
+                  sign_up_message:
+                    type: string
+                  teacher:
+                    type: string
+                  course_count:
+                    type: integer
+                  publicity:
+                    type: string
+                  start_at:
+                    type: string
+                  end_at:
+                    type: string
+                  sign_up_start_at:
+                    type: string
+                  sign_up_end_at:
+                    type: string
+                  content:
+                    type: string
+                  content_type:
+                    type: string
+                  cover:
+                    type: string
+                  channel_id:
+                    type: integer
+                  join:
+                    type: string
+                  number:
+                    type: string
+                  request_exp:
+                    type: string
+                  studio:
+                    type: string
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  member_count:
+                    type: integer
+                  members:
+                    type: string
+                  my_role:
+                    type: string
+                  cover_url:
+                    type: string
+                  anthology_id:
+                    type: integer
+                  anthology_title:
+                    type: string
+                  anthology_owner:
+                    type: string
+                  channel_name:
+                    type: string
+                  channel_owner:
+                    type: string
+                  my_status:
+                    type: string
+                  my_status_id:
+                    type: integer
+                  count_progressing:
+                    type: string
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:

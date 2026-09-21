@@ -58,6 +58,7 @@ get:
                     type: array
                     items:
                       type: object
+                      properties: { id: { type: integer }, userName: { type: string }, nickName: { type: string } }
                   count:
                     type: integer
     401:

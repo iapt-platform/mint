@@ -64,6 +64,7 @@ get:
                     type: array
                     items:
                       type: object
+                      properties: { uid: { type: string }, name: { type: string }, description: { type: string }, url: { type: string }, model: { type: string }, privacy: { type: string }, owner_id: { type: integer }, editor_id: { type: integer }, created_at: { type: string }, updated_at: { type: string }, user: { type: string }, key: { type: string }, system_prompt: { type: string } }
                   count:
                     type: integer
     401:

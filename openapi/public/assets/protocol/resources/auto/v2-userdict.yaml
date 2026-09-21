@@ -152,6 +152,7 @@ get:
                     type: array
                     items:
                       type: object
+                      properties: { id: { type: integer }, word: { type: string }, type: { type: integer }, grammar: { type: string }, mean: { type: string }, parent: { type: string }, note: { type: string }, factors: { type: string }, source: { type: string }, status: { type: integer }, confidence: { type: string }, updated_at: { type: string }, creator_id: { type: integer }, format: { type: string }, lang: { type: string }, editor: { type: string }, exp: { type: string }, dict: { type: string } }
                   count:
                     type: integer
     401:

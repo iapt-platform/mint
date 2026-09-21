@@ -51,6 +51,63 @@ put:
                 type: string
               data:
                 type: object
+                properties:
+                  uid:
+                    type: string
+                  title:
+                    type: string
+                  subtitle:
+                    type: string
+                  summary:
+                    type: string
+                  studio:
+                    type: string
+                  editor:
+                    type: string
+                  status:
+                    type: integer
+                  lang:
+                    type: string
+                  parent_uid:
+                    type: string
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  format:
+                    type: string
+                  key:
+                    type: string
+                  level:
+                    type: integer
+                  mode:
+                    type: string
+                  footnote:
+                    type: string
+                  origin:
+                    type: string
+                  paragraph:
+                    type: string
+                  role:
+                    type: string
+                  anthology_count:
+                    type: integer
+                  anthology_first:
+                    type: string
+                  path:
+                    type: string
+                  toc:
+                    type: string
+                  title_text:
+                    type: string
+                  content:
+                    type: string
+                  content_type:
+                    type: string
+                  html:
+                    type: string
+                  _summary:
+                    type: string
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:

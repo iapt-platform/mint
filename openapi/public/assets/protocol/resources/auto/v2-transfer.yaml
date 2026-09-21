@@ -73,6 +73,7 @@ get:
                     type: array
                     items:
                       type: object
+                      properties: { id: { type: integer }, origin_owner: { type: string }, res_type: { type: string }, res_id: { type: integer }, transferor: { type: string }, new_owner: { type: string }, status: { type: integer }, updated_at: { type: string }, created_at: { type: string }, editor: { type: string }, channel: { type: string } }
                   count:
                     type: integer
     401:

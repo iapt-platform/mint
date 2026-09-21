@@ -69,6 +69,7 @@ get:
                     type: array
                     items:
                       type: object
+                      properties: { id: { type: integer }, user_id: { type: integer }, group_id: { type: integer }, group: { type: string }, power: { type: string }, role: { type: string }, level: { type: integer }, status: { type: integer }, user: { type: string }, created_at: { type: string }, updated_at: { type: string } }
                   count:
                     type: integer
     401:
@@ -111,6 +112,29 @@ post:
                 type: string
               data:
                 type: object
+                properties:
+                  id:
+                    type: integer
+                  user_id:
+                    type: integer
+                  group_id:
+                    type: integer
+                  group:
+                    type: string
+                  power:
+                    type: string
+                  role:
+                    type: string
+                  level:
+                    type: integer
+                  status:
+                    type: integer
+                  user:
+                    type: string
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:

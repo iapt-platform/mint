@@ -26,6 +26,31 @@ get:
                 type: string
               data:
                 type: object
+                properties:
+                  id:
+                    type: integer
+                  chat_id:
+                    type: integer
+                  parent_id:
+                    type: integer
+                  session_id:
+                    type: integer
+                  role:
+                    type: string
+                  content:
+                    type: string
+                  model_name:
+                    type: string
+                  tool_calls:
+                    type: string
+                  tool_call_id:
+                    type: integer
+                  is_active:
+                    type: boolean
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:

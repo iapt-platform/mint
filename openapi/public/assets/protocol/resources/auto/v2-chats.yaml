@@ -62,6 +62,7 @@ get:
                     type: array
                     items:
                       type: object
+                      properties: { id: { type: integer }, title: { type: string }, user_id: { type: integer }, created_at: { type: string }, updated_at: { type: string }, messages_count: { type: integer } }
                   count:
                     type: integer
     401:
@@ -88,6 +89,19 @@ post:
                 type: string
               data:
                 type: object
+                properties:
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  user_id:
+                    type: integer
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  messages_count:
+                    type: integer
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:

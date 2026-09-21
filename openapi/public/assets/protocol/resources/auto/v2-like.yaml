@@ -116,6 +116,7 @@ get:
                     type: array
                     items:
                       type: object
+                      properties: { id: { type: integer }, type: { type: integer }, target_id: { type: integer }, target_type: { type: string }, context: { type: string }, updated_at: { type: string }, created_at: { type: string }, user: { type: string } }
                   count:
                     type: integer
     401:

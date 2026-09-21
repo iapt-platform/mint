@@ -26,6 +26,31 @@ get:
                 type: string
               data:
                 type: object
+                properties:
+                  uid:
+                    type: string
+                  title:
+                    type: string
+                  subtitle:
+                    type: string
+                  summary:
+                    type: string
+                  studio:
+                    type: string
+                  childrenNumber:
+                    type: string
+                  status:
+                    type: integer
+                  lang:
+                    type: string
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  default_channel:
+                    type: string
+                  article_list:
+                    type: string
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
@@ -78,6 +103,31 @@ put:
                 type: string
               data:
                 type: object
+                properties:
+                  uid:
+                    type: string
+                  title:
+                    type: string
+                  subtitle:
+                    type: string
+                  summary:
+                    type: string
+                  studio:
+                    type: string
+                  childrenNumber:
+                    type: string
+                  status:
+                    type: integer
+                  lang:
+                    type: string
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  default_channel:
+                    type: string
+                  article_list:
+                    type: string
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
@@ -130,6 +180,31 @@ patch:
                 type: string
               data:
                 type: object
+                properties:
+                  uid:
+                    type: string
+                  title:
+                    type: string
+                  subtitle:
+                    type: string
+                  summary:
+                    type: string
+                  studio:
+                    type: string
+                  childrenNumber:
+                    type: string
+                  status:
+                    type: integer
+                  lang:
+                    type: string
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  default_channel:
+                    type: string
+                  article_list:
+                    type: string
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
