@@ -467,9 +467,10 @@ class ProgressChapterController extends Controller
      *
      * @return Response
      */
-    public function show(ProgressChapter $progressChapter)
+    public function show(ProgressChapter $progress)
     {
         //
+        return $this->ok($progress);
     }
 
     /**
