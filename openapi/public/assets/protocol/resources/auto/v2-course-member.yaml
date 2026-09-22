@@ -1,0 +1,212 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-course-member.yaml
+get:
+  summary: 列出课程成员
+  tags:
+    - course-member
+  operationId: get_api_v2_course_member
+  description: |-
+    按 view 指定的口径返回课程成员列表，支持角色/状态过滤、按昵称搜索、分页与排序。
+    必须登录，且当前用户必须已经是该 course 的成员（在 course_member 中有 role），否则返回 403。
+    返回 rows（成员列表）、role（当前用户在该 course 中的当前角色）、count（过滤后的总数）。
+
+    实现：`CourseMemberController@index`
+  parameters:
+    -
+      name: id
+      in: query
+      schema:
+        type: string
+      description: 'course uid。view=timeline 时也用于权限校验'
+      required: true
+    -
+      name: course
+      in: query
+      schema:
+        type: string
+      description: '权限校验与 timeline 口径使用的 course uid，缺省时回退到 id'
+    -
+      name: view
+      in: query
+      schema:
+        type: string
+        enum:
+          - course
+          - timeline
+      description: 查询口径。course=课程内全部当前成员；timeline=某用户的成员变更时间线
+      required: true
+    -
+      name: userId
+      in: query
+      schema:
+        type: string
+      description: 'view=timeline 时必填，要查看时间线的用户 uid'
+    -
+      name: timeline
+      in: query
+      schema:
+        type: string
+        default: current
+      description: 'view=timeline 时的范围：current=只看 course 参数指定的课程，其余值=该用户全部课程'
+    -
+      name: role
+      in: query
+      schema:
+        type: string
+      description: '按角色过滤，all 表示不过滤'
+      example: student
+    -
+      name: status
+      in: query
+      schema:
+        type: string
+      description: 按状态过滤，逗号分隔可多选
+      example: 'joined,applied'
+    -
+      name: search
+      in: query
+      schema:
+        type: string
+      description: 按成员昵称模糊搜索
+    -
+      name: order
+      in: query
+      schema:
+        type: string
+        default: created_at
+      description: 排序字段
+    -
+      name: dir
+      in: query
+      schema:
+        type: string
+        enum:
+          - asc
+          - desc
+        default: asc
+      description: 排序方向
+    -
+      name: offset
+      in: query
+      schema:
+        type: integer
+        default: '0'
+      description: 跳过的记录数
+    -
+      name: limit
+      in: query
+      schema:
+        type: integer
+        default: '1000'
+      description: 返回条数上限
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  rows:
+                    type: array
+                    items:
+                      type: object
+                      properties: { id: { type: integer }, user_id: { type: integer }, course_id: { type: integer }, role: { type: string }, user: { type: string }, editor: { type: string }, status: { type: integer }, channel_id: { type: integer }, created_at: { type: string }, updated_at: { type: string }, channel: { type: string }, course: { type: string } }
+                  count:
+                    type: integer
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+post:
+  summary: 新增课程成员记录（加入/申请/邀请）
+  tags:
+    - course-member
+  operationId: post_api_v2_course_member
+  description: |-
+    必须登录。status=invited 表示由当前用户邀请他人，成员归属 user_id 指定的用户；
+    其余情况（自己加入或申请）一律忽略 user_id，成员归属当前登录用户。
+    非 invited 时若该 user 已在该 course 中存在任何记录，返回 member exists（HTTP 200）。
+    写入前会把同一 course + user 的旧记录 is_current 置为 false，新记录成为当前记录。
+    状态必须与课程加入方式匹配：course.join=open 只接受 joined/invited，manual 只接受 applied/invited，
+    不匹配返回 invalid course（HTTP 200）。course 不存在返回 invalid course。
+
+    实现：`CourseMemberController@store`
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            user_id:
+              type: string
+              description: '成员用户 uid，仅在 status=invited 时生效'
+            course_id:
+              type: string
+              description: 'course uid'
+            role:
+              type: string
+              description: 成员角色
+              example: student
+            status:
+              type: string
+              description: 成员状态
+              enum:
+                - joined
+                - applied
+                - invited
+          required:
+            - user_id
+            - course_id
+            - role
+            - status
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  user_id:
+                    type: integer
+                  course_id:
+                    type: integer
+                  role:
+                    type: string
+                  user:
+                    type: string
+                  editor:
+                    type: string
+                  status:
+                    type: integer
+                  channel_id:
+                    type: integer
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  channel:
+                    type: string
+                  course:
+                    type: string
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

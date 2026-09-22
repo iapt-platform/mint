@@ -1,0 +1,125 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-search-title-index-search-title-index.yaml
+get:
+  summary: '获取单个 search-title-index/{search_title_index}'
+  tags:
+    - search-title-index
+  operationId: get_api_v2_search_title_index_search_title_index_
+  description: 实现：`SearchTitleController@show`
+  parameters:
+    -
+      name: search_title_index
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+put:
+  summary: '更新 search-title-index/{search_title_index}'
+  tags:
+    - search-title-index
+  operationId: put_api_v2_search_title_index_search_title_index_
+  description: 实现：`SearchTitleController@update`
+  parameters:
+    -
+      name: search_title_index
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+patch:
+  summary: '更新 search-title-index/{search_title_index}'
+  tags:
+    - search-title-index
+  operationId: patch_api_v2_search_title_index_search_title_index_
+  description: 实现：`SearchTitleController@update`
+  parameters:
+    -
+      name: search_title_index
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+delete:
+  summary: '删除 search-title-index/{search_title_index}'
+  tags:
+    - search-title-index
+  operationId: delete_api_v2_search_title_index_search_title_index_
+  description: 实现：`SearchTitleController@destroy`
+  parameters:
+    -
+      name: search_title_index
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

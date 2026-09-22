@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\DTO\Search\HitItemDTO;
+use App\Http\Resources\V3Resource;
 use App\Services\OpenSearchService;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -16,28 +16,29 @@ class SearchPlusController extends Controller
     public function __construct(protected OpenSearchService $searchService) {}
 
     /**
-     * Display a listing of the resource.
+     * 全文检索
      *
-     * 处理搜索请求，支持 fuzzy / exact / semantic / hybrid 四种模式。
-     * 接收查询参数并调用 OpenSearchService 执行搜索。
+     * 支持 fuzzy / exact / semantic / hybrid 四种检索模式，底层走 OpenSearch。
+     * 同样的参数也可以用 POST /v3/search 提交（参数多、URL 放不下时用）。
      *
-     * 支持 GET 和 POST 请求
+     * @unauthenticated
      *
-     * @param  Request  $request
-     *                            - q (string): 搜索关键词
-     *                            - resource_type (string): 资源类型 (article|term|dictionary|translation|origin_text|nissaya)
-     *                            - granularity (string): 文档颗粒度 (book|chapter|sutta|section|paragraph|sentence)
-     *                            - language (string): 语言，如 pali, zh-Hans, zh-Hant, en-US, my
-     *                            - category (string): 文档分类 (pali|commentary|subcommentary)
-     *                            - tags (array): 标签过滤
-     *                            - page_refs (array): 页码标记 ["V3.81","M3.58"]
-     *                            - related_id (array): 关联 ID，如 ["chapter_93-5","m.n. 38"]
-     *                            - author (string): 作者或译者 (metadata.author)
-     *                            - channel (string): 来源渠道 (metadata.channel)
-     *                            - page (int): 页码，默认 1
-     *                            - page_size (int): 每页数量，默认 20，最大 100
-     *                            - search_mode (string): fuzzy|exact|semantic|hybrid，默认 fuzzy
-     * @return JsonResponse
+     * @queryParam q string required 搜索关键词
+     * @queryParam search_mode string 检索模式。Enum: fuzzy,exact,semantic,hybrid Default: fuzzy
+     * @queryParam resource_type string 资源类型。
+     *             Enum: article,term,dictionary,translation,origin_text,nissaya
+     * @queryParam resource_id string 限定某个资源 id
+     * @queryParam granularity string 文档颗粒度。
+     *             Enum: book,chapter,sutta,section,paragraph,sentence
+     * @queryParam language string 语言。Example: zh-Hans
+     * @queryParam category string 文档分类，逗号分隔。Enum: pali,commentary,subcommentary
+     * @queryParam tags string 标签过滤，逗号分隔
+     * @queryParam page_refs array 页码标记。Example: ["V3.81","M3.58"]
+     * @queryParam related_id array 关联 id。Example: ["chapter_93-5","m.n. 38"]
+     * @queryParam author string 按作者或译者过滤
+     * @queryParam channel string 按来源 channel 过滤
+     * @queryParam page integer 页码。Default: 1
+     * @queryParam page_size integer 每页数量，上限 100。Default: 20
      */
     public function index(Request $request)
     {
@@ -104,14 +105,26 @@ class SearchPlusController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * 全文检索（POST）
      *
-     * POST 方式调用搜索接口（与 index 方法功能相同）
+     * 与 `GET /v3/search` 完全等价，只是把参数放在请求体里——参数多、
+     * 尤其是 page_refs / related_id 这类数组时，URL 放不下。
      *
-     * @route POST /api/search
+     * @unauthenticated
      *
-     * @param JSON: 搜索参数（与 index 方法参数相同）
-     * @return JsonResponse
+     * @bodyParam q string required 搜索关键词
+     * @bodyParam search_mode string 检索模式。Enum: fuzzy,exact,semantic,hybrid Default: fuzzy
+     * @bodyParam resource_type string 资源类型
+     * @bodyParam granularity string 文档颗粒度
+     * @bodyParam language string 语言
+     * @bodyParam category string 文档分类，逗号分隔
+     * @bodyParam tags string 标签，逗号分隔
+     * @bodyParam page_refs array 页码标记
+     * @bodyParam related_id array 关联 id
+     * @bodyParam author string 作者或译者
+     * @bodyParam channel string 来源 channel
+     * @bodyParam page integer 页码。Default: 1
+     * @bodyParam page_size integer 每页数量，上限 100。Default: 20
      */
     public function store(Request $request)
     {
@@ -120,18 +133,21 @@ class SearchPlusController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * 按 id 取单条检索结果
      *
-     * @param  int  $id
-     * @return Response
+     * 直接从 OpenSearch 按文档 id 取回，不走检索。取不到返回 404。
+     *
+     * @unauthenticated
+     *
+     * @urlParam search string required OpenSearch 文档 id
      */
     public function show($id)
     {
         //
         try {
-            return $this->ok(HitItemDTO::fromArray($this->searchService->get($id)));
+            return V3Resource::make(HitItemDTO::fromArray($this->searchService->get($id)));
         } catch (\Throwable $th) {
-            return $this->error("no such index {$id}", 404, 404);
+            abort(404, __('site.not_found'));
         }
     }
 

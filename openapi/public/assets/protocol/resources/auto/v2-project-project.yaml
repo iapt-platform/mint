@@ -1,0 +1,285 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-project-project.yaml
+get:
+  summary: 查看单个工程
+  tags:
+    - project
+  operationId: get_api_v2_project_project_
+  description: |-
+    通过路由模型绑定按工程 uid 取出工程并返回详情，工程不存在时返回 404。
+    该接口不做登录与权限校验，私有工程同样可被读取。
+
+    实现：`ProjectController@show`
+  parameters:
+    -
+      name: project
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '工程 uid'
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  type:
+                    type: integer
+                  weight:
+                    type: string
+                  description:
+                    type: string
+                  executors_id:
+                    type: integer
+                  parent_id:
+                    type: integer
+                  parent:
+                    type: string
+                  path:
+                    type: string
+                  owner:
+                    type: string
+                  editor:
+                    type: string
+                  privacy:
+                    type: string
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+put:
+  summary: 修改工程
+  tags:
+    - project
+  operationId: put_api_v2_project_project_
+  description: |-
+    整体覆盖式更新：title、description、parent_id、privacy 会无条件按请求体写入，
+    未传的字段会被置空，调用方需回传完整数据。必须登录（否则 401），
+    且只有工程拥有者本人可以修改，否则返回 403。
+    传入合法的 parent_id 时会按父工程重新计算 path。
+
+    实现：`ProjectController@update`
+  parameters:
+    -
+      name: project
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '工程 uid'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            title:
+              type: string
+              description: 工程标题
+            description:
+              type: string
+              description: 工程描述
+            parent_id:
+              type: string
+              description: '父工程 uid；为合法 uuid 时重算 path'
+            privacy:
+              type: string
+              description: '隐私性：public 表示社区可见'
+              enum:
+                - private
+                - public
+              default: private
+          required:
+            - title
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  type:
+                    type: integer
+                  weight:
+                    type: string
+                  description:
+                    type: string
+                  executors_id:
+                    type: integer
+                  parent_id:
+                    type: integer
+                  parent:
+                    type: string
+                  path:
+                    type: string
+                  owner:
+                    type: string
+                  editor:
+                    type: string
+                  privacy:
+                    type: string
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+patch:
+  summary: 修改工程
+  tags:
+    - project
+  operationId: patch_api_v2_project_project_
+  description: |-
+    整体覆盖式更新：title、description、parent_id、privacy 会无条件按请求体写入，
+    未传的字段会被置空，调用方需回传完整数据。必须登录（否则 401），
+    且只有工程拥有者本人可以修改，否则返回 403。
+    传入合法的 parent_id 时会按父工程重新计算 path。
+
+    实现：`ProjectController@update`
+  parameters:
+    -
+      name: project
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '工程 uid'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            title:
+              type: string
+              description: 工程标题
+            description:
+              type: string
+              description: 工程描述
+            parent_id:
+              type: string
+              description: '父工程 uid；为合法 uuid 时重算 path'
+            privacy:
+              type: string
+              description: '隐私性：public 表示社区可见'
+              enum:
+                - private
+                - public
+              default: private
+          required:
+            - title
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  type:
+                    type: integer
+                  weight:
+                    type: string
+                  description:
+                    type: string
+                  executors_id:
+                    type: integer
+                  parent_id:
+                    type: integer
+                  parent:
+                    type: string
+                  path:
+                    type: string
+                  owner:
+                    type: string
+                  editor:
+                    type: string
+                  privacy:
+                    type: string
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+delete:
+  summary: 删除工程
+  tags:
+    - project
+  operationId: delete_api_v2_project_project_
+  description: |-
+    尚未实现：方法体为空，不会删除任何数据，也不返回任何内容（响应为 200 空 body）。
+
+    实现：`ProjectController@destroy`
+  parameters:
+    -
+      name: project
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '工程 uid'
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

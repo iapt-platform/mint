@@ -47,22 +47,24 @@ it('pages a chapter by paragraph count', function () {
     $channel = makeChapterFixture();
     $url = "/api/v3/tipitaka-read-chapter?book=9002&para=1&channel={$channel}&pagesize=2p";
 
-    $first = $this->getJson($url)->assertOk()->json('data');
-    expect(array_column($first['items'], 'para'))->toBe([1, 2]);
-    expect($first['pagination'])->toMatchArray([
-        'page' => 1,
-        'pageSize' => '2p',
+    $first = $this->getJson($url)->assertOk()->json();
+    expect(array_column($first['data'], 'para'))->toBe([1, 2]);
+    expect($first['meta'])->toMatchArray([
+        'current_page' => 1,
+        'page_size' => '2p',
         'total' => 5,
-        'from' => 1,
-        'to' => 2,
-        'hasMore' => true,
+        'first_para' => 1,
+        'last_para' => 2,
+        'has_more' => true,
     ]);
 
-    $last = $this->getJson($url.'&page=3')->assertOk()->json('data');
-    expect(array_column($last['items'], 'para'))->toBe([5]);
-    expect($last['pagination']['hasMore'])->toBeFalse();
+    $last = $this->getJson($url.'&page=3')->assertOk()->json();
+    expect(array_column($last['data'], 'para'))->toBe([5]);
+    expect($last['meta']['has_more'])->toBeFalse();
 
-    $this->getJson($url.'&page=4')->assertJsonPath('ok', false);
+    $this->getJson($url.'&page=4')
+        ->assertStatus(422)
+        ->assertJsonPath('errors.page.0', __('site.invalid_parameter'));
 });
 
 it('pages a chapter by byte size using the lenght column', function () {
@@ -70,19 +72,19 @@ it('pages a chapter by byte size using the lenght column', function () {
     // 每段 100 字节，250b 累加到第 3 段才超过上限
     $url = "/api/v3/tipitaka-read-chapter?book=9002&para=1&channel={$channel}&pagesize=250b";
 
-    $first = $this->getJson($url)->assertOk()->json('data');
-    expect(array_column($first['items'], 'para'))->toBe([1, 2, 3]);
+    $first = $this->getJson($url)->assertOk()->json();
+    expect(array_column($first['data'], 'para'))->toBe([1, 2, 3]);
 
-    $second = $this->getJson($url.'&page=2')->assertOk()->json('data');
-    expect(array_column($second['items'], 'para'))->toBe([4, 5]);
-    expect($second['pagination']['hasMore'])->toBeFalse();
+    $second = $this->getJson($url.'&page=2')->assertOk()->json();
+    expect(array_column($second['data'], 'para'))->toBe([4, 5]);
+    expect($second['meta']['has_more'])->toBeFalse();
 });
 
 it('returns at least one paragraph when it alone exceeds the byte size', function () {
     $channel = makeChapterFixture();
     $items = $this->getJson("/api/v3/tipitaka-read-chapter?book=9002&para=1&channel={$channel}&pagesize=1b")
         ->assertOk()
-        ->json('data.items');
+        ->json('data');
 
     expect(array_column($items, 'para'))->toBe([1]);
 });
@@ -91,7 +93,7 @@ it('accepts the id form and the view parameter', function () {
     $channel = makeChapterFixture();
     $items = $this->getJson("/api/v3/tipitaka-read-chapter/9002-1?channel={$channel}&pagesize=1p&view=all")
         ->assertOk()
-        ->json('data.items');
+        ->json('data');
 
     expect($items)->toHaveCount(1);
     expect($items[0])->toHaveKeys(['para', 'display', 'sentences']);
@@ -99,12 +101,16 @@ it('accepts the id form and the view parameter', function () {
 
 it('rejects a bad id, channel, pagesize or unknown chapter', function () {
     $channel = makeChapterFixture();
+    // v3 用真实状态码 + RFC 9457 Problem Details，不再看 ok 字段
     $this->getJson("/api/v3/tipitaka-read-chapter/bad-id?channel={$channel}")
-        ->assertJsonPath('ok', false);
+        ->assertStatus(422)
+        ->assertJsonStructure(['type', 'title', 'status', 'detail']);
     $this->getJson('/api/v3/tipitaka-read-chapter/9002-1?channel=not-a-uuid')
-        ->assertJsonPath('ok', false);
+        ->assertStatus(422)
+        ->assertJsonPath('errors.channel.0', __('site.invalid_parameter'));
     $this->getJson("/api/v3/tipitaka-read-chapter?book=9002&para=99&channel={$channel}")
-        ->assertJsonPath('ok', false);
+        ->assertStatus(404)
+        ->assertJsonPath('title', 'Resource not found.');
     $this->getJson("/api/v3/tipitaka-read-chapter?book=9002&para=1&channel={$channel}&pagesize=20000")
         ->assertStatus(422);
 });

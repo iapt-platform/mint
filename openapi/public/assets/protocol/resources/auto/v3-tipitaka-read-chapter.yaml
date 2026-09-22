@@ -1,0 +1,89 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-tipitaka-read-chapter.yaml
+get:
+  summary: 按章节读取译文
+  tags:
+    - tipitaka-read-chapter
+  operationId: get_api_v3_tipitaka_read_chapter
+  description: |-
+    给定 book + 段落号，定位它所属的章节，返回该章节的段落内容并分页。
+    章节不存在或没有内容返回 404。
+    分页是手工做的：按字节时从头累加 `pali_texts.lenght` 逐页推进，所以 meta
+    里用 `page_size`（领域语法，非整数）而不是框架的 `per_page`，并附带
+    `first_para` / `last_para` / `has_more`。
+
+    实现：`TipitakaReadChapterController@index`
+  parameters:
+    -
+      name: book
+      in: query
+      schema:
+        type: integer
+      description: '典籍 id'
+      required: true
+    -
+      name: para
+      in: query
+      schema:
+        type: integer
+      description: 章节内任一段落号，用于定位章节
+      required: true
+    -
+      name: channel
+      in: query
+      schema:
+        type: string
+      description: '译文 channel 的 uuid'
+      required: true
+    -
+      name: format
+      in: query
+      schema:
+        type: string
+        enum:
+          - html
+          - markdown
+          - react
+          - text
+        default: html
+      description: 内容格式
+    -
+      name: view
+      in: query
+      schema:
+        type: string
+        enum:
+          - display
+          - sentences
+          - all
+        default: display
+      description: '输出口径：display 整段合并，sentences 逐句，all 两者都给'
+    -
+      name: pagesize
+      in: query
+      schema:
+        type: string
+        default: 20000b
+      description: '每页大小，两种写法：`20000b` 按字节累加段落长度 （每页至少一段），`10p` 按段落数'
+    -
+      name: page
+      in: query
+      schema:
+        type: integer
+        default: '1'
+      description: '页码，从 1 开始。超出范围返回 422'
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+              meta:
+                $ref: '../../main.yaml#/components/schemas/PaginationMeta'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

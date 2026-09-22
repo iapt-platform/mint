@@ -16,6 +16,11 @@ return [
     'keywords' => ['pali', 'buddhistm'],
     'description' => 'wikipali',
     'copyright' => 'iapt 2022',
+
+    // 停机维护开关（.stop 文件）触发时，API 的 RFC 9457 detail 文案
+    'maintenance' => 'The service is under scheduled maintenance.',
+    'not_found' => 'The requested resource does not exist.',
+    'invalid_parameter' => 'Invalid parameter.',
     'author.name' => 'iapt',
     'author.email' => 'visuddhindand@gmail.com',
     'nav' => [

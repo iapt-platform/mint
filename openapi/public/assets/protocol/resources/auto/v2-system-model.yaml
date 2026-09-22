@@ -1,0 +1,109 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-system-model.yaml
+get:
+  summary: '列出 system-model'
+  tags:
+    - system-model
+  operationId: get_api_v2_system_model
+  description: 实现：`SysModelController@index`
+  parameters:
+    -
+      name: view
+      in: query
+      schema:
+        type: string
+        default: wbw
+    -
+      name: search
+      in: query
+      description: 搜索关键字
+      schema:
+        type: string
+    -
+      name: order
+      in: query
+      description: 排序字段
+      schema:
+        type: string
+    -
+      name: dir
+      in: query
+      description: 排序方向
+      schema:
+        type: string
+        enum:
+          - desc
+          - asc
+    -
+      name: limit
+      in: query
+      description: 每页记录数
+      schema:
+        type: number
+    -
+      name: offset
+      in: query
+      description: 从第几条记录开始提取
+      schema:
+        type: number
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  rows:
+                    type: array
+                    items:
+                      type: object
+                      properties: { uid: { type: string }, name: { type: string }, description: { type: string }, url: { type: string }, model: { type: string }, privacy: { type: string }, owner_id: { type: integer }, editor_id: { type: integer }, created_at: { type: string }, updated_at: { type: string }, user: { type: string }, key: { type: string }, system_prompt: { type: string } }
+                  count:
+                    type: integer
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+post:
+  summary: '新建 system-model'
+  tags:
+    - system-model
+  operationId: post_api_v2_system_model
+  description: 实现：`SysModelController@store`
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            view:
+              type: string
+              default: wbw
+            models:
+              type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

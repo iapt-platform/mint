@@ -1,41 +1,697 @@
-openapi: 3.0.0
+# 由 openapi/scripts/generate.php 生成，请勿手改
+openapi: 3.0.3
 info:
-  title: MINT API
-  description: International Academy Of Pali Tipitaka(国际巴利三藏学院)
-  version: 2022.12.8
+  title: 'MINT API'
+  description: |-
+    International Academy Of Pali Tipitaka(国际巴利三藏学院)
+
+    由 `php openapi/scripts/generate.php` 依据 api-v13 的路由与控制器源码生成。
+    响应统一封装为 `{ok, message, data}`；`ok=false` 时 `message` 为错误信息。
+  version: 2026.9.21
 servers:
-  - url: https://staging.wikipali.org/api/v2
-    description: Internal staging server for testing
-  - url: https://www.wikipali.org/api/v2
-    description: Main production server
-  - url: https://www.wikipali.cc/api/v2
-    description: Main production server in china
-  - url: http://127.0.0.1:8000/api/v2
-    description: local dev
+  -
+    url: /api
+    description: '同源（预览页里 Try it out 走 vite 代理，避免跨域）'
+  -
+    url: 'http://127.0.0.1:8000/api'
+    description: '本地开发（直连，浏览器里会被 CORS 挡住）'
+  -
+    url: 'https://staging.wikipali.org/api'
+    description: 测试
+  -
+    url: 'https://www.wikipali.org/api'
+    description: 生产
+  -
+    url: 'https://www.wikipali.cc/api'
+    description: 生产（中国）
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: '用户 token 或 access token'
+  responses:
+    Unauthorized:
+      description: 未登录或无权限
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Envelope'
+    ProblemUnauthorized:
+      description: 未登录或无权限（v3）
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+    ProblemValidation:
+      description: 参数校验失败（v3）
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+    ValidationError:
+      description: 参数校验失败
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message: { type: string }
+              errors: { type: object, additionalProperties: { type: array, items: { type: string } } }
+  schemas:
+    ProblemDetails:
+      type: object
+      description: |-
+        RFC 9457 Problem Details，v3 端点的错误响应体。
+        由 bootstrap/app.php 的异常处理器统一渲染，控制器不自己拼。
+        media type 是 application/problem+json。
+      properties:
+        type:
+          type: string
+          description: '问题类型标识，形如 urn:problem:not-found'
+          example: 'urn:problem:not-found'
+        title:
+          type: string
+          description: 稳定的英文摘要，同类问题恒定，供机器识别
+        status:
+          type: integer
+        detail:
+          type: string
+          description: '面向人的文案，已本地化；5xx 在生产环境会省略以免泄露内部信息'
+        instance:
+          type: string
+          description: '出问题的请求 URI'
+        errors:
+          type: object
+          description: '字段级校验错误，仅 422 时出现'
+          additionalProperties:
+            type: array
+            items:
+              type: string
+      required:
+        - type
+        - title
+        - status
+    PaginationMeta:
+      type: object
+      description: |-
+        v3 列表接口的分页信息，由 Laravel paginator 生成。
+        刻意不含 links / path：那些是 APP_URL 拼出的绝对地址，反代下会拼错，前端也用不到。
+        手工分页的接口会附加自己的字段（如 has_more / first_para / page_size）。
+      properties:
+        current_page:
+          type: integer
+        per_page:
+          type: integer
+        total:
+          type: integer
+        last_page:
+          type: integer
+        from:
+          type: integer
+          nullable: true
+        to:
+          type: integer
+          nullable: true
+      required:
+        - current_page
+        - total
+    Envelope:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        message:
+          type: string
+        data:
+          description: 业务数据，形状随接口而定
+security:
+  -
+    bearerAuth: []
 paths:
-  /users:
-    $ref: "./resources/auth/users/index.yaml"
-  /users/sign-in:
-    $ref: "./resources/auth/users/sign-in.yaml"
-  /channel:
-    $ref: "./resources/channel/index.yaml"
-  /channel/{channelId}:
-    $ref: "./resources/channel/show.yaml"
-  /palitext:
-    $ref: "./resources/corpus/pali-text/index.yaml"
-  /discussion:
-    $ref: "./resources/discussion/index.yaml"
-  /channel-io:
-    $ref: "./resources/io/channel/export.yaml"
-  /chapter-io:
-    $ref: "./resources/io/chapter/export.yaml"
-  /sentence-io:
-    $ref: "./resources/io/sentence/export.yaml"
-  /progress:
-    $ref: "./resources/progress/index.yaml"
-  /sentence:
-    $ref: "./resources/sentence/index.yaml"
-  /corpus:
-    $ref: "./resources/corpus/corpus/index.yaml"
-  /chapter-index:
-    $ref: "./resources/chapter-index/index.yaml"
+  /api/sentence/progress/daily/image:
+    $ref: ./resources/auto/api-sentence-progress-daily-image.yaml
+  /api/sentence/progress/image:
+    $ref: ./resources/auto/api-sentence-progress-image.yaml
+  '/ops/update-pali-synonyms/{version}':
+    $ref: ./resources/auto/ops-update-pali-synonyms-version.yaml
+  /v2/access-token:
+    $ref: ./resources/auto/v2-access-token.yaml
+  '/v2/access-token/{access_token}':
+    $ref: ./resources/auto/v2-access-token-access-token.yaml
+  /v2/ai-assistant:
+    $ref: ./resources/auto/v2-ai-assistant.yaml
+  '/v2/ai-assistant/{ai_assistant}':
+    $ref: ./resources/auto/v2-ai-assistant-ai-assistant.yaml
+  /v2/ai-model:
+    $ref: ./resources/auto/v2-ai-model.yaml
+  '/v2/ai-model-token/{ai_model}':
+    $ref: ./resources/auto/v2-ai-model-token-ai-model.yaml
+  '/v2/ai-model/{ai_model}':
+    $ref: ./resources/auto/v2-ai-model-ai-model.yaml
+  /v2/ai-translate:
+    $ref: ./resources/auto/v2-ai-translate.yaml
+  '/v2/ai-translate/{ai_translate}':
+    $ref: ./resources/auto/v2-ai-translate-ai-translate.yaml
+  /v2/anthology:
+    $ref: ./resources/auto/v2-anthology.yaml
+  /v2/anthology-my-number:
+    $ref: ./resources/auto/v2-anthology-my-number.yaml
+  '/v2/anthology/{anthology}':
+    $ref: ./resources/auto/v2-anthology-anthology.yaml
+  /v2/api:
+    $ref: ./resources/auto/v2-api.yaml
+  '/v2/api/{api}':
+    $ref: ./resources/auto/v2-api-api.yaml
+  /v2/article:
+    $ref: ./resources/auto/v2-article.yaml
+  /v2/article-fts:
+    $ref: ./resources/auto/v2-article-fts.yaml
+  '/v2/article-fts/{article_ft}':
+    $ref: ./resources/auto/v2-article-fts-article-ft.yaml
+  /v2/article-map:
+    $ref: ./resources/auto/v2-article-map.yaml
+  '/v2/article-map/{article_map}':
+    $ref: ./resources/auto/v2-article-map-article-map.yaml
+  /v2/article-my-number:
+    $ref: ./resources/auto/v2-article-my-number.yaml
+  /v2/article-nav:
+    $ref: ./resources/auto/v2-article-nav.yaml
+  '/v2/article-nav/{article_nav}':
+    $ref: ./resources/auto/v2-article-nav-article-nav.yaml
+  '/v2/article-preview/{id}':
+    $ref: ./resources/auto/v2-article-preview-id.yaml
+  /v2/article-progress:
+    $ref: ./resources/auto/v2-article-progress.yaml
+  '/v2/article-progress/{article_progress}':
+    $ref: ./resources/auto/v2-article-progress-article-progress.yaml
+  '/v2/article/{article}':
+    $ref: ./resources/auto/v2-article-article.yaml
+  /v2/attachment:
+    $ref: ./resources/auto/v2-attachment.yaml
+  '/v2/attachment/{attachment}':
+    $ref: ./resources/auto/v2-attachment-attachment.yaml
+  /v2/attachments:
+    $ref: ./resources/auto/v2-attachments.yaml
+  '/v2/attachments/{attachment}':
+    $ref: ./resources/auto/v2-attachments-attachment.yaml
+  /v2/auth/current:
+    $ref: ./resources/auto/v2-auth-current.yaml
+  /v2/auth/forgot-password:
+    $ref: ./resources/auto/v2-auth-forgot-password.yaml
+  '/v2/auth/forgot-password/{forgot_password}':
+    $ref: ./resources/auto/v2-auth-forgot-password-forgot-password.yaml
+  /v2/auth/reset-password:
+    $ref: ./resources/auto/v2-auth-reset-password.yaml
+  '/v2/auth/reset-password/{reset_password}':
+    $ref: ./resources/auto/v2-auth-reset-password-reset-password.yaml
+  /v2/book-title:
+    $ref: ./resources/auto/v2-book-title.yaml
+  '/v2/book-title/{book_title}':
+    $ref: ./resources/auto/v2-book-title-book-title.yaml
+  /v2/case:
+    $ref: ./resources/auto/v2-case.yaml
+  '/v2/case/{case}':
+    $ref: ./resources/auto/v2-case-case.yaml
+  /v2/channel:
+    $ref: ./resources/auto/v2-channel.yaml
+  /v2/channel-io:
+    $ref: ./resources/auto/v2-channel-io.yaml
+  '/v2/channel-io/{channel_io}':
+    $ref: ./resources/auto/v2-channel-io-channel-io.yaml
+  /v2/channel-my-number:
+    $ref: ./resources/auto/v2-channel-my-number.yaml
+  '/v2/channel-name/{name}':
+    $ref: ./resources/auto/v2-channel-name-name.yaml
+  /v2/channel-progress:
+    $ref: ./resources/auto/v2-channel-progress.yaml
+  '/v2/channel/{channel}':
+    $ref: ./resources/auto/v2-channel-channel.yaml
+  /v2/chapter:
+    $ref: ./resources/auto/v2-chapter.yaml
+  /v2/chapter-content:
+    $ref: ./resources/auto/v2-chapter-content.yaml
+  '/v2/chapter-content/{chapter_content}':
+    $ref: ./resources/auto/v2-chapter-content-chapter-content.yaml
+  /v2/chapter-index:
+    $ref: ./resources/auto/v2-chapter-index.yaml
+  '/v2/chapter-index/{chapter_index}':
+    $ref: ./resources/auto/v2-chapter-index-chapter-index.yaml
+  /v2/chapter-io:
+    $ref: ./resources/auto/v2-chapter-io.yaml
+  '/v2/chapter-io/{chapter_io}':
+    $ref: ./resources/auto/v2-chapter-io-chapter-io.yaml
+  '/v2/chapter/{chapter}':
+    $ref: ./resources/auto/v2-chapter-chapter.yaml
+  /v2/chat-messages:
+    $ref: ./resources/auto/v2-chat-messages.yaml
+  '/v2/chat-messages/{chat_message}':
+    $ref: ./resources/auto/v2-chat-messages-chat-message.yaml
+  /v2/chats:
+    $ref: ./resources/auto/v2-chats.yaml
+  '/v2/chats/{chat}':
+    $ref: ./resources/auto/v2-chats-chat.yaml
+  /v2/command:
+    $ref: ./resources/auto/v2-command.yaml
+  '/v2/command/{command}':
+    $ref: ./resources/auto/v2-command-command.yaml
+  /v2/compound:
+    $ref: ./resources/auto/v2-compound.yaml
+  '/v2/compound/{compound}':
+    $ref: ./resources/auto/v2-compound-compound.yaml
+  /v2/corpus:
+    $ref: ./resources/auto/v2-corpus.yaml
+  '/v2/corpus-chapter/{id}':
+    $ref: ./resources/auto/v2-corpus-chapter-id.yaml
+  '/v2/corpus-sent/{id}':
+    $ref: ./resources/auto/v2-corpus-sent-id.yaml
+  '/v2/corpus-sentences/{type}/{id}':
+    $ref: ./resources/auto/v2-corpus-sentences-type-id.yaml
+  '/v2/corpus/{corpu}':
+    $ref: ./resources/auto/v2-corpus-corpu.yaml
+  /v2/course:
+    $ref: ./resources/auto/v2-course.yaml
+  /v2/course-curr:
+    $ref: ./resources/auto/v2-course-curr.yaml
+  /v2/course-member:
+    $ref: ./resources/auto/v2-course-member.yaml
+  /v2/course-member-export:
+    $ref: ./resources/auto/v2-course-member-export.yaml
+  '/v2/course-member/{course_member}':
+    $ref: ./resources/auto/v2-course-member-course-member.yaml
+  /v2/course-member_set-channel:
+    $ref: ./resources/auto/v2-course-member-set-channel.yaml
+  /v2/course-my-course:
+    $ref: ./resources/auto/v2-course-my-course.yaml
+  '/v2/course/{course}':
+    $ref: ./resources/auto/v2-course-course.yaml
+  /v2/dict:
+    $ref: ./resources/auto/v2-dict.yaml
+  /v2/dict-info:
+    $ref: ./resources/auto/v2-dict-info.yaml
+  '/v2/dict-info/{dict_info}':
+    $ref: ./resources/auto/v2-dict-info-dict-info.yaml
+  /v2/dict-meaning:
+    $ref: ./resources/auto/v2-dict-meaning.yaml
+  '/v2/dict-meaning/{dict_meaning}':
+    $ref: ./resources/auto/v2-dict-meaning-dict-meaning.yaml
+  /v2/dict-preference:
+    $ref: ./resources/auto/v2-dict-preference.yaml
+  '/v2/dict-preference/{dict_preference}':
+    $ref: ./resources/auto/v2-dict-preference-dict-preference.yaml
+  /v2/dict-statistic:
+    $ref: ./resources/auto/v2-dict-statistic.yaml
+  '/v2/dict-statistic/{dict_statistic}':
+    $ref: ./resources/auto/v2-dict-statistic-dict-statistic.yaml
+  /v2/dict-vocabulary:
+    $ref: ./resources/auto/v2-dict-vocabulary.yaml
+  '/v2/dict-vocabulary/{dict_vocabulary}':
+    $ref: ./resources/auto/v2-dict-vocabulary-dict-vocabulary.yaml
+  '/v2/dict/{dict}':
+    $ref: ./resources/auto/v2-dict-dict.yaml
+  /v2/discussion:
+    $ref: ./resources/auto/v2-discussion.yaml
+  '/v2/discussion-anchor/{id}':
+    $ref: ./resources/auto/v2-discussion-anchor-id.yaml
+  /v2/discussion-count:
+    $ref: ./resources/auto/v2-discussion-count.yaml
+  '/v2/discussion-count/{discussion_count}':
+    $ref: ./resources/auto/v2-discussion-count-discussion-count.yaml
+  '/v2/discussion/{discussion}':
+    $ref: ./resources/auto/v2-discussion-discussion.yaml
+  /v2/editable-sentence:
+    $ref: ./resources/auto/v2-editable-sentence.yaml
+  '/v2/editable-sentence/{editable_sentence}':
+    $ref: ./resources/auto/v2-editable-sentence-editable-sentence.yaml
+  /v2/email-certification:
+    $ref: ./resources/auto/v2-email-certification.yaml
+  '/v2/email-certification/{email_certification}':
+    $ref: ./resources/auto/v2-email-certification-email-certification.yaml
+  /v2/exercise:
+    $ref: ./resources/auto/v2-exercise.yaml
+  '/v2/exercise/{exercise}':
+    $ref: ./resources/auto/v2-exercise-exercise.yaml
+  /v2/export:
+    $ref: ./resources/auto/v2-export.yaml
+  '/v2/export/{export}':
+    $ref: ./resources/auto/v2-export-export.yaml
+  /v2/export_wbw:
+    $ref: ./resources/auto/v2-export-wbw.yaml
+  /v2/grammar-guide:
+    $ref: ./resources/auto/v2-grammar-guide.yaml
+  '/v2/grammar-guide/{grammar_guide}':
+    $ref: ./resources/auto/v2-grammar-guide-grammar-guide.yaml
+  /v2/group:
+    $ref: ./resources/auto/v2-group.yaml
+  /v2/group-member:
+    $ref: ./resources/auto/v2-group-member.yaml
+  '/v2/group-member/{group_member}':
+    $ref: ./resources/auto/v2-group-member-group-member.yaml
+  /v2/group-my-number:
+    $ref: ./resources/auto/v2-group-my-number.yaml
+  '/v2/group/{group}':
+    $ref: ./resources/auto/v2-group-group.yaml
+  /v2/health-check:
+    $ref: ./resources/auto/v2-health-check.yaml
+  '/v2/health-check/{health_check}':
+    $ref: ./resources/auto/v2-health-check-health-check.yaml
+  /v2/heartbeat:
+    $ref: ./resources/auto/v2-heartbeat.yaml
+  '/v2/heartbeat/{heartbeat}':
+    $ref: ./resources/auto/v2-heartbeat-heartbeat.yaml
+  /v2/interactive:
+    $ref: ./resources/auto/v2-interactive.yaml
+  '/v2/interactive/{interactive}':
+    $ref: ./resources/auto/v2-interactive-interactive.yaml
+  /v2/invite:
+    $ref: ./resources/auto/v2-invite.yaml
+  '/v2/invite/{invite}':
+    $ref: ./resources/auto/v2-invite-invite.yaml
+  /v2/like:
+    $ref: ./resources/auto/v2-like.yaml
+  '/v2/like/{like}':
+    $ref: ./resources/auto/v2-like-like.yaml
+  /v2/milestone:
+    $ref: ./resources/auto/v2-milestone.yaml
+  '/v2/milestone/{milestone}':
+    $ref: ./resources/auto/v2-milestone-milestone.yaml
+  /v2/mock/openai/chat/completions:
+    $ref: ./resources/auto/v2-mock-openai-chat-completions.yaml
+  /v2/mock/openai/completions:
+    $ref: ./resources/auto/v2-mock-openai-completions.yaml
+  /v2/mock/openai/models:
+    $ref: ./resources/auto/v2-mock-openai-models.yaml
+  /v2/model-log:
+    $ref: ./resources/auto/v2-model-log.yaml
+  '/v2/model-log/{model_log}':
+    $ref: ./resources/auto/v2-model-log-model-log.yaml
+  /v2/nav-article:
+    $ref: ./resources/auto/v2-nav-article.yaml
+  '/v2/nav-article/{nav_article}':
+    $ref: ./resources/auto/v2-nav-article-nav-article.yaml
+  /v2/nav-cs-para:
+    $ref: ./resources/auto/v2-nav-cs-para.yaml
+  '/v2/nav-cs-para/{nav_cs_para}':
+    $ref: ./resources/auto/v2-nav-cs-para-nav-cs-para.yaml
+  /v2/nav-page:
+    $ref: ./resources/auto/v2-nav-page.yaml
+  '/v2/nav-page/{nav_page}':
+    $ref: ./resources/auto/v2-nav-page-nav-page.yaml
+  /v2/nissaya-card:
+    $ref: ./resources/auto/v2-nissaya-card.yaml
+  '/v2/nissaya-card/{nissaya_card}':
+    $ref: ./resources/auto/v2-nissaya-card-nissaya-card.yaml
+  /v2/nissaya-cover:
+    $ref: ./resources/auto/v2-nissaya-cover.yaml
+  '/v2/nissaya-cover/{nissaya_cover}':
+    $ref: ./resources/auto/v2-nissaya-cover-nissaya-cover.yaml
+  /v2/nissaya-ending:
+    $ref: ./resources/auto/v2-nissaya-ending.yaml
+  /v2/nissaya-ending-export:
+    $ref: ./resources/auto/v2-nissaya-ending-export.yaml
+  /v2/nissaya-ending-import:
+    $ref: ./resources/auto/v2-nissaya-ending-import.yaml
+  /v2/nissaya-ending-vocabulary:
+    $ref: ./resources/auto/v2-nissaya-ending-vocabulary.yaml
+  '/v2/nissaya-ending/{nissaya_ending}':
+    $ref: ./resources/auto/v2-nissaya-ending-nissaya-ending.yaml
+  /v2/notification:
+    $ref: ./resources/auto/v2-notification.yaml
+  '/v2/notification/{notification}':
+    $ref: ./resources/auto/v2-notification-notification.yaml
+  /v2/offline-index:
+    $ref: ./resources/auto/v2-offline-index.yaml
+  '/v2/offline-index/{offline_index}':
+    $ref: ./resources/auto/v2-offline-index-offline-index.yaml
+  /v2/pali-book-category:
+    $ref: ./resources/auto/v2-pali-book-category.yaml
+  '/v2/pali-book-category/{pali_book_category}':
+    $ref: ./resources/auto/v2-pali-book-category-pali-book-category.yaml
+  /v2/pali-search-data:
+    $ref: ./resources/auto/v2-pali-search-data.yaml
+  '/v2/pali-search-data/{pali_search_datum}':
+    $ref: ./resources/auto/v2-pali-search-data-pali-search-datum.yaml
+  /v2/pali-word-index:
+    $ref: ./resources/auto/v2-pali-word-index.yaml
+  '/v2/pali-word-index/{pali_word_index}':
+    $ref: ./resources/auto/v2-pali-word-index-pali-word-index.yaml
+  /v2/palitext:
+    $ref: ./resources/auto/v2-palitext.yaml
+  '/v2/palitext/{palitext}':
+    $ref: ./resources/auto/v2-palitext-palitext.yaml
+  /v2/para-info:
+    $ref: ./resources/auto/v2-para-info.yaml
+  '/v2/para-info/{para_info}':
+    $ref: ./resources/auto/v2-para-info-para-info.yaml
+  /v2/paragraph-content:
+    $ref: ./resources/auto/v2-paragraph-content.yaml
+  '/v2/paragraph-content/{paragraph_content}':
+    $ref: ./resources/auto/v2-paragraph-content-paragraph-content.yaml
+  /v2/pg-pali-dict-download:
+    $ref: ./resources/auto/v2-pg-pali-dict-download.yaml
+  '/v2/pg-pali-dict-download/{pg_pali_dict_download}':
+    $ref: ./resources/auto/v2-pg-pali-dict-download-pg-pali-dict-download.yaml
+  /v2/progress:
+    $ref: ./resources/auto/v2-progress.yaml
+  /v2/progress-img:
+    $ref: ./resources/auto/v2-progress-img.yaml
+  '/v2/progress-img/{progress_img}':
+    $ref: ./resources/auto/v2-progress-img-progress-img.yaml
+  '/v2/progress/{progress}':
+    $ref: ./resources/auto/v2-progress-progress.yaml
+  /v2/project:
+    $ref: ./resources/auto/v2-project.yaml
+  /v2/project-tree:
+    $ref: ./resources/auto/v2-project-tree.yaml
+  '/v2/project-tree/{project_tree}':
+    $ref: ./resources/auto/v2-project-tree-project-tree.yaml
+  '/v2/project/{project}':
+    $ref: ./resources/auto/v2-project-project.yaml
+  /v2/recent:
+    $ref: ./resources/auto/v2-recent.yaml
+  '/v2/recent/{recent}':
+    $ref: ./resources/auto/v2-recent-recent.yaml
+  /v2/related-paragraph:
+    $ref: ./resources/auto/v2-related-paragraph.yaml
+  '/v2/related-paragraph/{related_paragraph}':
+    $ref: ./resources/auto/v2-related-paragraph-related-paragraph.yaml
+  /v2/relation:
+    $ref: ./resources/auto/v2-relation.yaml
+  /v2/relation-export:
+    $ref: ./resources/auto/v2-relation-export.yaml
+  /v2/relation-import:
+    $ref: ./resources/auto/v2-relation-import.yaml
+  '/v2/relation/{relation}':
+    $ref: ./resources/auto/v2-relation-relation.yaml
+  /v2/search:
+    $ref: ./resources/auto/v2-search.yaml
+  /v2/search-book-list:
+    $ref: ./resources/auto/v2-search-book-list.yaml
+  /v2/search-page-number:
+    $ref: ./resources/auto/v2-search-page-number.yaml
+  '/v2/search-page-number/{search_page_number}':
+    $ref: ./resources/auto/v2-search-page-number-search-page-number.yaml
+  /v2/search-pali-wbw:
+    $ref: ./resources/auto/v2-search-pali-wbw.yaml
+  /v2/search-pali-wbw-books:
+    $ref: ./resources/auto/v2-search-pali-wbw-books.yaml
+  '/v2/search-pali-wbw/{search_pali_wbw}':
+    $ref: ./resources/auto/v2-search-pali-wbw-search-pali-wbw.yaml
+  /v2/search-title-index:
+    $ref: ./resources/auto/v2-search-title-index.yaml
+  '/v2/search-title-index/{search_title_index}':
+    $ref: ./resources/auto/v2-search-title-index-search-title-index.yaml
+  /v2/search-word-slice:
+    $ref: ./resources/auto/v2-search-word-slice.yaml
+  '/v2/search-word-slice/{search_word_slouse}':
+    $ref: ./resources/auto/v2-search-word-slice-search-word-slouse.yaml
+  '/v2/search/{search}':
+    $ref: ./resources/auto/v2-search-search.yaml
+  /v2/sent-discussion-tree:
+    $ref: ./resources/auto/v2-sent-discussion-tree.yaml
+  /v2/sent-in-channel:
+    $ref: ./resources/auto/v2-sent-in-channel.yaml
+  '/v2/sent-in-channel/{sent_in_channel}':
+    $ref: ./resources/auto/v2-sent-in-channel-sent-in-channel.yaml
+  /v2/sent-pr-tree:
+    $ref: ./resources/auto/v2-sent-pr-tree.yaml
+  /v2/sent-sim:
+    $ref: ./resources/auto/v2-sent-sim.yaml
+  '/v2/sent-sim/{sent_sim}':
+    $ref: ./resources/auto/v2-sent-sim-sent-sim.yaml
+  /v2/sent_history:
+    $ref: ./resources/auto/v2-sent-history.yaml
+  '/v2/sent_history/{sent_history}':
+    $ref: ./resources/auto/v2-sent-history-sent-history.yaml
+  /v2/sent_history_contribution:
+    $ref: ./resources/auto/v2-sent-history-contribution.yaml
+  /v2/sentence:
+    $ref: ./resources/auto/v2-sentence.yaml
+  /v2/sentence-attachment:
+    $ref: ./resources/auto/v2-sentence-attachment.yaml
+  '/v2/sentence-attachment/{sentence_attachment}':
+    $ref: ./resources/auto/v2-sentence-attachment-sentence-attachment.yaml
+  /v2/sentence-info:
+    $ref: ./resources/auto/v2-sentence-info.yaml
+  '/v2/sentence-info/{sentence_info}':
+    $ref: ./resources/auto/v2-sentence-info-sentence-info.yaml
+  /v2/sentence-io:
+    $ref: ./resources/auto/v2-sentence-io.yaml
+  '/v2/sentence-io/{sentence_io}':
+    $ref: ./resources/auto/v2-sentence-io-sentence-io.yaml
+  '/v2/sentence/{sentence}':
+    $ref: ./resources/auto/v2-sentence-sentence.yaml
+  /v2/sentences-in-chapter:
+    $ref: ./resources/auto/v2-sentences-in-chapter.yaml
+  '/v2/sentences-in-chapter/{sentences_in_chapter}':
+    $ref: ./resources/auto/v2-sentences-in-chapter-sentences-in-chapter.yaml
+  /v2/sentpr:
+    $ref: ./resources/auto/v2-sentpr.yaml
+  '/v2/sentpr/{sentpr}':
+    $ref: ./resources/auto/v2-sentpr-sentpr.yaml
+  /v2/share:
+    $ref: ./resources/auto/v2-share.yaml
+  '/v2/share/{share}':
+    $ref: ./resources/auto/v2-share-share.yaml
+  /v2/sign-in:
+    $ref: ./resources/auto/v2-sign-in.yaml
+  /v2/sign-up:
+    $ref: ./resources/auto/v2-sign-up.yaml
+  '/v2/sign-up/{sign_up}':
+    $ref: ./resources/auto/v2-sign-up-sign-up.yaml
+  /v2/site-info:
+    $ref: ./resources/auto/v2-site-info.yaml
+  '/v2/site-info/{site_info}':
+    $ref: ./resources/auto/v2-site-info-site-info.yaml
+  /v2/snowflake:
+    $ref: ./resources/auto/v2-snowflake.yaml
+  '/v2/snowflake/{snowflake}':
+    $ref: ./resources/auto/v2-snowflake-snowflake.yaml
+  /v2/studio:
+    $ref: ./resources/auto/v2-studio.yaml
+  '/v2/studio/{studio}':
+    $ref: ./resources/auto/v2-studio-studio.yaml
+  /v2/system-model:
+    $ref: ./resources/auto/v2-system-model.yaml
+  '/v2/system-model/{system_model}':
+    $ref: ./resources/auto/v2-system-model-system-model.yaml
+  '/v2/system-term/{lang}/{word}':
+    $ref: ./resources/auto/v2-system-term-lang-word.yaml
+  /v2/tag:
+    $ref: ./resources/auto/v2-tag.yaml
+  /v2/tag-map:
+    $ref: ./resources/auto/v2-tag-map.yaml
+  '/v2/tag-map/{tag_map}':
+    $ref: ./resources/auto/v2-tag-map-tag-map.yaml
+  '/v2/tag/{tag}':
+    $ref: ./resources/auto/v2-tag-tag.yaml
+  /v2/tags-in-chapter:
+    $ref: ./resources/auto/v2-tags-in-chapter.yaml
+  '/v2/tags-in-chapter/{tags_in_chapter}':
+    $ref: ./resources/auto/v2-tags-in-chapter-tags-in-chapter.yaml
+  /v2/task:
+    $ref: ./resources/auto/v2-task.yaml
+  /v2/task-group:
+    $ref: ./resources/auto/v2-task-group.yaml
+  '/v2/task-group/{task_group}':
+    $ref: ./resources/auto/v2-task-group-task-group.yaml
+  /v2/task-status:
+    $ref: ./resources/auto/v2-task-status.yaml
+  '/v2/task-status/{task_status}':
+    $ref: ./resources/auto/v2-task-status-task-status.yaml
+  '/v2/task/{task}':
+    $ref: ./resources/auto/v2-task-task.yaml
+  /v2/term-summary:
+    $ref: ./resources/auto/v2-term-summary.yaml
+  '/v2/term-summary/{term_summary}':
+    $ref: ./resources/auto/v2-term-summary-term-summary.yaml
+  /v2/term-vocabulary:
+    $ref: ./resources/auto/v2-term-vocabulary.yaml
+  '/v2/term-vocabulary/{term_vocabulary}':
+    $ref: ./resources/auto/v2-term-vocabulary-term-vocabulary.yaml
+  /v2/terms:
+    $ref: ./resources/auto/v2-terms.yaml
+  /v2/terms-export:
+    $ref: ./resources/auto/v2-terms-export.yaml
+  '/v2/terms-export/{terms_export}':
+    $ref: ./resources/auto/v2-terms-export-terms-export.yaml
+  /v2/terms-import:
+    $ref: ./resources/auto/v2-terms-import.yaml
+  '/v2/terms/{term}':
+    $ref: ./resources/auto/v2-terms-term.yaml
+  /v2/tipitaka-content:
+    $ref: ./resources/auto/v2-tipitaka-content.yaml
+  '/v2/tipitaka-content/{tipitaka_content}':
+    $ref: ./resources/auto/v2-tipitaka-content-tipitaka-content.yaml
+  /v2/transfer:
+    $ref: ./resources/auto/v2-transfer.yaml
+  '/v2/transfer/{transfer}':
+    $ref: ./resources/auto/v2-transfer-transfer.yaml
+  /v2/user:
+    $ref: ./resources/auto/v2-user.yaml
+  /v2/user-milestone:
+    $ref: ./resources/auto/v2-user-milestone.yaml
+  '/v2/user-milestone/{user_milestone}':
+    $ref: ./resources/auto/v2-user-milestone-user-milestone.yaml
+  /v2/user-operation-daily:
+    $ref: ./resources/auto/v2-user-operation-daily.yaml
+  '/v2/user-operation-daily/{user_operation_daily}':
+    $ref: ./resources/auto/v2-user-operation-daily-user-operation-daily.yaml
+  /v2/user-statistic:
+    $ref: ./resources/auto/v2-user-statistic.yaml
+  '/v2/user-statistic/{user_statistic}':
+    $ref: ./resources/auto/v2-user-statistic-user-statistic.yaml
+  '/v2/user/{user}':
+    $ref: ./resources/auto/v2-user-user.yaml
+  /v2/userdict:
+    $ref: ./resources/auto/v2-userdict.yaml
+  '/v2/userdict/{userdict}':
+    $ref: ./resources/auto/v2-userdict-userdict.yaml
+  /v2/view:
+    $ref: ./resources/auto/v2-view.yaml
+  '/v2/view/{view}':
+    $ref: ./resources/auto/v2-view-view.yaml
+  /v2/vocabulary:
+    $ref: ./resources/auto/v2-vocabulary.yaml
+  '/v2/vocabulary/{vocabulary}':
+    $ref: ./resources/auto/v2-vocabulary-vocabulary.yaml
+  /v2/wbw:
+    $ref: ./resources/auto/v2-wbw.yaml
+  /v2/wbw-sentence:
+    $ref: ./resources/auto/v2-wbw-sentence.yaml
+  '/v2/wbw-sentence/{wbw_sentence}':
+    $ref: ./resources/auto/v2-wbw-sentence-wbw-sentence.yaml
+  '/v2/wbw/{wbw}':
+    $ref: ./resources/auto/v2-wbw-wbw.yaml
+  /v2/wbw_templates:
+    $ref: ./resources/auto/v2-wbw-templates.yaml
+  '/v2/wbw_templates/{wbw_template}':
+    $ref: ./resources/auto/v2-wbw-templates-wbw-template.yaml
+  /v2/wbwlookup:
+    $ref: ./resources/auto/v2-wbwlookup.yaml
+  '/v2/wbwlookup/{wbwlookup}':
+    $ref: ./resources/auto/v2-wbwlookup-wbwlookup.yaml
+  /v2/webhook:
+    $ref: ./resources/auto/v2-webhook.yaml
+  '/v2/webhook/{webhook}':
+    $ref: ./resources/auto/v2-webhook-webhook.yaml
+  /v3/heartbeat:
+    $ref: ./resources/auto/v3-heartbeat.yaml
+  /v3/progress:
+    $ref: ./resources/auto/v3-progress.yaml
+  /v3/search:
+    $ref: ./resources/auto/v3-search.yaml
+  /v3/search-suggest:
+    $ref: ./resources/auto/v3-search-suggest.yaml
+  '/v3/search/{search}':
+    $ref: ./resources/auto/v3-search-search.yaml
+  /v3/tipitaka-read-chapter:
+    $ref: ./resources/auto/v3-tipitaka-read-chapter.yaml
+  '/v3/tipitaka-read-chapter/{tipitaka_read_chapter}':
+    $ref: ./resources/auto/v3-tipitaka-read-chapter-tipitaka-read-chapter.yaml
+  /v3/tipitaka-read-para:
+    $ref: ./resources/auto/v3-tipitaka-read-para.yaml
+  '/v3/tipitaka-read-para/{tipitaka_read_para}':
+    $ref: ./resources/auto/v3-tipitaka-read-para-tipitaka-read-para.yaml
+  /v3/upgrade:
+    $ref: ./resources/auto/v3-upgrade.yaml

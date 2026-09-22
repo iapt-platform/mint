@@ -1,0 +1,62 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-sent-discussion-tree.yaml
+post:
+  summary: 按句子批量查询讨论概览
+  tags:
+    - sent-discussion-tree
+  operationId: post_api_v2_sent_discussion_tree
+  description: |-
+    对传入的每个句子定位（book/paragraph/word_start/word_end/channel_id）先查到 sentence，
+    再取该句上全部顶级讨论（title、children_count、editor_uid，按创建时间倒序）。
+    没有讨论的句子会被跳过，不做登录与权限校验。返回 rows 与 count。
+
+    实现：`DiscussionController@discussion_tree`
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            data:
+              type: array
+              description: 句子定位数组
+            'data[].book':
+              type: integer
+              description: 卷号
+            'data[].paragraph':
+              type: integer
+              description: 段号
+            'data[].word_start':
+              type: integer
+              description: 句子起始词序号
+            'data[].word_end':
+              type: integer
+              description: 句子结束词序号
+            'data[].channel_id':
+              type: string
+              description: '译文集 channel uid'
+          required:
+            - data
+            - 'data[].book'
+            - 'data[].paragraph'
+            - 'data[].word_start'
+            - 'data[].word_end'
+            - 'data[].channel_id'
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

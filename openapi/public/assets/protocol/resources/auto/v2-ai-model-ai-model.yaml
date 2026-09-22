@@ -1,0 +1,224 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-ai-model-ai-model.yaml
+get:
+  summary: '获取单个 ai-model/{ai_model}'
+  tags:
+    - ai-model
+  operationId: get_api_v2_ai_model_ai_model_
+  description: 实现：`AiModelController@show`
+  parameters:
+    -
+      name: ai_model
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  uid:
+                    type: string
+                  name:
+                    type: string
+                  description:
+                    type: string
+                  url:
+                    type: string
+                  model:
+                    type: string
+                  privacy:
+                    type: string
+                  owner_id:
+                    type: integer
+                  editor_id:
+                    type: integer
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  user:
+                    type: string
+                  key:
+                    type: string
+                  system_prompt:
+                    type: string
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+put:
+  summary: '更新 ai-model/{ai_model}'
+  tags:
+    - ai-model
+  operationId: put_api_v2_ai_model_ai_model_
+  description: 实现：`AiModelController@update`
+  parameters:
+    -
+      name: ai_model
+      in: path
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  uid:
+                    type: string
+                  name:
+                    type: string
+                  description:
+                    type: string
+                  url:
+                    type: string
+                  model:
+                    type: string
+                  privacy:
+                    type: string
+                  owner_id:
+                    type: integer
+                  editor_id:
+                    type: integer
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  user:
+                    type: string
+                  key:
+                    type: string
+                  system_prompt:
+                    type: string
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+patch:
+  summary: '更新 ai-model/{ai_model}'
+  tags:
+    - ai-model
+  operationId: patch_api_v2_ai_model_ai_model_
+  description: 实现：`AiModelController@update`
+  parameters:
+    -
+      name: ai_model
+      in: path
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  uid:
+                    type: string
+                  name:
+                    type: string
+                  description:
+                    type: string
+                  url:
+                    type: string
+                  model:
+                    type: string
+                  privacy:
+                    type: string
+                  owner_id:
+                    type: integer
+                  editor_id:
+                    type: integer
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  user:
+                    type: string
+                  key:
+                    type: string
+                  system_prompt:
+                    type: string
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+delete:
+  summary: '删除 ai-model/{ai_model}'
+  tags:
+    - ai-model
+  operationId: delete_api_v2_ai_model_ai_model_
+  description: 实现：`AiModelController@destroy`
+  parameters:
+    -
+      name: ai_model
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

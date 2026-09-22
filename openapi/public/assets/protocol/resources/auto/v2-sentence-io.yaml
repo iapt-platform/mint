@@ -1,0 +1,107 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-sentence-io.yaml
+get:
+  summary: '列出 sentence-io'
+  tags:
+    - sentence-io
+  operationId: get_api_v2_sentence_io
+  description: 实现：`SentenceIOController@index`
+  parameters:
+    -
+      name: view
+      in: query
+      schema:
+        type: string
+        enum:
+          - public
+    -
+      name: type
+      in: query
+      schema:
+        type: string
+        default: translation
+    -
+      name: updated_at
+      in: query
+      schema:
+        type: string
+        default: '2000-1-1'
+    -
+      name: offset
+      in: query
+      schema:
+        type: string
+    -
+      name: limit
+      in: query
+      schema:
+        type: string
+    -
+      name: search
+      in: query
+      description: 搜索关键字
+      schema:
+        type: string
+    -
+      name: order
+      in: query
+      description: 排序字段
+      schema:
+        type: string
+    -
+      name: dir
+      in: query
+      description: 排序方向
+      schema:
+        type: string
+        enum:
+          - desc
+          - asc
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  rows:
+                    type: array
+                    items:
+                      type: object
+                  count:
+                    type: integer
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+post:
+  summary: '新建 sentence-io'
+  tags:
+    - sentence-io
+  operationId: post_api_v2_sentence_io
+  description: 实现：`SentenceIOController@store`
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

@@ -16,7 +16,6 @@ use App\Models\Sentence;
 use App\Services\AuthService;
 use App\Tools\OpsLog;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -138,13 +137,28 @@ class ArticleController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * 列出 article（文章）
      *
-     * @return Response
+     * 按 view 指定的口径返回文章列表，支持关键字搜索、分页、排序。
+     * 默认只返回列表字段（uid、title、subtitle、summary、owner、lang、status、editor_id、时间），
+     * content=true 时才附带正文与正文类型。
+     * view=studio 需要登录，且当前登录用户必须就是 name 指定的 studio 的拥有者，否则返回 401/403。
+     *
+     * @queryParam view string required 查询口径。template=按 studio_name 取该 studio 的全部文章（模版库）；studio=取某 studio 内的文章，需要登录；public=只取已公开（status=30）的文章。Enum: template,studio,public
+     * @queryParam content string 是否返回文章正文。传 true 时结果附带 content 与 content_type。Example: true
+     * @queryParam studio_name string view=template 时使用，指定 studio 的名称
+     * @queryParam name string view=studio 时使用，指定 studio 的名称，必须与当前登录用户一致
+     * @queryParam view2 string view=studio 时的二级口径：my=我创建的（owner 为该 studio），其余值=协作的（别人共享给我的，res_type=3）。Default: my
+     * @queryParam anthology string view=studio 时按文集过滤。all=不过滤；none=不属于我任何文集的文章；其余值按文集 uid 过滤。Enum: all,none
+     * @queryParam search string 按标题模糊搜索（title like %search%）
+     * @queryParam subtitle string 按副标题过滤（subtitle like，需自行带通配符）
+     * @queryParam order string 排序字段。Default: updated_at
+     * @queryParam dir string 排序方向。Enum: asc,desc Default: desc
+     * @queryParam offset integer 分页起始位置。Default: 0
+     * @queryParam limit integer 每页条数。Default: 1000
      */
     public function index(Request $request)
     {
-        //
         $field = [
             'uid',
             'title',
@@ -217,6 +231,8 @@ class ArticleController extends Controller
                 $table = $table->where('status', 30);
                 break;
             default:
+                // FIXME: 这里只调用 error() 没有 return，view 非法时会继续往下执行并返回全表数据（最多 limit 条）；
+                // 建议改成 return $this->error('view error', [], 400)。
                 $this->error('view error');
                 break;
         }
@@ -244,9 +260,12 @@ class ArticleController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * 统计我的文章数量
      *
-     * @return Response
+     * 返回指定 studio 下「我的」和「协作的」两类文章条数。
+     * 需要登录，且当前登录用户必须就是 studio 的拥有者，否则返回鉴权失败。
+     *
+     * @queryParam studio string required studio 名称，必须与当前登录用户一致
      */
     public function showMyNumber(Request $request)
     {
@@ -273,9 +292,22 @@ class ArticleController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * 新建 article（文章）
      *
-     * @return Response
+     * 需要登录。权限：当前用户必须是 studio 的拥有者；若不是，则必须对 anthologyId 指定的文集
+     * 拥有大于只读的权限（power>10），否则返回 403。
+     * 副作用：整个新建过程在事务中执行——写入 articles 表，若给了 anthologyId 则同时把文章挂进文集；
+     * 若再给了 parentNode，会按目录树重建该文集的 article_collections 记录（删除后整表重插）并刷新文集缓存。
+     * 标题超过 128 字会被截断。
+     *
+     * @bodyParam studio string required studio 名称，文章归属的 studio
+     * @bodyParam title string required 文章标题，最多 128 字，超出截断
+     * @bodyParam lang string required 文章语言代码
+     * @bodyParam status integer 公开状态，30 表示公开。不传则用数据库默认值
+     * @bodyParam parentId string 父文章 uid，写入 articles.parent
+     * @bodyParam anthologyId string 文集 uid，传入则把新文章加入该文集
+     * @bodyParam parentNode string 文集目录中的挂接点文章 uid，新文章作为它的子节点插入；
+     *                             不传则作为一级节点（level=1）追加到文集末尾
      */
     public function store(Request $request)
     {
@@ -370,6 +402,8 @@ class ArticleController extends Controller
                             $newMap[] = $newNode;
                         }
                     } else {
+                        // FIXME: parentNode 找不到挂接点时只写日志，不把文章加入文集，结果文章建成了却不在目录里、前端看不到；
+                        // 建议改为回退成一级节点追加，或直接抛异常让事务回滚并向前端报错。
                         Log::warning('没找到挂接点'.$parentNode);
                     }
 
@@ -410,13 +444,19 @@ class ArticleController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * 查看单篇 article（文章）
      *
-     * @return Response
+     * 前端阅读页最常用的接口。允许匿名访问：status=30（公开）的文章任何人可读；
+     * 非公开文章需要登录，且满足以下之一——是文章 owner、对该文章有只读以上共享权限（power>=10）、
+     * 或对该文章所在的（同一 owner 的）文集有只读以上共享权限，否则返回 403。
+     *
+     * @urlParam article string required 文章 uid（路由模型绑定到 Article，主键即 uid）
+     *
+     * @queryParam anthology string 所在文集 uid，用于在返回结果里渲染文集路径（path）
+     * @queryParam channel string 渲染标题所用的 channel uid，多个用下划线分隔；不传则回退到文集的默认 channel
      */
     public function show(Request $request, Article $article)
     {
-        //
         if (! $article) {
             return $this->error('no recorder');
         }
@@ -437,14 +477,22 @@ class ArticleController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * 预览文章正文
      *
-     * @param  string  $article
-     * @return Response
+     * PUT /api/v2/article-preview/{id}。用请求体里的 content 覆盖文章正文后走一遍渲染再返回，
+     * 不写数据库，用于编辑器里的即时预览。
+     * 权限与查看文章一致：公开文章匿名可预览，否则需要读权限，无权限返回 401。
+     * 未传 content 时返回 error('no content')，但 HTTP 状态码仍是 200。
+     *
+     * @urlParam id string required 文章 uid
+     *
+     * @bodyParam content string required 待预览的正文内容（markdown）
+     *
+     * @queryParam anthology string 所在文集 uid，用于渲染文集路径
+     * @queryParam channel string 渲染所用 channel uid，多个用下划线分隔
      */
     public function preview(Request $request, string $articleId)
     {
-        //
         $article = Article::find($articleId);
         if (! $article) {
             return $this->error('no recorder');
@@ -471,13 +519,28 @@ class ArticleController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * 更新 article（文章）
      *
-     * @return Response
+     * 需要登录。权限：必须是文章 owner，或对文章有编辑以上共享权限（power>=20），
+     * 或对文章所在的同 owner 文集有编辑以上权限，否则返回 401。
+     * 字段会整体覆盖：title/subtitle 截断到 128 字，summary 截断到 1024 字，
+     * status 未传时会被重置为 10（非公开），即部分更新也必须带全字段。
+     * 副作用：to_tpl=true 时把正文转成模版——按行切句，正文中的句子被替换成 {{book-para-start-end}} 占位，
+     * 同时把原文逐句写入 sentences 表（必要时为文集新建 CustomBook 与 channel），该过程需要对应 channel 的写权限。
+     *
+     * @urlParam article string required 文章 uid（路由模型绑定）
+     *
+     * @bodyParam title string required 标题，最多 128 字
+     * @bodyParam subtitle string 副标题，最多 128 字
+     * @bodyParam summary string 摘要，最多 1024 字
+     * @bodyParam content string required 正文（markdown）
+     * @bodyParam lang string required 语言代码
+     * @bodyParam status integer 公开状态，30 表示公开。Default: 10
+     * @bodyParam to_tpl boolean 是否把正文转换为模版并把原文切句入库，必须是布尔 true 才生效
+     * @bodyParam anthology_id string to_tpl=true 时必填，文集 uid，用于定位/创建书号与 channel
      */
     public function update(Request $request, Article $article)
     {
-        //
         if (! $article) {
             return $this->error('no recorder');
         }
@@ -521,6 +584,8 @@ class ArticleController extends Controller
         $article->summary = mb_substr($request->input('summary'), 0, 1024, 'UTF-8');
         $article->content = $content;
         $article->lang = $request->input('lang');
+        // FIXME: status 未传时会被静默重置为 10（非公开），已公开的文章做部分更新会被降级；
+        // 建议改为只有请求体明确带 status 时才赋值，否则保留原值。
         $article->status = $request->input('status', 10);
         $article->editor_id = $user['user_id'];
         $article->modify_time = time() * 1000;
@@ -532,13 +597,15 @@ class ArticleController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * 删除 article（文章）
      *
-     * @return Response
+     * 需要登录，且只有文章 owner 本人可以删除（协作者不行），否则返回鉴权失败。
+     * 副作用：在事务中删除文章记录，并同步把该文章从所有文集目录（article_collections）中摘除。
+     *
+     * @urlParam article string required 文章 uid（路由模型绑定）
      */
     public function destroy(Request $request, Article $article)
     {
-        //
         $user = AuthService::current($request);
         if (! $user) {
             return $this->error(__('auth.failed'));
@@ -548,6 +615,8 @@ class ArticleController extends Controller
             return $this->error(__('auth.failed'));
         }
         $delete = 0;
+        // FIXME: $delete 按值捕获，闭包内的赋值传不出来，返回值恒为 0，前端拿不到真实删除结果；
+        // 建议改为 use (&$delete) 引用捕获，或直接用 DB::transaction 的返回值。
         DB::transaction(function () use ($article, $delete) {
             // TODO 删除文集中的文章
             $delete = $article->delete();

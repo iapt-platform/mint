@@ -2,16 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ProgressV3Resource;
 use App\Models\ProgressChapter;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
 
 class ProgressController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * 列出章节翻译进度
      *
-     * @return Response
+     * 按 channel 查询各章节的翻译完成度。view 目前只支持 channel 一种口径，
+     * 传其它值返回 422。
+     *
+     * @unauthenticated
+     *
+     * @queryParam view string required 查询口径，目前只有 channel。Enum: channel
+     * @queryParam channels string required channel uid 列表，**下划线分隔**（不是逗号）
+     * @queryParam level integer 只返回该层级及以上的章节，需联查 pali_texts
+     * @queryParam lang string 按译文语言过滤。Example: zh-Hans
+     * @queryParam book integer 按典籍 id 过滤
+     * @queryParam order string 排序字段（progress_chapters 的列）。Default: completed_at
+     * @queryParam dir string 排序方向。Enum: asc,desc Default: desc
+     * @queryParam page integer 页码。Default: 1
+     * @queryParam per_page integer 每页数量。Default: 10
      */
     public function index(Request $request)
     {
@@ -33,7 +47,7 @@ class ProgressController extends Controller
                     ->whereIn('progress_chapters.channel_id', explode('_', $request->input('channels', '')));
                 break;
             default:
-                return $this->error('invalid view', 400, 400);
+                throw ValidationException::withMessages(['view' => __('site.invalid_parameter')]);
                 break;
         }
 
@@ -50,23 +64,14 @@ class ProgressController extends Controller
         if ($request->has('book')) {
             $table = $table->where('progress_chapters.book', $request->input('book'));
         }
-        $count = $table->count();
-
         $table = $table->orderBy(
             'progress_chapters.'.$request->input('order', 'completed_at'),
             $request->input('dir', 'desc')
         );
 
-        $table = $table->skip($request->input('offset', 0))
-            ->take($request->input('limit', 10));
-
-        $result = $table->get();
-
-        return $this->ok(
-            [
-                'rows' => $result->toArray(),
-                'total' => $count,
-            ]
+        // 分页与 meta 全由框架算；page 参数 paginate() 自己会读
+        return ProgressV3Resource::collection(
+            $table->paginate($request->integer('per_page', 10))
         );
     }
 

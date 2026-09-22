@@ -1,0 +1,462 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-task-task.yaml
+get:
+  summary: 查看单个任务
+  tags:
+    - task
+  operationId: get_api_v2_task_task_
+  description: |-
+    通过路由模型绑定按任务 uuid 取出任务并返回详情，任务不存在时返回 404。
+    该接口不做登录与权限校验，任何人都能读取。
+
+    实现：`TaskController@show`
+  parameters:
+    -
+      name: task
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '任务 uuid'
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  mode:
+                    type: string
+                  format:
+                    type: string
+                  footnote:
+                    type: string
+                  origin:
+                    type: string
+                  paragraph:
+                    type: string
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  description:
+                    type: string
+                  type:
+                    type: integer
+                  category:
+                    type: string
+                  progress:
+                    type: integer
+                  parent_id:
+                    type: integer
+                  parent:
+                    type: string
+                  roles:
+                    type: string
+                  executor_id:
+                    type: integer
+                  executor_relation_task_id:
+                    type: integer
+                  executor_relation_task:
+                    type: string
+                  pre_task:
+                    type: string
+                  next_task:
+                    type: string
+                  is_milestone:
+                    type: boolean
+                  project_id:
+                    type: integer
+                  project:
+                    type: string
+                  owner_id:
+                    type: integer
+                  owner:
+                    type: string
+                  editor_id:
+                    type: integer
+                  editor:
+                    type: string
+                  order:
+                    type: string
+                  status:
+                    type: integer
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  started_at:
+                    type: string
+                  finished_at:
+                    type: string
+                  assignees_id:
+                    type: integer
+                  assignees:
+                    type: string
+                  html:
+                    type: string
+                  executor:
+                    type: string
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+put:
+  summary: 修改任务
+  tags:
+    - task
+  operationId: put_api_v2_task_task_
+  description: |-
+    局部更新：只更新请求体里出现的字段，未出现的字段保持不变。必须登录（否则 401）；
+    只有任务拥有者、实际执行人或责任人之一可以修改，否则返回 403。
+    副作用：传 assignees_id 会先删除该任务全部责任人再整体重建；
+    传 pre_task_id / next_task_id 会整体重写任务的前置 / 后续关联关系。
+    每次保存都会把 editor_id 更新为当前用户。
+
+    实现：`TaskController@update`
+  parameters:
+    -
+      name: task
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '任务 uuid'
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            title:
+              type: string
+              description: 任务标题
+            description:
+              type: string
+              description: 任务描述（markdown）
+            category:
+              type: string
+              description: '类别，如 翻译、审稿、百科'
+            progress:
+              type: integer
+              description: 进度，0-100
+            assignees_id:
+              type: array
+              description: '责任人 uid 数组，整体覆盖原有责任人；传空数组等于清空'
+            roles:
+              type: array
+              description: '领取该任务所需的角色要求，存为 json'
+            executor_id:
+              type: string
+              description: '实际执行人 uid'
+            executor_relation_task_id:
+              type: string
+              description: '执行人关联任务 uuid，表示执行人与该任务保持一致'
+            project_id:
+              type: string
+              description: '所属工程 uid'
+            pre_task_id:
+              type: string
+              description: '前置任务 uuid，逗号分隔，整体覆盖原有前置关系'
+            next_task_id:
+              type: string
+              description: '后续任务 uuid，逗号分隔，整体覆盖原有后续关系'
+            is_milestone:
+              type: boolean
+              description: 是否为里程碑
+            order:
+              type: integer
+              description: 拖拽排序顺序
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  mode:
+                    type: string
+                  format:
+                    type: string
+                  footnote:
+                    type: string
+                  origin:
+                    type: string
+                  paragraph:
+                    type: string
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  description:
+                    type: string
+                  type:
+                    type: integer
+                  category:
+                    type: string
+                  progress:
+                    type: integer
+                  parent_id:
+                    type: integer
+                  parent:
+                    type: string
+                  roles:
+                    type: string
+                  executor_id:
+                    type: integer
+                  executor_relation_task_id:
+                    type: integer
+                  executor_relation_task:
+                    type: string
+                  pre_task:
+                    type: string
+                  next_task:
+                    type: string
+                  is_milestone:
+                    type: boolean
+                  project_id:
+                    type: integer
+                  project:
+                    type: string
+                  owner_id:
+                    type: integer
+                  owner:
+                    type: string
+                  editor_id:
+                    type: integer
+                  editor:
+                    type: string
+                  order:
+                    type: string
+                  status:
+                    type: integer
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  started_at:
+                    type: string
+                  finished_at:
+                    type: string
+                  assignees_id:
+                    type: integer
+                  assignees:
+                    type: string
+                  html:
+                    type: string
+                  executor:
+                    type: string
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+patch:
+  summary: 修改任务
+  tags:
+    - task
+  operationId: patch_api_v2_task_task_
+  description: |-
+    局部更新：只更新请求体里出现的字段，未出现的字段保持不变。必须登录（否则 401）；
+    只有任务拥有者、实际执行人或责任人之一可以修改，否则返回 403。
+    副作用：传 assignees_id 会先删除该任务全部责任人再整体重建；
+    传 pre_task_id / next_task_id 会整体重写任务的前置 / 后续关联关系。
+    每次保存都会把 editor_id 更新为当前用户。
+
+    实现：`TaskController@update`
+  parameters:
+    -
+      name: task
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '任务 uuid'
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            title:
+              type: string
+              description: 任务标题
+            description:
+              type: string
+              description: 任务描述（markdown）
+            category:
+              type: string
+              description: '类别，如 翻译、审稿、百科'
+            progress:
+              type: integer
+              description: 进度，0-100
+            assignees_id:
+              type: array
+              description: '责任人 uid 数组，整体覆盖原有责任人；传空数组等于清空'
+            roles:
+              type: array
+              description: '领取该任务所需的角色要求，存为 json'
+            executor_id:
+              type: string
+              description: '实际执行人 uid'
+            executor_relation_task_id:
+              type: string
+              description: '执行人关联任务 uuid，表示执行人与该任务保持一致'
+            project_id:
+              type: string
+              description: '所属工程 uid'
+            pre_task_id:
+              type: string
+              description: '前置任务 uuid，逗号分隔，整体覆盖原有前置关系'
+            next_task_id:
+              type: string
+              description: '后续任务 uuid，逗号分隔，整体覆盖原有后续关系'
+            is_milestone:
+              type: boolean
+              description: 是否为里程碑
+            order:
+              type: integer
+              description: 拖拽排序顺序
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  mode:
+                    type: string
+                  format:
+                    type: string
+                  footnote:
+                    type: string
+                  origin:
+                    type: string
+                  paragraph:
+                    type: string
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  description:
+                    type: string
+                  type:
+                    type: integer
+                  category:
+                    type: string
+                  progress:
+                    type: integer
+                  parent_id:
+                    type: integer
+                  parent:
+                    type: string
+                  roles:
+                    type: string
+                  executor_id:
+                    type: integer
+                  executor_relation_task_id:
+                    type: integer
+                  executor_relation_task:
+                    type: string
+                  pre_task:
+                    type: string
+                  next_task:
+                    type: string
+                  is_milestone:
+                    type: boolean
+                  project_id:
+                    type: integer
+                  project:
+                    type: string
+                  owner_id:
+                    type: integer
+                  owner:
+                    type: string
+                  editor_id:
+                    type: integer
+                  editor:
+                    type: string
+                  order:
+                    type: string
+                  status:
+                    type: integer
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  started_at:
+                    type: string
+                  finished_at:
+                    type: string
+                  assignees_id:
+                    type: integer
+                  assignees:
+                    type: string
+                  html:
+                    type: string
+                  executor:
+                    type: string
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+delete:
+  summary: 删除任务
+  tags:
+    - task
+  operationId: delete_api_v2_task_task_
+  description: |-
+    必须登录（否则 401），且当前用户必须是任务拥有者，否则返回 403。
+    删除成功返回 ok，失败返回 500。
+
+    实现：`TaskController@destroy`
+  parameters:
+    -
+      name: task
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '任务 uuid'
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

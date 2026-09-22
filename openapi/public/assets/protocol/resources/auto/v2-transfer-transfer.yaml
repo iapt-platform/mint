@@ -1,0 +1,220 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-transfer-transfer.yaml
+get:
+  summary: '获取单个 transfer/{transfer}'
+  tags:
+    - transfer
+  operationId: get_api_v2_transfer_transfer_
+  description: 实现：`TransferController@show`
+  parameters:
+    -
+      name: transfer
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  origin_owner:
+                    type: string
+                  res_type:
+                    type: string
+                  res_id:
+                    type: integer
+                  transferor:
+                    type: string
+                  new_owner:
+                    type: string
+                  status:
+                    type: integer
+                  updated_at:
+                    type: string
+                  created_at:
+                    type: string
+                  editor:
+                    type: string
+                  channel:
+                    type: string
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+put:
+  summary: '更新 transfer/{transfer}'
+  tags:
+    - transfer
+  operationId: put_api_v2_transfer_transfer_
+  description: 实现：`TransferController@update`
+  parameters:
+    -
+      name: transfer
+      in: path
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: string
+              enum:
+                - accept
+                - refuse
+                - cancel
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  origin_owner:
+                    type: string
+                  res_type:
+                    type: string
+                  res_id:
+                    type: integer
+                  transferor:
+                    type: string
+                  new_owner:
+                    type: string
+                  status:
+                    type: integer
+                  updated_at:
+                    type: string
+                  created_at:
+                    type: string
+                  editor:
+                    type: string
+                  channel:
+                    type: string
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+patch:
+  summary: '更新 transfer/{transfer}'
+  tags:
+    - transfer
+  operationId: patch_api_v2_transfer_transfer_
+  description: 实现：`TransferController@update`
+  parameters:
+    -
+      name: transfer
+      in: path
+      required: true
+      schema:
+        type: string
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: string
+              enum:
+                - accept
+                - refuse
+                - cancel
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  origin_owner:
+                    type: string
+                  res_type:
+                    type: string
+                  res_id:
+                    type: integer
+                  transferor:
+                    type: string
+                  new_owner:
+                    type: string
+                  status:
+                    type: integer
+                  updated_at:
+                    type: string
+                  created_at:
+                    type: string
+                  editor:
+                    type: string
+                  channel:
+                    type: string
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+delete:
+  summary: '删除 transfer/{transfer}'
+  tags:
+    - transfer
+  operationId: delete_api_v2_transfer_transfer_
+  description: 实现：`TransferController@destroy`
+  parameters:
+    -
+      name: transfer
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

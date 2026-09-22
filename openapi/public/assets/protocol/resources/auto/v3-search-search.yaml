@@ -1,0 +1,30 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-search-search.yaml
+get:
+  summary: '按 id 取单条检索结果'
+  tags:
+    - search
+  operationId: get_api_v3_search_search_
+  description: |-
+    直接从 OpenSearch 按文档 id 取回，不走检索。取不到返回 404。
+
+    实现：`SearchPlusController@show`
+  parameters:
+    -
+      name: search
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 'OpenSearch 文档 id'
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

@@ -1,0 +1,241 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-user-user.yaml
+get:
+  summary: 查看单个用户
+  tags:
+    - user
+  operationId: get_api_v2_user_user_
+  description: |-
+    按 userid 查询用户资料并返回（id、用户名、昵称、邮箱、角色、头像等）。
+    方法内没有任何鉴权，任何人都可以读取；查不到用户时会以空资源返回。
+
+    实现：`UserController@show`
+  parameters:
+    -
+      name: user
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: '用户的 userid（不是表自增主键 id）'
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  userName:
+                    type: string
+                  nickName:
+                    type: string
+                  email:
+                    type: string
+                  role:
+                    type: string
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  avatarName:
+                    type: string
+                  avatar:
+                    type: string
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+put:
+  summary: 更新用户资料或角色
+  tags:
+    - user
+  operationId: put_api_v2_user_user_
+  description: |-
+    两种互斥的用法：请求体里带 roles 时只更新角色（整体覆盖，以 JSON 存入 role 字段）；
+    不带 roles 时更新昵称、头像、邮箱三个字段（未传的会被置空）。
+    方法内没有任何鉴权，也没有校验，调用方需自行保证权限；userid 不存在时会报错。
+
+    实现：`UserController@update`
+  parameters:
+    -
+      name: user
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: '用户的 userid（不是表自增主键 id）'
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            roles:
+              type: array
+              description: 角色列表，传了就只更新角色，整体覆盖原有角色
+            nickName:
+              type: string
+              description: '昵称，未传 roles 时生效'
+            avatar:
+              type: string
+              description: '头像文件名，未传 roles 时生效'
+            email:
+              type: string
+              description: '邮箱，未传 roles 时生效'
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  userName:
+                    type: string
+                  nickName:
+                    type: string
+                  email:
+                    type: string
+                  role:
+                    type: string
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  avatarName:
+                    type: string
+                  avatar:
+                    type: string
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+patch:
+  summary: 更新用户资料或角色
+  tags:
+    - user
+  operationId: patch_api_v2_user_user_
+  description: |-
+    两种互斥的用法：请求体里带 roles 时只更新角色（整体覆盖，以 JSON 存入 role 字段）；
+    不带 roles 时更新昵称、头像、邮箱三个字段（未传的会被置空）。
+    方法内没有任何鉴权，也没有校验，调用方需自行保证权限；userid 不存在时会报错。
+
+    实现：`UserController@update`
+  parameters:
+    -
+      name: user
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: '用户的 userid（不是表自增主键 id）'
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            roles:
+              type: array
+              description: 角色列表，传了就只更新角色，整体覆盖原有角色
+            nickName:
+              type: string
+              description: '昵称，未传 roles 时生效'
+            avatar:
+              type: string
+              description: '头像文件名，未传 roles 时生效'
+            email:
+              type: string
+              description: '邮箱，未传 roles 时生效'
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  userName:
+                    type: string
+                  nickName:
+                    type: string
+                  email:
+                    type: string
+                  role:
+                    type: string
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  avatarName:
+                    type: string
+                  avatar:
+                    type: string
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+delete:
+  summary: 删除用户（未实现）
+  tags:
+    - user
+  operationId: delete_api_v2_user_user_
+  description: |-
+    路由已注册 DELETE /api/v2/user/{user}，但方法体为空，不会删除任何数据也不返回内容。
+
+    实现：`UserController@destroy`
+  parameters:
+    -
+      name: user
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: '用户的 userid'
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

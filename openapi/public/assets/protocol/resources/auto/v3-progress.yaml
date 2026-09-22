@@ -1,0 +1,117 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-progress.yaml
+get:
+  summary: 列出章节翻译进度
+  tags:
+    - progress
+  operationId: get_api_v3_progress
+  description: |-
+    按 channel 查询各章节的翻译完成度。view 目前只支持 channel 一种口径，
+    传其它值返回 422。
+
+    实现：`ProgressController@index`
+  parameters:
+    -
+      name: view
+      in: query
+      schema:
+        type: string
+        enum:
+          - channel
+      description: '查询口径，目前只有 channel'
+      required: true
+    -
+      name: channels
+      in: query
+      schema:
+        type: string
+        default: ''
+      description: 'channel uid 列表，**下划线分隔**（不是逗号）'
+      required: true
+    -
+      name: level
+      in: query
+      schema:
+        type: integer
+      description: '只返回该层级及以上的章节，需联查 pali_texts'
+    -
+      name: lang
+      in: query
+      schema:
+        type: string
+      description: 按译文语言过滤
+      example: zh-Hans
+    -
+      name: book
+      in: query
+      schema:
+        type: integer
+      description: '按典籍 id 过滤'
+    -
+      name: order
+      in: query
+      schema:
+        type: string
+        default: completed_at
+      description: '排序字段（progress_chapters 的列）'
+    -
+      name: dir
+      in: query
+      schema:
+        type: string
+        enum:
+          - asc
+          - desc
+        default: desc
+      description: 排序方向
+    -
+      name: per_page
+      in: query
+      schema:
+        type: integer
+        default: '10'
+      description: 每页数量
+    -
+      name: page
+      in: query
+      schema:
+        type: integer
+        default: '1'
+      description: 页码
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    book:
+                      type: integer
+                    para:
+                      type: integer
+                    lang:
+                      type: string
+                    progress:
+                      type: number
+                    channel_id:
+                      type: string
+                    title:
+                      type: string
+                      nullable: true
+                    last_chapter_completed_at:
+                      type: string
+                      nullable: true
+                    completed_at:
+                      type: string
+                      nullable: true
+                    updated_at:
+                      type: string
+              meta:
+                $ref: '../../main.yaml#/components/schemas/PaginationMeta'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

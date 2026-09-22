@@ -9,16 +9,30 @@ use App\Models\DictInfo;
 use App\Models\UserDict;
 use App\Services\AuthService;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Str;
 
 class UserDictController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * 列出用户词典条目
      *
-     * @return Response
+     * 按 view 指定的口径返回 user_dict 记录，支持按单词、词根、词典过滤，以及分页与排序。
+     * 需要登录的口径：all、studio；studio 口径还要求 name 指定的 studio 属于当前用户，否则返回 auth.failed。
+     * community 口径只返回 status>5 且来源为 _USER_WBW_/_USER_DICT_ 的社区公开数据。
+     * 返回 rows 与 count（过滤后总数）。
+     *
+     * @queryParam view string required 查询口径。all=全部；studio=某 studio 创建者的用户词条；user=cookie 中用户的词条（排除系统汇总）；word=按单词查全部；community=社区公开词条；compound=复合词机器人词典；dict=指定词典。Enum: all,studio,user,word,community,compound,dict
+     * @queryParam name string studio 口径为 studio 名；dict 口径为系统词典短名。Example: robot_compound
+     * @queryParam id string dict 口径下直接指定的词典 uid（与 name 二选一）
+     * @queryParam word string 要查询的单词，word/community/compound 口径必填；其他口径传入时也会追加过滤
+     * @queryParam parent string 按词根（parent）过滤
+     * @queryParam dict string 按词典短名（dict_info.shortname）过滤，解析为 uuid 后才生效
+     * @queryParam search string 按单词前缀模糊搜索
+     * @queryParam order string 排序字段。Default: updated_at
+     * @queryParam dir string 排序方向。Enum: asc,desc Default: desc
+     * @queryParam offset integer 跳过的记录数。Default: 0
+     * @queryParam limit integer 返回条数上限。Default: 200
      */
     public function index(Request $request)
     {
@@ -84,6 +98,7 @@ class UserDictController extends Controller
                 break;
             case 'compound':
                 $dict_id = DictApi::getSysDict('robot_compound');
+                // FIXME: $this->error(...) 没有 return，取不到词典时不会中断，会继续用 false 去查询。应改为 return $this->error(...)。
                 if ($dict_id === false) {
                     $this->error('no robot_compound');
                 }
@@ -97,15 +112,19 @@ class UserDictController extends Controller
                     $dict_id = $request->input('id');
                 }
 
+                // FIXME: $this->error(...) 没有 return，词典不存在时不会中断，会继续用 false 去查询。应改为 return $this->error(...)。
                 if ($dict_id === false) {
                     $this->error('no dict', [], 404);
                 }
                 $table = UserDict::select($indexCol)
                     ->where('dict_id', $dict_id);
+                // FIXME: 这里缺 break，会贯穿到 default（当前恰好无副作用，但属于隐患）。应补上 break;。
             default:
                 // code...
                 break;
         }
+        // FIXME: view 不在枚举内（含缺省）时 $table 从未被赋值，下面的 $table->count() 会 fatal error。
+        // 建议 default 分支直接 return $this->error('无法识别的参数view', 400, 400)。
         if ($request->has('search')) {
             $table->where('word', 'like', $request->input('search').'%');
         }
@@ -137,14 +156,23 @@ class UserDictController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * 批量新增/更新用户词典条目
      *
-     * @return Response
+     * 需要登录。data 是 JSON 字符串，解码后逐条处理：以 creator_id + word 以及请求中给出的
+     * type/grammar/parent/mean/factors 组合判重，不存在则插入（自动生成雪花 id、按 view 写入 source、
+     * 记录 create_time 与 creator_id），已存在则只更新 note 与 confidence。
+     * 新增且 status>5 时会同步刷新系统汇总词典 _SYS_USER_WBW_；每次新增都会刷新该单词的 Redis 缓存 dict/user。
+     * 返回 [新增条数, 汇总表更新结果]。
+     *
+     * @bodyParam view string required 数据来源口径，决定写入的 source：dict=_USER_DICT_，wbw=_USER_WBW_。Enum: dict,wbw
+     * @bodyParam data string required 词条数组的 JSON 字符串，每项含 word（必填）及可选 type、grammar、parent、mean、factors、factormean、note、confidence、status、language
      */
     public function store(Request $request)
     {
         //
         $user = AuthService::current($request);
+        // FIXME: $this->error('not login') 没有 return，未登录时会继续往下执行并在 $user['user_id'] 处 fatal error。
+        // 应改为 return $this->error(__('auth.failed'), [], 401)。
         if (! $user) {
             $this->error('not login');
         }
@@ -216,10 +244,11 @@ class UserDictController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * 查询单条用户词典记录
      *
-     * @param  int  $id
-     * @return Response
+     * 按主键查找，不做登录与权限校验；查不到返回「没有查询到数据」。
+     *
+     * @urlParam userdict string required 词条 id
      */
     public function show($id)
     {
@@ -233,14 +262,31 @@ class UserDictController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * 更新单条用户词典记录
      *
-     * @param  int  $id
-     * @return Response
+     * 把请求体中的全部字段直接写入该记录（未做字段白名单与权限校验）。
+     * 更新成功后同步刷新系统汇总词典 _SYS_USER_WBW_ 与该单词的 Redis 缓存 dict/user。
+     * 没有记录被更新时返回「没有查询到数据」。
+     *
+     * @urlParam userdict string required 词条 id
+     *
+     * @bodyParam word string 单词
+     * @bodyParam type string 词性
+     * @bodyParam grammar string 语法属性
+     * @bodyParam parent string 词根
+     * @bodyParam mean string 词义
+     * @bodyParam factors string 复合词拆分
+     * @bodyParam factormean string 复合词各部分词义
+     * @bodyParam note string 备注
+     * @bodyParam confidence integer 置信度
+     * @bodyParam status integer 状态，大于 5 表示公开到社区
+     * @bodyParam language string 语言代码
      */
     public function update(Request $request, $id)
     {
         //
+        // FIXME: 安全问题。直接把 $request->all() 整体落库，既无字段白名单（可改 creator_id、source、dict_id 等）
+        // 也无登录与创建者校验，任何人都能改任意词条。应先鉴权并只允许更新白名单字段。
         $newData = $request->all();
         $result = UserDict::where('id', $id)
             ->update($newData);
@@ -255,10 +301,15 @@ class UserDictController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * 删除用户词典记录（支持批量）
      *
-     * @param  int  $id
-     * @return Response
+     * 需要登录，未登录返回 403。传了查询参数 id（JSON 数组）时走批量分支，逐条只删除 creator_id
+     * 等于当前用户的记录，返回 [实际删除条数, 汇总表更新结果]；否则删除路径参数指定的单条记录，
+     * 非本人创建返回 auth.failed。两种分支都会同步刷新 _SYS_USER_WBW_ 汇总与 Redis 缓存 dict/user。
+     *
+     * @urlParam userdict string required 要删除的词条 id（未传查询参数 id 时使用）
+     *
+     * @queryParam id string 要批量删除的词条 id 数组的 JSON 字符串。Example: ["123","456"]
      */
     public function destroy(Request $request, $id)
     {
@@ -275,6 +326,7 @@ class UserDictController extends Controller
             $updateOk = false;
             foreach ($arrId as $key => $id) {
                 // 找到对应数据
+                // FIXME: find() 可能返回 null，下一行对 null 取属性会 fatal error。应先判空再处理。
                 $data = UserDict::find($id);
                 // 查看是否有权限删除
                 if ($data->creator_id == $user_id) {
@@ -291,6 +343,8 @@ class UserDictController extends Controller
             // 删除单个单词
             $userDict = UserDict::find($id);
             // 判断当前用户是否有指定的studio的权限
+            // FIXME: $userDict 可能为 null（fatal error）；且用 (int) 与 creator_id 做 !== 严格比较，
+            // creator_id 若是字符串列则永远不相等，会误判为无权限。建议先判空并改用 == 或统一类型。
             if ((int) $user_id !== $userDict->creator_id) {
                 return $this->error(__('auth.failed'));
             }
@@ -300,8 +354,19 @@ class UserDictController extends Controller
         }
     }
 
+    /**
+     * 批量删除用户词典记录（旧接口）
+     *
+     * 不走 AuthService，凭据取自 cookie 中的 user_id，只删除该用户创建的记录。
+     * 每删一条都会同步刷新 _SYS_USER_WBW_ 汇总与该单词的 Redis 缓存 dict/user。
+     * 返回 deleted（实际删除条数）。
+     *
+     * @queryParam id string required 要删除的词条 id 数组的 JSON 字符串。Example: ["123","456"]
+     */
     public function delete(Request $request)
     {
+        // FIXME: 本方法不走 AuthService，凭据直接取自 $_COOKIE['user_id']（见下方 $param），
+        // 未登录时会 undefined array key。应改用 AuthService::current($request) 并在未登录时返回 401。
         $arrId = json_decode($request->input('id'), true);
         $count = 0;
         $updateOk = false;

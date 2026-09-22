@@ -1,0 +1,255 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-course-member-course-member.yaml
+get:
+  summary: 查询某用户在指定课程中的当前成员记录
+  tags:
+    - course-member
+  operationId: get_api_v2_course_member_course_member_
+  description: |-
+    必须登录。默认查当前登录用户，传 user_uid 可查他人（无额外权限校验）。
+    只返回 is_current=true 的那条记录；查不到返回 no result（HTTP 200）。
+
+    实现：`CourseMemberController@show`
+  parameters:
+    -
+      name: course_member
+      in: path
+      required: true
+      schema:
+        type: string
+    -
+      name: user_uid
+      in: query
+      schema:
+        type: string
+      description: '要查询的用户 uid，缺省为当前登录用户'
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  user_id:
+                    type: integer
+                  course_id:
+                    type: integer
+                  role:
+                    type: string
+                  user:
+                    type: string
+                  editor:
+                    type: string
+                  status:
+                    type: integer
+                  channel_id:
+                    type: integer
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  channel:
+                    type: string
+                  course:
+                    type: string
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+put:
+  summary: 更新课程成员（以新增记录的方式保留历史）
+  tags:
+    - course-member
+  operationId: put_api_v2_course_member_course_member_
+  description: |-
+    必须登录。不会就地修改原记录：先复制一条新记录，把原记录 is_current 置为 false，
+    再把请求中出现的字段写到新记录上，原记录作为历史保留。
+    修改 channel_id 只允许成员本人操作，否则返回 auth.failed。
+
+    实现：`CourseMemberController@update`
+  parameters:
+    -
+      name: course_member
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '要更新的 course_member 记录 id'
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            channel_id:
+              type: string
+              description: '该成员在课程中使用的 channel uid，仅本人可改'
+            status:
+              type: string
+              description: 新的成员状态
+              example: joined
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  user_id:
+                    type: integer
+                  course_id:
+                    type: integer
+                  role:
+                    type: string
+                  user:
+                    type: string
+                  editor:
+                    type: string
+                  status:
+                    type: integer
+                  channel_id:
+                    type: integer
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  channel:
+                    type: string
+                  course:
+                    type: string
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+patch:
+  summary: 更新课程成员（以新增记录的方式保留历史）
+  tags:
+    - course-member
+  operationId: patch_api_v2_course_member_course_member_
+  description: |-
+    必须登录。不会就地修改原记录：先复制一条新记录，把原记录 is_current 置为 false，
+    再把请求中出现的字段写到新记录上，原记录作为历史保留。
+    修改 channel_id 只允许成员本人操作，否则返回 auth.failed。
+
+    实现：`CourseMemberController@update`
+  parameters:
+    -
+      name: course_member
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '要更新的 course_member 记录 id'
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            channel_id:
+              type: string
+              description: '该成员在课程中使用的 channel uid，仅本人可改'
+            status:
+              type: string
+              description: 新的成员状态
+              example: joined
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  user_id:
+                    type: integer
+                  course_id:
+                    type: integer
+                  role:
+                    type: string
+                  user:
+                    type: string
+                  editor:
+                    type: string
+                  status:
+                    type: integer
+                  channel_id:
+                    type: integer
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  channel:
+                    type: string
+                  course:
+                    type: string
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+delete:
+  summary: 删除课程成员记录
+  tags:
+    - course-member
+  operationId: delete_api_v2_course_member_course_member_
+  description: |-
+    必须登录。课程所有者（course.studio_id 等于当前用户）可以直接删除；
+    否则按当前用户在该课程中的角色判断权限，普通 student 无删除权限，返回 auth.failed。
+
+    实现：`CourseMemberController@destroy`
+  parameters:
+    -
+      name: course_member
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '要删除的 course_member 记录 id'
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

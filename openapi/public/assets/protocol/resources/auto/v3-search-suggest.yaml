@@ -1,0 +1,60 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-search-suggest.yaml
+get:
+  summary: 搜索建议（自动补全）
+  tags:
+    - search-suggest
+  operationId: get_api_v3_search_suggest
+  description: |-
+    按前缀给出补全候选，供搜索框实时提示。每个字段各自返回一组建议。
+    q 为空时返回 400。
+
+    实现：`SearchSuggestController@index`
+  parameters:
+    -
+      name: q
+      in: query
+      schema:
+        type: string
+        default: ''
+      description: 已输入的查询文本
+      required: true
+    -
+      name: fields
+      in: query
+      schema:
+        type: string
+        enum:
+          - title
+          - content
+          - page_refs
+      description: 在哪些字段上补全，逗号分隔；不传则全查
+    -
+      name: language
+      in: query
+      schema:
+        type: string
+      description: 语言过滤
+      example: pali
+    -
+      name: limit
+      in: query
+      schema:
+        type: integer
+        default: '10'
+      description: '每个字段返回的建议数，上限 50'
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+              meta:
+                $ref: '../../main.yaml#/components/schemas/PaginationMeta'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

@@ -1,0 +1,295 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-task.yaml
+get:
+  summary: 列出任务
+  tags:
+    - task
+  operationId: get_api_v2_task
+  description: |-
+    按 view 指定的口径返回任务列表，支持按执行人、责任人（指派）、参与者、
+    关键字、状态过滤，并支持排序与分页。必须登录，未登录返回 401。
+    注意：view 取值不在枚举内时不会构造查询，会导致请求失败。
+
+    实现：`TaskController@index`
+  parameters:
+    -
+      name: view
+      in: query
+      schema:
+        type: string
+        enum:
+          - all
+          - instance
+          - studio
+          - project
+      description: 查询口径：all=全部有归属的任务，instance=实例任务（type=instance），studio=当前用户名下（owner_id=当前用户）的任务，project=某工程及其子工程下的任务
+      required: true
+    -
+      name: project_id
+      in: query
+      schema:
+        type: string
+      description: 'view=project 时必填，工程 uid；同时匹配该工程本身及 path 中包含它的子工程'
+    -
+      name: executor_id_includes
+      in: query
+      schema:
+        type: string
+      description: '实际执行人 uid，逗号分隔，只返回执行人在其中的任务'
+    -
+      name: executor_id_not-includes
+      in: query
+      schema:
+        type: string
+      description: '实际执行人 uid，逗号分隔，排除执行人在其中的任务'
+    -
+      name: assignees_id_includes
+      in: query
+      schema:
+        type: string
+      description: 责任人（指派人）uid，逗号分隔，只返回指派给其中任一人的任务
+    -
+      name: assignees_id_not-includes
+      in: query
+      schema:
+        type: string
+      description: 责任人（指派人）uid，逗号分隔，排除指派给其中任一人的任务
+    -
+      name: assignees_id_null
+      in: query
+      schema:
+        type: string
+      description: 传该参数（任意值）表示只返回没有任何责任人的任务
+    -
+      name: assignees_id_not-null
+      in: query
+      schema:
+        type: string
+      description: 传该参数（任意值）表示只返回至少有一个责任人的任务
+    -
+      name: sign_up_equals
+      in: query
+      schema:
+        type: string
+        enum:
+          - 'true'
+          - 'false'
+      description: '值为 true 时只返回可领取的任务，即责任人和实际执行人都为空'
+    -
+      name: participants_id_includes
+      in: query
+      schema:
+        type: string
+      description: '参与者 uid，逗号分隔，实际执行人或责任人命中其一即返回'
+    -
+      name: participants_id_not-includes
+      in: query
+      schema:
+        type: string
+      description: '参与者 uid，逗号分隔，排除这些人参与的任务'
+    -
+      name: keyword
+      in: query
+      schema:
+        type: string
+      description: 标题模糊搜索关键字
+    -
+      name: status
+      in: query
+      schema:
+        type: string
+      description: '任务状态，逗号分隔可多选；传 all 表示不过滤。数据库默认值为 pending'
+    -
+      name: order
+      in: query
+      schema:
+        type: string
+        default: created_at
+      description: 排序字段
+    -
+      name: dir
+      in: query
+      schema:
+        type: string
+        enum:
+          - asc
+          - desc
+        default: asc
+      description: 排序方向
+    -
+      name: offset
+      in: query
+      schema:
+        type: integer
+        default: '0'
+      description: 分页偏移量
+    -
+      name: limit
+      in: query
+      schema:
+        type: integer
+        default: '1000'
+      description: 每页条数
+    -
+      name: search
+      in: query
+      description: 搜索关键字
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  rows:
+                    type: array
+                    items:
+                      type: object
+                      properties: { mode: { type: string }, format: { type: string }, footnote: { type: string }, origin: { type: string }, paragraph: { type: string }, id: { type: integer }, title: { type: string }, description: { type: string }, type: { type: integer }, category: { type: string }, progress: { type: integer }, parent_id: { type: integer }, parent: { type: string }, roles: { type: string }, executor_id: { type: integer }, executor_relation_task_id: { type: integer }, executor_relation_task: { type: string }, pre_task: { type: string }, next_task: { type: string }, is_milestone: { type: boolean }, project_id: { type: integer }, project: { type: string }, owner_id: { type: integer }, owner: { type: string }, editor_id: { type: integer }, editor: { type: string }, order: { type: string }, status: { type: integer }, created_at: { type: string }, updated_at: { type: string }, started_at: { type: string }, finished_at: { type: string }, assignees_id: { type: integer }, assignees: { type: string }, html: { type: string }, executor: { type: string } }
+                  count:
+                    type: integer
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+post:
+  summary: 新建任务
+  tags:
+    - task
+  operationId: post_api_v2_task
+  description: |-
+    在指定 studio 下创建任务。必须登录（否则 401），且当前用户必须是该 studio 本人
+    （studio_name 解析出的 id 等于当前用户 uid），否则返回 403。
+    新任务的 order 自动取同一 parent（无 parent 时取同一 project）下最大 order + 1，
+    没有兄弟节点时为 1；owner_id 为该 studio，creator_id 与 editor_id 为当前用户。
+
+    实现：`TaskController@store`
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            studio_name:
+              type: string
+              description: 'studio 名称，用于解析归属 studio 并做权限校验'
+            id:
+              type: string
+              description: '任务 uuid；为合法 uuid 时用它，否则服务端生成新 uuid'
+            project_id:
+              type: string
+              description: '所属工程 uid'
+            title:
+              type: string
+              description: 任务标题
+            parent_id:
+              type: string
+              description: '父任务 uuid，填写后为子任务'
+            type:
+              type: string
+              description: 任务类型
+              default: project
+          required:
+            - studio_name
+            - title
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  mode:
+                    type: string
+                  format:
+                    type: string
+                  footnote:
+                    type: string
+                  origin:
+                    type: string
+                  paragraph:
+                    type: string
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  description:
+                    type: string
+                  type:
+                    type: integer
+                  category:
+                    type: string
+                  progress:
+                    type: integer
+                  parent_id:
+                    type: integer
+                  parent:
+                    type: string
+                  roles:
+                    type: string
+                  executor_id:
+                    type: integer
+                  executor_relation_task_id:
+                    type: integer
+                  executor_relation_task:
+                    type: string
+                  pre_task:
+                    type: string
+                  next_task:
+                    type: string
+                  is_milestone:
+                    type: boolean
+                  project_id:
+                    type: integer
+                  project:
+                    type: string
+                  owner_id:
+                    type: integer
+                  owner:
+                    type: string
+                  editor_id:
+                    type: integer
+                  editor:
+                    type: string
+                  order:
+                    type: string
+                  status:
+                    type: integer
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  started_at:
+                    type: string
+                  finished_at:
+                    type: string
+                  assignees_id:
+                    type: integer
+                  assignees:
+                    type: string
+                  html:
+                    type: string
+                  executor:
+                    type: string
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

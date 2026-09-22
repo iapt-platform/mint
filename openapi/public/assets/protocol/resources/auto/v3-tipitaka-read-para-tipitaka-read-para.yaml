@@ -1,0 +1,62 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-tipitaka-read-para-tipitaka-read-para.yaml
+get:
+  summary: 读取单个段落
+  tags:
+    - tipitaka-read-para
+  operationId: get_api_v3_tipitaka_read_para_tipitaka_read_para_
+  description: |-
+    id 是 `{book}-{para}` 复合形式，例如 `9001-1`。格式不对或 channel 不是
+    uuid 返回 422；段落无内容返回 404。
+
+    实现：`TipitakaReadParaController@show`
+  parameters:
+    -
+      name: tipitaka_read_para
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '段落 id，格式 {book}-{para}'
+      example: 9001-1
+    -
+      name: channel
+      in: query
+      schema:
+        type: string
+      description: '译文 channel 的 uuid'
+      required: true
+    -
+      name: format
+      in: query
+      schema:
+        type: string
+        enum:
+          - html
+          - markdown
+          - react
+          - text
+        default: html
+      description: 内容格式
+    -
+      name: view
+      in: query
+      schema:
+        type: string
+        enum:
+          - display
+          - sentences
+          - all
+        default: display
+      description: 输出口径
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

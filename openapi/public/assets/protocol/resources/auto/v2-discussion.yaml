@@ -1,0 +1,285 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-discussion.yaml
+get:
+  summary: '列出讨论 / 批注'
+  tags:
+    - discussion
+  operationId: get_api_v2_discussion
+  description: |-
+    按 view 指定的口径返回 discussion 列表，支持状态过滤、分页与排序。
+    权限：未登录用户请求 type=discussion 时直接返回空结果；basic 角色用户在自己无编辑权限的
+    channel 上只能看到自己发表的 discussion；view=topic-by-user 必须登录，否则返回 403。
+    返回 rows、count（当前口径总数）、active/close（顶级节点的活跃与关闭数）、
+    can_create/can_reply（当前用户能否发起与回复，按 type 与 res_type 计算）。
+
+    实现：`DiscussionController@index`
+  parameters:
+    -
+      name: view
+      in: query
+      schema:
+        type: string
+        enum:
+          - question
+          - question-by-topic
+          - answer
+          - res_id
+          - topic-by-user
+          - all
+      description: 查询口径。question=按资源查顶级讨论；question-by-topic=按某条讨论所属资源查同资源讨论；answer=查某讨论的回复；res_id=某资源的顶级节点及其直接子节点；topic-by-user=当前用户发表的全部顶级讨论；all=全部顶级讨论
+      required: true
+    -
+      name: id
+      in: query
+      schema:
+        type: string
+      description: '资源 uid（question/res_id）、讨论 id（question-by-topic/answer）'
+      required: true
+    -
+      name: status
+      in: query
+      schema:
+        type: string
+        enum:
+          - active
+          - close
+        default: active
+      description: '状态过滤；res_id 与 topic-by-user 口径支持逗号分隔多选'
+    -
+      name: type
+      in: query
+      schema:
+        type: string
+        enum:
+          - discussion
+          - qa
+          - help
+          - note
+        default: discussion
+      description: 讨论类型
+    -
+      name: res_type
+      in: query
+      schema:
+        type: string
+        enum:
+          - sentence
+          - wbw
+          - article
+      description: 资源类型，影响权限判断与学员提问聚合
+    -
+      name: course
+      in: query
+      schema:
+        type: string
+      description: '课程 uid，配合 show_student 聚合学员提问'
+    -
+      name: show_student
+      in: query
+      schema:
+        type: string
+        enum:
+          - 'true'
+          - 'false'
+      description: '是否把学员 channel 上的同位置提问一并返回'
+    -
+      name: order
+      in: query
+      schema:
+        type: string
+        default: created_at
+      description: 排序字段
+    -
+      name: dir
+      in: query
+      schema:
+        type: string
+        enum:
+          - asc
+          - desc
+        default: desc
+      description: 排序方向
+    -
+      name: offset
+      in: query
+      schema:
+        type: integer
+        default: '0'
+      description: 跳过的记录数
+    -
+      name: limit
+      in: query
+      schema:
+        type: integer
+        default: '100'
+      description: 返回条数上限
+    -
+      name: search
+      in: query
+      description: 搜索关键字
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  rows:
+                    type: array
+                    items:
+                      type: object
+                      properties: { id: { type: integer }, title: { type: string }, content: { type: string }, content_type: { type: string }, parent: { type: string }, status: { type: integer }, editor: { type: string }, res_id: { type: integer }, res_type: { type: string }, type: { type: integer }, tpl_id: { type: integer }, children_count: { type: integer }, created_at: { type: string }, updated_at: { type: string }, pos_start: { type: string }, pos_end: { type: string }, quote_exact: { type: string }, quote_prefix: { type: string }, quote_suffix: { type: string }, html: { type: string }, summary: { type: string } }
+                  count:
+                    type: integer
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+post:
+  summary: '发表讨论 / 批注或回复'
+  tags:
+    - discussion
+  operationId: post_api_v2_discussion
+  description: |-
+    必须登录，未登录返回 401。传了 parent 即为回复：res_id 与 res_type 继承自父节点，
+    无需再传，父节点不存在返回 no record，保存后父节点 children_count 自增；
+    不传 parent 为顶级节点，此时 res_id、res_type、title 均为必填。
+    锚点字段（pos_start/pos_end/quote_exact/quote_prefix/quote_suffix）两种情况都可选。
+    默认会向消息队列 discussion 推送通知，可用 notification=false 关闭。
+
+    实现：`DiscussionController@store`
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            parent:
+              type: string
+              description: '父讨论 id，传入表示这是一条回复'
+            res_id:
+              type: string
+              description: '关联资源 uid（有 parent 时忽略并继承父节点）'
+            res_type:
+              type: string
+              description: '关联资源类型（有 parent 时忽略并继承父节点）'
+              enum:
+                - sentence
+                - wbw
+                - article
+            type:
+              type: string
+              description: 讨论类型
+              enum:
+                - discussion
+                - qa
+                - help
+                - note
+              default: discussion
+            tpl_id:
+              type: string
+              description: '模板 id'
+            title:
+              type: string
+              description: '标题（有 parent 时非必填）'
+            content:
+              type: string
+              description: 正文内容
+            content_type:
+              type: string
+              description: 正文格式
+              default: markdown
+            pos_start:
+              type: integer
+              description: 锚点在资源文本中的起始偏移，非负整数
+            pos_end:
+              type: integer
+              description: 锚点在资源文本中的结束偏移，非负整数
+            quote_exact:
+              type: string
+              description: 锚定的原文片段
+            quote_prefix:
+              type: string
+              description: 锚定片段前的上下文，用于重新定位
+            quote_suffix:
+              type: string
+              description: 锚定片段后的上下文，用于重新定位
+            notification:
+              type: boolean
+              description: 是否推送消息队列通知
+              default: 'true'
+          required:
+            - res_id
+            - res_type
+            - title
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  content:
+                    type: string
+                  content_type:
+                    type: string
+                  parent:
+                    type: string
+                  status:
+                    type: integer
+                  editor:
+                    type: string
+                  res_id:
+                    type: integer
+                  res_type:
+                    type: string
+                  type:
+                    type: integer
+                  tpl_id:
+                    type: integer
+                  children_count:
+                    type: integer
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  pos_start:
+                    type: string
+                  pos_end:
+                    type: string
+                  quote_exact:
+                    type: string
+                  quote_prefix:
+                    type: string
+                  quote_suffix:
+                    type: string
+                  html:
+                    type: string
+                  summary:
+                    type: string
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

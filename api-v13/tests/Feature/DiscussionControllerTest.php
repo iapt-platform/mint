@@ -13,7 +13,7 @@ it('stores the annotation selector fields on create', function () {
     $response = $this->postJson('/api/v2/discussion', [
         'res_id' => $resId,
         'res_type' => 'sentence',
-        'type' => 'note',
+        'type' => 'commentary',
         'title' => '义注',
         'content' => '{{1-2-3-4}}',
         'pos_start' => 10,
@@ -46,7 +46,7 @@ it('leaves annotation selector fields null when not provided', function () {
     $this->postJson('/api/v2/discussion', [
         'res_id' => (string) Str::uuid(),
         'res_type' => 'sentence',
-        'type' => 'note',
+        'type' => 'commentary',
         'title' => '无锚点',
         'content' => '{{1-2-3-4}}',
         'notification' => false,
@@ -59,6 +59,21 @@ it('leaves annotation selector fields null when not provided', function () {
     expect($saved->quote_exact)->toBeNull();
     expect($saved->quote_prefix)->toBeNull();
     expect($saved->quote_suffix)->toBeNull();
+});
+
+it('creates a discussion without a title', function () {
+    $userUid = makeStudio('annotator');
+
+    $this->postJson('/api/v2/discussion', [
+        'res_id' => (string) Str::uuid(),
+        'res_type' => 'sentence',
+        'type' => 'note',
+        'content' => '这里的 dassana 指见到佛陀。',
+        'notification' => false,
+    ], authHeader($userUid))->assertOk();
+
+    // 批注 / 脚注一类正文就是全部，标题可以没有
+    expect(Discussion::where('editor_uid', $userUid)->first()->title)->toBeNull();
 });
 
 it('rejects an invalid annotation selector', function () {
@@ -81,7 +96,7 @@ it('updates only the annotation fields present in the request', function () {
     $discussion->forceFill([
         'res_id' => (string) Str::uuid(),
         'res_type' => 'sentence',
-        'type' => 'note',
+        'type' => 'commentary',
         'title' => '旧标题',
         'content' => '{{1-2-3-4}}',
         'editor_uid' => $userUid,
@@ -114,7 +129,7 @@ it('allows clearing an annotation field explicitly', function () {
     $discussion->forceFill([
         'res_id' => (string) Str::uuid(),
         'res_type' => 'sentence',
-        'type' => 'note',
+        'type' => 'commentary',
         'title' => '旧标题',
         'editor_uid' => $userUid,
         'quote_exact' => '旧摘录',

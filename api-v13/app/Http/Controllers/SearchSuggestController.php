@@ -5,7 +5,6 @@
 namespace App\Http\Controllers;
 
 use App\Services\OpenSearchService;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 /**
@@ -75,19 +74,18 @@ GET /api/v2/suggest?q=M.1&fields=page_refs&language=pali&limit=5
 GET /api/v2/suggest?q=dhamma&fields[]=title&fields[]=content&limit=10
      */
     /**
-     * 自动建议接口
+     * 搜索建议（自动补全）
      *
-     * 基于 OpenSearch completion suggester，支持从不同字段获取建议。
+     * 按前缀给出补全候选，供搜索框实时提示。每个字段各自返回一组建议。
+     * q 为空时返回 400。
      *
-     * @param  Request  $request
-     *                            - q (string): 输入的部分文本（必填）
-     *                            - fields (string|array): 要查询的字段，可选值：
-     *                            - 不传：查询所有字段 (title, content, page_refs)
-     *                            - 单个字段：'title' | 'content' | 'page_refs'
-     *                            - 多个字段：'title,content' 或 ['title', 'content']
-     *                            - language (string): 语言过滤，可选（如：pali, zh, en）
-     *                            - limit (int): 每个字段返回的建议数量，默认 10，最大 50
-     * @return JsonResponse
+     * @unauthenticated
+     *
+     * @queryParam q string required 已输入的查询文本
+     * @queryParam fields string 在哪些字段上补全，逗号分隔；不传则全查。
+     *             Enum: title,content,page_refs
+     * @queryParam language string 语言过滤。Example: pali
+     * @queryParam limit integer 每个字段返回的建议数，上限 50。Default: 10
      */
     public function index(Request $request)
     {

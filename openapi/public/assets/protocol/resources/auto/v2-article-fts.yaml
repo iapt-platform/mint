@@ -1,0 +1,115 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-article-fts.yaml
+get:
+  summary: 'http://127.0.0.1:8000/api/v2/article-fts?id=df6c6609-6fc1-42d0-9ef1-535ef3e702c9&anthology=697c9169-cb9d-4a60-8848-92745e467bab&channesl=7fea264d-7a26-40f8-bef7-bc95102760fb'
+  tags:
+    - article-fts
+  operationId: get_api_v2_article_fts
+  description: 实现：`ArticleFtsController@index`
+  parameters:
+    -
+      name: from
+      in: query
+      schema:
+        type: string
+    -
+      name: anthology
+      in: query
+      schema:
+        type: string
+    -
+      name: id
+      in: query
+      schema:
+        type: string
+    -
+      name: channels
+      in: query
+      schema:
+        type: string
+    -
+      name: key
+      in: query
+      schema:
+        type: string
+    -
+      name: search
+      in: query
+      description: 搜索关键字
+      schema:
+        type: string
+    -
+      name: order
+      in: query
+      description: 排序字段
+      schema:
+        type: string
+    -
+      name: dir
+      in: query
+      description: 排序方向
+      schema:
+        type: string
+        enum:
+          - desc
+          - asc
+    -
+      name: limit
+      in: query
+      description: 每页记录数
+      schema:
+        type: number
+    -
+      name: offset
+      in: query
+      description: 从第几条记录开始提取
+      schema:
+        type: number
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  rows:
+                    type: array
+                    items:
+                      type: object
+                  count:
+                    type: integer
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+post:
+  summary: '新建 article-fts'
+  tags:
+    - article-fts
+  operationId: post_api_v2_article_fts
+  description: 实现：`ArticleFtsController@store`
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

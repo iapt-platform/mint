@@ -1,0 +1,24 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-upgrade.yaml
+get:
+  summary: 客户端升级检查
+  tags:
+    - upgrade
+  operationId: get_api_v3_upgrade
+  description: |-
+    目前只回报服务可用，尚未接入版本比对逻辑。
+
+    实现：`UpgradeController@index`
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+              meta:
+                $ref: '../../main.yaml#/components/schemas/PaginationMeta'

@@ -721,10 +721,14 @@ class PaliContentService
     }
 
     /**
-     * 段落注释（义注/复注内嵌）：把锚定到该句子的注释记录渲染成 {{note}} 模板，
-     * 按位置插入句子内容，并在其后追加 <cite> 作为跳转锚点。
+     * 段落批注内嵌：把锚定到该句子的批注渲染成 {{note}} 模板，按位置插入句子内容。
      *
-     * 同一句可能有多条注释，按 pos_end 倒序插入 —— 先插靠后的，避免先插入的
+     * 两种批注一起注入，除出处外处理完全一样：
+     * - `type='commentary'`（注释书对应）：content 是义注 / 复注的句子模板
+     *   `{{book-para-start-end}}`，渲染成这几句的译文，并追加 <cite> 作为跳转锚点；
+     * - `type='note'`（普通边注）：content 就是注解正文（markdown），没有出处，不出 <cite>。
+     *
+     * 同一句可能有多条批注，按 pos_end 倒序插入 —— 先插靠后的，避免先插入的
      * 模板改变后面位置的字符偏移（见 docs/reading-annotations.md §4）。
      */
     protected function injectAnnotationNotes(Sentence $row, string $channelType): array
@@ -733,7 +737,7 @@ class PaliContentService
         $result = ['content' => $content, 'notes' => []];
         $notes = Discussion::where('res_type', 'sentence')
             ->where('res_id', $row->uid)
-            ->where('type', 'note')
+            ->whereIn('type', Discussion::INJECTED_TYPES)
             ->get();
 
         if ($notes->isEmpty()) {
@@ -745,7 +749,8 @@ class PaliContentService
         // 插入顺序：按插入点倒序（先插靠后的，免得前面的插入改变后面的偏移）；
         // 插入点相同的，按义注原文的先后倒序——同一位置后插入的排在前面，
         // 倒序插入后读起来就是义注原文顺序。插入点与下面的越界处理口径一致
-        //（null / 越界都算句尾）。义注坐标取 content 第一句的 book-para-start。
+        //（null / 越界都算句尾）。义注坐标取 content 第一句的 book-para-start；
+        // 普通 note 没有坐标，取 0，同一插入点上读起来排在义注对应之前。
         $notes = $notes->sort(function ($a, $b) use ($len) {
             $key = function ($note) use ($len) {
                 $pos = $note->pos_end;
@@ -761,26 +766,35 @@ class PaliContentService
         })->values();
         $collected = [];
         foreach ($notes as $note) {
-            // content 是一个或多个义注句子模板 {{book-para-start-end}}（一个词可能由义注
-            // 多句解释，按顺序并列，如 {{135-404-50-54}}{{135-404-55-65}}）。
-            // 不是这种格式的记录不认，跳过——不插角标，也不进脚注列表。
             $noteContent = trim((string) $note->content);
-            if (! preg_match('/^(?:\{\{\d+-\d+-\d+-\d+\}\}\s*)+$/', $noteContent)) {
+            if ($noteContent === '') {
                 continue;
             }
-            preg_match_all('/\{\{(\d+)-(\d+)-(\d+)-(\d+)\}\}/', $noteContent, $sents, PREG_SET_ORDER);
-            // 义注实际内容：先用 MdRender 渲染义注句子模板得到，
-            // 再放进 {{note|text=…}} —— 直接嵌套 {{…}} 会被 wiki2xml 的平铺替换破坏。
-            // 用 text 格式渲染义注内容：避免「1.」被 markdown 解释成有序列表，
+            $sents = [];
+            if ($note->type === Discussion::TYPE_COMMENTARY) {
+                // content 是一个或多个义注句子模板 {{book-para-start-end}}（一个词可能由义注
+                // 多句解释，按顺序并列，如 {{135-404-50-54}}{{135-404-55-65}}）。
+                // 不是这种格式的记录不认，跳过——不插角标，也不进脚注列表。
+                if (! preg_match('/^(?:\{\{\d+-\d+-\d+-\d+\}\}\s*)+$/', $noteContent)) {
+                    continue;
+                }
+                preg_match_all('/\{\{(\d+)-(\d+)-(\d+)-(\d+)\}\}/', $noteContent, $sents, PREG_SET_ORDER);
+                // 义注正文只需译文（不要巴利原文）：把每个裸句模板 {{book-para-start-end}}
+                // 转成 {{sent|id=…|text=translation}}，让 sent 模板只输出 translation。
+                $source = implode(' ', array_map(
+                    fn ($s) => '{{sent|id='.$s[1].'-'.$s[2].'-'.$s[3].'-'.$s[4].'|text=translation}}',
+                    $sents
+                ));
+            } else {
+                // 普通边注：content 就是注解正文，照原样渲染。
+                $source = $noteContent;
+            }
+            // 边注实际内容：先用 MdRender 渲染出来，再放进 {{note|text=…}} ——
+            // 直接嵌套 {{…}} 会被 wiki2xml 的平铺替换破坏。
+            // 用 text 格式渲染：避免「1.」被 markdown 解释成有序列表，
             // 产生 <ol></p></p> 这类坏 HTML 把 sidenote 的闭合结构破坏、吞掉后续正文。
-            // 义注正文只需译文（不要巴利原文）：把每个裸句模板 {{book-para-start-end}}
-            // 转成 {{sent|id=…|text=translation}}，让 sent 模板只输出 translation。
-            $noteTpl = implode(' ', array_map(
-                fn ($s) => '{{sent|id='.$s[1].'-'.$s[2].'-'.$s[3].'-'.$s[4].'|text=translation}}',
-                $sents
-            ));
             $noteHtml = MdRender::render(
-                $noteTpl,
+                $source,
                 [$row->channel_uid],
                 null,
                 'read',
@@ -792,18 +806,22 @@ class PaliContentService
             if ($pos === null || $pos < 0 || $pos > $len) {
                 $pos = $len;
             }
-            // 跳转目标（义注书-段-起-止）：同时挂在 <cite> 和角标 <label> 上，
-            // 前者用于「点链接跳页」，后者用于平板双栏「点角标跨栏高亮」。
+            // 出处只有 commentary 有。跳转目标（义注书-段-起-止）同时挂在 <cite> 和角标
+            // <label> 上，前者用于「点链接跳页」，后者用于平板双栏「点角标跨栏高亮」。
+            // 多句时跳转到第一句（义注对这个词的解释从那里开始）。
+            $citeHtml = '';
+            $citeParam = '';
+            if ($sents) {
+                $m = $sents[0];
+                $target = ' data-book="'.$m[1].'" data-para="'.$m[2].'" data-start="'.$m[3].'" data-end="'.$m[4].'"';
+                $citeHtml = '<cite class="anno-jump"'.$target.'>义注</cite>';
+                $citeParam = '|cite=义注'
+                    .'|citelink='.$m[1].'-'.$m[2].'-'.$m[3].'-'.$m[4];
+            }
             // 用 {{note}} 模板渲染 tufte sidenote（label + input + span.sidenote），
             // 复用 render_note() 的结构，不再手拼 sidenote HTML。
-            // text 传已预渲染的纯文本译文（嵌套 {{…}} 会被 wiki2xml 平铺替换破坏）。
-            // 多句时跳转到第一句（义注对这个词的解释从那里开始）。
-            $m = $sents[0];
-            $target = ' data-book="'.$m[1].'" data-para="'.$m[2].'" data-start="'.$m[3].'" data-end="'.$m[4].'"';
-            $citeHtml = '<cite class="anno-jump"'.$target.'>义注</cite>';
-            $noteTplInline = '{{note|text='.$noteHtml
-                .'|cite=义注'
-                .'|citelink='.$m[1].'-'.$m[2].'-'.$m[3].'-'.$m[4].'}}';
+            // text 传已预渲染的纯文本（嵌套 {{…}} 会被 wiki2xml 平铺替换破坏）。
+            $noteTplInline = '{{note|text='.$noteHtml.$citeParam.'}}';
             $content = mb_substr($content, 0, $pos, 'UTF-8')
                 .$noteTplInline
                 .mb_substr($content, $pos, null, 'UTF-8');

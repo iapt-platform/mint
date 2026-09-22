@@ -1,0 +1,147 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-nissaya-ending.yaml
+get:
+  summary: '列出 nissaya-ending'
+  tags:
+    - nissaya-ending
+  operationId: get_api_v2_nissaya_ending
+  description: 实现：`NissayaEndingController@index`
+  parameters:
+    -
+      name: case
+      in: query
+      schema:
+        type: string
+    -
+      name: lang
+      in: query
+      schema:
+        type: string
+    -
+      name: relation
+      in: query
+      schema:
+        type: string
+    -
+      name: search
+      in: query
+      schema:
+        type: string
+    -
+      name: order
+      in: query
+      schema:
+        type: string
+        default: updated_at
+    -
+      name: dir
+      in: query
+      schema:
+        type: string
+        default: desc
+    -
+      name: offset
+      in: query
+      schema:
+        type: string
+    -
+      name: limit
+      in: query
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  rows:
+                    type: array
+                    items:
+                      type: object
+                      properties: { id: { type: integer }, ending: { type: string }, lang: { type: string }, relation: { type: string }, case: { type: string }, from: { type: string }, count: { type: integer }, editor: { type: string }, created_at: { type: string }, updated_at: { type: string }, term_channel: { type: string }, term_id: { type: integer } }
+                  count:
+                    type: integer
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+post:
+  summary: '新建 nissaya-ending'
+  tags:
+    - nissaya-ending
+  operationId: post_api_v2_nissaya_ending
+  description: 实现：`NissayaEndingController@store`
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            ending:
+              type: string
+              description: 规则：required
+            lang:
+              type: string
+              description: 规则：required
+            relation:
+              type: string
+            case:
+              type: string
+            from:
+              type: string
+          required:
+            - ending
+            - lang
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  ending:
+                    type: string
+                  lang:
+                    type: string
+                  relation:
+                    type: string
+                  case:
+                    type: string
+                  from:
+                    type: string
+                  count:
+                    type: integer
+                  editor:
+                    type: string
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  term_channel:
+                    type: string
+                  term_id:
+                    type: integer
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
