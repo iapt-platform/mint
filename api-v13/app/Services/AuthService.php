@@ -7,6 +7,7 @@ use App\Models\AiModel;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class AuthService
 {
@@ -101,7 +102,8 @@ class AuthService
      * 校验模型身份 token 是否已被撤销。
      *
      * 撤销即把 ai_models.token_version 自增，旧 token 里的 ver 随即对不上。
-     * 模型被删除同样视为失效。人类 token（id 为用户自增主键，恒 > 0）直接放行，不查库。
+     * 模型被删除同样视为失效。人类 token 直接放行，不查库；唯一的例外是
+     * root 管理员（自增主键 id 恰好是 0），见方法内 id === 0 分支的说明。
      */
     private static function modelTokenIsValid(object $jwt): bool
     {
@@ -111,9 +113,22 @@ class AuthService
             return $version !== null && (int) $version === (int) ($jwt->ver ?? 0);
         }
 
-        // 引入版本号之前签出的模型 token（typ 缺失、id 恒为 0）无法撤销，一律作废，
-        // 持有者须重新签发。
-        return (int) ($jwt->id ?? 0) !== 0;
+        // 人类 token（自增主键 id > 0）直接放行，不查库。
+        if ((int) ($jwt->id ?? 0) !== 0) {
+            return true;
+        }
+
+        // id === 0 的 token 有两种来源，不能再只凭 id 判死：
+        //   1. root 管理员的人类 token —— 其自增主键 id 恰好是 0（历史种子数据）；
+        //   2. 引入版本号之前签出的旧模型 token（typ 缺失、id 恒为 0）—— 无法撤销。
+        // 旧模型 token 的 uid 一定落在 ai_models 表，root 的 uid 不在其中，
+        // 故用「uid 是否命中 ai_models」区分：命中 → 旧模型 token，作废；未命中 → 人类，放行。
+        // ai_models.uid 是 uuid 列，uid 不是合法 UUID 时查库会报类型错误，先挡掉。
+        if (! Str::isUuid((string) $jwt->uid)) {
+            return false;
+        }
+
+        return ! AiModel::where('uid', $jwt->uid)->exists();
     }
 
     /**
