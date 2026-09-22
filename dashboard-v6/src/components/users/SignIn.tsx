@@ -49,32 +49,36 @@ const Widget = () => {
             "/api/v2/sign-in",
             user
           );
+          if (!res.ok) {
+            setError("用户名或密码错误");
+            return;
+          }
           //TODO sign-in 同时返回用户信息，之后直接dispatch 无需二次查询
-          if (res.ok) {
-            set(res.data);
-            get<IUserResponse>("/api/v2/auth/current").then((json) => {
-              if (json.ok) {
-                console.debug("获取用户信息成功", json.data);
-                dispatch(signIn([json.data, res.data]));
-                let url: string | null = null;
-                searchParams.forEach((value: string, key: string) => {
-                  if (key === "url") {
-                    url = value;
-                  }
-                });
-                if (url) {
-                  window.location.href = atob(url);
-                } else {
-                  navigate(TO_WORKSPACE);
-                }
-              } else {
-                setError("用户名或密码错误");
-                console.error(json.message);
+          set(res.data);
+          try {
+            const json = await get<IUserResponse>("/api/v2/auth/current");
+            if (!json.ok) {
+              setError("用户名或密码错误");
+              console.error(json.message);
+              return;
+            }
+            console.debug("获取用户信息成功", json.data);
+            dispatch(signIn([json.data, res.data]));
+            let url: string | null = null;
+            searchParams.forEach((value: string, key: string) => {
+              if (key === "url") {
+                url = value;
               }
             });
+            if (url) {
+              window.location.href = atob(url);
+            } else {
+              navigate(TO_WORKSPACE);
+            }
             message.success(intl.formatMessage({ id: "flashes.success" }));
-          } else {
-            setError("用户名或密码错误");
+          } catch (e) {
+            console.error(e);
+            setError("登录失败，请重试");
           }
         }}
       >
