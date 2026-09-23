@@ -126,6 +126,7 @@ put:
                 - qa
                 - help
                 - note
+                - commentary
             pos_start:
               type: integer
               description: 锚点起始偏移，仅在提交时更新
@@ -251,6 +252,7 @@ patch:
                 - qa
                 - help
                 - note
+                - commentary
             pos_start:
               type: integer
               description: 锚点起始偏移，仅在提交时更新

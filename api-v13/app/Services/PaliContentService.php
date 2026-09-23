@@ -703,6 +703,12 @@ class PaliContentService
     private const FORMATS = ['html', 'markdown', 'react', 'text'];
 
     /**
+     * 义注对应（commentary）批注最多渲染几句。
+     * 一条批注可能挂着十几句义注，全铺进边注会把正文挤没，只取前几句。
+     */
+    private const MAX_COMMENTARY_SENTENCES = 3;
+
+    /**
      * 段落阅读模式缓存的 key
      */
     public static function paragraphCacheKey(int $book, int $para, string $channelUid, string $format): string
@@ -749,7 +755,7 @@ class PaliContentService
         // 插入顺序：按插入点倒序（先插靠后的，免得前面的插入改变后面的偏移）；
         // 插入点相同的，按义注原文的先后倒序——同一位置后插入的排在前面，
         // 倒序插入后读起来就是义注原文顺序。插入点与下面的越界处理口径一致
-        //（null / 越界都算句尾）。义注坐标取 content 第一句的 book-para-start；
+        // （null / 越界都算句尾）。义注坐标取 content 第一句的 book-para-start；
         // 普通 note 没有坐标，取 0，同一插入点上读起来排在义注对应之前。
         $notes = $notes->sort(function ($a, $b) use ($len) {
             $key = function ($note) use ($len) {
@@ -781,9 +787,11 @@ class PaliContentService
                 preg_match_all('/\{\{(\d+)-(\d+)-(\d+)-(\d+)\}\}/', $noteContent, $sents, PREG_SET_ORDER);
                 // 义注正文只需译文（不要巴利原文）：把每个裸句模板 {{book-para-start-end}}
                 // 转成 {{sent|id=…|text=translation}}，让 sent 模板只输出 translation。
+                // 句子可能有很多条，只渲染前 MAX_COMMENTARY_SENTENCES 句；
+                // 跳转锚点仍指向第一句，点进去能看到完整义注。
                 $source = implode(' ', array_map(
                     fn ($s) => '{{sent|id='.$s[1].'-'.$s[2].'-'.$s[3].'-'.$s[4].'|text=translation}}',
-                    $sents
+                    array_slice($sents, 0, self::MAX_COMMENTARY_SENTENCES)
                 ));
             } else {
                 // 普通边注：content 就是注解正文，照原样渲染。
@@ -802,6 +810,10 @@ class PaliContentService
                 'markdown',
                 'text'
             );
+            // 义注被截断时补省略号，提示后面还有；想看全文点 <cite> 跳过去。
+            if (count($sents) > self::MAX_COMMENTARY_SENTENCES) {
+                $noteHtml = rtrim($noteHtml).'...';
+            }
             $pos = $note->pos_end;
             if ($pos === null || $pos < 0 || $pos > $len) {
                 $pos = $len;

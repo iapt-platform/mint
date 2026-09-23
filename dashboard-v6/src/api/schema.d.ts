@@ -7828,11 +7828,21 @@ export interface paths {
         };
         /**
          * 按章节读取译文
-         * @description 给定 book + 段落号，定位它所属的章节，返回该章节的段落内容并分页。
-         *     章节不存在或没有内容返回 404。
-         *     分页是手工做的：按字节时从头累加 `pali_texts.lenght` 逐页推进，所以 meta
-         *     里用 `page_size`（领域语法，非整数）而不是框架的 `per_page`，并附带
-         *     `first_para` / `last_para` / `has_more`。
+         * @description `para` 定位章节（它是章节的起始段落号，章节长度取那一行的 `chapter_len`），
+         *     `from` 是本次取数的起点游标，从它开始取 `pagesize` 大小的一块。章节不存在、
+         *     或该 channel 在这个章节里没有任何译文，返回 404。
+         *     取数的段落集合来自 sentences 表里该 channel 实际有译文的段落，不是章节的
+         *     全部段落——多数译文是残缺的，按 pali_texts 的整段区间切块会切出空块。
+         *     所以 `pagesize` 数的永远是有内容的段落。
+         *     游标式分块是为了前端的下载进度条与断点续传，meta 里给三个数：
+         *     `total_para` 是分母（该 channel 在本章节有多少段），`remaining_para` 是
+         *     `last_para` 之后本章节内还剩多少段，进度即
+         *     `(total_para - remaining_para) / total_para`；续传时把上次的
+         *     `last_para + 1` 当作下次的 `from` 传回来，`remaining_para` 为 0 即取完。
+         *     `first_para` / `last_para` 是本块实际覆盖的段落闭区间，取自切块结果而不是
+         *     `data`：渲染为空的段落会被剔出 `data` 但仍算在块内，所以 `data` 可能比这个
+         *     区间短，而续传必须按 `last_para` 推进，否则会卡在那一段上原地打转。
+         *     `first_para` 是游标顺延后的落点，可能大于请求的 `from`（即 `current_para`）。
          *
          *     实现：`TipitakaReadChapterController@index`
          */
@@ -7854,8 +7864,8 @@ export interface paths {
         };
         /**
          * 按 id 读取章节
-         * @description 与 index 等价，只是把 book 与 para 合成一个路径参数。格式不对或 channel
-         *     不是 uuid 返回 422。
+         * @description 与 index 等价，只是把 book 与 para 合成一个路径参数；游标 `from` 仍走
+         *     查询参数。格式不对或 channel 不是 uuid 返回 422。
          *
          *     实现：`TipitakaReadChapterController@show`
          */
@@ -16267,7 +16277,7 @@ export interface operations {
                 /** @description 状态过滤；res_id 与 topic-by-user 口径支持逗号分隔多选 */
                 status?: "active" | "close";
                 /** @description 讨论类型 */
-                type?: "discussion" | "qa" | "help" | "note";
+                type?: "discussion" | "qa" | "help" | "note" | "commentary";
                 /** @description 资源类型，影响权限判断与学员提问聚合 */
                 res_type?: "sentence" | "wbw" | "article";
                 /** @description 课程 uid，配合 show_student 聚合学员提问 */
@@ -16357,11 +16367,11 @@ export interface operations {
                      * @default discussion
                      * @enum {string}
                      */
-                    type?: "discussion" | "qa" | "help" | "note";
+                    type?: "discussion" | "qa" | "help" | "note" | "commentary";
                     /** @description 模板 id */
                     tpl_id?: string;
-                    /** @description 标题（有 parent 时非必填） */
-                    title: string;
+                    /** @description 标题（可选） */
+                    title?: string;
                     /** @description 正文内容 */
                     content?: string;
                     /**
@@ -16733,7 +16743,7 @@ export interface operations {
                      * @description 讨论类型，仅在提交时更新
                      * @enum {string}
                      */
-                    type?: "discussion" | "qa" | "help" | "note";
+                    type?: "discussion" | "qa" | "help" | "note" | "commentary";
                     /** @description 锚点起始偏移，仅在提交时更新 */
                     pos_start?: number;
                     /** @description 锚点结束偏移，仅在提交时更新 */
@@ -16843,7 +16853,7 @@ export interface operations {
                      * @description 讨论类型，仅在提交时更新
                      * @enum {string}
                      */
-                    type?: "discussion" | "qa" | "help" | "note";
+                    type?: "discussion" | "qa" | "help" | "note" | "commentary";
                     /** @description 锚点起始偏移，仅在提交时更新 */
                     pos_start?: number;
                     /** @description 锚点结束偏移，仅在提交时更新 */
@@ -32257,7 +32267,10 @@ export interface operations {
             query: {
                 /**
                  * @description 要删除的词条 id 数组的 JSON 字符串
-                 * @example ["123","456"]
+                 * @example [
+                 *       "123",
+                 *       "456"
+                 *     ]
                  */
                 id: string;
             };
@@ -32374,7 +32387,10 @@ export interface operations {
             query?: {
                 /**
                  * @description 要批量删除的词条 id 数组的 JSON 字符串
-                 * @example ["123","456"]
+                 * @example [
+                 *       "123",
+                 *       "456"
+                 *     ]
                  */
                 id?: string;
             };
@@ -33983,12 +33999,18 @@ export interface operations {
                 tags?: string;
                 /**
                  * @description 页码标记
-                 * @example ["V3.81","M3.58"]
+                 * @example [
+                 *       "V3.81",
+                 *       "M3.58"
+                 *     ]
                  */
                 page_refs?: unknown[];
                 /**
                  * @description 关联 id
-                 * @example ["chapter_93-5","m.n. 38"]
+                 * @example [
+                 *       "chapter_93-5",
+                 *       "m.n. 38"
+                 *     ]
                  */
                 related_id?: unknown[];
                 /** @description 按作者或译者过滤 */
@@ -34148,18 +34170,20 @@ export interface operations {
             query: {
                 /** @description 典籍 id */
                 book: number;
-                /** @description 章节内任一段落号，用于定位章节 */
+                /** @description 章节的起始段落号，决定本次取数的段落区间 */
                 para: number;
+                /** @description 起点游标，从这一段开始取；不传则等于 para，即从章节 开头取起。可以是章节区间内的任意段落号，落在没有译文的段落上就 顺延到它之后的第一段。超出章节区间、或它之后已经没有译文， 返回 422 */
+                from?: number;
                 /** @description 译文 channel 的 uuid */
                 channel: string;
                 /** @description 内容格式 */
                 format?: "html" | "markdown" | "react" | "text";
                 /** @description 输出口径：display 整段合并，sentences 逐句，all 两者都给 */
                 view?: "display" | "sentences" | "all";
-                /** @description 每页大小，两种写法：`20000b` 按字节累加段落长度 （每页至少一段），`10p` 按段落数 */
-                pagesize?: string;
-                /** @description 页码，从 1 开始。超出范围返回 422 */
-                page?: number;
+                /** @description 每块大小，含义由 unit 决定。上限 unit=para 时 200、 unit=byte 时 5000，超出不报错按上限算，meta.page_size 回实际 生效的值 */
+                pagesize?: number;
+                /** @description 每块大小的单位：para 按段落数，byte 按段落长度累加。 两种单位下每块都至少一段、至多 200 段 */
+                unit?: "para" | "byte";
             };
             header?: never;
             path?: never;
@@ -34187,14 +34211,16 @@ export interface operations {
             query: {
                 /** @description 译文 channel 的 uuid */
                 channel: string;
+                /** @description 起点游标，从这一段开始取；不传则从章节开头取起。 超出章节区间返回 422 */
+                from?: number;
                 /** @description 内容格式 */
                 format?: "html" | "markdown" | "react" | "text";
                 /** @description 输出口径：display 整段合并，sentences 逐句，all 两者都给 */
                 view?: "display" | "sentences" | "all";
-                /** @description 每页大小，两种写法：`20000b` 按字节累加段落长度 （每页至少一段），`10p` 按段落数 */
-                pagesize?: string;
-                /** @description 页码，从 1 开始。超出范围返回 422 */
-                page?: number;
+                /** @description 每块大小，含义由 unit 决定。上限 unit=para 时 200、 unit=byte 时 5000，超出不报错按上限算，meta.page_size 回实际 生效的值 */
+                pagesize?: number;
+                /** @description 每块大小的单位：para 按段落数，byte 按段落长度累加。 两种单位下每块都至少一段、至多 200 段 */
+                unit?: "para" | "byte";
             };
             header?: never;
             path: {
