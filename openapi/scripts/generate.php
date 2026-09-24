@@ -52,7 +52,7 @@ function parseController(string $class, string $method): array
     if (isset($methodCache[$key])) {
         return $methodCache[$key];
     }
-    $empty = ['summary' => null, 'description' => null, 'params' => [], 'validate' => [], 'resource' => null, 'tags' => ['params' => [], 'deprecated' => false, 'unauthenticated' => false, 'responses' => []]];
+    $empty = ['summary' => null, 'description' => null, 'params' => [], 'validate' => [], 'resource' => null, 'collection' => false, 'tags' => ['params' => [], 'deprecated' => false, 'unauthenticated' => false, 'responses' => [], 'meta' => []]];
 
     $file = $api.'/'.str_replace(['App\\', '\\'], ['app/', '/'], $class).'.php';
     if (! is_file($file)) {
@@ -75,6 +75,16 @@ function parseController(string $class, string $method): array
     }
 
     $info = $empty;
+
+    // use 语句：短类名 → 全名。控制器里写的是 `ReactionResource::collection(...)`，
+    // 只有短名，拼不出文件路径；控制器和 Resource 一旦进了子命名空间
+    // （App\Http\Resources\V3\…），按平铺目录找就会静默落空、schema 变成空对象。
+    $imports = [];
+    foreach ($finder->findInstanceOf($ast, Node\Stmt\Use_::class) as $use) {
+        foreach ($use->uses as $single) {
+            $imports[$single->getAlias()->toString()] = $single->name->toString();
+        }
+    }
 
     // 文档注释首行作为 summary，其余作为 description；
     // @queryParam / @bodyParam / @urlParam / @deprecated 作为结构化补充
@@ -195,11 +205,13 @@ function parseController(string $class, string $method): array
         }
     }
 
-    // 返回的 Resource 类
+    // 返回的 Resource 类，以及它是 ::collection() 还是单个
     foreach ($finder->findInstanceOf($node, Node\Expr\StaticCall::class) as $call) {
         $cls = $call->class instanceof Node\Name ? $call->class->toString() : null;
         if ($cls && str_ends_with($cls, 'Resource')) {
-            $info['resource'] = $cls;
+            $info['resource'] = $imports[$cls] ?? $cls;
+            $info['collection'] = $call->name instanceof Node\Identifier
+                && $call->name->toString() === 'collection';
             break;
         }
     }
@@ -207,13 +219,33 @@ function parseController(string $class, string $method): array
         foreach ($finder->findInstanceOf($node, Node\Expr\New_::class) as $new) {
             $cls = $new->class instanceof Node\Name ? $new->class->toString() : null;
             if ($cls && str_ends_with($cls, 'Resource')) {
-                $info['resource'] = $cls;
+                $info['resource'] = $imports[$cls] ?? $cls;
                 break;
             }
         }
     }
 
     return $methodCache[$key] = $info;
+}
+
+/**
+ * 把 `Default:` / `Example:` 里写的字面量转成参数声明的那个类型。
+ *
+ * 文档注释里写什么都是字符串，直接吐出去会得到 `type: integer` 配 `example: '9001'`，
+ * redocly 的 no-invalid-parameter-examples 会报警，生成的前端类型也对不上。
+ */
+function castToType(string $value, string $type): mixed
+{
+    return match ($type) {
+        'integer' => is_numeric($value) ? (int) $value : $value,
+        'number' => is_numeric($value) ? (float) $value : $value,
+        'boolean' => match (strtolower($value)) {
+            'true', '1' => true,
+            'false', '0' => false,
+            default => $value,
+        },
+        default => $value,
+    };
 }
 
 /**
@@ -224,12 +256,17 @@ function parseController(string $class, string $method): array
  *   @bodyParam   name type [required] 描述
  *   @urlParam    name type [required] 描述
  *   @deprecated  弃用说明
+ *   @unauthenticated       该端点无需登录，不挂 401
+ *   @responseStatus 码 描述  额外的状态码。v3 下 2xx 视为另一种成功口径（响应体与 200
+ *                          同形，如 201 Created），非 2xx 的响应体是 Problem Details
+ *   @meta name type 描述     v3 列表响应的手工分页 meta 字段（如游标式阅读接口）。
+ *                           声明后 meta 不再套通用 PaginationMeta，而是按声明生成专用 schema
  *
- * @return array{params: array<string, array>, deprecated: bool}
+ * @return array{params: array<string, array>, meta: array<string, array>, deprecated: bool}
  */
 function parseDocTags(array $tagLines): array
 {
-    $result = ['params' => [], 'deprecated' => false, 'unauthenticated' => false, 'responses' => []];
+    $result = ['params' => [], 'deprecated' => false, 'unauthenticated' => false, 'responses' => [], 'meta' => []];
     foreach ($tagLines as $line) {
         if (str_starts_with($line, '@deprecated')) {
             $result['deprecated'] = true;
@@ -241,9 +278,19 @@ function parseDocTags(array $tagLines): array
 
             continue;
         }
-        // @responseStatus 503 服务停机维护中
+        // @responseStatus 503 服务停机维护中 / @responseStatus 201 首次创建
         if (preg_match('/^@responseStatus\s+(\d{3})\s*(.*)$/u', $line, $r)) {
             $result['responses'][$r[1]] = trim($r[2]) ?: '';
+
+            continue;
+        }
+        // @meta name type 描述 —— 手工分页的 meta 字段
+        if (preg_match('/^@meta\s+(\S+)\s+(\S+)\s*(.*)$/u', $line, $m)) {
+            [, $name, $type, $rest] = $m;
+            $result['meta'][$name] = [
+                'type' => normalizeType($type),
+                'description' => preg_replace('/^\s+|[\s.。]+$/u', '', $rest),
+            ];
 
             continue;
         }
@@ -271,7 +318,7 @@ function parseDocTags(array $tagLines): array
             $rest = trim(str_replace($e[0], '', $rest));
         }
         if (preg_match('/\bDefault:\s*((?:(?!\bExample:)[^.。\n])+)/u', $rest, $d)) {
-            $entry['default'] = trim($d[1]);
+            $entry['default'] = castToType(trim($d[1]), $entry['type']);
             $rest = trim(str_replace($d[0], '', $rest));
         }
         if (preg_match('/\bExample:\s*([^\n]+)/u', $rest, $x)) {
@@ -284,7 +331,7 @@ function parseDocTags(array $tagLines): array
                     $example = $decoded;
                 }
             }
-            $entry['example'] = $example;
+            $entry['example'] = is_string($example) ? castToType($example, $entry['type']) : $example;
             $rest = trim(str_replace($x[0], '', $rest));
         }
         // trim() 按字节裁剪会把末尾的中文字符截断成非法 UTF-8，这里用 /u 正则
@@ -590,6 +637,34 @@ function guessType(string $field): string
     return 'string';
 }
 
+/**
+ * v3 列表响应的 meta schema。
+ *
+ * 默认是 Eloquent 分页的 PaginationMeta；控制器 docblock 里写了 `@meta` 标签时
+ * （手工分页，如游标式阅读接口），按声明生成专用 schema，字段名与类型都不再猜测。
+ *
+ * @param  array  $info  parseController 的返回
+ * @return array  meta 的 OpenAPI schema
+ */
+function metaSchema(array $info): array
+{
+    $meta = $info['tags']['meta'] ?? [];
+    if (empty($meta)) {
+        return ['$ref' => '../../main.yaml#/components/schemas/PaginationMeta'];
+    }
+
+    $properties = [];
+    foreach ($meta as $name => $field) {
+        $property = ['type' => $field['type']];
+        if (! empty($field['description'])) {
+            $property['description'] = $field['description'];
+        }
+        $properties[$name] = $property;
+    }
+
+    return ['type' => 'object', 'properties' => $properties];
+}
+
 /* ------------------------------------------------------- 生成 operation */
 
 $listParams = Yaml::parseFile($protocol.'/resources/list_query.yaml');
@@ -768,12 +843,16 @@ function buildOperation(array $route, string $httpMethod): array
 
     if (isV3($route['uri'])) {
         // v3 用 Laravel Resource 的原生形状：列表 {data: [...], meta: {...}}，单个 {data: {...}}
-        $success = $method === 'index'
+        //
+        // 判断依据是控制器返回的是不是 `::collection()`，不能只看方法名叫不叫 index：
+        // 单动作控制器的方法名是 __invoke，照样可以返回集合。
+        $isList = $method === 'index' || ! empty($info['collection']);
+        $success = $isList
             ? [
                 'type' => 'object',
                 'properties' => [
                     'data' => ['type' => 'array', 'items' => $data],
-                    'meta' => ['$ref' => '../../main.yaml#/components/schemas/PaginationMeta'],
+                    'meta' => metaSchema($info),
                 ],
             ]
             : ['type' => 'object', 'properties' => ['data' => $data]];
@@ -792,14 +871,21 @@ function buildOperation(array $route, string $httpMethod): array
         if (! empty($op['parameters']) || ! empty($op['requestBody'])) {
             $responses['422'] = ['$ref' => '../../main.yaml#/components/responses/ProblemValidation'];
         }
-        // @responseStatus 声明的额外状态码
+        // @responseStatus 声明的额外状态码。2xx 是另一种成功口径（如 201 Created），
+        // 响应体与 200 同形；其余是错误，响应体是 Problem Details。
         foreach ($info['tags']['responses'] ?? [] as $code => $desc) {
-            $responses[(string) $code] = [
-                'description' => $desc !== '' ? $desc : 'Problem Details',
-                'content' => ['application/problem+json' => [
-                    'schema' => ['$ref' => '../../main.yaml#/components/schemas/ProblemDetails'],
-                ]],
-            ];
+            $isSuccess = $code >= 200 && $code < 300;
+            $responses[(string) $code] = $isSuccess
+                ? [
+                    'description' => $desc !== '' ? $desc : '成功',
+                    'content' => ['application/json' => ['schema' => $success]],
+                ]
+                : [
+                    'description' => $desc !== '' ? $desc : 'Problem Details',
+                    'content' => ['application/problem+json' => [
+                        'schema' => ['$ref' => '../../main.yaml#/components/schemas/ProblemDetails'],
+                    ]],
+                ];
         }
         ksort($responses);
         $op['responses'] = $responses;
@@ -868,7 +954,14 @@ function tagOf(string $uri): string
 $paths = [];
 foreach ($routes as $route) {
     $uri = $route['uri'];
-    if (! str_starts_with($uri, 'api/') || ! str_contains((string) $route['action'], '@')) {
+    $action = (string) $route['action'];
+    // 原来用「action 里有没有 @」当作「是不是控制器」，把**单动作控制器**
+    // （invokable，action 就是类名、没有 @method）整条漏掉了，而且不报错。
+    // buildOperation() 下游本来就有 __invoke 的兜底，这里放行即可。
+    if (! str_starts_with($uri, 'api/') || $action === '' || $action === 'Closure') {
+        continue;
+    }
+    if (! str_contains($action, '@') && ! str_contains($action, 'Controllers\\')) {
         continue;
     }
     if (str_contains($route['action'], 'Laravel\\') || str_contains($route['uri'], 'sanctum')) {
@@ -890,7 +983,12 @@ ksort($paths);
 function deepMerge(array $base, array $over): array
 {
     foreach ($over as $k => $v) {
-        $base[$k] = (is_array($v) && isset($base[$k]) && is_array($base[$k]) && ! array_is_list($v))
+        // 列表值整体替换；含 $ref / oneOf / anyOf / allOf 的 schema 也整体替换，
+        // 否则自动结果里的 `type: object` 会与 oneOf 并存，变成不合法 schema
+        $replace = ! is_array($v)
+            || array_is_list($v)
+            || array_intersect(['$ref', 'oneOf', 'anyOf', 'allOf'], array_keys($v)) !== [];
+        $base[$k] = (is_array($v) && isset($base[$k]) && is_array($base[$k]) && ! $replace)
             ? deepMerge($base[$k], $v)
             : $v;
     }
