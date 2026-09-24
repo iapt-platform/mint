@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\V3\IndexMeReactionRequest;
 use App\Http\Requests\V3\StoreMeReactionRequest;
 use App\Http\Resources\V3\ReactionResource;
-use App\Http\Resources\V3\ReactionStatusResource;
 use App\Models\Reaction;
 use App\Services\V3\ReactionService;
 use Illuminate\Http\Request;
@@ -58,6 +57,10 @@ class MeReactionController extends Controller
      * wasRecentlyCreated，新建时自动给 201。这里不要改成固定 200——幂等端点区分
      * 「真的建了」与「早就有了」对调用方有用。
      *
+     * 返回的是 reaction 资源本身（调用方需要 id 才能后续删除），**不含计数**。
+     * 计数是共享聚合值，归 `GET /v3/reactions/tally` 管；前端用乐观更新 ±1，
+     * 下次读 tally 时校正。见 v3-resource skill 硬规范第 2 条。
+     *
      * @responseStatus 201 首次创建。响应体与 200 同形，区别只在这一条是本次新建的
      *
      * @bodyParam type string required 操作类型。Enum: like,dislike,favorite,watch,bookmark,download
@@ -69,7 +72,7 @@ class MeReactionController extends Controller
     {
         $user = $this->currentUser($request);
 
-        return new ReactionStatusResource(
+        return new ReactionResource(
             $this->reactions->add($user['user_uid'], $request->validated())
         );
     }
@@ -79,16 +82,18 @@ class MeReactionController extends Controller
      *
      * 只能删自己那条（user_id 与当前用户不符返回 403）。
      *
+     * 成功返回 **204 空体**：硬删就是删了，没有资源可回，计数也不在这里给
+     * （见 v3-resource skill 硬规范第 2 条）。
+     *
      * @urlParam reaction string required reaction 的 uuid
      *
+     * @responseStatus 204 删除成功，无响应体
      * @responseStatus 403 只能删除自己的 reaction
      */
     public function destroy(Request $request, Reaction $reaction)
     {
-        $user = $this->currentUser($request);
+        $this->reactions->remove($reaction, $this->currentUser($request)['user_uid']);
 
-        return new ReactionStatusResource(
-            $this->reactions->remove($reaction, $user['user_uid'])
-        );
+        return response()->noContent();
     }
 }

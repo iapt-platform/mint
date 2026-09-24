@@ -251,9 +251,11 @@ it('adds a reaction and forces user_id to the current user', function () {
         'user_id' => (string) Str::uuid(), // 客户端塞的 user_id 应被忽略
     ], authHeader($uid))->assertCreated()->json('data');
 
-    expect($data['selected'])->toBeTrue()
-        ->and($data['count'])->toBe(1)
-        ->and($data['id'])->not->toBeNull();
+    // 返回的是资源本身。计数不在这里给——那是 tally 的职责
+    expect($data)->toHaveKeys(['id', 'type', 'target_id', 'target_type', 'user'])
+        ->and($data)->not->toHaveKey('count')
+        ->and($data['type'])->toBe('like')
+        ->and($data['target_id'])->toBe($target);
 
     $record = Reaction::find($data['id']);
     expect($record->user_id)->toBe($uid);
@@ -269,7 +271,6 @@ it('is idempotent: repeat add returns the same record', function () {
     $second = $this->postJson('/api/v3/me/reactions', $payload, authHeader($uid))->assertOk()->json('data');
 
     expect($second['id'])->toBe($first['id'])
-        ->and($second['count'])->toBe(1)
         ->and(Reaction::count())->toBe(1);
 });
 
@@ -279,19 +280,21 @@ it('requires auth to delete a reaction', function () {
     $this->deleteJson("/api/v3/me/reactions/{$reaction->id}")->assertStatus(401);
 });
 
-it('deletes my reaction and reports the remaining count', function () {
+it('deletes my reaction with 204 and an empty body', function () {
     $uid = makeStudio('del-owner');
     $target = (string) Str::uuid();
     $mine = makeReaction(['target_id' => $target, 'type' => 'like', 'user_id' => $uid]);
-    makeReaction(['target_id' => $target, 'type' => 'like']);
+    $others = makeReaction(['target_id' => $target, 'type' => 'like']);
 
-    $data = $this->deleteJson("/api/v3/me/reactions/{$mine->id}", [], authHeader($uid))
-        ->assertOk()
-        ->json('data');
+    // 两条都要：只有前者可能「返回 204 但压根没删」，只有后者可能「删对了但多吐了 body」
+    $this->deleteJson("/api/v3/me/reactions/{$mine->id}", [], authHeader($uid))
+        ->assertNoContent();
+    $this->assertModelMissing($mine);
 
-    expect($data['selected'])->toBeFalse()
-        ->and($data['count'])->toBe(1)
-        ->and(Reaction::find($mine->id))->toBeNull();
+    // 别人那条还在；剩余计数去 tally 拿，不由 destroy 返回
+    $this->assertModelExists($others);
+    $tally = $this->getJson("/api/v3/reactions/tally?target_id={$target}")->assertOk()->json('data');
+    expect(collect($tally)->firstWhere('type', 'like')['count'])->toBe(1);
 });
 
 it('forbids deleting another user reaction', function () {
