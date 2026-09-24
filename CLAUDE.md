@@ -14,6 +14,12 @@ wikipali —— 开放的、基于语料库的巴利语学习与翻译平台。�
 | `docker/` | 容器工具链与开发环境 | |
 | `magnolia/`、`ai-translate/`、`langchain-server/`、`open-ai-server/`、`sutta-pitaka-importer/`、`scripts/` | 周边服务与工具 | |
 
+**同一后端的第三个前端（不在本仓库）：**
+
+- `/home/deploy/workspace/wikipali-mobile` —— 移动端，独立 git 仓库，开发阶段未上线。
+  用 `openapi-fetch` 调 `/api/v3/*`，有自己的 `src/api/schema.d.ts`。
+  **改 v3 端点前要 grep 它**，否则会漏掉消费者（2026-09 就漏过一次）。
+
 **冻结但仍在线上运行（代码不要改，但它的依赖决定了后端能动什么）：**
 
 - `dashboard-v4/` —— 线上生产前端，依赖 161 条 `/api/v2` 路径。
@@ -61,12 +67,18 @@ wikipali —— 开放的、基于语料库的巴利语学习与翻译平台。�
 
 ### 接口类型生成（agent 自动执行，不用问）
 
-`dashboard-v6/src/api/schema.d.ts` 由 OpenAPI 规格生成，**已提交进版本库**，
-不要加进 `.gitignore`。生成命令（在仓库根目录执行）：
+`schema.d.ts` 由 OpenAPI 规格生成，**已提交进版本库**，不要加进 `.gitignore`。
+**有两个目标，每次都要生成两份**（第二个在另一个仓库，别漏）：
 
 ```bash
+# 在 mint 仓库根目录执行
 npx openapi-typescript openapi/public/assets/protocol/main.yaml -o dashboard-v6/src/api/schema.d.ts
+npx openapi-typescript openapi/public/assets/protocol/main.yaml -o /home/deploy/workspace/wikipali-mobile/src/api/schema.d.ts
 ```
+
+两份内容完全相同，只是分发到两个消费者。mobile 那份的改动留在它自己的工作区，
+由用户决定何时提交。**它也是一道闸**：`cd /home/deploy/workspace/wikipali-mobile && npx tsc --noEmit`
+会把被后端改动打断的调用点精确报出来。
 
 **何时必须重跑（满足任一条就直接跑，不必询问用户）：**
 
@@ -158,6 +170,17 @@ FormRequest 与 Resource），自研脚本退化为只服务 v2 遗留部分；v
 grep -rn "/v2/channel" dashboard-v4/dashboard/src   # 命中 = v4 在用，动不得
 grep -rn "/api/v2/channel" dashboard-v6/src
 ```
+
+> ⚠️ **这张分区表只盘点了 v2 路径的消费者。改 v3 端点时它帮不上忙——
+> v3 另有第三个消费者 `wikipali-mobile`（见上面「目录状态」）。**
+> 动 v3 之前三个都要 grep：
+>
+> ```bash
+> grep -rn "v3/tipitaka" dashboard-v4/dashboard/src dashboard-v6/src \
+>     /home/deploy/workspace/wikipali-mobile/src
+> ```
+>
+> 2026-09 就是漏了第三个，把 mobile 正在用的两个端点删掉了。
 
 **v4 的真实代码在 `dashboard-v4/dashboard/src`**（不是 `dashboard-v4/src`），
 且有一批绕过请求封装的裸 URL（antd Upload 的 `action`、导出 `href`），grep 时别漏。
@@ -369,3 +392,6 @@ v3 这条只服务单 channel 的只读渲染。前端 `dashboard-v6/src/api/pal
 - 文档文件只在用户明确要求时创建。
 - **不要擅自安装或升级任何依赖**（npm、composer 都一样）。需要新依赖就说明理由，
   等用户自己装完通知你。
+- **不要自动新建 migration。** 加列是不可逆的库结构变更，由用户决定。发现缺列
+  （如软删除的 `deleted_at`、乐观锁的 version）就停下来说明用途，等用户确认再写。
+  改动本身仍受铁律 4 约束：只准加，加列必须 nullable 或带默认值。

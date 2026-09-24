@@ -39,6 +39,17 @@ grep -rn "/v2/channel" dashboard-v4/dashboard/src   # 命中 = v4 在用
 grep -rn "/api/v2/channel" dashboard-v6/src
 ```
 
+> **动 v3 端点时这张表不适用。** v3 有第三个消费者：独立仓库
+> `/home/deploy/workspace/wikipali-mobile`（移动端，开发阶段未上线，用
+> openapi-fetch 调 /api/v3/*）。改 v3 之前三个前端都要 grep：
+>
+> ```bash
+> grep -rn "v3/xxx" dashboard-v4/dashboard/src dashboard-v6/src \
+>     /home/deploy/workspace/wikipali-mobile/src
+> ```
+>
+> 2026-09 漏过一次，把 mobile 正在用的 tipitaka-read-para / -chapter 删掉了。
+
 | 分区  | 谁在用  | 条数 | 迁移策略                                                    |
 | ----- | ------- | ---- | ----------------------------------------------------------- |
 | **A** | 只有 v6 | 3    | 自由迁。`heartbeat`、`chapter-content`、`paragraph-content` |
@@ -231,6 +242,60 @@ v3 端点可以自由改：v4 那两处 v3 引用（`ChatInput.tsx:127`、`agent
 
    **v2 的 `ok()` / `error()` 不准出现在 v3 控制器里。**
 
+   ### 写操作各自返回什么
+
+   | 动作 | 状态码 | 响应体 |
+   | --- | --- | --- |
+   | `store` | 201 | **新建的资源本身**（调用方需要 id 才能后续引用） |
+   | `update` | 200 | 更新后的资源 |
+   | `destroy` | **204** | **空**。硬删就是删了，没有资源可回 |
+
+   三条依据都指向 204：RFC 9110 §9.3.5 说动作已执行且「no further information is
+   to be supplied」就用 204；GitHub 的 star/unstar 与 reactions 删除都是 204 空体；
+   Laravel 的 `assertNoContent()` 默认就是 204 **且断言响应体为空**——框架把这个
+   组合当成了默认预期。
+
+   ```php
+   public function destroy(Request $request, Reaction $reaction)
+   {
+       $this->reactions->remove($reaction, $this->currentUser($request)['user_uid']);
+
+       return response()->noContent();
+   }
+   ```
+
+   **mutation 不返回共享聚合值**——计数、总数、排名、排行位次。理由不是洁癖：
+
+   - 它当场就可能是错的（你删的同时别人在点，返回的数字发出去就过期了）
+   - 它给了假的权威感，前端会拿它当真值缓存
+   - 它把「改一次状态」和「读一次聚合」耦在一起，将来想给聚合加缓存都不好加
+
+   X(Twitter) 的 like / unlike 只回 `{"data":{"liked":false}}`，连计数都不给；
+   GitHub 干脆 204。前端用乐观更新 ±1，下次读聚合端点时自然校正——这是
+   TanStack Query 文档里的标准套路（`onMutate` 快照 + 失败回滚 +
+   `onSettled` invalidate）。聚合值有自己的读端点，mutation 不该再抄一份。
+
+   **判据：这个值客户端自己算得出来吗？**
+
+   - 算得出来（计数 ±1、列表里去掉一项）→ 不回，前端乐观更新
+   - 算不出来且当场就要用（服务端分配的 id、剩余配额、余额）→ 回
+
+   > **软删是例外**：行还在、只是标了 `deleted_at`，资源并没有消失。按 AIP-164
+   > 这种情况应该返回**更新后的资源**（200），不是 204。测试也要跟着换成
+   > `assertSoftDeleted()`——软删的模型用 `assertModelMissing()` 会失败，因为行还在表里。
+
+   **destroy 的测试两条都要写**，它们抓的失败不一样：
+
+   ```php
+   $this->deleteJson("/api/v3/me/reactions/{$mine->id}", [], authHeader($uid))
+       ->assertNoContent();           // 只有它：可能返回 204 但压根没删
+   $this->assertModelMissing($mine);  // 只有它：删对了但多吐了不该有的 body
+   ```
+
+   **前端注意**：`openapi-fetch` 对 204 返回 `{ data: undefined }`，而
+   `client.ts` 的 `unwrap()` 见到 `data === undefined` 会当失败、弹提示再抛异常。
+   所以 204 端点要用 `unwrapVoid()`（只判状态码，不取 body）。
+
 3. **资源名用复数名词**：`/v3/channels/{uid}`。不要 `/v2/channel-my-number` 这种
    动词化端点。（注意：现有 v3 端点 search / progress / tipitaka-read-para 是早期
    遗留的单数命名，新资源不要照抄。）
@@ -400,7 +465,181 @@ v3 端点可以自由改：v4 那两处 v3 引用（`ChatInput.tsx:127`、`agent
    **鉴权和 URL 形状是两件事**：要让某些动作需要登录，挂中间件就行，不需要把它们
    塞进 `/v3/me/` 前缀。而且中间件只管得了 401，「钥匙对不对」的 403 得靠 Policy
    或 Service 里抛 `AuthorizationException`。
-8. **面向用户的文案一律走 `__()`，不准硬编码。**
+8. **用户建立的实质内容：软删除 + 乐观锁。**
+
+   **哪些算**：用户亲手产出、删错了会心疼的东西——`article`、译文（`sentence`）、
+   术语（`dhamma_terms` / `user_dicts`）、`collection`、`channel`。
+   **哪些不算**：操作记录、日志、聚合、reactions、view、recent——可重建，硬删就好。
+
+   判据一句话：**删错了用户会心疼吗？**
+
+   > **缺列时停下来问用户，不要自己加 migration。** 加列是不可逆的库结构变更，
+   > 由用户决定。这跟「不要擅自安装依赖」是同一条规矩。
+
+   ### 软删除
+
+   现状（2026-09 实测）：**16 张表已经有 `deleted_at` 列**（articles / channels /
+   collections / dhamma_terms / user_dicts / sentences / attachments / chats …），
+   但**只有 `Sentence` 挂了 `SoftDeletes` trait**。所以多数情况下不需要 migration，
+   缺的是代码。
+
+   **加 trait 之前必须查三件事**——模型是 v2/v3 共享的，加 trait 会同时改变 v2 的行为：
+
+   1. **业务唯一索引**。软删的行仍占着唯一键，用户删了再建会撞。实测目标表的唯一
+      索引只有主键，安全；但 `likes` 的 `UNIQUE(type, target_id, user_id)` 会中招——
+      这类表不要软删（reactions 正因如此是硬删）。
+   2. **裸 `DB::table()` 查询绕过全局作用域**，会把已删的行算进来。实测
+      `dhamma_terms` 3 处、`sentences` 2 处，其余 0。逐个看过再动。
+   3. **v4 没有回收站 UI**。软删对它等同于删除，可接受；但别指望 v4 能恢复。
+
+   API 形态按 AIP-164：
+
+   - `destroy` → **200 + 更新后的资源**，不是 204。资源没消失，只是标了 `deleted_at`，
+     204「没有内容可给」的前提不成立。
+   - 恢复 → `POST /v3/xxx/{id}/restore`（补充路由 + 单动作控制器）。
+     AIP 写成 `:undelete`，但冒号动作不符合本项目的路由判据。
+   - 测试用 `assertSoftDeleted()`，**不能用 `assertModelMissing()`**——行还在表里，会失败。
+
+   ### 乐观锁
+
+   为什么值得做：两个人同时编辑同一条译文，后保存的会**静默覆盖**前一个人的工作，
+   而且没有人会发现。这是这个项目最值得防的一类数据丢失。
+
+   **机制用 ETag + `If-Match` → 412，不要在 body 里塞 `version` + 409。**
+   RFC 9110 把 412 Precondition Failed 定义成「条件请求的前置条件不成立」，这正是
+   丢失更新的语义；409 Conflict 说的是「请求与资源当前状态冲突」（用户名已占用那种）。
+   混用会让客户端和缓存分不清。412 的教科书用例就是乐观并发控制。
+
+   ```
+   GET /v3/articles/{id}                    → 200, ETag: "7"
+   PUT /v3/articles/{id}  If-Match: "7"
+       version 仍是 7 → 写入，version + 1，返回新 ETag
+       version 已变   → 412 Precondition Failed
+   PUT 不带 If-Match                        → 428 Precondition Required
+   ```
+
+   **ETag 不能用 `updated_at` 生成。** 实测所有目标表的 `updated_at` 是
+   `timestamp(0)`，只有秒精度——同一秒内的两次更新分辨不出来，而那恰恰是乐观锁
+   要防的场景。需要一个自增的 version 列，**缺就问用户**。
+   （`sentences.version` 与 `sentences.ver` 已存在且全仓库无引用，是死列，可以直接用。）
+
+   **前端：412 不能静默重试**——那等于把别人的改动覆盖掉，比不做乐观锁还糟。
+   必须提示「这条在你编辑期间被改过」，给出重新加载或查看差异的入口。
+
+   **生成器目前不支持声明请求/响应头**（只有 `@queryParam` / `@bodyParam` /
+   `@urlParam`）。做第一个乐观锁资源时要先给它加 header 支持，否则 ETag 与
+   If-Match 不会进规格，前端类型也拿不到。
+
+9. **批量操作：路由和控制器都要带 `batch` 字样。**
+
+   ```php
+   // 字面量段必须排在 apiResource 之前，否则 /terms/{term} 会把 batch 当成 id
+   Route::post('terms/batch',        BatchTermController::class);        // 批量创建
+   Route::post('terms/batch-delete', BatchDeleteTermController::class);  // 批量删除
+   Route::apiResource('terms', TermController::class);
+   ```
+
+   **不要把批量伪装成单条端点。** 反面教材就在本仓库：`DELETE /v2/userdict` 的
+   `id` 参数收的是 JSON 数组字符串，从 URL 和方法名完全看不出它一次能删一批。
+   调用方读文档才知道，审计日志里也分不清。
+
+   **批量删除用 POST，不用 DELETE。** RFC 9110 §9.3.5：「A client SHOULD NOT
+   generate content in a DELETE request. Content received in a DELETE request has
+   no generally defined semantics, cannot alter the meaning or target of the
+   request, and might lead some implementations to reject it.」——要删哪些只能靠
+   请求体传，而 DELETE 带 body 既无定义语义，也可能被中间件拒掉。Google 的
+   AIP-235 同理用 `POST …:batchDelete`（冒号动作不合本项目的路由判据，用
+   `/batch-delete` 这个段代替）。
+
+   **默认整体事务：全成功或全失败。** 别默默部分成功——调用方拿到 200 却不知道
+   有三条没进去，是最难排查的一类 bug。AIP-233 / 235 也是原子为默认，部分成功
+   必须由 `return_partial_success` 这类显式开关打开，并在响应里逐条给出失败原因。
+   真要支持部分成功，就得设计一个逐条结果的响应体，那是另一个契约，别顺手做。
+
+   **必须有条数上限，写进 FormRequest。** 不设上限的话一次请求就能打垮库：
+
+   ```php
+   'ids'   => ['required', 'array', 'min:1', 'max:200'],
+   'ids.*' => ['uuid'],
+   ```
+
+   响应：
+
+   | 动作 | 状态码 | 响应体 |
+   | --- | --- | --- |
+   | 批量创建 | 201 | 创建出来的资源列表（调用方要 id） |
+   | 批量删除（硬删） | **204** | 空 |
+   | 批量删除（软删） | 200 | 更新后的资源列表（同第 8 条） |
+
+   别返回「成功了几条」这种计数——原子事务下它恒等于请求的条数，是废话；
+   非原子才需要，而非原子本来就不该是默认。
+
+10. **写操作的入参：`store` 按业务必填，`update` 只做 PATCH。**
+
+    ### 只注册 PATCH，不注册 PUT
+
+    Laravel 的 `apiResource` 把两个动词路由到**同一个** `update()`
+    （`ResourceRegistrar:402`：`$this->router->match(['PUT', 'PATCH'], $uri, $action)`）——
+    框架只给一个方法承载两种语义。注册了 PUT 却做局部更新，是在契约上撒谎；
+    真做全量替换，客户端漏传一个字段就误删。所以只暴露实现了的那一个：
+
+    ```php
+    Route::apiResource('channels', ChannelController::class)->except(['update']);
+    Route::patch('channels/{channel}', [ChannelController::class, 'update'])
+        ->whereUuid('channel');
+    ```
+
+    PUT 随之返回 405，这是对的——它本来就没实现。
+
+    ### FormRequest：store 分必填，update 一律 sometimes
+
+    ```php
+    // StoreChannelRequest —— 业务上真的必填才写 required
+    'name' => ['required', 'string', 'max:255'],
+    'lang' => ['required', 'string', 'size:7'],
+    'summary' => ['sometimes', 'nullable', 'string'],
+
+    // UpdateChannelRequest —— 一个 required 都不要有
+    'name' => ['sometimes', 'string', 'max:255'],
+    'lang' => ['sometimes', 'string', 'size:7'],
+    'summary' => ['sometimes', 'nullable', 'string'],
+    ```
+
+    ### 控制器只用 `validated()`，绝不用 `$request->input('x')`
+
+    ```php
+    $channel->fill($request->validated())->save();   // 只有传了的字段会被改
+    ```
+
+    **反面教材在 v2 的 `ChannelController@update`：**
+
+    ```php
+    $channel->summary = $request->input('summary');   // 没传 → null → 清空
+    ```
+
+    用户只想改个名字，`summary` 没传就被写成 null，**没有任何报错**。
+    `input()` 分不清「没传」和「传了 null」，`validated()` 分得清——这是两者的
+    根本差别，不是风格问题。
+
+    ### 这条修的是一个现在就存在的矛盾
+
+    实测 v2 生成的 `v2-channel-channel.yaml` 里，**PATCH 也把 5 个字段声明成必填**
+    （因为 PUT / PATCH 共用同一份 docblock）。前端从这份规格生成类型，结果是
+    「局部更新」必须传全部字段。只保留 PATCH 之后，required 列表为空，规格与实现
+    才对得上。
+
+    ### PATCH 涵盖不了什么
+
+    「传全部字段的 PATCH」**不等于** PUT：PUT 的语义是「没传的字段重置为默认/空」，
+    PATCH 永远只认你传了什么。真需要「把这条记录整个重置」，用
+    `POST /v3/xxx/{id}/reset` 这种补充路由明确表达——靠 PUT 顺带表达重置，
+    客户端漏传一个字段就变成误删，正是上面那个毛病。
+
+    社区口径一致：GitHub 用 PATCH，Stripe 用 POST 做局部更新，Google AIP-134
+    只用 PATCH + `update_mask`（`*` 才是全量替换）。**本项目不需要 `update_mask`**——
+    protobuf 要它是因为分不清「没传」和「传了零值」，PHP 的 `validated()` 分得清。
+
+11. **面向用户的文案一律走 `__()`，不准硬编码。**
 
    翻译文件在 **`api-v13/resources/lang/{locale}/`**（注意不是 Laravel 11+ 默认的
    `lang/`，本项目把 langPath 指到了 resources 下）。支持 8 个语言：
