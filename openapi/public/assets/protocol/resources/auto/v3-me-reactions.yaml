@@ -1,0 +1,214 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-me-reactions.yaml
+get:
+  summary: '列出我自己的 reactions'
+  tags:
+    - me
+  operationId: get_api_v3_me_reactions
+  description: 实现：`V3\MeReactionController@index`
+  parameters:
+    -
+      name: per_page
+      in: query
+      schema:
+        type: integer
+        default: 15
+      description: '每页数量，最大 200'
+    -
+      name: type
+      in: query
+      schema:
+        type: string
+        enum:
+          - like
+          - dislike
+          - favorite
+          - watch
+          - bookmark
+          - download
+      description: 操作类型
+    -
+      name: target_type
+      in: query
+      schema:
+        type: string
+        enum:
+          - task
+          - collection
+          - progress_chapter
+          - article
+          - terms
+      description: 'target 的类型（task 任务、collection 文集、progress_chapter 书·章节、article 文章、terms 术语）'
+    -
+      name: page
+      in: query
+      schema:
+        type: integer
+        default: 1
+      description: 页码
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    type:
+                      type: string
+                    target_id:
+                      type: string
+                    target_type:
+                      type: string
+                    context:
+                      type: string
+                      nullable: true
+                    created_at:
+                      type: string
+                    updated_at:
+                      type: string
+                    user:
+                      type: object
+                      properties: { id: { type: string }, nickName: { type: string }, userName: { type: string }, realName: { type: string }, sn: { type: integer }, avatar: { type: string }, roles: { type: array, items: { type: string } } }
+                      nullable: true
+              meta:
+                $ref: '../../main.yaml#/components/schemas/PaginationMeta'
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'
+post:
+  summary: '添加一条我自己的 reaction（幂等）'
+  tags:
+    - me
+  operationId: post_api_v3_me_reactions
+  description: |-
+    唯一键是 (type, target_id, user_id)：重复提交不会产生第二条记录，返回同一条。
+    首次创建返回 201，命中已存在的记录返回 200。
+    201 不是手写的状态码：Laravel 的 ResourceResponse::calculateStatus() 看模型的
+    wasRecentlyCreated，新建时自动给 201。这里不要改成固定 200——幂等端点区分
+    「真的建了」与「早就有了」对调用方有用。
+    返回的是 reaction 资源本身（调用方需要 id 才能后续删除），**不含计数**。
+    计数是共享聚合值，归 `GET /v3/reactions/tally` 管；前端用乐观更新 ±1，
+    下次读 tally 时校正。见 v3-resource skill 硬规范第 2 条。
+
+    实现：`V3\MeReactionController@store`
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            type:
+              type: string
+              description: 操作类型
+              enum:
+                - like
+                - dislike
+                - favorite
+                - watch
+                - bookmark
+                - download
+            target_id:
+              type: string
+              description: 'target 的 uuid'
+            target_type:
+              type: string
+              description: 'target 的类型（task 任务、collection 文集、progress_chapter 书·章节、article 文章、terms 术语）'
+              enum:
+                - task
+                - collection
+                - progress_chapter
+                - article
+                - terms
+            context:
+              type: string
+              description: '附加上下文，最长 128 字符'
+          required:
+            - type
+            - target_id
+            - target_type
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  type:
+                    type: string
+                  target_id:
+                    type: string
+                  target_type:
+                    type: string
+                  context:
+                    type: string
+                    nullable: true
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string }
+                      roles: { type: array, items: { type: string } }
+                    nullable: true
+    201:
+      description: '首次创建。响应体与 200 同形，区别只在这一条是本次新建的'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  type:
+                    type: string
+                  target_id:
+                    type: string
+                  target_type:
+                    type: string
+                  context:
+                    type: string
+                    nullable: true
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string }
+                      roles: { type: array, items: { type: string } }
+                    nullable: true
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

@@ -77,16 +77,20 @@ class SentenceController extends Controller
                     ->where('updated_at', '>', $request->input('updated_after', '1970-1-1'));
                 break;
             case 'fulltext':
-                if (isset($_COOKIE['user_uid'])) {
-                    $userUid = $_COOKIE['user_uid'];
+                // 原先凭据取自 $_COOKIE['user_uid']（v1 遗留的认证绕过），而且没有
+                // cookie 时 $userUid 根本没被赋值——未登录访问这个 view 会拿未定义
+                // 变量去查询。改走 AuthService，未登录明确报错。
+                $user = AuthService::current($request);
+                if (! $user) {
+                    return $this->error(__('auth.failed'));
                 }
                 $key = $request->input('key');
                 if (empty($key)) {
                     return $this->error('没有关键词');
                 }
                 $table = Sentence::select($indexCol)
-                    ->where('content', 'like', '%' . $key . '%')
-                    ->where('editor_uid', $userUid);
+                    ->where('content', 'like', '%'.$key.'%')
+                    ->where('editor_uid', $user['user_uid']);
 
                 break;
             case 'channel':
@@ -203,7 +207,7 @@ class SentenceController extends Controller
                 break;
         }
         if (! empty($request->input('key'))) {
-            $table = $table->where('content', 'like', '%' . $request->input('key') . '%');
+            $table = $table->where('content', 'like', '%'.$request->input('key').'%');
         }
 
         $count = $table->count();

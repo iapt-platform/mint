@@ -1,0 +1,77 @@
+# 手写补充：/v2/progress 多 view 的 rows 按口径分 schema。
+# 只补 get 的响应 item（anyOf，各 view 形状有重叠字段，不能算互斥），post 与其它 view 保持自动生成结果。
+get:
+  responses:
+    200:
+      content:
+        application/json:
+          schema:
+            properties:
+              data:
+                properties:
+                  rows:
+                    items:
+                      anyOf:
+                        - type: object
+                          description: view=chapter_channels
+                          properties:
+                            book:
+                              type: integer
+                            para:
+                              type: integer
+                            uid:
+                              type: string
+                            channel_id:
+                              type: string
+                            name:
+                              type: string
+                            type:
+                              type: string
+                            progress:
+                              type: number
+                            updated_at:
+                              type: string
+                            channel:
+                              type: object
+                              properties:
+                                uid:
+                                  type: string
+                                name:
+                                  type: string
+                                type:
+                                  type: string
+                        - type: object
+                          description: view=ids
+                          properties:
+                            id:
+                              type: string
+                        - type: object
+                          description: view=channel
+                          properties:
+                            channel_id:
+                              type: string
+                            count:
+                              type: integer
+                            studio:
+                              type: object
+                              properties:
+                                id:
+                                  type: string
+                                nickName:
+                                  type: string
+                                realName:
+                                  type: string
+                                studioName:
+                                  type: string
+                                avatar:
+                                  type: string
+                            channel:
+                              type: object
+                              properties:
+                                name:
+                                  type: string
+                                summary:
+                                  type: string
+                                  nullable: true
+                                lang:
+                                  type: string

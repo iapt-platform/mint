@@ -5,6 +5,7 @@ use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\OpsToken;
 use App\Http\Middleware\SetLocale;
 use App\Http\Middleware\UserOperation;
+use App\Http\Middleware\V3\Authenticate as V3Authenticate;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -39,6 +40,9 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'ops.token' => OpsToken::class,
+            // v3 的登录闸。只认 bearer，未登录在进控制器前就 401——
+            // 所以「未登录 + 参数非法」得到的是 401 而不是 422
+            'auth.v3' => V3Authenticate::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

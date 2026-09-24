@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Services\PaliSeriesesService;
 use App\Services\RomanizeService;
+use App\Services\UserService;
 use App\Tools\QueryBuilderMacro;
 use App\View\Composers\BlogViewComposer;
 use Carbon\CarbonImmutable;
@@ -56,6 +57,18 @@ class AppServiceProvider extends ServiceProvider
         |--------------------------------------------------------------------------
         */
         $this->app->singleton(PaliSeriesesService::class);
+
+        /*
+        |--------------------------------------------------------------------------
+        | User Service
+        |--------------------------------------------------------------------------
+        |
+        | 必须是 singleton：它在请求内维护一张 uuid => 摘要的身份映射，同一个用户
+        | 在一次请求里被解析多次时只查一次库、只签一次头像 URL。每次 make 新实例
+        | 那张映射就永远是空的。
+        |
+        */
+        $this->app->singleton(UserService::class);
     }
 
     /**

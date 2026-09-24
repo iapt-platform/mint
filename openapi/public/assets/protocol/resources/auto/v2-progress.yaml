@@ -123,7 +123,7 @@ get:
                   rows:
                     type: array
                     items:
-                      type: object
+                      anyOf: [{ type: object, description: view=chapter_channels, properties: { book: { type: integer }, para: { type: integer }, uid: { type: string }, channel_id: { type: string }, name: { type: string }, type: { type: string }, progress: { type: number }, updated_at: { type: string }, channel: { type: object, properties: { uid: { type: string }, name: { type: string }, type: { type: string } } } } }, { type: object, description: view=ids, properties: { id: { type: string } } }, { type: object, description: view=channel, properties: { channel_id: { type: string }, count: { type: integer }, studio: { type: object, properties: { id: { type: string }, nickName: { type: string }, realName: { type: string }, studioName: { type: string }, avatar: { type: string } } }, channel: { type: object, properties: { name: { type: string }, summary: { type: string, nullable: true }, lang: { type: string } } } } }]
                   count:
                     type: integer
     401:

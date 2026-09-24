@@ -4,18 +4,24 @@ get:
   tags:
     - recent
   operationId: get_api_v2_recent
-  description: 实现：`RecentController@index`
+  description: |-
+    按用户拉取阅读记录，view 目前只有 user 一种口径。
+
+    实现：`RecentController@index`
   parameters:
     -
       name: id
       in: query
       schema:
         type: string
+      description: 'view=user 时的用户 uid，必须是 uuid'
     -
       name: type
       in: query
       schema:
         type: string
+      description: 按记录类型过滤
+      example: chapter
     -
       name: order
       in: query
@@ -38,6 +44,15 @@ get:
       in: query
       schema:
         type: string
+    -
+      name: view
+      in: query
+      schema:
+        type: string
+        enum:
+          - user
+      description: 查询口径
+      required: true
     -
       name: search
       in: query
@@ -63,7 +78,7 @@ get:
                     type: array
                     items:
                       type: object
-                      properties: { id: { type: integer }, type: { type: integer }, article_id: { type: integer }, param: { type: string }, updated_at: { type: string }, title: { type: string } }
+                      properties: { id: { type: string }, type: { type: string }, article_id: { type: string }, param: { type: string, nullable: true }, updated_at: { type: string }, title: { type: string } }
                   count:
                     type: integer
     401:
@@ -110,13 +125,14 @@ post:
                 type: object
                 properties:
                   id:
-                    type: integer
+                    type: string
                   type:
-                    type: integer
+                    type: string
                   article_id:
-                    type: integer
+                    type: string
                   param:
                     type: string
+                    nullable: true
                   updated_at:
                     type: string
                   title:

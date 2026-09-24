@@ -15,7 +15,7 @@ get:
     仓库根目录存在 `.stop` 文件时返回 503（运维停机开关），此时响应体是
     RFC 9457 Problem Details 而非正常结构。
 
-    实现：`HeartbeatV3Controller@show`
+    实现：`V3\HeartbeatController@show`
   responses:
     200:
       description: 成功

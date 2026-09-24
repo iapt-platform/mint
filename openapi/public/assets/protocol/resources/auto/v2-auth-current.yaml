@@ -19,6 +19,19 @@ get:
                 type: string
               data:
                 type: object
+                properties:
+                  id:
+                    type: string
+                  nickName:
+                    type: string
+                  realName:
+                    type: string
+                  avatar:
+                    type: string
+                  roles:
+                    type: array
+                    items:
+                      type: string
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:

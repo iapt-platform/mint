@@ -29,7 +29,8 @@ post:
               message:
                 type: string
               data:
-                type: object
+                type: string
+                description: '登录成功后返回的 JWT token'
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:

@@ -83,3 +83,22 @@ export const unwrapQuiet = <T>(result: FetchResult<T>): T => {
   }
   return result.data;
 };
+
+/**
+ * 给 **204 No Content** 的端点用：只判成败，不取 body。
+ *
+ * v3 的 destroy 一律返回 204 空体（见 v3-resource skill 硬规范第 2 条）。
+ * 而 `openapi-fetch` 对 204 返回的是 `{ data: undefined }`——`unwrap()` 见到
+ * `data === undefined` 会当成失败、弹提示再抛异常，明明请求是成功的。
+ * 所以 204 端点必须走这里，不能走 `unwrap()`。
+ *
+ * 失败时的行为与 `unwrap()` 一致：弹提示并抛出。
+ */
+export const unwrapVoid = (result: FetchResult<unknown>): void => {
+  if (result.response.ok) {
+    return;
+  }
+  const error = toApiError(result);
+  reportApiError(error);
+  throw error;
+};

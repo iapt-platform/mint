@@ -49,7 +49,6 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\GroupMemberController;
 use App\Http\Controllers\HealthCheckController;
 use App\Http\Controllers\HeartbeatController;
-use App\Http\Controllers\HeartbeatV3Controller;
 use App\Http\Controllers\InteractiveController;
 use App\Http\Controllers\InviteController;
 use App\Http\Controllers\LikeController;
@@ -70,7 +69,6 @@ use App\Http\Controllers\ParagraphContentController;
 use App\Http\Controllers\ParaInfoController;
 use App\Http\Controllers\PgPaliDictDownloadController;
 use App\Http\Controllers\ProgressChapterController;
-use App\Http\Controllers\ProgressController;
 use App\Http\Controllers\ProgressImgController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectTreeController;
@@ -82,8 +80,6 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SearchPageNumberController;
 use App\Http\Controllers\SearchPaliDataController;
 use App\Http\Controllers\SearchPaliWbwController;
-use App\Http\Controllers\SearchPlusController;
-use App\Http\Controllers\SearchSuggestController;
 use App\Http\Controllers\SearchTitleController;
 use App\Http\Controllers\SearchWordSliceController;
 use App\Http\Controllers\SentenceAttachmentController;
@@ -112,11 +108,8 @@ use App\Http\Controllers\TermExportController;
 use App\Http\Controllers\TermSummaryController;
 use App\Http\Controllers\TermVocabularyController;
 use App\Http\Controllers\TipitakaContentController;
-use App\Http\Controllers\TipitakaReadChapterController;
-use App\Http\Controllers\TipitakaReadParaController;
 use App\Http\Controllers\TransferController;
 use App\Http\Controllers\UpdatePaliSynonymsController;
-use App\Http\Controllers\UpgradeController;
 use App\Http\Controllers\UploadController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserDictController;
@@ -171,7 +164,6 @@ Route::group([
     Route::apiResource('tag', TagController::class);
     Route::apiResource('view', ViewController::class);
 
-    Route::delete('like', [LikeController::class, 'delete']);
     Route::apiResource('like', LikeController::class);
     Route::apiResource('sent_history', SentHistoryController::class);
     Route::get('sent_history_contribution', [SentHistoryController::class, 'contribution']);
@@ -340,18 +332,25 @@ Route::group([
         ->where('version', '[A-Za-z0-9._-]+');
 });
 
-Route::group([
-    'prefix' => 'v3',
-    'as' => 'v3.',
-], function () {
-    // 只注册真正实现了的动作——空方法会在 OpenAPI 里变成幽灵端点
-    Route::apiResource('search', SearchPlusController::class)->only(['index', 'store', 'show']);
-    Route::apiResource('search-suggest', SearchSuggestController::class)->only(['index']);
-    Route::apiResource('upgrade', UpgradeController::class)->only(['index']);
-    Route::apiResource('progress', ProgressController::class)->only(['index']);
-    Route::apiResource('tipitaka-read-para', TipitakaReadParaController::class)->only(['index', 'show']);
-    Route::apiResource('tipitaka-read-chapter', TipitakaReadChapterController::class)->only(['index', 'show']);
-
-    // 存活检查是单例资源（只有一个实例），不是集合
-    Route::apiSingleton('heartbeat', HeartbeatV3Controller::class)->only(['show']);
+/*
+|--------------------------------------------------------------------------
+| v3
+|--------------------------------------------------------------------------
+|
+| 按领域拆成 routes/v3/*.php，前缀与名字前缀只在这里加一次——子文件里不要再包
+| 一层 group，漏写会让路由落到 /api/ 根下而且不报错。
+|
+| **顺序是显式的，不要改成 glob()**：跨文件的注册顺序由下面的 require 顺序决定，
+| glob 会变成按字母排且看不见。文件内部的顺序陷阱（字面量路由必须排在 apiResource
+| 之前）在各自文件里解决。
+|
+| 新增一个领域就在这里加一行 require，并在 routes/v3/ 下建同名文件。
+|
+*/
+Route::prefix('v3')->as('v3.')->group(function () {
+    require __DIR__.'/v3/system.php';
+    require __DIR__.'/v3/search.php';
+    require __DIR__.'/v3/tipitaka.php';
+    require __DIR__.'/v3/channel.php';
+    require __DIR__.'/v3/interaction.php';
 });

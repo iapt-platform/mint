@@ -14,6 +14,12 @@ wikipali —— 开放的、基于语料库的巴利语学习与翻译平台。�
 | `docker/` | 容器工具链与开发环境 | |
 | `magnolia/`、`ai-translate/`、`langchain-server/`、`open-ai-server/`、`sutta-pitaka-importer/`、`scripts/` | 周边服务与工具 | |
 
+**同一后端的第三个前端（不在本仓库）：**
+
+- `/home/deploy/workspace/wikipali-mobile` —— 移动端，独立 git 仓库，开发阶段未上线。
+  用 `openapi-fetch` 调 `/api/v3/*`，有自己的 `src/api/schema.d.ts`。
+  **改 v3 端点前要 grep 它**，否则会漏掉消费者（2026-09 就漏过一次）。
+
 **冻结但仍在线上运行（代码不要改，但它的依赖决定了后端能动什么）：**
 
 - `dashboard-v4/` —— 线上生产前端，依赖 161 条 `/api/v2` 路径。
@@ -61,12 +67,18 @@ wikipali —— 开放的、基于语料库的巴利语学习与翻译平台。�
 
 ### 接口类型生成（agent 自动执行，不用问）
 
-`dashboard-v6/src/api/schema.d.ts` 由 OpenAPI 规格生成，**已提交进版本库**，
-不要加进 `.gitignore`。生成命令（在仓库根目录执行）：
+`schema.d.ts` 由 OpenAPI 规格生成，**已提交进版本库**，不要加进 `.gitignore`。
+**有两个目标，每次都要生成两份**（第二个在另一个仓库，别漏）：
 
 ```bash
+# 在 mint 仓库根目录执行
 npx openapi-typescript openapi/public/assets/protocol/main.yaml -o dashboard-v6/src/api/schema.d.ts
+npx openapi-typescript openapi/public/assets/protocol/main.yaml -o /home/deploy/workspace/wikipali-mobile/src/api/schema.d.ts
 ```
+
+两份内容完全相同，只是分发到两个消费者。mobile 那份的改动留在它自己的工作区，
+由用户决定何时提交。**它也是一道闸**：`cd /home/deploy/workspace/wikipali-mobile && npx tsc --noEmit`
+会把被后端改动打断的调用点精确报出来。
 
 **何时必须重跑（满足任一条就直接跑，不必询问用户）：**
 
@@ -159,16 +171,55 @@ grep -rn "/v2/channel" dashboard-v4/dashboard/src   # 命中 = v4 在用，动�
 grep -rn "/api/v2/channel" dashboard-v6/src
 ```
 
+> ⚠️ **这张分区表只盘点了 v2 路径的消费者。改 v3 端点时它帮不上忙——
+> v3 另有第三个消费者 `wikipali-mobile`（见上面「目录状态」）。**
+> 动 v3 之前三个都要 grep：
+>
+> ```bash
+> grep -rn "v3/tipitaka" dashboard-v4/dashboard/src dashboard-v6/src \
+>     /home/deploy/workspace/wikipali-mobile/src
+> ```
+>
+> 2026-09 就是漏了第三个，把 mobile 正在用的两个端点删掉了。
+
 **v4 的真实代码在 `dashboard-v4/dashboard/src`**（不是 `dashboard-v4/src`），
 且有一批绕过请求封装的裸 URL（antd Upload 的 `action`、导出 `href`），grep 时别漏。
 
 ### 铁律
 
 1. **不得改变 v2 的响应形状、字段名、状态码。** 加字段是安全的，改/删不是。
-2. **修 bug 修在 Service 层**，v2 控制器只当适配层，不再新增业务逻辑。
-   这样同一处修复能同时惠及 v2 与 v3——这是 v2 改动成为 v3 资产的唯一途径。
-3. **碰之前先录快照测试**（characterization test）。不必一次给 161 条都补，
-   但要动哪条就先把它当前的真实响应录下来，改完形状没变才算修对。
+2. **改 v2 只有两个理由，其余一律迁 v3。** 常规做法是「bug 报告 = 迁移触发器」：
+   与其在一份马上要删的代码里修，不如把这一刀花在往前推进上。
+
+   ```
+   发现 bug
+   ├─ ① 必须 1 小时内修好，或
+   │  ② 会污染 / 丢失数据库里的数据（哪怕不急）
+   │     └─ 直接改 v2。这是唯一允许改 v2 的两个理由。
+   └─ 其余一律 → 迁 v3、在 v3 修、v6 同 commit 切过去。v2 那份不碰、不管。
+                 C 类（只有 v4 用）没有 v6 可切，等同于不管。
+   ```
+
+   第 ② 条不是为了照顾 v4 用户——**v4 和 v6 共用同一个数据库**，v2 的写入端点
+   污染的是 v6 也在读的那批行。这一条即使 v4 明天下线也仍然成立。
+   （v4 是公示过的冻结旧版，首页入口指向 v6，角落才是「旧版入口」。普通 bug
+   不回补到旧版，与 Ubuntu LTS / Windows ESU 只修安全和数据问题是同一个口径。）
+
+   **不要为了共享逻辑去改 v2。** 规则按代码种类分：
+
+   | 种类 | 怎么办 | 放哪 |
+   | --- | --- | --- |
+   | 契约相关：查询构造、权限判定、响应组装、view 分支 | **不共享，v3 重写** | `App\Services\V3\` |
+   | 纯能力：与请求/响应形状无关，进去模型出来数据 | **共享现成的** | `App\Services\`（根）：`PaliContentService`、`OpenSearchService`、`UserService` |
+
+   现成的纯能力 Service 直接注入用；v3 需要而它没有的，v3 自己写一份，
+   v2 里那份同名逻辑原地烂着，等 v4 下线一起删。**两个都照顾，两个都照顾不好。**
+
+   **「v3 重写」是重写进 `App\Services\V3\`，不是写进控制器。**
+   控制器只是胶水层：取 `validated()`、调 Service、包 Resource、`abort()`，
+   除入口方法外不该有第二个 `protected function`。详见 `v3-resource` skill 硬规范第 5 条。
+3. **改 v2 之前先录快照测试**（characterization test）。只有上面那两条分支会走到
+   这一步——常规路径永远不改 v2，也就不需要给 161 条都补。
 4. **migration 只准加，不准改删**：加列必须 nullable 或带默认值；
    禁止删列、改列名、改类型、加 NOT NULL。v4 的代码在读这些列，而你不会去改 v4。
 5. **删除任何 v2 路由前**，必须先枚举 `dashboard-v4/dashboard/src` 里两处动态调用
@@ -213,10 +264,10 @@ v2 用 `src/request.ts` 的 `HttpError`。等 v2 调用点全部消失，`reques
 列表 `{data: [...], meta: {...}}`，失败 `{type, title, status, detail, instance, errors?}`
 + `application/problem+json`。**判断成败只看 HTTP 状态码。**
 
-控制器里**没有任何响应 helper**：成功直接 `return XxxV3Resource::make()/::collection()`，
+控制器里**没有任何响应 helper**：成功直接 `return XxxResource::make()/::collection()`，
 失败 `abort()` / `throw ValidationException` / `throw BusinessException`，
 由 `bootstrap/app.php` 统一渲染（只接管 `api/v3/*`）。
-`*V3Resource` 继承 `App\Http\Resources\V3Resource`，它负责裁掉分页里的绝对 URL。
+v3 的 Resource 继承 `App\Http\Resources\V3\BaseResource`，它负责裁掉分页里的绝对 URL。
 **v2 的 `ok()` / `error()` 不准出现在 v3 控制器里。**
 
 前端对应（**只管 v3**，v2 的 `request.ts` 错误语义不同，迁移期内不碰）：
@@ -229,11 +280,47 @@ v2 用 `src/request.ts` 的 `HttpError`。等 v2 调用点全部消失，`reques
   `installApiErrorHandler()` 在 `main.tsx` 装全局兜底，消掉未捕获 promise 的噪音
 - 表单要字段级错误时自己 catch，用 `fieldErrorsOf(e)` 取 422 的 `errors`
 
-**类名约定：`<v2 资源名>V3Controller`**（`HeartbeatController` → `HeartbeatV3Controller`），
-Resource / FormRequest / 测试同理。新旧长期共存，名字带上 v2 资源名才能一眼看出父子
-关系；不要按新端点语义另起名。**URL 同样沿用 v2 资源名**，只换版本前缀
-（`/v2/heartbeat` → `/v3/heartbeat`），唯一允许的调整是集合复数化
-（`/v2/channel` → `/v3/channels`）。
+**v3 的类全部放在 `V3\` 子命名空间里，名字里不再带 `V3`：**
+
+```
+app/Http/Controllers/V3/HeartbeatController.php   → App\Http\Controllers\V3\HeartbeatController
+app/Http/Resources/V3/ReactionResource.php        → App\Http\Resources\V3\ReactionResource
+app/Http/Requests/V3/IndexReactionRequest.php     → App\Http\Requests\V3\IndexReactionRequest
+```
+
+命名空间已经把版本说清楚了，类名再带一次是冗余；而且跟 v2 同名也不冲突——
+`App\Http\Controllers\HeartbeatController`（v2）与 `…\V3\HeartbeatController` 并存。
+目录名用 StudlyCase 的 `V3`（PSR-4 要求目录与命名空间段一致，仓库里的先例是 `Library/`）。
+**判据：`/v3/*` 路由指向的控制器，全都应该在 `Controllers/V3/` 下。**
+
+基类在 `App\Http\Resources\V3\BaseResource` / `BaseResourceCollection`
+（原来叫 `V3Resource` / `V3ResourceCollection`）。测试文件保持 `tests/Feature/` 扁平。
+
+**默认沿用 v2 的资源名**：`HeartbeatController` → `V3\HeartbeatController`，
+Resource / FormRequest / 测试同理；URL 只换版本前缀
+（`/v2/heartbeat` → `/v3/heartbeat`），集合复数化（`/v2/channel` → `/v3/channels`）。
+名字对得上，排查时两边能互相找到。
+
+**但改名是允许的，不需要审批。** v3 是破坏性重构，v2 的名字本来就有很多名不副实的；
+遇到该改的就改，输入输出也可以重新设计——反正前后端一起改，没改到的资源继续走 v2 老代码。
+
+**改了就往下面这张表加一行。** 这张表不是门禁，是**对照表**：改名越多，v2↔v3 对不上号
+的排查成本越高，所以每迁一个改了名的资源都要留下映射。
+
+### v2 → v3 对照表
+
+| v2 | v3 | 说明 |
+| --- | --- | --- |
+| `like` / `LikeController` | `reactions` / `V3\ReactionController` 等 | `likes` 表早已不只存点赞：`type` 的实际取值有 `like`、`dislike`、`favorite`、`watch`、`bookmark`、`download` 六种 |
+| （无对应 v2 端点） | `tipitaka-reading/{channel}` / `V3\TipitakaReadingController` | 新能力：单 channel 的只读渲染 + 游标式下载。曾叫 `tipitaka-read-para` / `tipitaka-read-chapter`（两条），也短暂叫过 `channels/{c}/books/{b}/paragraphs\|chapters`，2026-09-24 并成一条 |
+
+**注意**：`tipitaka-reading` **不是** v2 `paragraph-content` / `chapter-content` 的替代品。
+那两个 v2 端点支持多 channel（`channels=a,b,c`）与 edit 模式、返回 sentenceIds 供编辑器用；
+v3 这条只服务单 channel 的只读渲染。前端 `dashboard-v6/src/api/pali-text.ts` 仍在调 v2，
+要真正取代它们还得先把多 channel 与 edit 口径补上。
+
+补偿手段要写进代码：v3 控制器的类注释写明「取代 `GET /v2/xxx`」，模型注释写明底层表名
+（如 `Reaction` 写明仍是 `likes` 表），这样从任一端都能找到另一端。
 
 **做迁移时使用 `v3-resource` skill**，里面有完整的七步链路与模板。
 一次只迁一个资源。试点顺序：先 A 类 3 条（零线上风险，用来打磨样板与 CI 三道闸），
@@ -305,3 +392,6 @@ Resource / FormRequest / 测试同理。新旧长期共存，名字带上 v2 资
 - 文档文件只在用户明确要求时创建。
 - **不要擅自安装或升级任何依赖**（npm、composer 都一样）。需要新依赖就说明理由，
   等用户自己装完通知你。
+- **不要自动新建 migration。** 加列是不可逆的库结构变更，由用户决定。发现缺列
+  （如软删除的 `deleted_at`、乐观锁的 version）就停下来说明用途，等用户确认再写。
+  改动本身仍受铁律 4 约束：只准加，加列必须 nullable 或带默认值。

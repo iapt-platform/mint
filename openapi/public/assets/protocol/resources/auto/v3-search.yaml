@@ -8,7 +8,7 @@ get:
     支持 fuzzy / exact / semantic / hybrid 四种检索模式，底层走 OpenSearch。
     同样的参数也可以用 POST /v3/search 提交（参数多、URL 放不下时用）。
 
-    实现：`SearchPlusController@index`
+    实现：`V3\SearchPlusController@index`
   parameters:
     -
       name: q
@@ -23,14 +23,14 @@ get:
       in: query
       schema:
         type: integer
-        default: '1'
+        default: 1
       description: 页码
     -
       name: page_size
       in: query
       schema:
         type: integer
-        default: '20'
+        default: 20
       description: '每页数量，上限 100'
     -
       name: search_mode
@@ -154,7 +154,7 @@ post:
     与 `GET /v3/search` 完全等价，只是把参数放在请求体里——参数多、
     尤其是 page_refs / related_id 这类数组时，URL 放不下。
 
-    实现：`SearchPlusController@store`
+    实现：`V3\SearchPlusController@store`
   requestBody:
     required: true
     content:
@@ -204,11 +204,11 @@ post:
             page:
               type: integer
               description: 页码
-              default: '1'
+              default: 1
             page_size:
               type: integer
               description: '每页数量，上限 100'
-              default: '20'
+              default: 20
           required:
             - q
   responses:
