@@ -46,9 +46,9 @@ it('injects a commentary annotation with a cite link', function () {
     makeSentence($channel, 9102, 7, 3, '义注这么说');
     makeAnnotation($sentence->uid, 'commentary', '{{9102-7-3-3}}', 5);
 
-    $display = $this->getJson("/api/v3/tipitaka-read-para/9101-1?channel={$channel}")
+    $display = $this->getJson("/api/v3/tipitaka-reading/{$channel}?book=9101&para=1")
         ->assertOk()
-        ->json('data.display');
+        ->json('data.0.display');
 
     expect($display)
         ->toContain('义注这么说')
@@ -60,9 +60,9 @@ it('injects a plain note annotation without a cite link', function () {
     // 普通边注：content 就是注解正文本身
     makeAnnotation($sentence->uid, 'note', '这里的 dassana 指见到佛陀。', 5);
 
-    $display = $this->getJson("/api/v3/tipitaka-read-para/9101-1?channel={$channel}")
+    $display = $this->getJson("/api/v3/tipitaka-reading/{$channel}?book=9101&para=1")
         ->assertOk()
-        ->json('data.display');
+        ->json('data.0.display');
 
     // 正文照原样进 sidenote，紧跟 </span> 收尾——没有 <cite> 出处
     expect($display)
@@ -76,16 +76,16 @@ it('injects both kinds on the same sentence, note first at the same position', f
     makeAnnotation($sentence->uid, 'commentary', '{{9102-7-3-3}}', 5);
     makeAnnotation($sentence->uid, 'note', '译者按。', 5);
 
-    $display = $this->getJson("/api/v3/tipitaka-read-para/9101-1?channel={$channel}")
+    $display = $this->getJson("/api/v3/tipitaka-reading/{$channel}?book=9101&para=1")
         ->assertOk()
-        ->json('data.display');
+        ->json('data.0.display');
 
     expect(mb_strpos($display, '译者按。'))->toBeLessThan(mb_strpos($display, '义注这么说'));
 });
 
 it('drops the paragraph cache when either kind of annotation changes', function () {
     [$channel, $sentence] = makeAnnotatedSentence();
-    $url = "/api/v3/tipitaka-read-para/9101-1?channel={$channel}";
+    $url = "/api/v3/tipitaka-reading/{$channel}?book=9101&para=1";
     $this->getJson($url)->assertOk();
 
     $key = PaliContentService::paragraphCacheKey(9101, 1, $channel, 'html');
@@ -93,5 +93,5 @@ it('drops the paragraph cache when either kind of annotation changes', function 
 
     makeAnnotation($sentence->uid, 'note', '译者按。', 5);
     expect(Cache::has($key))->toBeFalse();
-    expect($this->getJson($url)->json('data.display'))->toContain('译者按。');
+    expect($this->getJson($url)->json('data.0.display'))->toContain('译者按。');
 });
