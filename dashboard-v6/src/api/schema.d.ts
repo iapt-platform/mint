@@ -7739,6 +7739,9 @@ export interface paths {
          *     201 不是手写的状态码：Laravel 的 ResourceResponse::calculateStatus() 看模型的
          *     wasRecentlyCreated，新建时自动给 201。这里不要改成固定 200——幂等端点区分
          *     「真的建了」与「早就有了」对调用方有用。
+         *     返回的是 reaction 资源本身（调用方需要 id 才能后续删除），**不含计数**。
+         *     计数是共享聚合值，归 `GET /v3/reactions/tally` 管；前端用乐观更新 ±1，
+         *     下次读 tally 时校正。见 v3-resource skill 硬规范第 2 条。
          *
          *     实现：`V3\MeReactionController@store`
          */
@@ -7762,6 +7765,8 @@ export interface paths {
         /**
          * 删除我自己的 reaction
          * @description 只能删自己那条（user_id 与当前用户不符返回 403）。
+         *     成功返回 **204 空体**：硬删就是删了，没有资源可回，计数也不在这里给
+         *     （见 v3-resource skill 硬规范第 2 条）。
          *
          *     实现：`V3\MeReactionController@destroy`
          */
@@ -7780,8 +7785,9 @@ export interface paths {
         };
         /**
          * 列出章节翻译进度
-         * @description 按 channel 查询各章节的翻译完成度。view 目前只支持 channel 一种口径，
-         *     传其它值返回 422。
+         * @description 按 channel 查询各章节的翻译完成度。分页与 meta 全由框架算。
+         *     原来有个 `view` 参数，但它只有 `channel` 一个合法值、传别的直接 422——
+         *     那不是业务路径开关而是噪音，已去掉（硬规范第 1 条）。
          *
          *     实现：`V3\ProgressController@index`
          */
@@ -34071,10 +34077,22 @@ export interface operations {
                 content: {
                     "application/json": {
                         data?: {
+                            id?: string;
                             type?: string;
-                            count?: number;
-                            selected?: boolean;
-                            id?: string | null;
+                            target_id?: string;
+                            target_type?: string;
+                            context?: string | null;
+                            created_at?: string;
+                            updated_at?: string;
+                            user?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
                         };
                     };
                 };
@@ -34087,10 +34105,22 @@ export interface operations {
                 content: {
                     "application/json": {
                         data?: {
+                            id?: string;
                             type?: string;
-                            count?: number;
-                            selected?: boolean;
-                            id?: string | null;
+                            target_id?: string;
+                            target_type?: string;
+                            context?: string | null;
+                            created_at?: string;
+                            updated_at?: string;
+                            user?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
                         };
                     };
                 };
@@ -34111,21 +34141,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 成功 */
-            200: {
+            /** @description 删除成功，无响应体 */
+            204: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": {
-                        data?: {
-                            type?: string;
-                            count?: number;
-                            selected?: boolean;
-                            id?: string | null;
-                        };
-                    };
-                };
+                content?: never;
             };
             401: components["responses"]["ProblemUnauthorized"];
             /** @description 只能删除自己的 reaction */
@@ -34143,8 +34164,6 @@ export interface operations {
     get_api_v3_progress: {
         parameters: {
             query: {
-                /** @description 查询口径，目前只有 channel */
-                view: "channel";
                 /** @description channel uid 列表，**下划线分隔**（不是逗号） */
                 channels: string;
                 /** @description 只返回该层级及以上的章节，需联查 pali_texts */
@@ -34156,14 +34175,14 @@ export interface operations {
                 lang?: string;
                 /** @description 按典籍 id 过滤 */
                 book?: number;
-                /** @description 排序字段（progress_chapters 的列） */
-                order?: string;
+                /** @description 排序字段，白名单内 */
+                order?: "book" | "para" | "lang" | "progress" | "title" | "last_chapter_completed_at" | "completed_at" | "updated_at";
                 /** @description 排序方向 */
                 dir?: "asc" | "desc";
-                /** @description 每页数量 */
-                per_page?: number;
                 /** @description 页码 */
                 page?: number;
+                /** @description 每页数量，最大 200 */
+                per_page?: number;
             };
             header?: never;
             path?: never;

@@ -94,6 +94,9 @@ post:
     201 不是手写的状态码：Laravel 的 ResourceResponse::calculateStatus() 看模型的
     wasRecentlyCreated，新建时自动给 201。这里不要改成固定 200——幂等端点区分
     「真的建了」与「早就有了」对调用方有用。
+    返回的是 reaction 资源本身（调用方需要 id 才能后续删除），**不含计数**。
+    计数是共享聚合值，归 `GET /v3/reactions/tally` 管；前端用乐观更新 ±1，
+    下次读 tally 时校正。见 v3-resource skill 硬规范第 2 条。
 
     实现：`V3\MeReactionController@store`
   requestBody:
@@ -143,14 +146,31 @@ post:
               data:
                 type: object
                 properties:
-                  type:
-                    type: string
-                  count:
-                    type: integer
-                  selected:
-                    type: boolean
                   id:
                     type: string
+                  type:
+                    type: string
+                  target_id:
+                    type: string
+                  target_type:
+                    type: string
+                  context:
+                    type: string
+                    nullable: true
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string }
+                      roles: { type: array, items: { type: string } }
                     nullable: true
     201:
       description: '首次创建。响应体与 200 同形，区别只在这一条是本次新建的'
@@ -162,14 +182,31 @@ post:
               data:
                 type: object
                 properties:
-                  type:
-                    type: string
-                  count:
-                    type: integer
-                  selected:
-                    type: boolean
                   id:
                     type: string
+                  type:
+                    type: string
+                  target_id:
+                    type: string
+                  target_type:
+                    type: string
+                  context:
+                    type: string
+                    nullable: true
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string }
+                      roles: { type: array, items: { type: string } }
                     nullable: true
     401:
       $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'

@@ -6,6 +6,8 @@ delete:
   operationId: delete_api_v3_me_reactions_reaction_
   description: |-
     只能删自己那条（user_id 与当前用户不符返回 403）。
+    成功返回 **204 空体**：硬删就是删了，没有资源可回，计数也不在这里给
+    （见 v3-resource skill 硬规范第 2 条）。
 
     实现：`V3\MeReactionController@destroy`
   parameters:
@@ -17,25 +19,8 @@ delete:
         type: string
       description: 'reaction 的 uuid'
   responses:
-    200:
-      description: 成功
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              data:
-                type: object
-                properties:
-                  type:
-                    type: string
-                  count:
-                    type: integer
-                  selected:
-                    type: boolean
-                  id:
-                    type: string
-                    nullable: true
+    204:
+      description: 删除成功，无响应体
     401:
       $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
     403:

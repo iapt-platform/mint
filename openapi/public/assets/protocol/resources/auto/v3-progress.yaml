@@ -5,26 +5,17 @@ get:
     - progress
   operationId: get_api_v3_progress
   description: |-
-    按 channel 查询各章节的翻译完成度。view 目前只支持 channel 一种口径，
-    传其它值返回 422。
+    按 channel 查询各章节的翻译完成度。分页与 meta 全由框架算。
+    原来有个 `view` 参数，但它只有 `channel` 一个合法值、传别的直接 422——
+    那不是业务路径开关而是噪音，已去掉（硬规范第 1 条）。
 
     实现：`V3\ProgressController@index`
   parameters:
-    -
-      name: view
-      in: query
-      schema:
-        type: string
-        enum:
-          - channel
-      description: '查询口径，目前只有 channel'
-      required: true
     -
       name: channels
       in: query
       schema:
         type: string
-        default: ''
       description: 'channel uid 列表，**下划线分隔**（不是逗号）'
       required: true
     -
@@ -51,8 +42,17 @@ get:
       in: query
       schema:
         type: string
+        enum:
+          - book
+          - para
+          - lang
+          - progress
+          - title
+          - last_chapter_completed_at
+          - completed_at
+          - updated_at
         default: completed_at
-      description: '排序字段（progress_chapters 的列）'
+      description: 排序字段，白名单内
     -
       name: dir
       in: query
@@ -64,19 +64,19 @@ get:
         default: desc
       description: 排序方向
     -
-      name: per_page
-      in: query
-      schema:
-        type: integer
-        default: 10
-      description: 每页数量
-    -
       name: page
       in: query
       schema:
         type: integer
         default: 1
       description: 页码
+    -
+      name: per_page
+      in: query
+      schema:
+        type: integer
+        default: 10
+      description: '每页数量，最大 200'
   responses:
     200:
       description: 成功
