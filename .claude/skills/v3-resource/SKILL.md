@@ -89,19 +89,33 @@ nginx 伺服；无论改代码、改 `.env` 还是改 ops 的配置，都要**�
 v2 用 `src/request.ts` 的 `HttpError`，两边不共用类型。等 v2 调用点全部消失，
 `request.ts` 整个删掉，不牵连 v3。
 
-### 逻辑下沉到 Service
+### Service 怎么用：不为共享去改 v2
 
-不要把逻辑在 v2 和 v3 各写一遍，那样 v2 的紧急修复成不了 v3 的资产，反而双倍维护。
+**不要把 v2 控制器里的逻辑抽到 Service 再让两边共用。** 抽取动作本身就要改 v2，
+而一个 Service 同时服务两套契约，最后一定会长出开关和分支——正是本 skill 禁止的兼容代码。
+**两个都照顾，两个都照顾不好。**
+
+按代码种类分：
+
+| 种类 | 怎么办 |
+| --- | --- |
+| **契约相关**：查询构造、权限判定、响应组装、view 分支 | **不共享，v3 重写** |
+| **纯能力**：与请求/响应形状无关，进去模型出来数据 | **共享现成的** |
+
+现成的纯能力 Service（已经在被两边共享，继续用）：
 
 ```
-                 ┌─ v2 Controller（冻结的适配层，只做形状转换）
-Service（唯一逻辑）┤
-                 └─ v3 Controller（FormRequest + Resource 新契约）
+PaliContentService   ← ChapterContentController(v2) / V3\TipitakaReadingController / …
+OpenSearchService    ← TipitakaContentController(v2) / V3\SearchPlusController / …
+UserService          ← 全仓库（v2 经 UserApi 转发壳，v3 直接注入）
 ```
 
-现成范例：`TipitakaReadParaController` 注入 `PaliContentService`。
-迁移时把 v2 控制器里的业务逻辑抽到 Service，v2 控制器改成薄适配层——
-**但它的响应形状、字段名、状态码一个都不准变**，v4 会碎。
+v3 需要而现成 Service 没有的逻辑，**v3 自己写一份**；v2 里那份同名逻辑原地烂着，
+等 v4 下线一起删。
+
+**那 v2 的 bug 怎么办？** 常规做法是「bug 报告 = 迁移触发器」：迁 v3、在 v3 修、
+v6 同 commit 切过去，v2 那份不碰。只有两种情况直接改 v2——必须 1 小时内修好的，
+以及会污染 / 丢失数据库数据的（v4 和 v6 共用一个库）。详见根目录 CLAUDE.md 铁律 2。
 
 ### migration 只准加不准删
 
@@ -166,12 +180,12 @@ v3 端点可以自由改：v4 那两处 v3 引用（`ChatInput.tsx:127`、`agent
    **成功：直接 return Resource，控制器里没有任何 helper。**
 
    ```php
-   return ChannelV3Resource::make($channel);                              // 单个
-   return ChannelV3Resource::collection($query->paginate($per_page));     // 列表
+   return ChannelResource::make($channel);                              // 单个
+   return ChannelResource::collection($query->paginate($per_page));     // 列表
    ```
 
-   所有 `*V3Resource` 继承 `App\Http\Resources\V3Resource`。它只做一件事：
-   让 `::collection()` 产出 `V3ResourceCollection`，裁掉分页里的绝对 URL
+   所有 v3 Resource 继承 `App\Http\Resources\V3\BaseResource`。它只做一件事：
+   让 `::collection()` 产出 `BaseResourceCollection`，裁掉分页里的绝对 URL
    （顶层 `links`、`meta.path`、`meta.links` 都是 `APP_URL` 拼的，反代下会拼错，
    前端也用不到）。其余全交给框架：`meta` 里的 `current_page` / `per_page` /
    `total` / `last_page` / `from` / `to` 都是 paginator 自己算的。
@@ -179,7 +193,7 @@ v3 端点可以自由改：v4 那两处 v3 引用（`ChatInput.tsx:127`、`agent
    载荷不是 Eloquent 模型时直接用基类，`additional()` 补 meta：
 
    ```php
-   return V3Resource::collection($items)->additional(['meta' => [
+   return BaseResource::collection($items)->additional(['meta' => [
        'current_page' => $page, 'total' => $total, 'has_more' => $more,
    ]]);
    ```
@@ -213,7 +227,7 @@ v3 端点可以自由改：v4 那两处 v3 引用（`ChatInput.tsx:127`、`agent
 
    它自带 `render()`，优先级高于所有处理器。**5xx 的 detail 在生产环境会被兜底
    处理器抹掉**（防泄露），所以「预期的 5xx、文案必须送达」的场景必须用它，
-   不能用 `abort(503)`——见 `HeartbeatV3Controller` 的停机分支。
+   不能用 `abort(503)`——见 `V3\HeartbeatController` 的停机分支。
 
    **v2 的 `ok()` / `error()` 不准出现在 v3 控制器里。**
 
@@ -221,16 +235,20 @@ v3 端点可以自由改：v4 那两处 v3 引用（`ChatInput.tsx:127`、`agent
    动词化端点。（注意：现有 v3 端点 search / progress / tipitaka-read-para 是早期
    遗留的单数命名，新资源不要照抄。）
 
-   **类名用 `<v2 资源名>V3Controller`**，不要另起炉灶起新名字：
+   **v3 的类放在 `V3\` 子命名空间，名字里不带 `V3`**，资源名沿用 v2 的：
 
    | v2 | v3 |
    | --- | --- |
-   | `HeartbeatController` | `HeartbeatV3Controller` |
-   | `ChannelController` | `ChannelV3Controller` |
-   | `DhammaTermController` | `DhammaTermV3Controller` |
+   | `App\Http\Controllers\HeartbeatController` | `App\Http\Controllers\V3\HeartbeatController` |
+   | `App\Http\Controllers\ChannelController` | `App\Http\Controllers\V3\ChannelController` |
+   | `App\Http\Resources\ChannelResource` | `App\Http\Resources\V3\ChannelResource` |
+   | — | `App\Http\Requests\V3\IndexChannelRequest` |
 
-   Resource、FormRequest、测试同理：`HeartbeatV3Resource`、
-   `IndexChannelV3Request`、`HeartbeatV3Test`。
+   命名空间已经说明了版本，类名再带一次是冗余；同名也不冲突。基类是
+   `App\Http\Resources\V3\BaseResource`。测试保持 `tests/Feature/` 扁平，
+   文件名用 `<资源>V3Test` 区分。
+
+   **判据：`/v3/*` 路由指向的控制器，全都应该在 `Controllers/V3/` 下。**
 
    理由：新旧类会长期共存（v4 下线前 v2 一直在），名字带上 v2 的资源名才能
    一眼看出父子关系。**不要按新端点的语义另起名**——`/v3/heartbeat` 别叫
@@ -240,6 +258,10 @@ v3 端点可以自由改：v4 那两处 v3 引用（`ChatInput.tsx:127`、`agent
    **URL 也沿用 v2 的资源名，只换版本前缀**，不要借迁移之机改名：
    `/v2/heartbeat` → `/v3/heartbeat`，不要改叫 `/v3/health`。
    改名会切断 v2↔v3 的对应关系，迁移期内两套并存，对不上号就很难排查。
+
+   **但改名是允许的，不需要审批**——v3 是破坏性重构，v2 有不少名字本来就名不副实。
+   改了就往根目录 CLAUDE.md 的「v2 → v3 对照表」加一行。那张表不是门禁是地图：
+   看到 v3 的名字与 v2 对不上时先查表，别当成错误去"修正"。
 
    唯一允许的调整是**按 REST 规范做复数化**（集合用复数，单例保持单数）：
 
@@ -265,14 +287,14 @@ v3 端点可以自由改：v4 那两处 v3 引用（`ChatInput.tsx:127`、`agent
 4. **分页交给框架。**
 
    ```php
-   return ChannelV3Resource::collection($query->paginate($request->integer('per_page', 20)));
+   return ChannelResource::collection($query->paginate($request->integer('per_page', 20)));
    ```
 
    `paginate()` 自己会读 `page` 查询参数，count、页数、边界全由框架算，
    `meta` 由 `V3ResourceCollection` 输出（已裁掉绝对 URL）。控制器里只写业务查询。
 
-   只有**不是 Eloquent 查询**的端点才手写 meta（例如 `TipitakaReadChapterController`
-   按字节累加切页），用 `V3Resource::collection($items)->additional(['meta' => [...]])`，
+   只有**不是 Eloquent 查询**的端点才手写 meta（例如 `V3\TipitakaReadingController`
+   按字节累加切页），用 `BaseResource::collection($items)->additional(['meta' => [...]])`，
    **对外形状必须与框架一致**：`{data: [...], meta: {...}}`，键名跟 snake_case。
 
    **列表端点必须能把结果集收敛到可读范围。** 不加条件就能拉全表的端点是设计
@@ -283,9 +305,102 @@ v3 端点可以自由改：v4 那两处 v3 引用（`ChatInput.tsx:127`、`agent
    收敛之后性能不是问题：实测 sentences 按 channel+book 过滤后 3,019 行，
    `count(*)` 8ms，offset 5000 仍是 4ms。不需要 `cursorPaginate`。
 
-5. **时间一律 ISO 8601 UTC；ID 一律字符串。** 不要让同一字段在不同端点类型摇摆。
-6. **认证统一 Sanctum bearer。** 不准从 cookie 里摸 user_id 这类旁路。
-7. **面向用户的文案一律走 `__()`，不准硬编码。**
+   **但"下载全量"这类端点必须用 keyset 游标，不能把结果集捞进 PHP。**
+   实测最大的 channel 有 **522,718 段、跨 217 本书**：
+
+   | 做法 | 代价 |
+   | --- | --- |
+   | `->pluck()` 全量再在 PHP 里切片 | 821 ms，**峰值内存 281 MB** |
+   | keyset 取一页 | **3 ms** |
+
+   keyset 的三条约定：
+
+   - **游标用行值比较**：`whereRaw('(book_id, paragraph) > (?, ?)')`。比
+     `book > ? or (book = ? and para > ?)` 短，而且能走复合索引。
+   - **游标对客户端不透明**：服务端在 `meta.next_cursor` 给出，客户端原样回传，
+     `null` 表示取完。内部形式（`{book}-{para}`）是实现细节。
+     这跟"路径里不要放复合 id"不矛盾：复合 id 要人手写，游标是机器回传的 token。
+   - **越界不报错**：keyset 语义下"游标在范围之后"就是空结果。游标既然由服务端给，
+     再去校验它落在哪个区间就没有意义了。
+
+   **进度用的 `total` / `remaining` 只在带了收敛 filter 时给**，无 filter 时省略
+   （schema 里声明成可选），让调用方用 `next_cursor` 判断结束。无 filter 时
+   `count(distinct …)` 在 52 万行上要几百毫秒，每翻一页算一次不划算。
+
+5. **控制器只是胶水层：粘 request、service、response，不放业务逻辑。**
+
+   ```php
+   public function __invoke(TipitakaReadingRequest $request, string $channel)
+   {
+       $page = $this->reading->page($channel, $request->validated());
+
+       return ReadParagraphResource::collection($page['items'])
+           ->additional(['meta' => $page['meta']]);
+   }
+   ```
+
+   控制器里**只允许**出现这四件事：取 `validated()`、调 Service、包 Resource、
+   `abort()` / `throw`。查询构造、权限判定、分页切块、聚合统计、领域规则一律进 Service。
+
+   **「少量业务逻辑写在控制器里也还行」是个陷阱。** Laravel 官方说控制器保持在
+   10 行以内即可，那是以项目静态为前提的。本仓库六年下来的经验正相反：项目刚开始
+   业务逻辑很少，后来逐渐增加，等到不可控时已经散落在一百多个控制器里，既没法复用
+   也没法单测。所以这里的规则比官方更硬——**无论多少，业务逻辑一律进 Service，
+   没有"少量可以接受"这条缝**。有缝就会被撑开。
+
+   **自检：控制器文件里除了入口方法，还有别的方法吗？** 有就是漏了。
+   （`Concerns\` 下的共用胶水 trait 不算——它提供的是取当前用户这类跨控制器的
+   粘合动作，不是业务逻辑。）
+   反面教材（本仓库真实发生过）：`TipitakaReadingController` 一度 314 行，带着
+   `scopedQuery` / `chapterRange` / `applyCursor` / `sliceByBytes` / `paragraphLengths`
+   / `progressMeta` / `filterInclude` 七个业务方法——那是个穿着控制器外衣的 Service。
+
+   **v3 自己的 Service 放 `App\Services\V3\`**，与控制器的 `V3\` 对齐：
+
+   | 放哪 | 什么 |
+   | --- | --- |
+   | `App\Services\`（根） | 纯能力，v2/v3 共享：`PaliContentService`、`OpenSearchService`、`UserService` |
+   | `App\Services\V3\` | v3 契约相关：查询构造、权限判定、分页游标、领域规则 |
+
+   这跟「不为共享逻辑去改 v2」不冲突：那条说的是**不要和 v2 共用**，不是说写进控制器。
+   v3 重写出来的逻辑，落点是 `App\Services\V3\`。
+
+   Service 返回**普通数组 + `@return array{...}` 声明**（仓库现有风格，见
+   `PaliContentService::readParagraph`），不引入 DTO 层。
+
+   好处不只是好看：业务逻辑在 Service 里可以直接单元测，不必走 HTTP。本仓库的
+   `TipitakaReadingSliceTest` 为了测一个纯函数，得 `new class(app(PaliContentService::class))
+   extends Controller` 造匿名子类——这就是逻辑放错地方的味道。
+
+6. **时间一律 ISO 8601 UTC；ID 一律字符串。** 不要让同一字段在不同端点类型摇摆。
+7. **认证走 `auth.v3` 中间件，只认 bearer。**
+
+   ```php
+   // 整组挂
+   Route::prefix('me')->middleware('auth.v3')->group(...);
+
+   // 或按方法挂——读公开、写要登录，不必为此改 URL
+   Route::apiResource('channels', ChannelController::class)
+       ->middlewareFor(['store', 'update', 'destroy'], 'auth.v3');
+   ```
+
+   `App\Http\Middleware\V3\Authenticate`（别名 `auth.v3`）做三件事：挡掉没带
+   bearer 的请求、校验 token、把解出的用户放进 request attributes。控制器用
+   `Concerns\ResolvesCurrentUser` 的 `currentUser($request)` 取，不重复解 JWT；
+   可选登录的端点（如 tally）不挂中间件，用 `currentUserUid($request)`，没登录返回 null。
+
+   **别在控制器第一行写 `if (! $user) throw`。** 中间件跑在 FormRequest 之前，
+   所以「未登录 + 参数非法」得到的是 401 而不是 422——这是语义上正确的顺序，
+   写在控制器里就拿不到。
+
+   **只认 bearer 这件事在中间件里自己挡**：`AuthService::current()` 取不到 bearer
+   时会回落读 `$_COOKIE['user_uid']`，那是 v2 的旁路。不要去改 `AuthService`——
+   它是 v2 也在用的共享代码（铁律 2）。
+
+   **鉴权和 URL 形状是两件事**：要让某些动作需要登录，挂中间件就行，不需要把它们
+   塞进 `/v3/me/` 前缀。而且中间件只管得了 401，「钥匙对不对」的 403 得靠 Policy
+   或 Service 里抛 `AuthorizationException`。
+8. **面向用户的文案一律走 `__()`，不准硬编码。**
 
    翻译文件在 **`api-v13/resources/lang/{locale}/`**（注意不是 Laravel 11+ 默认的
    `lang/`，本项目把 langPath 指到了 resources 下）。支持 8 个语言：
@@ -318,7 +433,85 @@ v3 端点可以自由改：v4 那两处 v3 引用（`ChatInput.tsx:127`、`agent
    > 所以目前 API 响应永远是 `en`，`Accept-Language` 与 `?lang=` 均无效。
    > 文案仍然必须外置到翻译文件（否则将来想修也修不了），但别指望它现在会变中文。
 
-## 路由怎么设计（Laravel 官方形态）
+## 路由怎么设计
+
+### 先过四道判据
+
+**这四条是本项目的约定，不是行业标准。** REST 从没规定过 URL 长什么样——Fielding
+本人写过 "A REST API **must not** define fixed resource names or hierarchies"，
+RFC 3986 也把 path 与 query 都定义成「标识资源」，只区分层级 / 非层级。所以别去找
+"正确答案"，照下面四条走：**一致比正确值钱**。
+
+**① 路径开头是「领域-功能」，不是通用坐标。**
+
+`channel + book + para` 在 wikipali 里是**通用坐标**——sentences、wbw、批注、进度
+全都用它。把坐标放路径开头，每个新能力都要来抢同一个前缀，而且看不出这条 API 干什么：
+
+```
+✗  /v3/channels/{channel}/books/{book}/paragraphs/{para}
+       坐标开头。看不出是"读三藏"还是别的；还会跟将来真正的 /v3/channels 资源混
+       （生成器按路径第一段打 tag，这两条会被归到 channels 标签下）
+
+✓  /v3/tipitaka-reading/{channel}?book=&para=
+       领域-功能开头，坐标降成 filter
+```
+
+「领域-功能」写成**一个段**（`tipitaka-reading`），不要写成 `tipitaka/reading` 两段：
+裸命名空间段不能解引用（`GET /v3/tipitaka` 是 404），而一个段后面跟 `{id}` 是正常的
+集合形态。
+
+**② 必填进路径，可选留查询串。**
+
+| 方向 | 规则 | 依据 |
+| --- | --- | --- |
+| 必填 → 路径 | 它在指认"是哪一个"，属层级数据 | RFC 3986 §3.3 |
+| 路径 → 必填 | 路径参数**没有"可选"这回事** | OpenAPI 强制 `required: true` |
+
+**检验方法：把问号后面整段砍掉，请求还成立吗？** 成立就对了。
+
+副作用是好的：这条逼你给每个可选参数定默认值。
+
+**例外——本质非层级的参数，即使必填也留查询串**：自由文本（`/v3/search?key=`，
+检索词里一个斜杠就把路径劈开）、多值集合（`?ids=a,b,c`）。判断方法：这个值能不能
+安全地当一个路径段？值域是 id / slug / 数字就能，是用户输入的任意文本就不能。
+
+**③ 路径变量最多两个，最好只有一个。**
+
+```
+✓  /v3/channels/{channel}
+✓  /v3/studios/{studio}/articles/{article}
+✗  /v3/channels/{channel}/books/{book}/paragraphs/{para}      三个，太多
+```
+
+超过两个就回头想：**是不是有参数其实是 filter？是不是业务逻辑该重新定义？**
+`tipitaka-reading` 就是这么从三个降到一个的——重新想清楚「这个 API 是为阅读和下载
+设计的，只有 channel 必填，book / para 是过滤条件，不给就是取整个 channel」。
+
+**④ 需要校验归属关系 → 路径。**
+
+`->scoped()` 只对**路径参数**生效，框架自动验证 channel 确实属于那个 studio；
+写成 `?studio=x` 就得自己写一遍权限判断。
+
+### `/v3/me/` 什么时候用
+
+问一句：**`{owner}` 这个位置，将来会不会出现 `me` 以外的值？**
+
+- **会** → **magic ID**：`GET /v3/studios/me/channels`。一个路由模板、一份权限逻辑，
+  `me` 只是 `{studio}` 的取值之一（Gmail 的 `users/me`，Google AIP-122 明确认可）。
+  配套要守 AIP-122 那条 must：**响应里回真实 id，不能回 `"me"`**。
+- **不会** → **独立端点**：`/v3/me/reactions`。它与 `/v3/reactions` 必填参数相反
+  （那边 `target_id` 必填，这边不能有）、权限相反，是两个契约，不是别名。
+
+**别把鉴权和 URL 形状绑在一起。** 想用中间件挡 401 不需要路径前缀：
+`Route::apiResource(...)->middlewareFor(['store','update'], 'auth.v3')`，或者控制器
+实现 `HasMiddleware`，都能按方法挂。而且中间件只管得了 401，「钥匙对不对」的 403
+它做不了——前缀买到的东西比看上去少。
+
+反面：`me` 定义成"我有钥匙的资源"会让同一个资源有两个 URL（我协作的 channel 同时
+出现在 `/v3/me/channels` 和 `/v3/studios/{g}/channels`），这正是 AIP-122 的
+canonical name 要防的，也是 GitHub `/user/repos` 被诟病的形态。
+
+### Laravel 官方的四种形态
 
 官方对这件事只有一句话，在 Supplementing Resource Controllers 一节：
 
@@ -345,6 +538,47 @@ Route::apiResource('studios.channels', StudioChannelController::class)->scoped()
 Route::apiSingleton('courses.members.channel', MemberChannelController::class);
 ```
 
+**路由约束必须挂在每条路由上，不能挂在 prefix 组上链式调用。**
+`RouteRegistrar` 的 `where` 是**整体替换而不是合并**，后一个会把前一个顶掉，
+而且不报错——约束静默失效，非法参数一路打到数据库才炸：
+
+```php
+// ✗ whereUuid('channel') 被 whereNumber('book') 顶掉了，channel 没有约束
+Route::prefix('channels/{channel}/books/{book}')
+    ->whereUuid('channel')->whereNumber('book')->group(...);
+
+// ✓ 挂在 Route 对象上，Route::where() 是合并
+Route::get('...', Xxx::class)->whereUuid('channel')->whereNumber(['book', 'para']);
+```
+
+顺带一条契约后果：**路径参数格式不对是 404 不是 422**（匹配不上任何路由），
+查询参数格式不对才是 422（走 FormRequest）。写测试时别搞反。
+
+### 路由文件按领域拆
+
+`routes/api.php` 里 v2 有 156 条声明、134 行 import，v3 铺开后还要翻倍。
+**按领域拆成 `routes/v3/<领域>.php`**，与 `dashboard-v6/src/components/` 的领域对齐，
+找东西只有一个心智模型。
+
+```php
+// routes/api.php —— 前缀和名字前缀只在这里加一次
+Route::prefix('v3')->as('v3.')->group(function () {
+    require __DIR__.'/v3/system.php';
+    require __DIR__.'/v3/tipitaka.php';
+    require __DIR__.'/v3/channel.php';
+    require __DIR__.'/v3/interaction.php';
+});
+```
+
+三条注意：
+
+- **子文件里不要再包一层 group**，漏写会让路由落到 `/api/` 根下**而且不报错**
+- **不要用 `glob()`**：跨文件的注册顺序由 require 顺序决定，glob 会变成按字母排且看不见
+- **按需建文件，不要一次建十几个空的**——空文件会让人以为那个域已经在迁了
+
+`withRouting(api: [...])` 也接受文件数组，但那样每个文件都得重复 `prefix('v3')`
+的包装，漏一个就静默出错，所以用单入口 require。
+
 动词化端点的统一处理：
 
 | v2 模式 | v3 |
@@ -357,7 +591,7 @@ Route::apiSingleton('courses.members.channel', MemberChannelController::class);
 
 控制器内部：每个原 view 分支变成 Model 的 local scope（`scopePublic`、`scopeEditableBy`），
 index 用 `spatie/laravel-query-builder` 把 scope 暴露成 `filter[]`，
-控制器方法回到 10 行以内（官方 Keep Controllers Thin）。
+scope 和 filter 的组装写在 Service 里（硬规范第 5 条），控制器只负责调它。
 
 ## 迁移七步
 
@@ -419,6 +653,39 @@ public function toArray($request): array
 `key?:` 表示只在部分口径下返回；`|null` 会生成 `nullable: true`。
 范例见 `api-v13/app/Http/Resources/ChannelResource.php`。
 
+**Resource 不准查库。** v2 到处是 `UserApi::getByUuid($this->editor_id)` 这种逐行
+查询（仓库里约 30 处），一页 15 行就是 15~30 次查询。v3 的做法：
+
+```php
+// 模型：uuid 列对 user_infos.userid，三参数 belongsTo（同款见 Channel::owner()）
+public function user(): BelongsTo     { return $this->belongsTo(UserInfo::class, 'user_id', 'userid'); }
+public function aiModel(): BelongsTo  { return $this->belongsTo(AiModel::class, 'user_id', 'uid'); }
+
+// 控制器：列白名单收在 UserService 里，别手抄
+$query->with(UserService::eagerLoadActor());
+
+// Resource：use ResolvesActor，一行
+'user' => $this->actor($this->user, $this->aiModel),
+```
+
+三个要知道的点：
+
+- **受限列必须含匹配列**（`userid` / `uid`），漏了关系会**静默对不上、整列变 null**，
+  不报错。所以列白名单收在 `UserService::eagerLoadActor()`，不要在控制器里手抄。
+- 顺带的安全收益：`->first()` 是 `SELECT *`，会把 `user_infos.password`、
+  `ai_models.key`（API 密钥）逐行捞进内存；受限列挡住了。
+- **关系的 ownerKey 是非主键列时，目标模型要声明 `$keyType`**。`AiModel` 漏了这行，
+  Eloquent 按默认 int 主键走 `whereIntegerInRaw`，把 uuid 全转成 `0`。
+
+**配一条 N+1 守卫测试**，断言的是**不变量**而不是具体数字：
+
+```php
+// 12 行与 2 行的查询数必须相同；硬编码 4 会被 Laravel 内部变动误伤
+expect($countQueriesFor(12))->toBe($countQueriesFor(2));
+```
+
+（`DB::enableQueryLog()` **不清空历史**，两次测量之间要 `DB::flushQueryLog()`。）
+
 ### 3. 测试（契约测试尚未落地，这是已知缺口）
 
 **现状：`hotmeteor/spectator` 未安装，项目里也没有可用的 JSON Schema 校验器，
@@ -469,10 +736,19 @@ lint 必须 0 error。不要手改 `resources/auto/` 下的任何文件。
 
 生成器对 v3 路由（`api/v3/*`）用的是另一套信封，不用你操心：
 
-- 成功响应是 `{data: ...}`（Laravel Resource 的默认包装），
-  `index` 额外带 `meta{page, per_page, total}`
+- 成功响应是 `{data: ...}`（Laravel Resource 的默认包装）；
+  **返回 `::collection()` 的就是列表**（带 `meta`），返回 `::make()` 的是单个——
+  按返回值判断，不看方法名叫不叫 `index`，所以单动作控制器也对
 - 错误响应引用 `ProblemDetails`（RFC 9457），不是 v2 的 `{ok, message, data}`
 - 默认挂 401；**有入参时**才挂 422
+- **单动作控制器（`__invoke`）支持**
+- **子命名空间支持**：短类名按控制器的 `use` 语句解析，所以
+  `App\Http\Resources\V3\XxxResource` 能正确找到
+- `Default:` / `Example:` 的字面量会按参数声明的类型转换（整数参数不会配字符串示例）
+
+> 这几条都是 2026-09 补的。**生成器静默失败是这套方案最危险的地方**：找不到 Resource
+> 就返回空 schema、认不出路由就整条漏掉，lint 全过、没有任何报错。改完规格养成
+> 抽查一眼的习惯——`grep -c "type: string" resources/auto/<你的端点>.yaml`。
 
 两个标签控制这部分，写在控制器方法的文档注释里：
 
@@ -482,7 +758,11 @@ lint 必须 0 error。不要手改 `resources/auto/` 下的任何文件。
  *
  * @unauthenticated                       // 该端点无需登录，不要挂 401
  *
- * @responseStatus 503 服务已进入停机维护状态   // 声明额外状态码，响应体是 Problem Details
+ * @responseStatus 503 服务已进入停机维护状态   // 额外状态码。2xx 视为另一种成功口径
+ *                                            //（响应体与 200 同形），非 2xx 是 Problem Details
+ *
+ * @meta next_cursor string 下一块的游标      // 手写 meta 的端点用它声明 meta 字段，
+ *                                            // 不写就按框架的 PaginationMeta 出
  */
 ```
 
@@ -583,11 +863,12 @@ cd dashboard-v6 && npm run build                                  # 前端类型
 - 不要保留 `view=` 开关，不要保留 `ok:false` + HTTP 200（**仅指新建的 v3 端点**；
   v2 那份原样不动）
 - **不要删 B 类和 C 类的 v2 路由**，v4 在线上用着
-- 不要把逻辑在 v2 和 v3 各写一遍，抽到 Service 共用
+- **不要为了共享逻辑去改 v2**：现成的纯能力 Service 直接用，其余 v3 自己写一份
 - 不要凭字段名猜类型，一律查库核实
 - 改完留在工作区，**不要自动 git commit**
 
 ## 收尾报告
 
 用一句话说清：迁了哪个资源、v2 的哪几个端点/view 映射成了 v3 的哪几个端点、
-补了几条契约测试、三道闸的结果。
+补了几条契约测试、三道闸的结果。**改了名的话，提醒用户往 CLAUDE.md 的
+「v2 → v3 对照表」加一行。**
