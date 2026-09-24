@@ -857,7 +857,10 @@ function buildOperation(array $route, string $httpMethod): array
             ]
             : ['type' => 'object', 'properties' => ['data' => $data]];
 
-        $responses = [
+        // 声明了 204 就不再输出默认的 200——控制器 return response()->noContent()
+        // 的端点没有 200 这个口径，留着会让前端以为可以读 body
+        $declared = $info['tags']['responses'] ?? [];
+        $responses = isset($declared[204]) ? [] : [
             '200' => [
                 'description' => '成功',
                 'content' => ['application/json' => ['schema' => $success]],
@@ -873,8 +876,14 @@ function buildOperation(array $route, string $httpMethod): array
         }
         // @responseStatus 声明的额外状态码。2xx 是另一种成功口径（如 201 Created），
         // 响应体与 200 同形；其余是错误，响应体是 Problem Details。
-        foreach ($info['tags']['responses'] ?? [] as $code => $desc) {
+        foreach ($declared as $code => $desc) {
             $isSuccess = $code >= 200 && $code < 300;
+            // 204 / 205 按 RFC 9110 MUST NOT 带消息体，不给 content
+            if ((int) $code === 204 || (int) $code === 205) {
+                $responses[(string) $code] = ['description' => $desc !== '' ? $desc : '成功，无响应体'];
+
+                continue;
+            }
             $responses[(string) $code] = $isSuccess
                 ? [
                     'description' => $desc !== '' ? $desc : '成功',
