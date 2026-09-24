@@ -88,14 +88,20 @@ class AuthService
 
             // 有效的token
             return ['user_uid' => $jwt->uid, 'user_id' => $jwt->id];
-        } elseif (isset($_COOKIE['user_uid'])) {
-            return [
-                'user_uid' => $_COOKIE['user_uid'],
-                'user_id' => $_COOKIE['user_id'],
-            ];
-        } else {
-            return false;
         }
+
+        // 这里曾经有一条 cookie 回落：拿不到 bearer 就读 $_COOKIE['user_uid'] 并
+        // 直接当成已登录用户返回。那是 v1（api-v8）时代的遗留，而且是个认证绕过——
+        // 它不验签名、不验过期、不查库，浏览器里手工种一个 user_uid 就能冒充任何人。
+        // api-v13 与两个前端都已不再种这个 cookie（只种 timezone 和 language），
+        // 所以这条分支是只读不写的孤儿路径，2026-09-24 删除。
+        //
+        // 仍有少数 v2 控制器绕开本方法直接读 $_COOKIE，删它们是各自独立的工作：
+        //   SentenceController@index（view=fulltext）
+        //   ProgressChapterController@index
+        //   LikeController@delete
+        //   UserDictController@index（view=user）与 @delete
+        return false;
     }
 
     /**

@@ -171,7 +171,6 @@ Route::group([
     Route::apiResource('tag', TagController::class);
     Route::apiResource('view', ViewController::class);
 
-    Route::delete('like', [LikeController::class, 'delete']);
     Route::apiResource('like', LikeController::class);
     Route::apiResource('sent_history', SentHistoryController::class);
     Route::get('sent_history_contribution', [SentHistoryController::class, 'contribution']);

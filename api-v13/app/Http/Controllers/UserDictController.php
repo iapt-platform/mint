@@ -78,9 +78,15 @@ class UserDictController extends Controller
                     ->whereIn('source', ['_USER_WBW_', '_USER_DICT_']);
                 break;
             case 'user':
-                // code...
+                // 原先凭据取自 $_COOKIE['user_id']（v1 遗留的认证绕过）。同一个 switch
+                // 上面的 studio 分支早就用的是 $user['user_id']，这条是漏改的。
+                // $user 是各分支各自解析的（case 之间不共享），这里要自己解一次。
+                $user = AuthService::current($request);
+                if (! $user) {
+                    return $this->error(__('auth.failed'));
+                }
                 $table = UserDict::select($indexCol)
-                    ->where('creator_id', $_COOKIE['user_id'])
+                    ->where('creator_id', $user['user_id'])
                     ->where('source', '<>', '_SYS_USER_WBW_');
                 break;
             case 'word':
@@ -365,8 +371,18 @@ class UserDictController extends Controller
      */
     public function delete(Request $request)
     {
-        // FIXME: 本方法不走 AuthService，凭据直接取自 $_COOKIE['user_id']（见下方 $param），
-        // 未登录时会 undefined array key。应改用 AuthService::current($request) 并在未登录时返回 401。
+        // 原先凭据取自 $_COOKIE['user_id']（v1 遗留的认证绕过），未登录时还会
+        // undefined array key。前端的删除走的是 DELETE /v2/userdict/{id}（destroy），
+        // 没人调这条，但既然留着就得让它是安全的。
+        //
+        // FIXME: 这条端点是死的（两个前端都无调用），而且成功路径本来就是坏的——
+        // 2026-09-24 第一次真跑它，update_sys_wbw() 往 user_dicts 插入时
+        // dict_id / editor_id（uuid 列）拿到 "0"，直接 500。修它超出「清除 cookie
+        // 绕过」的范围，没有读懂那段汇总逻辑之前不动。要么补对那两列，要么整条删掉。
+        $user = AuthService::current($request);
+        if (! $user) {
+            return $this->error(__('auth.failed'));
+        }
         $arrId = json_decode($request->input('id'), true);
         $count = 0;
         $updateOk = false;
@@ -376,7 +392,7 @@ class UserDictController extends Controller
                 // 找到对应数据
                 $param = [
                     'id' => $id,
-                    'creator_id' => $_COOKIE['user_id'],
+                    'creator_id' => $user['user_id'],
                 ];
                 $del = UserDict::where($param)->delete();
                 $count += $del;

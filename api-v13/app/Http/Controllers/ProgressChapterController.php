@@ -10,6 +10,7 @@ use App\Models\ProgressChapter;
 use App\Models\Tag;
 use App\Models\TagMap;
 use App\Models\View;
+use App\Services\AuthService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
@@ -208,6 +209,8 @@ class ProgressChapterController extends Controller
                     ->where('para', $request->input('par'))
                     ->orderBy('progress', 'desc')
                     ->get();
+                // 整个循环共用一次登录判定，不必每行都解一次 JWT
+                $currentUser = AuthService::current($request);
                 foreach ($chapters as $key => $value) {
                     // code...
                     $chapters[$key]->views = View::where('target_id', $value->uid)->count();
@@ -217,13 +220,17 @@ class ProgressChapterController extends Controller
                         ->select('type')
                         ->selectRaw('count(*)')
                         ->get();
-                    if (isset($_COOKIE['user_uid'])) {
+                    // 原先凭据取自 $_COOKIE['user_uid']（v1 遗留的认证绕过）。这段只
+                    // 决定 selected 这个可选字段出不出现，改走 AuthService 后带 bearer
+                    // 的登录用户才拿得到——以前只有揣着 v1 cookie 的浏览器有。
+                    // FIXME: 这里是 N+1，每个 chapter × 每个 type 各查一次。
+                    if ($currentUser) {
                         foreach ($likes as $key1 => $like) {
                             // 查看这些点赞里有没有我点的
                             $myLikeId = Like::where([
                                 'target_id' => $value->uid,
                                 'type' => $like->type,
-                                'user_id' => $_COOKIE['user_uid'],
+                                'user_id' => $currentUser['user_uid'],
                             ])->value('id');
                             if ($myLikeId) {
                                 $likes[$key1]->selected = $myLikeId;
