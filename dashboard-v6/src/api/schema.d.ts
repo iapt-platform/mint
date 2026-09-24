@@ -3351,11 +3351,7 @@ export interface paths {
          * @description 实现：`LikeController@store`
          */
         post: operations["post_api_v2_like"];
-        /**
-         * delete like
-         * @description 实现：`LikeController@delete`
-         */
-        delete: operations["delete_api_v2_like"];
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -4730,7 +4726,9 @@ export interface paths {
         };
         /**
          * 列出 recent
-         * @description 实现：`RecentController@index`
+         * @description 按用户拉取阅读记录，view 目前只有 user 一种口径。
+         *
+         *     实现：`RecentController@index`
          */
         get: operations["get_api_v2_recent"];
         put?: never;
@@ -7710,12 +7708,64 @@ export interface paths {
          *     仓库根目录存在 `.stop` 文件时返回 503（运维停机开关），此时响应体是
          *     RFC 9457 Problem Details 而非正常结构。
          *
-         *     实现：`HeartbeatV3Controller@show`
+         *     实现：`V3\HeartbeatController@show`
          */
         get: operations["get_api_v3_heartbeat"];
         put?: never;
         post?: never;
         delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/me/reactions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 列出我自己的 reactions
+         * @description 实现：`V3\MeReactionController@index`
+         */
+        get: operations["get_api_v3_me_reactions"];
+        put?: never;
+        /**
+         * 添加一条我自己的 reaction（幂等）
+         * @description 唯一键是 (type, target_id, user_id)：重复提交不会产生第二条记录，返回同一条。
+         *     首次创建返回 201，命中已存在的记录返回 200。
+         *     201 不是手写的状态码：Laravel 的 ResourceResponse::calculateStatus() 看模型的
+         *     wasRecentlyCreated，新建时自动给 201。这里不要改成固定 200——幂等端点区分
+         *     「真的建了」与「早就有了」对调用方有用。
+         *
+         *     实现：`V3\MeReactionController@store`
+         */
+        post: operations["post_api_v3_me_reactions"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/me/reactions/{reaction}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * 删除我自己的 reaction
+         * @description 只能删自己那条（user_id 与当前用户不符返回 403）。
+         *
+         *     实现：`V3\MeReactionController@destroy`
+         */
+        delete: operations["delete_api_v3_me_reactions_reaction_"];
         options?: never;
         head?: never;
         patch?: never;
@@ -7733,9 +7783,53 @@ export interface paths {
          * @description 按 channel 查询各章节的翻译完成度。view 目前只支持 channel 一种口径，
          *     传其它值返回 422。
          *
-         *     实现：`ProgressController@index`
+         *     实现：`V3\ProgressController@index`
          */
         get: operations["get_api_v3_progress"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/reactions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 列出某个 target 下的 reactions
+         * @description 按 target 聚合的公共列表，不要求登录。分页由 Laravel paginator 提供。
+         *
+         *     实现：`V3\ReactionController@index`
+         */
+        get: operations["get_api_v3_reactions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/reactions/tally": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 统计某个 target 下各 type 的计数
+         * @description 一次聚合查询出各 type 的 count；登录时再查一次当前用户的选择，补 selected / id。
+         *
+         *     实现：`V3\ReactionTallyController@index`
+         */
+        get: operations["get_api_v3_reactions_tally"];
         put?: never;
         post?: never;
         delete?: never;
@@ -7756,7 +7850,7 @@ export interface paths {
          * @description 支持 fuzzy / exact / semantic / hybrid 四种检索模式，底层走 OpenSearch。
          *     同样的参数也可以用 POST /v3/search 提交（参数多、URL 放不下时用）。
          *
-         *     实现：`SearchPlusController@index`
+         *     实现：`V3\SearchPlusController@index`
          */
         get: operations["get_api_v3_search"];
         put?: never;
@@ -7765,7 +7859,7 @@ export interface paths {
          * @description 与 `GET /v3/search` 完全等价，只是把参数放在请求体里——参数多、
          *     尤其是 page_refs / related_id 这类数组时，URL 放不下。
          *
-         *     实现：`SearchPlusController@store`
+         *     实现：`V3\SearchPlusController@store`
          */
         post: operations["post_api_v3_search"];
         delete?: never;
@@ -7786,7 +7880,7 @@ export interface paths {
          * @description 按前缀给出补全候选，供搜索框实时提示。每个字段各自返回一组建议。
          *     q 为空时返回 400。
          *
-         *     实现：`SearchSuggestController@index`
+         *     实现：`V3\SearchSuggestController@index`
          */
         get: operations["get_api_v3_search_suggest"];
         put?: never;
@@ -7808,7 +7902,7 @@ export interface paths {
          * 按 id 取单条检索结果
          * @description 直接从 OpenSearch 按文档 id 取回，不走检索。取不到返回 404。
          *
-         *     实现：`SearchPlusController@show`
+         *     实现：`V3\SearchPlusController@show`
          */
         get: operations["get_api_v3_search_search_"];
         put?: never;
@@ -7819,7 +7913,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v3/tipitaka-read-chapter": {
+    "/v3/tipitaka-reading/{channel}": {
         parameters: {
             query?: never;
             header?: never;
@@ -7827,96 +7921,19 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * 按章节读取译文
-         * @description `para` 定位章节（它是章节的起始段落号，章节长度取那一行的 `chapter_len`），
-         *     `from` 是本次取数的起点游标，从它开始取 `pagesize` 大小的一块。章节不存在、
-         *     或该 channel 在这个章节里没有任何译文，返回 404。
-         *     取数的段落集合来自 sentences 表里该 channel 实际有译文的段落，不是章节的
-         *     全部段落——多数译文是残缺的，按 pali_texts 的整段区间切块会切出空块。
-         *     所以 `pagesize` 数的永远是有内容的段落。
-         *     游标式分块是为了前端的下载进度条与断点续传，meta 里给三个数：
-         *     `total_para` 是分母（该 channel 在本章节有多少段），`remaining_para` 是
-         *     `last_para` 之后本章节内还剩多少段，进度即
-         *     `(total_para - remaining_para) / total_para`；续传时把上次的
-         *     `last_para + 1` 当作下次的 `from` 传回来，`remaining_para` 为 0 即取完。
-         *     `first_para` / `last_para` 是本块实际覆盖的段落闭区间，取自切块结果而不是
-         *     `data`：渲染为空的段落会被剔出 `data` 但仍算在块内，所以 `data` 可能比这个
-         *     区间短，而续传必须按 `last_para` 推进，否则会卡在那一段上原地打转。
-         *     `first_para` 是游标顺延后的落点，可能大于请求的 `from`（即 `current_para`）。
+         * 读取译文
+         * @description 取这个 channel 已经翻译的段落，按 (book, para) 升序，用游标分块。
+         *     不带任何查询串就是从头取整个 channel——下载场景要的就是这个；
+         *     阅读场景用 `book` + `chapter` 或 `book` + `para`/`to` 把范围收窄。
+         *     续传把 `meta.next_cursor` 原样传回 `after` 即可，它为 null 表示取完了。
+         *     **不要自己拼游标**：它的内部形式（`{book}-{para}`）是实现细节，会变。
+         *     `total` / `remaining` 只在带了 `book` 过滤时才给：不带过滤时结果集是整个
+         *     channel（实测最大的有 52 万段、跨 217 本书），每翻一页都去 count 一次不划算。
+         *     无过滤时用 `next_cursor` 是否为 null 判断结束，不要指望百分比。
          *
-         *     实现：`TipitakaReadChapterController@index`
+         *     实现：`V3\TipitakaReadingController@__invoke`
          */
-        get: operations["get_api_v3_tipitaka_read_chapter"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v3/tipitaka-read-chapter/{tipitaka_read_chapter}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 按 id 读取章节
-         * @description 与 index 等价，只是把 book 与 para 合成一个路径参数；游标 `from` 仍走
-         *     查询参数。格式不对或 channel 不是 uuid 返回 422。
-         *
-         *     实现：`TipitakaReadChapterController@show`
-         */
-        get: operations["get_api_v3_tipitaka_read_chapter_tipitaka_read_chapter_"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v3/tipitaka-read-para": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 按段落区间读取译文
-         * @description 阅读模式下按 book + 段落区间取内容，空段落会被跳过。区间由 para 到 to，
-         *     不传 to 则只取一段；to 小于 para 返回 422。
-         *     这个接口不走 Eloquent 分页，meta 是手工给的：一次请求即一页。
-         *
-         *     实现：`TipitakaReadParaController@index`
-         */
-        get: operations["get_api_v3_tipitaka_read_para"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v3/tipitaka-read-para/{tipitaka_read_para}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 读取单个段落
-         * @description id 是 `{book}-{para}` 复合形式，例如 `9001-1`。格式不对或 channel 不是
-         *     uuid 返回 422；段落无内容返回 404。
-         *
-         *     实现：`TipitakaReadParaController@show`
-         */
-        get: operations["get_api_v3_tipitaka_read_para_tipitaka_read_para_"];
+        get: operations["get_api_v3_tipitaka_reading_channel_"];
         put?: never;
         post?: never;
         delete?: never;
@@ -7936,7 +7953,7 @@ export interface paths {
          * 客户端升级检查
          * @description 目前只回报服务可用，尚未接入版本比对逻辑。
          *
-         *     实现：`UpgradeController@index`
+         *     实现：`V3\UpgradeController@index`
          */
         get: operations["get_api_v3_upgrade"];
         put?: never;
@@ -11274,7 +11291,13 @@ export interface operations {
                     "application/json": {
                         ok?: boolean;
                         message?: string;
-                        data?: Record<string, never>;
+                        data?: {
+                            id?: string;
+                            nickName?: string;
+                            realName?: string;
+                            avatar?: string;
+                            roles?: string[];
+                        };
                     };
                 };
             };
@@ -11684,7 +11707,17 @@ export interface operations {
                         ok?: boolean;
                         message?: string;
                         data?: {
-                            rows?: Record<string, never>[];
+                            rows?: {
+                                book?: number;
+                                paragraph?: number;
+                                sn?: number;
+                                title?: string;
+                                toc?: string | null;
+                                tags?: string[];
+                                related_name?: string | null;
+                                /** @description 仅在部分查询口径下返回。 */
+                                language?: string | null;
+                            }[];
                             count?: number;
                         };
                     };
@@ -12471,7 +12504,21 @@ export interface operations {
                     "application/json": {
                         ok?: boolean;
                         message?: string;
-                        data?: Record<string, never>;
+                        data?: {
+                            uid?: string;
+                            name?: string;
+                            summary?: string | null;
+                            lang?: string;
+                            type?: string;
+                            updated_at?: string;
+                            studio?: {
+                                id?: string;
+                                nickName?: string;
+                                realName?: string;
+                                studioName?: string;
+                                avatar?: string;
+                            };
+                        };
                     };
                 };
             };
@@ -12635,7 +12682,15 @@ export interface operations {
                         ok?: boolean;
                         message?: string;
                         data?: {
-                            rows?: Record<string, never>[];
+                            rows?: {
+                                book?: number;
+                                paragraph?: number;
+                                level?: number;
+                                text?: string | null;
+                                chapter_len?: number;
+                                chapter_strlen?: number;
+                                parent?: number;
+                            }[];
                             count?: number;
                         };
                     };
@@ -19113,36 +19168,6 @@ export interface operations {
             422: components["responses"]["ValidationError"];
         };
     };
-    delete_api_v2_like: {
-        parameters: {
-            query?: {
-                id?: string;
-                target_id?: string;
-                type?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        ok?: boolean;
-                        message?: string;
-                        data?: Record<string, never>;
-                    };
-                };
-            };
-            401: components["responses"]["Unauthorized"];
-            422: components["responses"]["ValidationError"];
-        };
-    };
     get_api_v2_like_like_: {
         parameters: {
             query?: never;
@@ -22714,7 +22739,38 @@ export interface operations {
                         ok?: boolean;
                         message?: string;
                         data?: {
-                            rows?: Record<string, never>[];
+                            rows?: ({
+                                book?: number;
+                                para?: number;
+                                uid?: string;
+                                channel_id?: string;
+                                name?: string;
+                                type?: string;
+                                progress?: number;
+                                updated_at?: string;
+                                channel?: {
+                                    uid?: string;
+                                    name?: string;
+                                    type?: string;
+                                };
+                            } | {
+                                id?: string;
+                            } | {
+                                channel_id?: string;
+                                count?: number;
+                                studio?: {
+                                    id?: string;
+                                    nickName?: string;
+                                    realName?: string;
+                                    studioName?: string;
+                                    avatar?: string;
+                                };
+                                channel?: {
+                                    name?: string;
+                                    summary?: string | null;
+                                    lang?: string;
+                                };
+                            })[];
                             count?: number;
                         };
                     };
@@ -22948,7 +23004,12 @@ export interface operations {
                     "application/json": {
                         ok?: boolean;
                         message?: string;
-                        data?: Record<string, never>;
+                        data?: {
+                            book?: number;
+                            para?: number;
+                            channel_id?: string;
+                            title?: string;
+                        };
                     };
                 };
             };
@@ -23552,13 +23613,20 @@ export interface operations {
     };
     get_api_v2_recent: {
         parameters: {
-            query?: {
+            query: {
+                /** @description view=user 时的用户 uid，必须是 uuid */
                 id?: string;
+                /**
+                 * @description 按记录类型过滤
+                 * @example chapter
+                 */
                 type?: string;
                 order?: string;
                 dir?: string;
                 offset?: string;
                 limit?: string;
+                /** @description 查询口径 */
+                view: "user";
                 /** @description 搜索关键字 */
                 search?: string;
             };
@@ -23579,10 +23647,10 @@ export interface operations {
                         message?: string;
                         data?: {
                             rows?: {
-                                id?: number;
-                                type?: number;
-                                article_id?: number;
-                                param?: string;
+                                id?: string;
+                                type?: string;
+                                article_id?: string;
+                                param?: string | null;
                                 updated_at?: string;
                                 title?: string;
                             }[];
@@ -23624,10 +23692,10 @@ export interface operations {
                         ok?: boolean;
                         message?: string;
                         data?: {
-                            id?: number;
-                            type?: number;
-                            article_id?: number;
-                            param?: string;
+                            id?: string;
+                            type?: string;
+                            article_id?: string;
+                            param?: string | null;
                             updated_at?: string;
                             title?: string;
                         };
@@ -23659,10 +23727,10 @@ export interface operations {
                         ok?: boolean;
                         message?: string;
                         data?: {
-                            id?: number;
-                            type?: number;
-                            article_id?: number;
-                            param?: string;
+                            id?: string;
+                            type?: string;
+                            article_id?: string;
+                            param?: string | null;
                             updated_at?: string;
                             title?: string;
                         };
@@ -27458,7 +27526,8 @@ export interface operations {
                     "application/json": {
                         ok?: boolean;
                         message?: string;
-                        data?: Record<string, never>;
+                        /** @description 登录成功后返回的 JWT token */
+                        data?: string;
                     };
                 };
             };
@@ -33915,6 +33984,162 @@ export interface operations {
             };
         };
     };
+    get_api_v3_me_reactions: {
+        parameters: {
+            query?: {
+                /** @description 每页数量，最大 200 */
+                per_page?: number;
+                /** @description 操作类型 */
+                type?: "like" | "dislike" | "favorite" | "watch" | "bookmark" | "download";
+                /** @description target 的类型（task 任务、collection 文集、progress_chapter 书·章节、article 文章、terms 术语） */
+                target_type?: "task" | "collection" | "progress_chapter" | "article" | "terms";
+                /** @description 页码 */
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            type?: string;
+                            target_id?: string;
+                            target_type?: string;
+                            context?: string | null;
+                            created_at?: string;
+                            updated_at?: string;
+                            user?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                        }[];
+                        meta?: components["schemas"]["PaginationMeta"];
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    post_api_v3_me_reactions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /**
+                     * @description 操作类型
+                     * @enum {string}
+                     */
+                    type: "like" | "dislike" | "favorite" | "watch" | "bookmark" | "download";
+                    /** @description target 的 uuid */
+                    target_id: string;
+                    /**
+                     * @description target 的类型（task 任务、collection 文集、progress_chapter 书·章节、article 文章、terms 术语）
+                     * @enum {string}
+                     */
+                    target_type: "task" | "collection" | "progress_chapter" | "article" | "terms";
+                    /** @description 附加上下文，最长 128 字符 */
+                    context?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            type?: string;
+                            count?: number;
+                            selected?: boolean;
+                            id?: string | null;
+                        };
+                    };
+                };
+            };
+            /** @description 首次创建。响应体与 200 同形，区别只在这一条是本次新建的 */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            type?: string;
+                            count?: number;
+                            selected?: boolean;
+                            id?: string | null;
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    delete_api_v3_me_reactions_reaction_: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description reaction 的 uuid */
+                reaction: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            type?: string;
+                            count?: number;
+                            selected?: boolean;
+                            id?: string | null;
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            /** @description 只能删除自己的 reaction */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
     get_api_v3_progress: {
         parameters: {
             query: {
@@ -33963,6 +34188,94 @@ export interface operations {
                             last_chapter_completed_at?: string | null;
                             completed_at?: string | null;
                             updated_at?: string;
+                        }[];
+                        meta?: components["schemas"]["PaginationMeta"];
+                    };
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    get_api_v3_reactions: {
+        parameters: {
+            query: {
+                /** @description 每页数量，最大 200 */
+                per_page?: number;
+                /**
+                 * @description target 的 uuid
+                 * @example 5b4511c1-c99f-47e7-9798-97b9e5229e18
+                 */
+                target_id: string;
+                /** @description 操作类型 */
+                type?: "like" | "dislike" | "favorite" | "watch" | "bookmark" | "download";
+                /** @description 页码 */
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            type?: string;
+                            target_id?: string;
+                            target_type?: string;
+                            context?: string | null;
+                            created_at?: string;
+                            updated_at?: string;
+                            user?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                        }[];
+                        meta?: components["schemas"]["PaginationMeta"];
+                    };
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    get_api_v3_reactions_tally: {
+        parameters: {
+            query: {
+                /**
+                 * @description target 的 uuid
+                 * @example 5b4511c1-c99f-47e7-9798-97b9e5229e18
+                 */
+                target_id: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            type?: string;
+                            count?: number;
+                            selected?: boolean;
+                            id?: string | null;
                         }[];
                         meta?: components["schemas"]["PaginationMeta"];
                     };
@@ -34165,143 +34478,38 @@ export interface operations {
             422: components["responses"]["ProblemValidation"];
         };
     };
-    get_api_v3_tipitaka_read_chapter: {
+    get_api_v3_tipitaka_reading_channel_: {
         parameters: {
-            query: {
-                /** @description 典籍 id */
-                book: number;
-                /** @description 章节的起始段落号，决定本次取数的段落区间 */
-                para: number;
-                /** @description 起点游标，从这一段开始取；不传则等于 para，即从章节 开头取起。可以是章节区间内的任意段落号，落在没有译文的段落上就 顺延到它之后的第一段。超出章节区间、或它之后已经没有译文， 返回 422 */
-                from?: number;
-                /** @description 译文 channel 的 uuid */
-                channel: string;
-                /** @description 内容格式 */
-                format?: "html" | "markdown" | "react" | "text";
-                /** @description 输出口径：display 整段合并，sentences 逐句，all 两者都给 */
-                view?: "display" | "sentences" | "all";
-                /** @description 每块大小，含义由 unit 决定。上限 unit=para 时 200、 unit=byte 时 5000，超出不报错按上限算，meta.page_size 回实际 生效的值 */
-                pagesize?: number;
-                /** @description 每块大小的单位：para 按段落数，byte 按段落长度累加。 两种单位下每块都至少一段、至多 200 段 */
-                unit?: "para" | "byte";
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data?: Record<string, never>[];
-                        meta?: components["schemas"]["PaginationMeta"];
-                    };
-                };
-            };
-            422: components["responses"]["ProblemValidation"];
-        };
-    };
-    get_api_v3_tipitaka_read_chapter_tipitaka_read_chapter_: {
-        parameters: {
-            query: {
-                /** @description 译文 channel 的 uuid */
-                channel: string;
-                /** @description 起点游标，从这一段开始取；不传则从章节开头取起。 超出章节区间返回 422 */
-                from?: number;
-                /** @description 内容格式 */
-                format?: "html" | "markdown" | "react" | "text";
-                /** @description 输出口径：display 整段合并，sentences 逐句，all 两者都给 */
-                view?: "display" | "sentences" | "all";
-                /** @description 每块大小，含义由 unit 决定。上限 unit=para 时 200、 unit=byte 时 5000，超出不报错按上限算，meta.page_size 回实际 生效的值 */
-                pagesize?: number;
-                /** @description 每块大小的单位：para 按段落数，byte 按段落长度累加。 两种单位下每块都至少一段、至多 200 段 */
-                unit?: "para" | "byte";
-            };
-            header?: never;
-            path: {
+            query?: {
                 /**
-                 * @description 章节 id，格式 {book}-{para}
-                 * @example 9002-1
+                 * @description 典籍 id。与 chapter / para / to 一起用时必填
+                 * @example 9002
                  */
-                tipitaka_read_chapter: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data?: Record<string, never>;
-                    };
-                };
-            };
-            422: components["responses"]["ProblemValidation"];
-        };
-    };
-    get_api_v3_tipitaka_read_para: {
-        parameters: {
-            query: {
-                /** @description 典籍 id */
-                book: number;
+                book?: number;
+                /** @description 章节起始段落号，服务端按 chapter_len 展开成段落区间。 与 para / to 互斥 */
+                chapter?: number;
                 /** @description 起始段落号 */
-                para: number;
-                /** @description 结束段落号（含）。不传则等于 para */
+                para?: number;
+                /** @description 结束段落号（含）。不传则等于 para，即只取一段 */
                 to?: number;
-                /** @description 译文 channel 的 uuid */
-                channel: string;
+                /**
+                 * @description 游标，取 meta.next_cursor 原样回传
+                 * @example 9002-15
+                 */
+                after?: string;
+                /** @description 每块大小，含义由 unit 决定。上限 unit=para 时 200、 unit=byte 时 5000，超出不报错按上限算，meta.page_size 回实际生效的值 */
+                page_size?: number;
+                /** @description 每块大小的单位：para 按段落数，byte 按段落长度累加。 两种单位下每块都至少一段、至多 200 段 */
+                unit?: "para" | "byte";
                 /** @description 内容格式 */
                 format?: "html" | "markdown" | "react" | "text";
-                /** @description 输出口径：display 整段合并，sentences 逐句，all 两者都给 */
-                view?: "display" | "sentences" | "all";
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data?: Record<string, never>[];
-                        meta?: components["schemas"]["PaginationMeta"];
-                    };
-                };
-            };
-            422: components["responses"]["ProblemValidation"];
-        };
-    };
-    get_api_v3_tipitaka_read_para_tipitaka_read_para_: {
-        parameters: {
-            query: {
-                /** @description 译文 channel 的 uuid */
-                channel: string;
-                /** @description 内容格式 */
-                format?: "html" | "markdown" | "react" | "text";
-                /** @description 输出口径 */
-                view?: "display" | "sentences" | "all";
+                /** @description 输出口径：display 整段合并，sentences 逐句，all 两者都给。 不叫 view 是因为 v2 的 `view=` 是必填互斥的业务路径开关，名字撞上会误导 */
+                include?: "display" | "sentences" | "all";
             };
             header?: never;
             path: {
-                /**
-                 * @description 段落 id，格式 {book}-{para}
-                 * @example 9001-1
-                 */
-                tipitaka_read_para: string;
+                /** @description 译文 channel 的 uuid */
+                channel: string;
             };
             cookie?: never;
         };
@@ -34314,8 +34522,33 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: Record<string, never>;
+                        data?: {
+                            para?: number;
+                            display?: string;
+                            book?: number;
+                        }[];
+                        meta?: {
+                            /** @description 每块大小（按 unit 计） */
+                            page_size?: number;
+                            /** @description 每块大小的单位：para 或 byte */
+                            page_size_unit?: string;
+                            /** @description 下一块的游标，原样传回 after；为 null 表示取完 */
+                            next_cursor?: string;
+                            /** @description 过滤范围内已翻译的段落总数。仅在带了 book 过滤时出现 */
+                            total?: number;
+                            /** @description 本块之后过滤范围内还剩多少段。仅在带了 book 过滤时出现 */
+                            remaining?: number;
+                        };
                     };
+                };
+            };
+            /** @description 指定的 chapter 在 pali_texts 里不存在 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
             };
             422: components["responses"]["ProblemValidation"];

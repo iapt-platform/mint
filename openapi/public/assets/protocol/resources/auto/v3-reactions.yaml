@@ -1,0 +1,82 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-reactions.yaml
+get:
+  summary: '列出某个 target 下的 reactions'
+  tags:
+    - reactions
+  operationId: get_api_v3_reactions
+  description: |-
+    按 target 聚合的公共列表，不要求登录。分页由 Laravel paginator 提供。
+
+    实现：`V3\ReactionController@index`
+  parameters:
+    -
+      name: per_page
+      in: query
+      schema:
+        type: integer
+        default: 15
+      description: '每页数量，最大 200'
+    -
+      name: target_id
+      in: query
+      schema:
+        type: string
+      description: 'target 的 uuid'
+      required: true
+      example: 5b4511c1-c99f-47e7-9798-97b9e5229e18
+    -
+      name: type
+      in: query
+      schema:
+        type: string
+        enum:
+          - like
+          - dislike
+          - favorite
+          - watch
+          - bookmark
+          - download
+      description: 操作类型
+    -
+      name: page
+      in: query
+      schema:
+        type: integer
+        default: 1
+      description: 页码
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    type:
+                      type: string
+                    target_id:
+                      type: string
+                    target_type:
+                      type: string
+                    context:
+                      type: string
+                      nullable: true
+                    created_at:
+                      type: string
+                    updated_at:
+                      type: string
+                    user:
+                      type: object
+                      properties: { id: { type: string }, nickName: { type: string }, userName: { type: string }, realName: { type: string }, sn: { type: integer }, avatar: { type: string }, roles: { type: array, items: { type: string } } }
+                      nullable: true
+              meta:
+                $ref: '../../main.yaml#/components/schemas/PaginationMeta'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

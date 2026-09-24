@@ -120,14 +120,14 @@ get:
       in: query
       schema:
         type: integer
-        default: '0'
+        default: 0
       description: 分页偏移量
     -
       name: limit
       in: query
       schema:
         type: integer
-        default: '1000'
+        default: 1000
       description: 每页条数
     -
       name: search

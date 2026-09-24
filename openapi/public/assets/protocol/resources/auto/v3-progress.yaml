@@ -8,7 +8,7 @@ get:
     按 channel 查询各章节的翻译完成度。view 目前只支持 channel 一种口径，
     传其它值返回 422。
 
-    实现：`ProgressController@index`
+    实现：`V3\ProgressController@index`
   parameters:
     -
       name: view
@@ -68,14 +68,14 @@ get:
       in: query
       schema:
         type: integer
-        default: '10'
+        default: 10
       description: 每页数量
     -
       name: page
       in: query
       schema:
         type: integer
-        default: '1'
+        default: 1
       description: 页码
   responses:
     200:

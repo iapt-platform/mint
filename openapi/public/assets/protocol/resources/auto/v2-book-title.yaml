@@ -58,6 +58,7 @@ get:
                     type: array
                     items:
                       type: object
+                      properties: { book: { type: integer }, paragraph: { type: integer }, sn: { type: integer }, title: { type: string }, toc: { type: string, nullable: true }, tags: { type: array, items: { type: string } }, related_name: { type: string, nullable: true }, language: { type: string, nullable: true, description: 仅在部分查询口径下返回。 } }
                   count:
                     type: integer
     401:

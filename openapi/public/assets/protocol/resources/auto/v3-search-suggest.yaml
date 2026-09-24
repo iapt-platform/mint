@@ -8,7 +8,7 @@ get:
     按前缀给出补全候选，供搜索框实时提示。每个字段各自返回一组建议。
     q 为空时返回 400。
 
-    实现：`SearchSuggestController@index`
+    实现：`V3\SearchSuggestController@index`
   parameters:
     -
       name: q
@@ -40,7 +40,7 @@ get:
       in: query
       schema:
         type: integer
-        default: '10'
+        default: 10
       description: '每个字段返回的建议数，上限 50'
   responses:
     200:

@@ -70,6 +70,7 @@ get:
                     type: array
                     items:
                       type: object
+                      properties: { book: { type: integer }, paragraph: { type: integer }, level: { type: integer }, text: { type: string, nullable: true }, chapter_len: { type: integer }, chapter_strlen: { type: integer }, parent: { type: integer } }
                   count:
                     type: integer
     401:

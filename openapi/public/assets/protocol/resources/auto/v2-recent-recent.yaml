@@ -28,13 +28,14 @@ get:
                 type: object
                 properties:
                   id:
-                    type: integer
+                    type: string
                   type:
-                    type: integer
+                    type: string
                   article_id:
-                    type: integer
+                    type: string
                   param:
                     type: string
+                    nullable: true
                   updated_at:
                     type: string
                   title:

@@ -26,6 +26,15 @@ get:
                 type: string
               data:
                 type: object
+                properties:
+                  book:
+                    type: integer
+                  para:
+                    type: integer
+                  channel_id:
+                    type: string
+                  title:
+                    type: string
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:

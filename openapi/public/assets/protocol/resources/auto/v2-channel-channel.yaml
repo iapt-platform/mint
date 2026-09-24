@@ -30,6 +30,28 @@ get:
                 type: string
               data:
                 type: object
+                properties:
+                  uid:
+                    type: string
+                  name:
+                    type: string
+                  summary:
+                    type: string
+                    nullable: true
+                  lang:
+                    type: string
+                  type:
+                    type: string
+                  updated_at:
+                    type: string
+                  studio:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      realName: { type: string }
+                      studioName: { type: string }
+                      avatar: { type: string }
     401:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:

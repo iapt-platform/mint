@@ -104,14 +104,14 @@ get:
       in: query
       schema:
         type: integer
-        default: '0'
+        default: 0
       description: 跳过的记录数
     -
       name: limit
       in: query
       schema:
         type: integer
-        default: '100'
+        default: 100
       description: 返回条数上限
     -
       name: search
@@ -219,7 +219,7 @@ post:
             notification:
               type: boolean
               description: 是否推送消息队列通知
-              default: 'true'
+              default: true
           required:
             - res_id
             - res_type

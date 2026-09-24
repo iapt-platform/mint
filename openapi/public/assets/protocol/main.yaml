@@ -7,7 +7,7 @@ info:
 
     由 `php openapi/scripts/generate.php` 依据 api-v13 的路由与控制器源码生成。
     响应统一封装为 `{ok, message, data}`；`ok=false` 时 `message` 为错误信息。
-  version: 2026.9.21
+  version: 2026.9.24
 servers:
   -
     url: /api
@@ -677,21 +677,23 @@ paths:
     $ref: ./resources/auto/v2-webhook-webhook.yaml
   /v3/heartbeat:
     $ref: ./resources/auto/v3-heartbeat.yaml
+  /v3/me/reactions:
+    $ref: ./resources/auto/v3-me-reactions.yaml
+  '/v3/me/reactions/{reaction}':
+    $ref: ./resources/auto/v3-me-reactions-reaction.yaml
   /v3/progress:
     $ref: ./resources/auto/v3-progress.yaml
+  /v3/reactions:
+    $ref: ./resources/auto/v3-reactions.yaml
+  /v3/reactions/tally:
+    $ref: ./resources/auto/v3-reactions-tally.yaml
   /v3/search:
     $ref: ./resources/auto/v3-search.yaml
   /v3/search-suggest:
     $ref: ./resources/auto/v3-search-suggest.yaml
   '/v3/search/{search}':
     $ref: ./resources/auto/v3-search-search.yaml
-  /v3/tipitaka-read-chapter:
-    $ref: ./resources/auto/v3-tipitaka-read-chapter.yaml
-  '/v3/tipitaka-read-chapter/{tipitaka_read_chapter}':
-    $ref: ./resources/auto/v3-tipitaka-read-chapter-tipitaka-read-chapter.yaml
-  /v3/tipitaka-read-para:
-    $ref: ./resources/auto/v3-tipitaka-read-para.yaml
-  '/v3/tipitaka-read-para/{tipitaka_read_para}':
-    $ref: ./resources/auto/v3-tipitaka-read-para-tipitaka-read-para.yaml
+  '/v3/tipitaka-reading/{channel}':
+    $ref: ./resources/auto/v3-tipitaka-reading-channel.yaml
   /v3/upgrade:
     $ref: ./resources/auto/v3-upgrade.yaml
