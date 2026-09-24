@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\V3\BaseResource;
 use App\Services\OpenSearchService;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 class SearchPlusController extends Controller
 {
@@ -151,25 +150,4 @@ class SearchPlusController extends Controller
             abort(404, __('site.not_found'));
         }
     }
-
-    /**
-     * 更新资源
-     *
-     * @route PUT /api/search/{uid}
-     *
-     * @param JSON: OpenSearch 格式数据
-     * @return Response
-     */
-    public function update(Request $request, $uid) {}
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * 删除资源
-     *
-     * @route DELETE /api/search/{uid}
-     *
-     * @return Response
-     */
-    public function destroy($uid) {}
 }
