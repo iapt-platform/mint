@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\V3;
 
 use App\DTO\Search\HitItemDTO;
-use App\Http\Resources\V3Resource;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\V3\BaseResource;
 use App\Services\OpenSearchService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -145,7 +146,7 @@ class SearchPlusController extends Controller
     {
         //
         try {
-            return V3Resource::make(HitItemDTO::fromArray($this->searchService->get($id)));
+            return BaseResource::make(HitItemDTO::fromArray($this->searchService->get($id)));
         } catch (\Throwable $th) {
             abort(404, __('site.not_found'));
         }

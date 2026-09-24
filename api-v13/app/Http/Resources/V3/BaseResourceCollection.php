@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\V3;
 
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Arr;
@@ -14,7 +14,7 @@ use Illuminate\Support\Arr;
  * 其余一概交给框架：`meta` 里的 current_page / per_page / total / last_page /
  * from / to 都是 paginator 自己算的。
  */
-class V3ResourceCollection extends AnonymousResourceCollection
+class BaseResourceCollection extends AnonymousResourceCollection
 {
     /**
      * @param  array{links: array, meta: array}  $default

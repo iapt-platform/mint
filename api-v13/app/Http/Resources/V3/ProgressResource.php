@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\V3;
 
 use Illuminate\Http\Request;
 
@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
  * 类型取自 progress_chapters 表：progress 是 double，book / para 是整数，
  * 时间字段可能为 null（尚未完成）。
  */
-class ProgressV3Resource extends V3Resource
+class ProgressResource extends BaseResource
 {
     /**
      * @param  Request  $request

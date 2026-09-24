@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\V3;
 
 use Illuminate\Http\Request;
 
-class HeartbeatV3Resource extends V3Resource
+class HeartbeatResource extends BaseResource
 {
     /**
      * 心跳结果。

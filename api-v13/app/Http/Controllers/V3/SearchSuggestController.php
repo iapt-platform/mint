@@ -2,8 +2,9 @@
 
 // api-v8/app/Http/Controllers/SearchSuggestController.php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\V3;
 
+use App\Http\Controllers\Controller;
 use App\Services\OpenSearchService;
 use Illuminate\Http\Request;
 

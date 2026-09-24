@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\V3;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * v3 资源的基类。所有 `*V3Resource` 都继承它。
+ * v3 资源的基类。所有 `*BaseResource` 都继承它。
  *
- * 作用是让 `XxxV3Resource::collection()` 产出 {@see V3ResourceCollection}，
+ * 作用是让 `XxxV3Resource::collection()` 产出 {@see BaseResourceCollection}，
  * 从而裁掉分页里的绝对 URL。除此之外与普通 JsonResource 完全一致——
  * 响应形状由框架决定：
  *
@@ -19,15 +19,15 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *
  * 载荷是普通数组（不是 Eloquent 模型）时可以直接用本类：
  *
- *     return V3Resource::collection($items)->additional(['meta' => [...]]);
+ *     return BaseResource::collection($items)->additional(['meta' => [...]]);
  */
-class V3Resource extends JsonResource
+class BaseResource extends JsonResource
 {
     /**
      * @param  mixed  $resource
      */
-    protected static function newCollection($resource): V3ResourceCollection
+    protected static function newCollection($resource): BaseResourceCollection
     {
-        return new V3ResourceCollection($resource, static::class);
+        return new BaseResourceCollection($resource, static::class);
     }
 }

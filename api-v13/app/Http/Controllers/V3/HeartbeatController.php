@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\V3;
 
 use App\Exceptions\BusinessException;
-use App\Http\Resources\HeartbeatV3Resource;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\V3\HeartbeatResource;
 
-class HeartbeatV3Controller extends Controller
+class HeartbeatController extends Controller
 {
     /**
      * 心跳
@@ -27,7 +28,7 @@ class HeartbeatV3Controller extends Controller
      *
      * @responseStatus 503 服务已进入停机维护状态
      */
-    public function show(): HeartbeatV3Resource
+    public function show(): HeartbeatResource
     {
         if (file_exists(base_path('.stop'))) {
             // 用 BusinessException 而不是 abort(503)：兜底处理器会屏蔽 5xx 的 detail
@@ -35,7 +36,7 @@ class HeartbeatV3Controller extends Controller
             throw new BusinessException(__('site.maintenance'), 503, 'maintenance');
         }
 
-        return HeartbeatV3Resource::make([
+        return HeartbeatResource::make([
             'status' => 'ok',
             'checked_at' => now(),
         ]);

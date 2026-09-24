@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\V3;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUpgradeRequest;
 use App\Http\Requests\UpdateUpgradeRequest;
-use App\Http\Resources\V3Resource;
+use App\Http\Resources\V3\BaseResource;
 use App\Models\Upgrade;
 
 class UpgradeController extends Controller
@@ -19,7 +20,7 @@ class UpgradeController extends Controller
     public function index()
     {
         //
-        return V3Resource::make(['status' => 'ok']);
+        return BaseResource::make(['status' => 'ok']);
     }
 
     /**

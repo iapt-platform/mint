@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\V3;
 
-use App\Http\Resources\ProgressV3Resource;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\V3\ProgressResource;
 use App\Models\ProgressChapter;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -70,7 +71,7 @@ class ProgressController extends Controller
         );
 
         // 分页与 meta 全由框架算；page 参数 paginate() 自己会读
-        return ProgressV3Resource::collection(
+        return ProgressResource::collection(
             $table->paginate($request->integer('per_page', 10))
         );
     }
