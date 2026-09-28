@@ -313,6 +313,7 @@ Resource / FormRequest / 测试同理；URL 只换版本前缀
 | --- | --- | --- |
 | `like` / `LikeController` | `reactions` / `V3\ReactionController` 等 | `likes` 表早已不只存点赞：`type` 的实际取值有 `like`、`dislike`、`favorite`、`watch`、`bookmark`、`download` 六种 |
 | （无对应 v2 端点） | `tipitaka-reading/{channel}` / `V3\TipitakaReadingController` | 新能力：单 channel 的只读渲染 + 游标式下载。曾叫 `tipitaka-read-para` / `tipitaka-read-chapter`（两条），也短暂叫过 `channels/{c}/books/{b}/paragraphs\|chapters`，2026-09-24 并成一条 |
+| `related-paragraph` / `RelatedParagraphController` | `tipitaka-related-paragraphs` (+`/aggregate`) / `V3\TipitakaRelatedParagraphController` + `V3\TipitakaRelatedParagraphAggregateController` | 字段改名 `book_title_pali`→`title`、`cs6_para`→`cs_para`；响应 `{ok,…}`→原生 Resource；消除逐行 N+1（批量 whereIn）；新增 `book_name`/`cs_para` 过滤器与独立 `/aggregate` 聚合端点（`group_by=book_id`→book_name 列表 / `group_by=book_name`→cs_para 列表，分页） |
 
 **注意**：`tipitaka-reading` **不是** v2 `paragraph-content` / `chapter-content` 的替代品。
 那两个 v2 端点支持多 channel（`channels=a,b,c`）与 edit 模式、返回 sentenceIds 供编辑器用；

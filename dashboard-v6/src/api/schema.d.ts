@@ -7948,6 +7948,73 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v3/tipitaka-related-paragraphs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 列出一个段落的关联段落
+         * @description 按 book_id 分组，一本书一条，附带书名、标签、目录路径与该书内的段落列表。
+         *     没有关联段落时返回空集（这是正常结果，不是错误）。
+         *
+         *     实现：`V3\TipitakaRelatedParagraphController@index`
+         */
+        get: operations["get_api_v3_tipitaka_related_paragraphs"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/tipitaka-related-paragraphs/aggregate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 列出所有 SC 缩写
+         * @description data 是去空、去重的 SC 缩写，每条形如 {book_name}，分页由 Laravel paginator 提供。
+         *
+         *     实现：`V3\TipitakaRelatedParagraphAggregateController@index`
+         */
+        get: operations["get_api_v3_tipitaka_related_paragraphs_aggregate"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/tipitaka-related-paragraphs/aggregate/{book_name}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 列出某个 SC 缩写下的 cs_para
+         * @description data 是去重、>0 的 cs_para（升序），每条形如 {cs_para}，分页由 Laravel paginator 提供。
+         *
+         *     实现：`V3\TipitakaRelatedParagraphAggregateController@show`
+         */
+        get: operations["get_api_v3_tipitaka_related_paragraphs_aggregate_book_name_"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v3/upgrade": {
         parameters: {
             query?: never;
@@ -34568,6 +34635,143 @@ export interface operations {
                 };
                 content: {
                     "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    get_api_v3_tipitaka_related_paragraphs: {
+        parameters: {
+            query?: {
+                /**
+                 * @description 典籍文件号（1-217）。与 para 一起用，prohibits 下面那组
+                 * @example 1
+                 */
+                book?: number;
+                /**
+                 * @description 段落号。与 book 一起用
+                 * @example 2
+                 */
+                para?: number;
+                /**
+                 * @description SC 风格书名缩写（如 dn1、an2）。与 cs_para 一起用，prohibits 上面那组
+                 * @example dn1
+                 */
+                book_name?: string;
+                /**
+                 * @description 书内段落号。与 book_name 一起用
+                 * @example 4
+                 */
+                cs_para?: number;
+                /** @description 真书号（book_titles.sn），可选收窄 */
+                book_id?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            book?: number;
+                            book_id?: number;
+                            title?: string | null;
+                            cs_para?: number;
+                            para?: number[];
+                            tags?: string[];
+                            path?: {
+                                title?: string;
+                                level?: number;
+                            }[] | null;
+                        }[];
+                        meta?: {
+                            /** @description 命中的书籍条数 */
+                            count?: number;
+                        };
+                    };
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    get_api_v3_tipitaka_related_paragraphs_aggregate: {
+        parameters: {
+            query?: {
+                /** @description 典籍文件号过滤（对应表里的 book 列） */
+                file?: number;
+                /** @description 真书号过滤（对应表里的 book_id 列） */
+                book?: number;
+                /** @description 页码 */
+                page?: number;
+                /** @description 每页数量，最大 200 */
+                per_page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            book_name?: string;
+                        }[];
+                        meta?: components["schemas"]["PaginationMeta"];
+                    };
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    get_api_v3_tipitaka_related_paragraphs_aggregate_book_name_: {
+        parameters: {
+            query?: {
+                /** @description 典籍文件号过滤（对应表里的 book 列） */
+                file?: number;
+                /** @description 真书号过滤（对应表里的 book_id 列） */
+                book?: number;
+                /** @description 页码 */
+                page?: number;
+                /** @description 每页数量，最大 200 */
+                per_page?: number;
+            };
+            header?: never;
+            path: {
+                /**
+                 * @description SC 风格书名缩写（如 dn1、an2）
+                 * @example dn1
+                 */
+                book_name: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            cs_para?: string;
+                        }[];
+                        meta?: components["schemas"]["PaginationMeta"];
+                    };
                 };
             };
             422: components["responses"]["ProblemValidation"];
