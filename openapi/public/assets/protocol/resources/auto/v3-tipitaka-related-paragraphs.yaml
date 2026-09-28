@@ -1,0 +1,86 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-tipitaka-related-paragraphs.yaml
+get:
+  summary: 列出一个段落的关联段落
+  tags:
+    - tipitaka-related-paragraphs
+  operationId: get_api_v3_tipitaka_related_paragraphs
+  description: |-
+    按 book_id 分组，一本书一条，附带书名、标签、目录路径与该书内的段落列表。
+    没有关联段落时返回空集（这是正常结果，不是错误）。
+
+    实现：`V3\TipitakaRelatedParagraphController@index`
+  parameters:
+    -
+      name: book
+      in: query
+      schema:
+        type: integer
+      description: '典籍文件号（1-217）。与 para 一起用，prohibits 下面那组'
+      example: 1
+    -
+      name: para
+      in: query
+      schema:
+        type: integer
+      description: '段落号。与 book 一起用'
+      example: 2
+    -
+      name: book_name
+      in: query
+      schema:
+        type: string
+      description: 'SC 风格书名缩写（如 dn1、an2）。与 cs_para 一起用，prohibits 上面那组'
+      example: dn1
+    -
+      name: cs_para
+      in: query
+      schema:
+        type: integer
+      description: '书内段落号。与 book_name 一起用'
+      example: 4
+    -
+      name: book_id
+      in: query
+      schema:
+        type: integer
+      description: 真书号（book_titles.sn），可选收窄
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    book:
+                      type: integer
+                    book_id:
+                      type: integer
+                    title:
+                      type: string
+                      nullable: true
+                    cs_para:
+                      type: integer
+                    para:
+                      type: array
+                      items: { type: integer }
+                    tags:
+                      type: array
+                      items: { type: string }
+                    path:
+                      type: array
+                      items: { type: object, properties: { title: { type: string }, level: { type: integer } } }
+                      nullable: true
+              meta:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    description: 命中的书籍条数
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'
