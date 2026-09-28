@@ -34704,10 +34704,10 @@ export interface operations {
     get_api_v3_tipitaka_related_paragraphs_aggregate: {
         parameters: {
             query?: {
-                /** @description 典籍文件号过滤 */
+                /** @description 典籍文件号过滤（对应表里的 book 列） */
+                file?: number;
+                /** @description 真书号过滤（对应表里的 book_id 列） */
                 book?: number;
-                /** @description 真书号过滤 */
-                book_id?: number;
                 /** @description 页码 */
                 page?: number;
                 /** @description 每页数量，最大 200 */
@@ -34739,10 +34739,10 @@ export interface operations {
     get_api_v3_tipitaka_related_paragraphs_aggregate_book_name_: {
         parameters: {
             query?: {
-                /** @description 典籍文件号过滤 */
+                /** @description 典籍文件号过滤（对应表里的 book 列） */
+                file?: number;
+                /** @description 真书号过滤（对应表里的 book_id 列） */
                 book?: number;
-                /** @description 真书号过滤 */
-                book_id?: number;
                 /** @description 页码 */
                 page?: number;
                 /** @description 每页数量，最大 200 */

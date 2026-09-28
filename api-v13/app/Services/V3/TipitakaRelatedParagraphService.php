@@ -91,8 +91,8 @@ class TipitakaRelatedParagraphService
     public function bookNames(array $filters): LengthAwarePaginator
     {
         return RelatedParagraph::query()
-            ->when(isset($filters['book']), fn (Builder $q) => $q->where('book', (int) $filters['book']))
-            ->when(isset($filters['book_id']), fn (Builder $q) => $q->where('book_id', (int) $filters['book_id']))
+            ->when(isset($filters['file']), fn (Builder $q) => $q->where('book', (int) $filters['file']))
+            ->when(isset($filters['book']), fn (Builder $q) => $q->where('book_id', (int) $filters['book']))
             ->where('cs_para', '>', 0)
             ->where('book_name', '!=', '')
             ->select('book_name')
@@ -111,8 +111,8 @@ class TipitakaRelatedParagraphService
     {
         return RelatedParagraph::query()
             ->where('book_name', $bookName)
-            ->when(isset($filters['book']), fn (Builder $q) => $q->where('book', (int) $filters['book']))
-            ->when(isset($filters['book_id']), fn (Builder $q) => $q->where('book_id', (int) $filters['book_id']))
+            ->when(isset($filters['file']), fn (Builder $q) => $q->where('book', (int) $filters['file']))
+            ->when(isset($filters['book']), fn (Builder $q) => $q->where('book_id', (int) $filters['book']))
             ->where('cs_para', '>', 0)
             ->select('cs_para')
             ->groupBy('cs_para')

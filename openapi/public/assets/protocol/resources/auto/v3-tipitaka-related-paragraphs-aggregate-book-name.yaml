@@ -18,17 +18,17 @@ get:
       description: 'SC 风格书名缩写（如 dn1、an2）'
       example: dn1
     -
+      name: file
+      in: query
+      schema:
+        type: integer
+      description: '典籍文件号过滤（对应表里的 book 列）'
+    -
       name: book
       in: query
       schema:
         type: integer
-      description: 典籍文件号过滤
-    -
-      name: book_id
-      in: query
-      schema:
-        type: integer
-      description: 真书号过滤
+      description: '真书号过滤（对应表里的 book_id 列）'
     -
       name: page
       in: query

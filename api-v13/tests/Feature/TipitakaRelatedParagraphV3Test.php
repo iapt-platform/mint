@@ -140,6 +140,38 @@ it('lists cs_para of a book name', function () {
         ->and($json['meta']['total'])->toBe(2);
 });
 
+it('filters aggregate book names by file and book', function () {
+    makeRelatedParagraph(100, 2, 110, 4, 'an2');
+    makeRelatedParagraph(100, 3, 110, 5, 'an3');
+    makeRelatedParagraph(101, 2, 111, 4, 'an2');
+
+    // file 过滤 book 列：只剩 book=100 的两条
+    $json = $this->getJson('/api/v3/tipitaka-related-paragraphs/aggregate?file=100')->assertOk()->json();
+    expect($json['data'])->toBe([['book_name' => 'an2'], ['book_name' => 'an3']]);
+
+    // book 过滤 book_id 列：只剩 book_id=110 的两条
+    $json = $this->getJson('/api/v3/tipitaka-related-paragraphs/aggregate?book=110')->assertOk()->json();
+    expect($json['data'])->toBe([['book_name' => 'an2'], ['book_name' => 'an3']]);
+
+    // book 过滤 book_id 列：只剩 book_id=111 的一条
+    $json = $this->getJson('/api/v3/tipitaka-related-paragraphs/aggregate?book=111')->assertOk()->json();
+    expect($json['data'])->toBe([['book_name' => 'an2']]);
+});
+
+it('filters aggregate cs_para by file and book', function () {
+    makeRelatedParagraph(100, 2, 110, 4, 'an2');
+    makeRelatedParagraph(100, 3, 110, 5, 'an2');
+    makeRelatedParagraph(101, 2, 111, 4, 'an2');
+
+    // file 过滤 book 列：只剩 book=100 的两条
+    $json = $this->getJson('/api/v3/tipitaka-related-paragraphs/aggregate/an2?file=100')->assertOk()->json();
+    expect($json['data'])->toBe([['cs_para' => '4'], ['cs_para' => '5']]);
+
+    // book 过滤 book_id 列：只剩 book_id=111 的一条
+    $json = $this->getJson('/api/v3/tipitaka-related-paragraphs/aggregate/an2?book=111')->assertOk()->json();
+    expect($json['data'])->toBe([['cs_para' => '4']]);
+});
+
 it('validates the mutually exclusive lookup filters', function () {
     $this->getJson('/api/v3/tipitaka-related-paragraphs?book=1')
         ->assertStatus(422)

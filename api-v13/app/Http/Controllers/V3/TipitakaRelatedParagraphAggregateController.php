@@ -29,8 +29,8 @@ class TipitakaRelatedParagraphAggregateController extends Controller
      *
      * @unauthenticated
      *
-     * @queryParam book integer 典籍文件号过滤。
-     * @queryParam book_id integer 真书号过滤。
+     * @queryParam file integer 典籍文件号过滤（对应表里的 book 列）。
+     * @queryParam book integer 真书号过滤（对应表里的 book_id 列）。
      * @queryParam page integer 页码。Default: 1
      * @queryParam per_page integer 每页数量，最大 200。Default: 15
      */
@@ -50,8 +50,8 @@ class TipitakaRelatedParagraphAggregateController extends Controller
      *
      * @urlParam book_name string required SC 风格书名缩写（如 dn1、an2）。Example: dn1
      *
-     * @queryParam book integer 典籍文件号过滤。
-     * @queryParam book_id integer 真书号过滤。
+     * @queryParam file integer 典籍文件号过滤（对应表里的 book 列）。
+     * @queryParam book integer 真书号过滤（对应表里的 book_id 列）。
      * @queryParam page integer 页码。Default: 1
      * @queryParam per_page integer 每页数量，最大 200。Default: 15
      */
