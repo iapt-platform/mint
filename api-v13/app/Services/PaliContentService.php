@@ -178,6 +178,18 @@ class PaliContentService
     {
         $content = [];
 
+        // 逐词解析（wbw）默认使用第一个 translation channel 的数据。
+        // 系统原文 channel 固定在末尾（见 CorpusController / ChapterContentController 的约定），
+        // 这里从 indexChannel 挑出 translation channel 作为 wbw 的读写目标；
+        // 没有 translation channel 时（如直接编辑系统原文）保持为空，回落到系统原文。
+        $this->wbwChannels = [];
+        foreach ($indexChannel as $channelId => $info) {
+            if ($info->type === 'translation') {
+                $this->wbwChannels[] = $channelId;
+                break;
+            }
+        }
+
         // 获取句子编号列表
         $paraIndex = [];
         foreach ($record as $value) {
