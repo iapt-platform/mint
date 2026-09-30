@@ -60,6 +60,7 @@ const items = {
   "labels.error.404": "没有找到指定的资源",
   "labels.error.429": "请求过于频繁",
   "labels.error.500": "Server Internal Error",
+  "labels.error.render-failed": "Diagram failed to render",
   "labels.task": "task",
   "labels.task.hall": "task hall",
   "labels.task.mine": "my task",

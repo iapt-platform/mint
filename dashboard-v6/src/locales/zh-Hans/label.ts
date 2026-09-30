@@ -64,6 +64,7 @@ const items = {
   "labels.error.404": "没有找到指定的资源",
   "labels.error.429": "请求过于频繁",
   "labels.error.500": "服务器内部错误",
+  "labels.error.render-failed": "图形渲染失败",
   "labels.task": "任务",
   "labels.task.hall": "任务大厅",
   "labels.task.mine": "我的任务",
