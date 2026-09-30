@@ -64,6 +64,7 @@ const items = {
   "labels.error.404": "沒有找到指定的資源",
   "labels.error.429": "請求過於頻繁",
   "labels.error.500": "伺服器內部錯誤",
+  "labels.error.render-failed": "圖形渲染失敗",
   "labels.task": "任務",
   "labels.task.hall": "任務大廳",
   "labels.task.mine": "我的任務",
