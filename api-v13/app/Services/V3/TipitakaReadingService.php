@@ -22,7 +22,7 @@ class TipitakaReadingService
     /**
      * 字节模式下单块的字节上限。请求超过这个数按这个数算，不报错。
      */
-    public const MAX_BYTES_PER_PAGE = 5000;
+    public const MAX_BYTES_PER_PAGE = 50000;
 
     /**
      * 单块最多返回的段落数，两种单位都受它约束。
@@ -57,14 +57,14 @@ class TipitakaReadingService
             : min($pageSize, self::MAX_PARAGRAPHS_PER_PAGE);
 
         $candidates = (clone $scope)
-            ->when($filters['after'] ?? null, fn (Builder $q, string $after) => $this->applyCursor($q, $after))
+            ->when($filters['after'] ?? null, fn(Builder $q, string $after) => $this->applyCursor($q, $after))
             ->distinct()
             ->select(['book_id', 'paragraph'])
             ->orderBy('book_id')
             ->orderBy('paragraph')
             ->limit($want + 1)
             ->get()
-            ->map(fn ($row) => ['book' => (int) $row->book_id, 'para' => (int) $row->paragraph])
+            ->map(fn($row) => ['book' => (int) $row->book_id, 'para' => (int) $row->paragraph])
             ->all();
 
         $hasMoreBeyondWant = count($candidates) > $want;
@@ -240,7 +240,7 @@ class TipitakaReadingService
             return [];
         }
 
-        $countIn = fn (Builder $q): int => (int) (
+        $countIn = fn(Builder $q): int => (int) (
             $q->selectRaw('count(distinct (book_id, paragraph)) as aggregate')->first()?->aggregate ?? 0
         );
 
