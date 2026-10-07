@@ -57,7 +57,7 @@ const TaskEditDrawer = ({
           <Button
             type="link"
             onClick={() => {
-              window.open(fullUrl(`/article/task/${taskId}`), "_blank");
+              window.open(fullUrl(`/workspace/task/${taskId}`), "_blank");
             }}
           >
             {intl.formatMessage(

@@ -1,0 +1,125 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-article-nav-article-nav.yaml
+get:
+  summary: '获取单个 article-nav/{article_nav}'
+  tags:
+    - article-nav
+  operationId: get_api_v2_article_nav_article_nav_
+  description: 实现：`ArticleNavController@show`
+  parameters:
+    -
+      name: article_nav
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+put:
+  summary: '更新 article-nav/{article_nav}'
+  tags:
+    - article-nav
+  operationId: put_api_v2_article_nav_article_nav_
+  description: 实现：`ArticleNavController@update`
+  parameters:
+    -
+      name: article_nav
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+patch:
+  summary: '更新 article-nav/{article_nav}'
+  tags:
+    - article-nav
+  operationId: patch_api_v2_article_nav_article_nav_
+  description: 实现：`ArticleNavController@update`
+  parameters:
+    -
+      name: article_nav
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+delete:
+  summary: '删除 article-nav/{article_nav}'
+  tags:
+    - article-nav
+  operationId: delete_api_v2_article_nav_article_nav_
+  description: 实现：`ArticleNavController@destroy`
+  parameters:
+    -
+      name: article_nav
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

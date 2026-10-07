@@ -1,0 +1,132 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-interactive-interactive.yaml
+get:
+  summary: 获取某个资源，某个用户的权限
+  tags:
+    - interactive
+  operationId: get_api_v2_interactive_interactive_
+  description: 实现：`InteractiveController@show`
+  parameters:
+    -
+      name: interactive
+      in: path
+      required: true
+      schema:
+        type: string
+    -
+      name: res_type
+      in: query
+      schema:
+        type: string
+        enum:
+          - article
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+put:
+  summary: '更新 interactive/{interactive}'
+  tags:
+    - interactive
+  operationId: put_api_v2_interactive_interactive_
+  description: 实现：`InteractiveController@update`
+  parameters:
+    -
+      name: interactive
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+patch:
+  summary: '更新 interactive/{interactive}'
+  tags:
+    - interactive
+  operationId: patch_api_v2_interactive_interactive_
+  description: 实现：`InteractiveController@update`
+  parameters:
+    -
+      name: interactive
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+delete:
+  summary: '删除 interactive/{interactive}'
+  tags:
+    - interactive
+  operationId: delete_api_v2_interactive_interactive_
+  description: 实现：`InteractiveController@destroy`
+  parameters:
+    -
+      name: interactive
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

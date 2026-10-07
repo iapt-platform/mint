@@ -287,11 +287,24 @@ class MdRender
                         }
                     }
                     if (empty($paramName)) {
+                        /**
+                         * 位置参数。多个文本节点要拼接，不能互相覆盖。
+                         * 如果参数里含有嵌套模版（元素节点），纯文本是残缺的，
+                         * 此时不设置该参数，交给渲染结果的子节点（children）显示。
+                         * TODO: html / markdown 格式下嵌套模版仍会丢失外层模版结构，
+                         * 因为 dfn 是按文档顺序遍历的，外层先于内层渲染。
+                         */
+                        $paramText = '';
+                        $hasNestedTpl = false;
                         foreach ($child->childNodes as $param_child) {
-                            // code...
                             if ($param_child->nodeType === 3) {
-                                $props["{$param_id}"] = $param_child->nodeValue;
+                                $paramText .= $param_child->nodeValue;
+                            } elseif ($param_child->nodeType === 1) {
+                                $hasNestedTpl = true;
                             }
+                        }
+                        if (! $hasNestedTpl) {
+                            $props["{$param_id}"] = $paramText;
                         }
                     }
                 }
@@ -389,8 +402,26 @@ class MdRender
                 $nissayaWord = [];
                 if (is_array($json)) {
                     foreach ($json as $word) {
-                        if (count($word->sn) === 1) {
-                            // 只输出第一层级
+                        if (isset($word->original)) {
+                            // 对齐后的 nissaya json 格式：
+                            // {original, translation, note, confidence}
+                            // translation 用 ">" 分隔多层意思，转成 wiki 模版使用的 "=" 分隔符
+                            $str = '{{nissaya|';
+                            $str .= $word->original;
+                            $str .= '|';
+                            $str .= str_replace(
+                                '>',
+                                '=',
+                                isset($word->translation) ? $word->translation : ''
+                            );
+                            $str .= '}}';
+                            $nissayaWord[] = $str;
+
+                            if (! empty($word->note)) {
+                                $nissayaWord[] = '{{note|'.$word->note.'|[nt]}}';
+                            }
+                        } elseif (isset($word->sn) && count($word->sn) === 1) {
+                            // 逐词解析 wbw json 格式，只输出第一层级
                             $str = '{{nissaya|';
                             if (isset($word->word->value)) {
                                 $str .= $word->word->value;

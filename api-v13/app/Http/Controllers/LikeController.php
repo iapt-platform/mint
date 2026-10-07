@@ -157,24 +157,4 @@ class LikeController extends Controller
             return $this->error(_('auth.failed'), 403, 403);
         }
     }
-
-    public function delete(Request $request)
-    {
-        if (! isset($_COOKIE['user_uid'])) {
-            return $this->error('no login');
-        }
-        $param = [
-            'id' => $request->input('id'),
-            'user_id' => $_COOKIE['user_uid'],
-        ];
-        $del = Like::where($param)->delete();
-        $count = Like::where('target_id', $request->input('target_id'))
-            ->where('type', $request->input('type'))
-            ->count();
-
-        return $this->ok([
-            'deleted' => $del,
-            'count' => $count,
-        ]);
-    }
 }

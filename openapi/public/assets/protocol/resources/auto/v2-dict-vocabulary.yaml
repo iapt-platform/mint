@@ -1,0 +1,103 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-dict-vocabulary.yaml
+get:
+  summary: '列出 dict-vocabulary'
+  tags:
+    - dict-vocabulary
+  operationId: get_api_v2_dict_vocabulary
+  description: 实现：`DictVocabularyController@index`
+  parameters:
+    -
+      name: view
+      in: query
+      schema:
+        type: string
+        enum:
+          - dict_name
+          - dict_short_name
+    -
+      name: name
+      in: query
+      schema:
+        type: string
+    -
+      name: stream
+      in: query
+      schema:
+        type: string
+    -
+      name: dir
+      in: query
+      schema:
+        type: string
+        default: asc
+    -
+      name: offset
+      in: query
+      schema:
+        type: string
+    -
+      name: limit
+      in: query
+      schema:
+        type: string
+    -
+      name: search
+      in: query
+      description: 搜索关键字
+      schema:
+        type: string
+    -
+      name: order
+      in: query
+      description: 排序字段
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  rows:
+                    type: array
+                    items:
+                      type: object
+                  count:
+                    type: integer
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+post:
+  summary: '新建 dict-vocabulary'
+  tags:
+    - dict-vocabulary
+  operationId: post_api_v2_dict_vocabulary
+  description: 实现：`DictVocabularyController@store`
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

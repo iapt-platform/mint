@@ -30,9 +30,11 @@
 }
 .text_input > .menu {
   background-color: #b2b2b2;
-  width: 200px;
-  height: 300px;
-  box-shadow: #000;
+  min-width: 200px;
+  max-width: 320px;
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
   position: absolute;
   display: none;
   z-index: 100;
@@ -47,6 +49,7 @@
   cursor: pointer;
   padding: 0;
   margin: 5px;
+  word-break: break-word;
 }
 .text_input > .menu ul li:hover {
   background: linear-gradient(90deg, #40a9ff, transparent);

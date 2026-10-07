@@ -1,0 +1,38 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-discussion-anchor-id.yaml
+get:
+  summary: '获取 discussion 锚点的数据'
+  tags:
+    - discussion-anchor
+  operationId: get_api_v2_discussion_anchor_id_
+  description: |-
+    以句子为最小单位返回锚点上下文：res_type=wbw 时，由单词定位到所属 wbw block 与巴利句子，
+    再用该 block 的 channel 渲染出句子内容的 markdown。其他 res_type 暂返回空字符串。
+    不做登录与权限校验；wbw、wbw block 或句子任一查不到时分别返回 no wbw data / no wbwBlock data / no sent data。
+
+    实现：`DiscussionController@anchor`
+  parameters:
+    -
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '讨论 id'
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

@@ -178,6 +178,18 @@ class PaliContentService
     {
         $content = [];
 
+        // 逐词解析（wbw）默认使用第一个 translation channel 的数据。
+        // 系统原文 channel 固定在末尾（见 CorpusController / ChapterContentController 的约定），
+        // 这里从 indexChannel 挑出 translation channel 作为 wbw 的读写目标；
+        // 没有 translation channel 时（如直接编辑系统原文）保持为空，回落到系统原文。
+        $this->wbwChannels = [];
+        foreach ($indexChannel as $channelId => $info) {
+            if ($info->type === 'translation') {
+                $this->wbwChannels[] = $channelId;
+                break;
+            }
+        }
+
         // 获取句子编号列表
         $paraIndex = [];
         foreach ($record as $value) {
@@ -330,19 +342,15 @@ class PaliContentService
                                     "/sent/{$channelId}/{$ids}/{$format}",
                                     config('mint.cache.expire'),
                                     function () use ($row, $mode, $format) {
-                                        if ($row->content_type === 'markdown') {
-                                            return MdRender::render(
-                                                $row->content,
-                                                [$row->channel_uid],
-                                                null,
-                                                $mode,
-                                                'nissaya',
-                                                $row->content_type,
-                                                $format
-                                            );
-                                        } else {
-                                            return null;
-                                        }
+                                        return MdRender::render(
+                                            $row->content,
+                                            [$row->channel_uid],
+                                            null,
+                                            $mode,
+                                            'nissaya',
+                                            $row->content_type,
+                                            $format
+                                        );
                                     }
                                 );
                                 break;
@@ -655,10 +663,13 @@ class PaliContentService
         $level = $this->paragraphLevel($book, $para);
         // 缓存句子，段落外壳与标题级别有关，不进缓存
         $key = self::paragraphCacheKey($book, $para, $channelUid, $format);
-        $cached = Cache::tags([self::paragraphCacheTag($book, $para, $channelUid)])
-            ->rememberForever($key, function () use ($book, $para, $channelUid, $format) {
+        $cached = Cache::remember(
+            $key,
+            config('mint.cache.expire'),
+            function () use ($book, $para, $channelUid, $format) {
                 return $this->renderReadSentences($book, $para, $channelUid, $format);
-            });
+            }
+        );
 
         $result = [
             'para' => $para,
@@ -670,10 +681,11 @@ class PaliContentService
         }
 
         if ($format === 'html') {
-            // html 格式加段落外壳
+            // html 格式加段落外壳；段后追加段落脚注列表（本段义注/复注条目）
             $content = implode('', $cached['display']);
             $inner = $level > 0 ? "<h{$level}>{$content}</h{$level}>" : "<div class='para-block'>{$content}</div>";
-            $result['display'] = "<div class='{$cached['area']}' data-para='{$para}'>{$inner}</div>";
+            $footnoteList = $this->renderFootnoteList($cached['notes'] ?? []);
+            $result['display'] = "<div id='para-{$para}' class='{$cached['area']}' data-para='{$para}'>{$inner}{$footnoteList}</div>";
         } else {
             // 其他格式一行一句
             $result['display'] = implode("\n", $cached['display']);
@@ -696,6 +708,19 @@ class PaliContentService
     }
 
     /**
+     * 阅读模式支持的全部格式。forgetParagraph 需要逐格式清除缓存 key。
+     *
+     * @var array<int, string>
+     */
+    private const FORMATS = ['html', 'markdown', 'react', 'text'];
+
+    /**
+     * 义注对应（commentary）批注最多渲染几句。
+     * 一条批注可能挂着十几句义注，全铺进边注会把正文挤没，只取前几句。
+     */
+    private const MAX_COMMENTARY_SENTENCES = 3;
+
+    /**
      * 段落阅读模式缓存的 key
      */
     public static function paragraphCacheKey(int $book, int $para, string $channelUid, string $format): string
@@ -704,19 +729,167 @@ class PaliContentService
     }
 
     /**
-     * 段落缓存的 tag。一个段落一个 channel 的全部格式共用一个 tag
-     */
-    public static function paragraphCacheTag(int $book, int $para, string $channelUid): string
-    {
-        return "read-para:{$book}-{$para}:{$channelUid}";
-    }
-
-    /**
      * 删除某个段落的阅读模式缓存。句子有增改删时调用，下次 readParagraph 自动重建。
      */
     public static function forgetParagraph(int $book, int $para, string $channelUid): void
     {
-        Cache::tags([self::paragraphCacheTag($book, $para, $channelUid)])->flush();
+        foreach (self::FORMATS as $format) {
+            Cache::forget(self::paragraphCacheKey($book, $para, $channelUid, $format));
+        }
+    }
+
+    /**
+     * 段落批注内嵌：把锚定到该句子的批注渲染成 {{note}} 模板，按位置插入句子内容。
+     *
+     * 两种批注一起注入，除出处外处理完全一样：
+     * - `type='commentary'`（注释书对应）：content 是义注 / 复注的句子模板
+     *   `{{book-para-start-end}}`，渲染成这几句的译文，并追加 <cite> 作为跳转锚点；
+     * - `type='note'`（普通边注）：content 就是注解正文（markdown），没有出处，不出 <cite>。
+     *
+     * 同一句可能有多条批注，按 pos_end 倒序插入 —— 先插靠后的，避免先插入的
+     * 模板改变后面位置的字符偏移（见 docs/reading-annotations.md §4）。
+     */
+    protected function injectAnnotationNotes(Sentence $row, string $channelType): array
+    {
+        $content = (string) $row->content;
+        $result = ['content' => $content, 'notes' => []];
+        $notes = Discussion::where('res_type', 'sentence')
+            ->where('res_id', $row->uid)
+            ->whereIn('type', Discussion::INJECTED_TYPES)
+            ->get();
+
+        if ($notes->isEmpty()) {
+            return $result;
+        }
+
+        $sid = "{$row->book_id}-{$row->paragraph}-{$row->word_start}-{$row->word_end}";
+        $len = mb_strlen($content, 'UTF-8');
+        // 插入顺序：按插入点倒序（先插靠后的，免得前面的插入改变后面的偏移）；
+        // 插入点相同的，按义注原文的先后倒序——同一位置后插入的排在前面，
+        // 倒序插入后读起来就是义注原文顺序。插入点与下面的越界处理口径一致
+        // （null / 越界都算句尾）。义注坐标取 content 第一句的 book-para-start；
+        // 普通 note 没有坐标，取 0，同一插入点上读起来排在义注对应之前。
+        $notes = $notes->sort(function ($a, $b) use ($len) {
+            $key = function ($note) use ($len) {
+                $pos = $note->pos_end;
+                if ($pos === null || $pos < 0 || $pos > $len) {
+                    $pos = $len;
+                }
+                preg_match('/\{\{(\d+)-(\d+)-(\d+)-\d+\}\}/', (string) $note->content, $m);
+
+                return [$pos, (int) ($m[1] ?? 0), (int) ($m[2] ?? 0), (int) ($m[3] ?? 0)];
+            };
+
+            return $key($b) <=> $key($a);
+        })->values();
+        $collected = [];
+        foreach ($notes as $note) {
+            $noteContent = trim((string) $note->content);
+            if ($noteContent === '') {
+                continue;
+            }
+            $sents = [];
+            if ($note->type === Discussion::TYPE_COMMENTARY) {
+                // content 是一个或多个义注句子模板 {{book-para-start-end}}（一个词可能由义注
+                // 多句解释，按顺序并列，如 {{135-404-50-54}}{{135-404-55-65}}）。
+                // 不是这种格式的记录不认，跳过——不插角标，也不进脚注列表。
+                if (! preg_match('/^(?:\{\{\d+-\d+-\d+-\d+\}\}\s*)+$/', $noteContent)) {
+                    continue;
+                }
+                preg_match_all('/\{\{(\d+)-(\d+)-(\d+)-(\d+)\}\}/', $noteContent, $sents, PREG_SET_ORDER);
+                // 义注正文只需译文（不要巴利原文）：把每个裸句模板 {{book-para-start-end}}
+                // 转成 {{sent|id=…|text=translation}}，让 sent 模板只输出 translation。
+                // 句子可能有很多条，只渲染前 MAX_COMMENTARY_SENTENCES 句；
+                // 跳转锚点仍指向第一句，点进去能看到完整义注。
+                $source = implode(' ', array_map(
+                    fn ($s) => '{{sent|id='.$s[1].'-'.$s[2].'-'.$s[3].'-'.$s[4].'|text=translation}}',
+                    array_slice($sents, 0, self::MAX_COMMENTARY_SENTENCES)
+                ));
+            } else {
+                // 普通边注：content 就是注解正文，照原样渲染。
+                $source = $noteContent;
+            }
+            // 边注实际内容：先用 MdRender 渲染出来，再放进 {{note|text=…}} ——
+            // 直接嵌套 {{…}} 会被 wiki2xml 的平铺替换破坏。
+            // 用 text 格式渲染：避免「1.」被 markdown 解释成有序列表，
+            // 产生 <ol></p></p> 这类坏 HTML 把 sidenote 的闭合结构破坏、吞掉后续正文。
+            $noteHtml = MdRender::render(
+                $source,
+                [$row->channel_uid],
+                null,
+                'read',
+                $channelType,
+                'markdown',
+                'text'
+            );
+            // 义注被截断时补省略号，提示后面还有；想看全文点 <cite> 跳过去。
+            if (count($sents) > self::MAX_COMMENTARY_SENTENCES) {
+                $noteHtml = rtrim($noteHtml).'...';
+            }
+            $pos = $note->pos_end;
+            if ($pos === null || $pos < 0 || $pos > $len) {
+                $pos = $len;
+            }
+            // 出处只有 commentary 有。跳转目标（义注书-段-起-止）同时挂在 <cite> 和角标
+            // <label> 上，前者用于「点链接跳页」，后者用于平板双栏「点角标跨栏高亮」。
+            // 多句时跳转到第一句（义注对这个词的解释从那里开始）。
+            $citeHtml = '';
+            $citeParam = '';
+            if ($sents) {
+                $m = $sents[0];
+                $target = ' data-book="'.$m[1].'" data-para="'.$m[2].'" data-start="'.$m[3].'" data-end="'.$m[4].'"';
+                $citeHtml = '<cite class="anno-jump"'.$target.'>义注</cite>';
+                $citeParam = '|cite=义注'
+                    .'|citelink='.$m[1].'-'.$m[2].'-'.$m[3].'-'.$m[4];
+            }
+            // 用 {{note}} 模板渲染 tufte sidenote（label + input + span.sidenote），
+            // 复用 render_note() 的结构，不再手拼 sidenote HTML。
+            // text 传已预渲染的纯文本（嵌套 {{…}} 会被 wiki2xml 平铺替换破坏）。
+            $noteTplInline = '{{note|text='.$noteHtml.$citeParam.'}}';
+            $content = mb_substr($content, 0, $pos, 'UTF-8')
+                .$noteTplInline
+                .mb_substr($content, $pos, null, 'UTF-8');
+            // 收集脚注列表条目（倒序插入，最后反转回阅读顺序）
+            $collected[] = [
+                'fnId' => 'fn-'.$note->id,
+                'noteHtml' => $noteHtml,
+                'citeHtml' => $citeHtml,
+            ];
+        }
+
+        $result['notes'] = array_reverse($collected);
+        $result['content'] = $content;
+
+        Log::info('reading-annotations: inject', [
+            'sid' => $sid,
+            'count' => $notes->count(),
+            'content' => $content,
+        ]);
+
+        return $result;
+    }
+
+    /**
+     * 段落脚注列表：把本段的注释条目逐条列在段后，每条默认收起为可配置行数（见阅读器 CSS）。
+     */
+    protected function renderFootnoteList(array $notes): string
+    {
+        if (empty($notes)) {
+            return '';
+        }
+        $html = '<div class="anno-footnotes">';
+        foreach ($notes as $note) {
+            $html .= '<div class="anno-footnote">'
+                .'<input type="checkbox" id="'.$note['fnId'].'" class="anno-fn-toggle"/>'
+                .'<label for="'.$note['fnId'].'" class="anno-fn-label">'
+                .'<span class="anno-fn-body">'.e($note['noteHtml']).'</span>'
+                .'</label>'
+                .$note['citeHtml']
+                .'</div>';
+        }
+        $html .= '</div>';
+
+        return $html;
     }
 
     /**
@@ -743,9 +916,13 @@ class PaliContentService
             ->orderBy('word_start')
             ->get();
 
+        $allNotes = [];
         foreach ($records as $row) {
+            $injected = $this->injectAnnotationNotes($row, $channelType);
+            $content = $injected['content'];
+            $allNotes = array_merge($allNotes, $injected['notes']);
             $html = MdRender::render(
-                $row->content,
+                $content,
                 [$row->channel_uid],
                 null,
                 'read',
@@ -765,6 +942,7 @@ class PaliContentService
                 $result['display'][] = $html;
             }
         }
+        $result['notes'] = $allNotes;
 
         return $result;
     }

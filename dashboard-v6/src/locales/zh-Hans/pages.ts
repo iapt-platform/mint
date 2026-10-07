@@ -9,6 +9,7 @@ const items = {
   "pages.workspace.home.title": "欢迎来到wikipali",
   "pages.team.title": "团队",
   "pages.task.project.title": "项目",
+  "pages.task.show.title": "任务",
   "pages.tipitaka.chapter.title": "章节",
   "pages.tipitaka.para.title": "段落",
   "pages.tipitaka.cs-para.title": "CS段落",

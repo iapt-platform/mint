@@ -25,6 +25,8 @@ interface IWidget {
   currIndex?: number;
   onChange?: (word: string) => void;
   onSelect?: (word: string) => void;
+  /** 当前可见候选项数量，供父组件限制上下键范围 */
+  onCount?: (count: number) => void;
 }
 
 const TermTextAreaMenuWidget = ({
@@ -35,6 +37,7 @@ const TermTextAreaMenuWidget = ({
   currIndex = 0,
   onChange,
   onSelect,
+  onCount,
 }: IWidget) => {
   const sysTerms = useAppSelector(getTerm);
 
@@ -81,7 +84,17 @@ const TermTextAreaMenuWidget = ({
         isTerm: true,
       }));
 
-    return [...parentTerm, ...mWords, ...sysTerm];
+    // 术语表可能有同一个 word 的多条记录（不同 tag/meaning），
+    // 句子单词也可能同时出现在术语表里，这里按 word 统一去重，
+    // 保留优先级 parentTerm > mWords > sysTerm。
+    const unique = new Map<string, IWordWithEn>();
+    [...parentTerm, ...mWords, ...sysTerm].forEach((item) => {
+      if (!unique.has(item.word)) {
+        unique.set(item.word, item);
+      }
+    });
+
+    return Array.from(unique.values());
   }, [items, sysTerms]);
 
   /**
@@ -98,13 +111,19 @@ const TermTextAreaMenuWidget = ({
   /**
    * ✅ 只有真正副作用才用 useEffect
    */
-  useEffect(() => {
-    if (!filtered.length || !onChange) return;
+  const visibleCount = Math.min(filtered.length, maxItem);
 
-    const index = currIndex < filtered.length ? currIndex : filtered.length - 1;
+  useEffect(() => {
+    onCount?.(visibleCount);
+  }, [visibleCount, onCount]);
+
+  useEffect(() => {
+    if (!visibleCount || !onChange) return;
+
+    const index = currIndex < visibleCount ? currIndex : visibleCount - 1;
 
     onChange(filtered[index].word);
-  }, [currIndex, filtered, onChange]);
+  }, [currIndex, filtered, visibleCount, onChange]);
 
   if (!visible) return null;
 

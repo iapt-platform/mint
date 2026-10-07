@@ -128,7 +128,7 @@ const SentTabWidget = ({
       tabBarExtraContent={
         <Space>
           <TocPath
-            link="none"
+            link="blank"
             data={mPath}
             channels={channelsId}
             trigger={path ? path.length > 0 ? path[0].title : <></> : <></>}

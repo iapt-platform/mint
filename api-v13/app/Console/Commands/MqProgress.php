@@ -54,9 +54,9 @@ class MqProgress extends Command
                 '--para' => $message->para,
                 '--channel' => $message->channel,
             ];
-            $ok1 = $this->call('upgrade:progress', $data);
+            $ok1 = $this->call('upgrade:progress.para', $data);
             if ($ok1 !== 0) {
-                Log::error('mq:progress upgrade:progress fail', $data);
+                Log::error('mq:progress upgrade:progress.para fail', $data);
             }
             $ok2 = $this->call('upgrade:progress.chapter', $data);
             if ($ok2 !== 0) {

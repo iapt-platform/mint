@@ -1,0 +1,70 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-course-member-set-channel.yaml
+put:
+  summary: '设置当前用户在某课程中使用的 channel'
+  tags:
+    - course-member_set-channel
+  operationId: put_api_v2_course_member_set_channel
+  description: |-
+    必须登录。就地修改当前用户在该 course 的 is_current 记录（不产生历史记录）。
+    未传 channel_id、或当前用户不是该课程的当前成员，都返回 auth.failed。
+
+    实现：`CourseMemberController@set_channel`
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            channel_id:
+              type: string
+              description: '作业所用的 channel uid'
+            course_id:
+              type: string
+              description: 'course uid'
+          required:
+            - course_id
+            - channel_id
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  user_id:
+                    type: integer
+                  course_id:
+                    type: integer
+                  role:
+                    type: string
+                  user:
+                    type: string
+                  editor:
+                    type: string
+                  status:
+                    type: integer
+                  channel_id:
+                    type: integer
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  channel:
+                    type: string
+                  course:
+                    type: string
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

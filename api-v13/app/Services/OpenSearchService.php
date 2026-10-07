@@ -985,26 +985,27 @@ class OpenSearchService
 
         $cacheKey = 'embedding:' . md5($text);
 
-        return Cache::remember($cacheKey, now()->addDays(7), function () use ($text) {
-            $response = $this->http->post('embeddings', [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $this->openaiApiKey,
-                    'Content-Type' => 'application/json',
-                ],
-                'json' => [
-                    'model' => 'text-embedding-3-small',
-                    'input' => $text,
-                ],
-            ]);
+        return Cache::tags(['embedding'])
+            ->remember($cacheKey, now()->addDays(7), function () use ($text) {
+                $response = $this->http->post('embeddings', [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $this->openaiApiKey,
+                        'Content-Type' => 'application/json',
+                    ],
+                    'json' => [
+                        'model' => 'text-embedding-3-small',
+                        'input' => $text,
+                    ],
+                ]);
 
-            $json = json_decode((string) $response->getBody(), true);
+                $json = json_decode((string) $response->getBody(), true);
 
-            if (empty($json['data'][0]['embedding'])) {
-                throw new Exception('OpenAI embedding 返回异常: ' . json_encode($json));
-            }
+                if (empty($json['data'][0]['embedding'])) {
+                    throw new Exception('OpenAI embedding 返回异常: ' . json_encode($json));
+                }
 
-            return $json['data'][0]['embedding'];
-        });
+                return $json['data'][0]['embedding'];
+            });
     }
 
     /**
@@ -1034,16 +1035,9 @@ class OpenSearchService
      *   $count = $service->clearAllEmbeddingCache();
      *   echo "已清理缓存 {$count} 条";
      */
-    public function clearAllEmbeddingCache(): int
+    public function clearAllEmbeddingCache(): void
     {
-        $redis = Cache::getRedis();
-        $keys = $redis->keys('embedding:*');
-
-        if (! empty($keys)) {
-            $redis->del($keys);
-        }
-
-        return count($keys);
+        Cache::tags(['embedding'])->flush();
     }
 
     /**

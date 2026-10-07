@@ -4,6 +4,44 @@ export function initReader() {
     injectCommentaryMarkers();
     injectEvaluateMarkers();
     initTocToggle();
+    initHashScroll();
+}
+
+// 处理 URL hash（#354 / #94-354 / #para-354）：滚动到对应段落并加高亮底色
+function initHashScroll() {
+    const scrollToParagraph = (paragraph, smooth = false) => {
+        const el = document.getElementById(`para-${paragraph}`);
+        if (!el) {
+            return;
+        }
+
+        document
+            .querySelectorAll('.reader-para-anchor')
+            .forEach((node) => node.classList.remove('reader-para-anchor'));
+        el.classList.add('reader-para-anchor');
+        el.scrollIntoView({ block: 'start', behavior: smooth ? 'smooth' : 'auto' });
+    };
+
+    // 统一解析为段落号：取最后一个 '-' 之后的数字，兼容 #354 与 #94-354
+    const parseHash = (hash) => {
+        if (!hash || hash === '#') {
+            return null;
+        }
+        const paragraph = parseInt(hash.replace(/^#/, '').split('-').pop(), 10);
+        return Number.isInteger(paragraph) && paragraph > 0 ? paragraph : null;
+    };
+
+    window.addEventListener('hashchange', () => {
+        const paragraph = parseHash(window.location.hash);
+        if (paragraph !== null) {
+            scrollToParagraph(paragraph, true);
+        }
+    });
+
+    const paragraph = parseHash(window.location.hash);
+    if (paragraph !== null) {
+        scrollToParagraph(paragraph);
+    }
 }
 
 // TOC 折叠/展开：点击按钮切换所在 .toc-tree 的 .toc-expanded 类

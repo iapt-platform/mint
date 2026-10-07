@@ -1,0 +1,96 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-sent-history.yaml
+get:
+  summary: '列出 sent_history'
+  tags:
+    - sent_history
+  operationId: get_api_v2_sent_history
+  description: 实现：`SentHistoryController@index`
+  parameters:
+    -
+      name: id
+      in: query
+      schema:
+        type: string
+    -
+      name: fork
+      in: query
+      schema:
+        type: string
+    -
+      name: order
+      in: query
+      schema:
+        type: string
+        default: created_at
+    -
+      name: dir
+      in: query
+      schema:
+        type: string
+        default: desc
+    -
+      name: offset
+      in: query
+      schema:
+        type: string
+    -
+      name: limit
+      in: query
+      schema:
+        type: string
+    -
+      name: search
+      in: query
+      description: 搜索关键字
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  rows:
+                    type: array
+                    items:
+                      type: object
+                      properties: { id: { type: integer }, sent_uid: { type: string }, editor: { type: string }, content: { type: string }, landmark: { type: string }, pr_from: { type: string }, created_at: { type: string }, fork_from: { type: string }, fork_studio: { type: string }, accepter: { type: string } }
+                  count:
+                    type: integer
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+post:
+  summary: '新建 sent_history'
+  tags:
+    - sent_history
+  operationId: post_api_v2_sent_history
+  description: 实现：`SentHistoryController@store`
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

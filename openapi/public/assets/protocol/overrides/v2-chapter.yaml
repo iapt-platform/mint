@@ -1,0 +1,31 @@
+# 手写补充：/v2/chapter?view=toc 的 rows 逐字段类型，与 dashboard-v6 手写的 IChapterToc 对齐
+# （src/api/pali-text.ts）：text 可空，其余为 number。实际返回 PaliText 的
+# book/paragraph/level/text/chapter_len/chapter_strlen/parent。
+get:
+  responses:
+    200:
+      content:
+        application/json:
+          schema:
+            properties:
+              data:
+                properties:
+                  rows:
+                    items:
+                      type: object
+                      properties:
+                        book:
+                          type: integer
+                        paragraph:
+                          type: integer
+                        level:
+                          type: integer
+                        text:
+                          type: string
+                          nullable: true
+                        chapter_len:
+                          type: integer
+                        chapter_strlen:
+                          type: integer
+                        parent:
+                          type: integer

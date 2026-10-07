@@ -78,7 +78,7 @@ class UpdateCorpus extends Command
                 $this->info("Directory processed: {$stats['processed']} records saved, {$stats['errors']} errors");
                 if ($this->option('es') && isset($stats['channels'])) {
                     foreach ($stats['channels'] as $key => $channelId) {
-                        $this->call('upgrade:progress', ['--channel' => $channelId]);
+                        $this->call('upgrade:progress.para', ['--channel' => $channelId]);
                         $this->call('upgrade:progress.chapter', ['--channel' => $channelId]);
                         $this->call('opensearch:index-tipitaka', [
                             'book' => 0,

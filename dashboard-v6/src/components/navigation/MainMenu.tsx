@@ -7,6 +7,8 @@ import {
   FileOutlined,
   SettingOutlined,
   PlusOutlined,
+  ToolOutlined,
+  TeamOutlined,
 } from "@ant-design/icons";
 import { useNavigate, useMatches, type UIMatch } from "react-router";
 import {
@@ -132,18 +134,24 @@ const Widget = ({ onSearch }: Props) => {
     {
       key: "search",
       icon: <SearchOutlined />,
-      label: "搜索",
+      label: intl.formatMessage({ id: "labels.search" }),
     },
     {
       key: "/workspace",
       icon: <HomeOutlined />,
-      label: "主页",
+      label: intl.formatMessage({ id: "labels.home" }),
       activeId: "workspace.home",
       extra: (
         <PlusOutlined
           role="button"
-          aria-label="open-home-new-tab"
-          title="在新标签页打开主页"
+          aria-label={intl.formatMessage(
+            { id: "buttons.open.in.new.tab" },
+            { item: intl.formatMessage({ id: "labels.home" }) }
+          )}
+          title={intl.formatMessage(
+            { id: "buttons.open.in.new.tab" },
+            { item: intl.formatMessage({ id: "labels.home" }) }
+          )}
           onClick={(e) => {
             e.stopPropagation();
             window.open(fullUrl("workspace"), "_blank");
@@ -186,7 +194,7 @@ const Widget = ({ onSearch }: Props) => {
     {
       key: "/workspace/doc",
       icon: <DocumentIcon />,
-      label: "文档",
+      label: intl.formatMessage({ id: "labels.documents" }),
       children: [
         {
           key: "/workspace/article",
@@ -242,7 +250,7 @@ const Widget = ({ onSearch }: Props) => {
       children: [
         {
           key: "/workspace/task/pending",
-          label: "Pending",
+          label: intl.formatMessage({ id: "labels.task.pending" }),
           activeId: "workspace.task.pending",
         },
         {
@@ -254,7 +262,7 @@ const Widget = ({ onSearch }: Props) => {
         },
         {
           key: "/workspace/task/list",
-          label: "To-Do List",
+          label: intl.formatMessage({ id: "labels.task.mine" }),
           activeId: "workspace.task.list",
         },
         {
@@ -275,8 +283,8 @@ const Widget = ({ onSearch }: Props) => {
     },
     {
       key: "/workspace/tools",
-      icon: <CourseOutLinedIcon />,
-      label: "tools",
+      icon: <ToolOutlined />,
+      label: intl.formatMessage({ id: "labels.tools" }),
       children: [
         {
           key: "/workspace/tag",
@@ -287,40 +295,49 @@ const Widget = ({ onSearch }: Props) => {
         },
         {
           key: "/workspace/driver",
-          label: "driver",
+          label: intl.formatMessage({
+            id: "columns.studio.attachment.title",
+          }),
           activeId: "workspace.driver",
         },
         {
           key: "/workspace/dict",
-          label: "dict",
+          label: intl.formatMessage({
+            id: "columns.studio.userdict.title",
+          }),
           activeId: "workspace.dict",
         },
       ],
     },
     {
       key: "/workspace/collaboration",
-      icon: <CourseOutLinedIcon />,
+      icon: <TeamOutlined />,
       label: intl.formatMessage({ id: "labels.collaboration" }),
       children: [
         {
           key: "/workspace/team",
-          label: "team",
+          label: intl.formatMessage({
+            id: "columns.studio.group.title",
+          }),
           activeId: "workspace.team",
         },
         {
           key: "/workspace/invite",
-          label: "invite",
+          label: intl.formatMessage({
+            id: "columns.studio.invite.title",
+          }),
           activeId: "workspace.invite",
         },
         {
           key: "/workspace/transfer",
-          label: "transfer",
+          label: intl.formatMessage({
+            id: "columns.studio.transfer.title",
+          }),
           activeId: "workspace.transfer",
         },
       ],
     },
   ];
-  console.log("nav", routeId);
   /** 当前选中 */
   const selectedKey = findSelectedKey(items, routeId);
 
@@ -355,12 +372,9 @@ const Widget = ({ onSearch }: Props) => {
       <RecentModal
         open={recentOpen}
         onOpenChange={() => setRecentOpen(false)}
-        onSelect={(e, row) => {
-          if (e.ctrlKey || e.metaKey) {
-            window.open("");
-          } else {
-            navigate(recentPath(row.type, row.articleId));
-          }
+        onSelect={(_e, row) => {
+          // 弹窗中的链接一律新标签页打开，避免弹窗被原地跳转关掉
+          window.open(fullUrl(recentPath(row.type, row.articleId)), "_blank");
           setRecentOpen(false);
         }}
       />

@@ -6,7 +6,6 @@ use App\Http\Api\ChannelApi;
 use App\Models\Article;
 use App\Models\DhammaTerm;
 use App\Models\Sentence;
-use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -15,8 +14,18 @@ class RecentResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
+     * id 是 uuid、type 是 article/chapter/term 之一、article_id 是
+     * `"{book}-{para}"` 之类的字符串（不是数字）。
+     *
      * @param  Request  $request
-     * @return array|Arrayable|\JsonSerializable
+     * @return array{
+     *     id: string,
+     *     type: string,
+     *     article_id: string,
+     *     param: string|null,
+     *     updated_at: string,
+     *     title: string
+     * }
      */
     public function toArray($request)
     {

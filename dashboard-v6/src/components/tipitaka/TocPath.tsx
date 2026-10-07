@@ -6,7 +6,7 @@ import { articlePath, fullUrl } from "../../utils";
 import type { ITocPathNode } from "../../api/pali-text";
 import PaliText from "../general/PaliText";
 
-export declare type ELinkType = "none" | "blank" | "self";
+export declare type ELinkType = "blank" | "self";
 
 interface IWidgetTocPath {
   data?: ITocPathNode[];
@@ -24,6 +24,7 @@ interface IWidgetTocPath {
 const TocPathWidget = ({
   data = [],
   trigger,
+  link,
   channels,
   style,
   onChange,
@@ -51,7 +52,9 @@ const TocPathWidget = ({
           const urlMode = mode ? mode : "read";
           let url = `${articlePath(type, `${item.book}-${item.paragraph}`)}?mode=${urlMode}${param}`;
           url += channel ? `&channel=${channel}` : "";
-          if (e.ctrlKey || e.metaKey) {
+          // link="blank"：在弹层（Modal/Drawer/Popover）中使用时，
+          // 一律新标签页打开，避免原地跳转把弹层关掉
+          if (link === "blank" || e.ctrlKey || e.metaKey) {
             window.open(fullUrl(url), "_blank");
           } else {
             navigate(url);

@@ -1,0 +1,143 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-recent.yaml
+get:
+  summary: '列出 recent'
+  tags:
+    - recent
+  operationId: get_api_v2_recent
+  description: |-
+    按用户拉取阅读记录，view 目前只有 user 一种口径。
+
+    实现：`RecentController@index`
+  parameters:
+    -
+      name: id
+      in: query
+      schema:
+        type: string
+      description: 'view=user 时的用户 uid，必须是 uuid'
+    -
+      name: type
+      in: query
+      schema:
+        type: string
+      description: 按记录类型过滤
+      example: chapter
+    -
+      name: order
+      in: query
+      schema:
+        type: string
+        default: updated_at
+    -
+      name: dir
+      in: query
+      schema:
+        type: string
+        default: desc
+    -
+      name: offset
+      in: query
+      schema:
+        type: string
+    -
+      name: limit
+      in: query
+      schema:
+        type: string
+    -
+      name: view
+      in: query
+      schema:
+        type: string
+        enum:
+          - user
+      description: 查询口径
+      required: true
+    -
+      name: search
+      in: query
+      description: 搜索关键字
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  rows:
+                    type: array
+                    items:
+                      type: object
+                      properties: { id: { type: string }, type: { type: string }, article_id: { type: string }, param: { type: string, nullable: true }, updated_at: { type: string }, title: { type: string } }
+                  count:
+                    type: integer
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+post:
+  summary: '新建 recent'
+  tags:
+    - recent
+  operationId: post_api_v2_recent
+  description: 实现：`RecentController@store`
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            type:
+              type: string
+              description: 规则：required
+            article_id:
+              type: string
+              description: 规则：required
+            param:
+              type: string
+          required:
+            - type
+            - article_id
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  type:
+                    type: string
+                  article_id:
+                    type: string
+                  param:
+                    type: string
+                    nullable: true
+                  updated_at:
+                    type: string
+                  title:
+                    type: string
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

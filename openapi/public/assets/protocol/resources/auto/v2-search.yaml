@@ -1,0 +1,112 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-search.yaml
+get:
+  summary: '列出 search'
+  tags:
+    - search
+  operationId: get_api_v2_search
+  description: 实现：`SearchController@index`
+  parameters:
+    -
+      name: view
+      in: query
+      schema:
+        type: string
+        enum:
+          - pali
+          - page
+          - title
+        default: pali
+    -
+      name: key
+      in: query
+      schema:
+        type: string
+    -
+      name: tags
+      in: query
+      schema:
+        type: string
+    -
+      name: orderby
+      in: query
+      schema:
+        type: string
+        default: book
+    -
+      name: dir
+      in: query
+      schema:
+        type: string
+        default: asc
+    -
+      name: offset
+      in: query
+      schema:
+        type: string
+    -
+      name: limit
+      in: query
+      schema:
+        type: string
+    -
+      name: search
+      in: query
+      description: 搜索关键字
+      schema:
+        type: string
+    -
+      name: order
+      in: query
+      description: 排序字段
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  rows:
+                    type: array
+                    items:
+                      type: object
+                      properties: { book: { type: string }, paragraph: { type: string }, content: { type: string }, path: { type: string }, paliTitle: { type: string }, content_type: { type: string } }
+                  count:
+                    type: integer
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+post:
+  summary: '新建 search'
+  tags:
+    - search
+  operationId: post_api_v2_search
+  description: 实现：`SearchController@store`
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

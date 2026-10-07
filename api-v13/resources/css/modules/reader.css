@@ -349,3 +349,18 @@ body {
     color: var(--tblr-secondary);
     display: block;
 }
+
+/* ══════════════════════════════════════════
+   九、锚点段落高亮（hash 跳转定位）
+   柔和琥珀色，浅色/暗色模式各一套，避免过亮
+   ══════════════════════════════════════════ */
+
+.reader-para-anchor {
+    background-color: rgba(255, 213, 79, 0.18);
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+}
+
+.dark-mode .reader-para-anchor {
+    background-color: rgba(255, 213, 79, 0.14);
+}

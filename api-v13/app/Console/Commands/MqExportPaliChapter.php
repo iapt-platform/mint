@@ -63,7 +63,7 @@ class MqExportPaliChapter extends Command
             }
             $ok = $this->call('export:chapter', $data);
             if ($ok !== 0) {
-                Log::error('mq:export.pali.chapter upgrade:progress fail', $data);
+                Log::error('mq:export.pali.chapter export:chapter fail', $data);
             } else {
                 $this->info('Received book='.$message->book.' result='.$ok);
                 Log::debug('mq:export.pali.chapter done ', $data);

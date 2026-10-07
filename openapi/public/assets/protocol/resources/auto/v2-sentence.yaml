@@ -1,0 +1,221 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-sentence.yaml
+get:
+  summary: '列出 sentence'
+  tags:
+    - sentence
+  operationId: get_api_v2_sentence
+  description: 实现：`SentenceController@index`
+  parameters:
+    -
+      name: view
+      in: query
+      schema:
+        type: string
+        enum:
+          - public
+          - fulltext
+          - channel
+          - sent-can-read
+          - chapter
+          - paragraph
+          - my-edit
+    -
+      name: channel_type
+      in: query
+      schema:
+        type: string
+        default: translation
+    -
+      name: updated_after
+      in: query
+      schema:
+        type: string
+        default: '1970-1-1'
+    -
+      name: key
+      in: query
+      schema:
+        type: string
+    -
+      name: sentence
+      in: query
+      schema:
+        type: string
+    -
+      name: channel
+      in: query
+      schema:
+        type: string
+    -
+      name: type
+      in: query
+      schema:
+        type: string
+        default: translation
+    -
+      name: excludes
+      in: query
+      schema:
+        type: string
+    -
+      name: book
+      in: query
+      schema:
+        type: string
+    -
+      name: para
+      in: query
+      schema:
+        type: string
+    -
+      name: channels
+      in: query
+      schema:
+        type: string
+    -
+      name: lang
+      in: query
+      schema:
+        type: string
+    -
+      name: strlen
+      in: query
+      schema:
+        type: string
+    -
+      name: order
+      in: query
+      schema:
+        type: string
+        default: updated_at
+    -
+      name: dir
+      in: query
+      schema:
+        type: string
+        default: desc
+    -
+      name: offset
+      in: query
+      schema:
+        type: string
+    -
+      name: limit
+      in: query
+      schema:
+        type: string
+    -
+      name: search
+      in: query
+      description: 搜索关键字
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  rows:
+                    type: array
+                    items:
+                      type: object
+                      properties: { data: { type: string }, uid: { type: string }, id: { type: integer }, content: { type: string }, content_type: { type: string }, html: { type: string }, book: { type: string }, paragraph: { type: string }, word_start: { type: string }, word_end: { type: string }, editor: { type: string }, fork_at: { type: string }, updated_at: { type: string }, channel: { type: string }, studio: { type: string }, suggestionCount: { type: string }, acceptor: { type: string }, pr_edit_at: { type: string } }
+                  count:
+                    type: integer
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+post:
+  summary: 新建多个句子
+  tags:
+    - sentence
+  operationId: post_api_v2_sentence
+  description: |-
+    如果句子存在，修改
+
+    实现：`SentenceController@store`
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            sentences:
+              type: string
+            channel:
+              type: string
+            book:
+              type: string
+            access_token:
+              type: string
+            copy:
+              type: string
+            fork_from:
+              type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  data:
+                    type: string
+                  uid:
+                    type: string
+                  id:
+                    type: integer
+                  content:
+                    type: string
+                  content_type:
+                    type: string
+                  html:
+                    type: string
+                  book:
+                    type: string
+                  paragraph:
+                    type: string
+                  word_start:
+                    type: string
+                  word_end:
+                    type: string
+                  editor:
+                    type: string
+                  fork_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  channel:
+                    type: string
+                  studio:
+                    type: string
+                  suggestionCount:
+                    type: string
+                  acceptor:
+                    type: string
+                  pr_edit_at:
+                    type: string
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

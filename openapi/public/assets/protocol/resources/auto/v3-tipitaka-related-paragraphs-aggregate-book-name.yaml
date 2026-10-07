@@ -1,0 +1,64 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-tipitaka-related-paragraphs-aggregate-book-name.yaml
+get:
+  summary: '列出某个 SC 缩写下的 cs_para'
+  tags:
+    - tipitaka-related-paragraphs
+  operationId: get_api_v3_tipitaka_related_paragraphs_aggregate_book_name_
+  description: |-
+    data 是去重、>0 的 cs_para（升序），每条形如 {cs_para}，分页由 Laravel paginator 提供。
+
+    实现：`V3\TipitakaRelatedParagraphAggregateController@show`
+  parameters:
+    -
+      name: book_name
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 'SC 风格书名缩写（如 dn1、an2）'
+      example: dn1
+    -
+      name: file
+      in: query
+      schema:
+        type: integer
+      description: '典籍文件号过滤（对应表里的 book 列）'
+    -
+      name: book
+      in: query
+      schema:
+        type: integer
+      description: '真书号过滤（对应表里的 book_id 列）'
+    -
+      name: page
+      in: query
+      schema:
+        type: integer
+        default: 1
+      description: 页码
+    -
+      name: per_page
+      in: query
+      schema:
+        type: integer
+        default: 15
+      description: '每页数量，最大 200'
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    cs_para:
+                      type: string
+              meta:
+                $ref: '../../main.yaml#/components/schemas/PaginationMeta'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

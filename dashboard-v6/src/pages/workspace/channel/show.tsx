@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useIntl } from "react-intl";
 import { Button, Card, Tabs } from "antd";
 import { TeamOutlined } from "@ant-design/icons";
@@ -17,6 +17,7 @@ import TermList from "../../../components/term/TermList";
 
 const Widget = () => {
   const { channelId } = useParams(); //url 参数
+  const navigate = useNavigate();
   const [title, setTitle] = useState<string>();
   const intl = useIntl();
   const channelTitle = intl.formatMessage({
@@ -73,8 +74,11 @@ const Widget = () => {
                         : "";
                       window.open(fullUrl(url), "_blank");
                     } else {
-                      //setParam(chapter);
-                      //setArticleOpen(true);
+                      let url = articlePath(chapter.type, chapter.articleId);
+                      url += chapter?.channelId
+                        ? `?channel=${chapter.channelId}`
+                        : "";
+                      navigate(url);
                     }
                   }}
                 />

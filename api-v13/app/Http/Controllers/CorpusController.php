@@ -155,9 +155,15 @@ class CorpusController extends Controller
 
         // 获取wbw channel
         // 目前默认的 wbw channel 是第一个translation channel
+        // TODO: channel 不存在时目前只是静默跳过（句子会渲染为空）。
+        // 以后改为抛出异常，由外层（render_sent / 控制器）捕获，
+        // 把出错信息 message 传给前端提示用户 channel 无效。
         foreach ($channels as $channel) {
             // code...
-            if ($channelIndex[$channel]->type === 'translation') {
+            if (
+                isset($channelIndex[$channel]) &&
+                $channelIndex[$channel]->type === 'translation'
+            ) {
                 $this->wbwChannels[] = $channel;
                 break;
             }

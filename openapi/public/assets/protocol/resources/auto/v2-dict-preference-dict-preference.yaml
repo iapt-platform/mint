@@ -1,0 +1,167 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-dict-preference-dict-preference.yaml
+get:
+  summary: '获取单个 dict-preference/{dict_preference}'
+  tags:
+    - dict-preference
+  operationId: get_api_v2_dict_preference_dict_preference_
+  description: 实现：`DictPreferenceController@show`
+  parameters:
+    -
+      name: dict_preference
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+put:
+  summary: '更新 dict-preference/{dict_preference}'
+  tags:
+    - dict-preference
+  operationId: put_api_v2_dict_preference_dict_preference_
+  description: 实现：`DictPreferenceController@update`
+  parameters:
+    -
+      name: dict_preference
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  word:
+                    type: string
+                  count:
+                    type: integer
+                  parent:
+                    type: string
+                  note:
+                    type: string
+                  factors:
+                    type: string
+                  confidence:
+                    type: string
+                  updated_at:
+                    type: string
+                  creator_id:
+                    type: integer
+                  editor:
+                    type: string
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+patch:
+  summary: '更新 dict-preference/{dict_preference}'
+  tags:
+    - dict-preference
+  operationId: patch_api_v2_dict_preference_dict_preference_
+  description: 实现：`DictPreferenceController@update`
+  parameters:
+    -
+      name: dict_preference
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  word:
+                    type: string
+                  count:
+                    type: integer
+                  parent:
+                    type: string
+                  note:
+                    type: string
+                  factors:
+                    type: string
+                  confidence:
+                    type: string
+                  updated_at:
+                    type: string
+                  creator_id:
+                    type: integer
+                  editor:
+                    type: string
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+delete:
+  summary: '删除 dict-preference/{dict_preference}'
+  tags:
+    - dict-preference
+  operationId: delete_api_v2_dict_preference_dict_preference_
+  description: 实现：`DictPreferenceController@destroy`
+  parameters:
+    -
+      name: dict_preference
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

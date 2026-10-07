@@ -12,7 +12,13 @@ use Illuminate\Support\Str;
 class RecentController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * 列出 recent
+     *
+     * 按用户拉取阅读记录，view 目前只有 user 一种口径。
+     *
+     * @queryParam view string required 查询口径。Enum: user
+     * @queryParam id string view=user 时的用户 uid，必须是 uuid
+     * @queryParam type string 按记录类型过滤。Example: chapter
      *
      * @return Response
      */

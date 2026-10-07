@@ -1,0 +1,37 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-relation-import.yaml
+get:
+  summary: 'Import relations from an uploaded XLSX file.'
+  tags:
+    - relation-import
+  operationId: get_api_v2_relation_import
+  description: |-
+    Requires authentication. Reads the file path from the `filename` request
+    parameter. Existing records are matched by id and updated in place;
+    rows without a matching id are inserted as new records.
+    Invalidates the vocabulary cache on completion.
+
+    实现：`RelationController@import`
+  parameters:
+    -
+      name: filename
+      in: query
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

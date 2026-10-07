@@ -103,6 +103,10 @@ class BookController extends Controller
     {
 
         $channelId = $request->input('channel');
+        $isDefaultChannel = empty($channelId);
+        if ($isDefaultChannel) {
+            $channelId = ChannelApi::getSysChannel('_System_Pali_VRI_');
+        }
 
         [$bookId, $paraId] = explode('-', $id);
         $bookId = (int) $bookId;
@@ -132,6 +136,7 @@ class BookController extends Controller
         $book['categories'] = $chapter['category'];
         $book['title'] = $chapter['title'];
         $book['author'] = $channel['name'];
+        $book['is_original'] = in_array($channel['type'], ['original', 'wbw'], true);
         $book['studio'] = $studio;
         $book['tags'] = [];
         $book['book_title'] = $this->getBookTitle($bookId, $paraId, $channelId);
@@ -154,7 +159,7 @@ class BookController extends Controller
         $editor_link = config('mint.server.dashboard_base_path')
             ."/workspace/tipitaka/chapter/{$id}?channel={$channelId}";
 
-        $view = view('library.book.read', compact('book', 'channels', 'editor_link', 'commentaryChannels'));
+        $view = view('library.book.read', compact('book', 'channels', 'editor_link', 'commentaryChannels', 'isDefaultChannel'));
 
         return $view;
     }

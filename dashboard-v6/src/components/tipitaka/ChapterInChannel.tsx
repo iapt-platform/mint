@@ -36,11 +36,16 @@ const ChapterInChannelWidget = ({
   book,
   para,
   channelId,
+  openTarget,
 }: IWidgetChapterInChannel) => {
   const intl = useIntl(); //i18n
   const [searchParams] = useSearchParams();
   const [open, setOpen] = useState(false);
-  const ChannelList = (channels: IChapterChannelData[]): JSX.Element => {
+  const ChannelList = (
+    channels: IChapterChannelData[],
+    /** 在弹层中渲染时传 "_blank"，避免原地跳转导致弹层关闭 */
+    target: React.HTMLAttributeAnchorTarget | undefined = openTarget
+  ): JSX.Element => {
     return channels.length ? (
       <List
         style={{ maxWidth: 500 }}
@@ -70,7 +75,7 @@ const ChapterInChannelWidget = ({
             <List.Item key={id}>
               <Row>
                 <Col span={12}>
-                  <Link to={url}>
+                  <Link to={url} target={target}>
                     <ChannelListItem
                       channel={item.channel}
                       studio={item.studio}
@@ -139,7 +144,7 @@ const ChapterInChannelWidget = ({
           onCancel={handleCancel}
           onOk={handleCancel}
         >
-          <div>{ChannelList(data)}</div>
+          <div>{ChannelList(data, "_blank")}</div>
         </Modal>
       </div>
     );

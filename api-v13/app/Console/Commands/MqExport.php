@@ -43,7 +43,7 @@ class MqExport extends Command
         $exchange = 'router';
         $queue = 'export';
         $this->info(" [*] Waiting for {$queue}. To exit press CTRL+C");
-        Log::debug('mq:progress start.');
+        Log::debug('mq:export start.');
         Mq::worker($exchange, $queue, function ($message) {
             $data = [
                 'book' => $message->book,
@@ -60,7 +60,7 @@ class MqExport extends Command
             }
             $ok = $this->call('export:chapter', $data);
             if ($ok !== 0) {
-                Log::error('mq:progress upgrade:progress fail', $data);
+                Log::error('mq:export export:chapter fail', $data);
             } else {
                 $this->info('Received book='.$message->book.' result='.$ok);
                 Log::debug('mq:export: done ', $data);

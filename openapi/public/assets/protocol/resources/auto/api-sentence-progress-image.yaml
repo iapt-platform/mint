@@ -1,0 +1,38 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/api-sentence-progress-image.yaml
+get:
+  summary: 输出一张图片显示进度
+  tags:
+    - api
+  operationId: get_api_api_sentence_progress_image
+  description: |-
+    http://127.0.0.1:8000/api/sentence/progress/image?channel=00ae2c48-c204-4082-ae79-79ba2740d506&&book=168&from=916&to=926&view=page&pages=400
+
+    实现：`SentenceInfoController@showprogress`
+  parameters:
+    -
+      name: view
+      in: query
+      schema:
+        type: string
+        enum:
+          - percent
+          - strlen
+          - page
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

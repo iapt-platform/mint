@@ -1,0 +1,11 @@
+# 手写补充：POST /v2/sign-in 的 data 是 token 字符串，不是对象。
+post:
+  responses:
+    200:
+      content:
+        application/json:
+          schema:
+            properties:
+              data:
+                type: string
+                description: 登录成功后返回的 JWT token

@@ -37,6 +37,11 @@ class DiscussionResource extends JsonResource
             'children_count' => Discussion::where('parent', $this->id)->count(),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'pos_start' => $this->pos_start,
+            'pos_end' => $this->pos_end,
+            'quote_exact' => $this->quote_exact,
+            'quote_prefix' => $this->quote_prefix,
+            'quote_suffix' => $this->quote_suffix,
         ];
         $channels = [];
         switch ($this->res_type) {

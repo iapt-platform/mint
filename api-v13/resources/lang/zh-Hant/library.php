@@ -114,6 +114,7 @@ return [
     'versions' => '版本',
     'logout' => '登出',
     'select_version' => '選擇版本',
+    'default_version_notice' => '未選擇版本，預設顯示巴利原文。',
     'no_content' => '無內容',
     'prev_article' => '上一篇',
     'next_article' => '下一篇',
@@ -134,6 +135,10 @@ return [
     'cancel' => '取消',
     'confirm' => '確定',
     'no_toc' => '本書無目錄',
+    'share' => '分享',
+    'share_qr' => 'QR 碼',
+    'share_qr_title' => '掃碼分享',
+    'share_qr_hint' => '使用手機掃碼打開本頁',
 
     // course (course/index.blade.php + course/history.blade.php)
     'course' => '課程',

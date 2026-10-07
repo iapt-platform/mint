@@ -1,0 +1,45 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-reactions-tally.yaml
+get:
+  summary: '统计某个 target 下各 type 的计数'
+  tags:
+    - reactions
+  operationId: get_api_v3_reactions_tally
+  description: |-
+    一次聚合查询出各 type 的 count；登录时再查一次当前用户的选择，补 selected / id。
+
+    实现：`V3\ReactionTallyController@index`
+  parameters:
+    -
+      name: target_id
+      in: query
+      schema:
+        type: string
+      description: 'target 的 uuid'
+      required: true
+      example: 5b4511c1-c99f-47e7-9798-97b9e5229e18
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                    count:
+                      type: integer
+                    selected:
+                      type: boolean
+                    id:
+                      type: string
+                      nullable: true
+              meta:
+                $ref: '../../main.yaml#/components/schemas/PaginationMeta'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

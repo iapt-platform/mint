@@ -1,0 +1,23 @@
+# 手写补充：GET /v2/auth/current 的 data 逐字段类型（对齐移动端 AuthUser）。
+get:
+  responses:
+    200:
+      content:
+        application/json:
+          schema:
+            properties:
+              data:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  nickName:
+                    type: string
+                  realName:
+                    type: string
+                  avatar:
+                    type: string
+                  roles:
+                    type: array
+                    items:
+                      type: string

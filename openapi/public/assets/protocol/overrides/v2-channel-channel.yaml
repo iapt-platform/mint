@@ -1,0 +1,38 @@
+# 手写补充：GET /v2/channel/{channel} 的 data 逐字段类型（对齐移动端 ChannelInfo）。
+# 只补 get 的响应，put/patch/delete 保持自动生成结果。
+get:
+  responses:
+    200:
+      content:
+        application/json:
+          schema:
+            properties:
+              data:
+                type: object
+                properties:
+                  uid:
+                    type: string
+                  name:
+                    type: string
+                  summary:
+                    type: string
+                    nullable: true
+                  lang:
+                    type: string
+                  type:
+                    type: string
+                  updated_at:
+                    type: string
+                  studio:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      nickName:
+                        type: string
+                      realName:
+                        type: string
+                      studioName:
+                        type: string
+                      avatar:
+                        type: string

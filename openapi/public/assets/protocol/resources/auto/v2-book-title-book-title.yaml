@@ -1,0 +1,125 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-book-title-book-title.yaml
+get:
+  summary: '获取单个 book-title/{book_title}'
+  tags:
+    - book-title
+  operationId: get_api_v2_book_title_book_title_
+  description: 实现：`BookTitleController@show`
+  parameters:
+    -
+      name: book_title
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+put:
+  summary: '更新 book-title/{book_title}'
+  tags:
+    - book-title
+  operationId: put_api_v2_book_title_book_title_
+  description: 实现：`BookTitleController@update`
+  parameters:
+    -
+      name: book_title
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+patch:
+  summary: '更新 book-title/{book_title}'
+  tags:
+    - book-title
+  operationId: patch_api_v2_book_title_book_title_
+  description: 实现：`BookTitleController@update`
+  parameters:
+    -
+      name: book_title
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+delete:
+  summary: '删除 book-title/{book_title}'
+  tags:
+    - book-title
+  operationId: delete_api_v2_book_title_book_title_
+  description: 实现：`BookTitleController@destroy`
+  parameters:
+    -
+      name: book_title
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

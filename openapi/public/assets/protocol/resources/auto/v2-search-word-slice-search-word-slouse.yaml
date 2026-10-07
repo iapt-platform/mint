@@ -1,0 +1,125 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-search-word-slice-search-word-slouse.yaml
+get:
+  summary: '获取单个 search-word-slice/{search_word_slouse}'
+  tags:
+    - search-word-slice
+  operationId: get_api_v2_search_word_slice_search_word_slouse_
+  description: 实现：`SearchWordSliceController@show`
+  parameters:
+    -
+      name: search_word_slouse
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+put:
+  summary: '更新 search-word-slice/{search_word_slouse}'
+  tags:
+    - search-word-slice
+  operationId: put_api_v2_search_word_slice_search_word_slouse_
+  description: 实现：`SearchWordSliceController@update`
+  parameters:
+    -
+      name: search_word_slouse
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+patch:
+  summary: '更新 search-word-slice/{search_word_slouse}'
+  tags:
+    - search-word-slice
+  operationId: patch_api_v2_search_word_slice_search_word_slouse_
+  description: 实现：`SearchWordSliceController@update`
+  parameters:
+    -
+      name: search_word_slouse
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+delete:
+  summary: '删除 search-word-slice/{search_word_slouse}'
+  tags:
+    - search-word-slice
+  operationId: delete_api_v2_search_word_slice_search_word_slouse_
+  description: 实现：`SearchWordSliceController@destroy`
+  parameters:
+    -
+      name: search_word_slouse
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

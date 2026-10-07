@@ -1,0 +1,19 @@
+# 手写补充：/v3/tipitaka-reading/{channel} 的 data[] 逐字段类型。
+# meta 已由控制器 @meta 注解生成专用 schema，这里只补 data 的 item（para + display）。
+get:
+  responses:
+    200:
+      content:
+        application/json:
+          schema:
+            properties:
+              data:
+                items:
+                  type: object
+                  properties:
+                    book:
+                      type: integer
+                    para:
+                      type: integer
+                    display:
+                      type: string

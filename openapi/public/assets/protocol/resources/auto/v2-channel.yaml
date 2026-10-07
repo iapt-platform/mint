@@ -1,0 +1,262 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-channel.yaml
+get:
+  summary: '列出 channel（译文集）'
+  tags:
+    - channel
+  operationId: get_api_v2_channel
+  description: |-
+    按 view 指定的口径返回 channel 列表，支持关键字搜索、分页、排序。
+    需要登录的口径：studio、studio-all、user-edit、user-in-chapter。
+
+    实现：`ChannelController@index`
+  parameters:
+    -
+      name: book
+      in: query
+      schema:
+        type: integer
+      description: 'view=user-in-chapter 时的典籍 id；传入后会联查该章节的翻译进度'
+    -
+      name: view
+      in: query
+      schema:
+        type: string
+        enum:
+          - public
+          - studio
+          - studio-all
+          - user-edit
+          - user-in-chapter
+          - system
+          - paragraphs
+          - id
+      description: 查询口径
+      required: true
+    -
+      name: name
+      in: query
+      schema:
+        type: string
+      description: 'studio 名称，view=studio / studio-all 时必填'
+    -
+      name: view2
+      in: query
+      schema:
+        type: string
+        default: my
+      description: 'view=studio 时的二级口径：my=我的，其余值=协作的'
+    -
+      name: collaborator
+      in: query
+      schema:
+        type: string
+        default: all
+      description: 'view=studio 且 view2 为协作时，按协作者 uid 过滤'
+    -
+      name: para
+      in: query
+      schema:
+        type: string
+      description: 'view=user-in-chapter 时的段落号'
+    -
+      name: book_id
+      in: query
+      schema:
+        type: integer
+      description: 'view=paragraphs 时的典籍 id'
+    -
+      name: id
+      in: query
+      schema:
+        type: string
+      description: 'view=id 时的 channel uid 列表，逗号分隔'
+    -
+      name: paragraph
+      in: query
+      schema:
+        type: string
+      description: '联查 progress_chapters 时的段落号，与 book 配合使用'
+    -
+      name: search
+      in: query
+      schema:
+        type: string
+    -
+      name: type
+      in: query
+      schema:
+        type: integer
+      description: '按 channel 类型过滤'
+    -
+      name: updated_at
+      in: query
+      schema:
+        type: string
+      description: 只返回该时间之后更新的记录，用于离线包增量同步
+      example: '2023-09-18T05:39:51.000000Z'
+    -
+      name: created_at
+      in: query
+      schema:
+        type: string
+      description: 只返回该时间之后新建的记录
+    -
+      name: order
+      in: query
+      schema:
+        type: string
+        default: created_at
+    -
+      name: dir
+      in: query
+      schema:
+        type: string
+        default: desc
+    -
+      name: offset
+      in: query
+      schema:
+        type: string
+    -
+      name: limit
+      in: query
+      schema:
+        type: string
+    -
+      name: progress
+      in: query
+      schema:
+        type: string
+      description: '传入则在每行附带 final 逐句完成情况，依赖 book 与 para'
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  rows:
+                    type: array
+                    items:
+                      type: object
+                  count:
+                    type: integer
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+post:
+  summary: '新建 channel'
+  tags:
+    - channel
+  operationId: post_api_v2_channel
+  description: |-
+    在指定 studio 下新建译文集。同一 studio 内不允许重名。
+    调用者必须对该 studio 有管理权限。
+
+    实现：`ChannelController@store`
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            studio:
+              type: string
+              description: '所属 studio 名称'
+            name:
+              type: string
+              description: 'channel 名称，在同一 studio 内唯一'
+            type:
+              type: integer
+              description: 'channel 类型'
+            lang:
+              type: string
+              description: 译文语言代码
+              example: zh-Hans
+          required:
+            - studio
+            - name
+            - type
+            - lang
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+patch:
+  summary: '局部更新 channel'
+  tags:
+    - channel
+  operationId: patch_api_v2_channel
+  description: |-
+    只更新请求体中出现的字段。系统 channel 不可修改；非 owner 需要 30 以上的协作权限。
+
+    实现：`ChannelController@patch`
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+              description: 'channel 名称'
+            type:
+              type: integer
+              description: 'channel 类型'
+            summary:
+              type: string
+              description: 简介
+            lang:
+              type: string
+              description: 译文语言代码
+            status:
+              type: integer
+              description: '状态。30 为全网公开'
+            config:
+              type: string
+              description: 'channel 配置'
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

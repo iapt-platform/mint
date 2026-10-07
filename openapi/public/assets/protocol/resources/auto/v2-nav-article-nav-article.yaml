@@ -1,0 +1,155 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-nav-article-nav-article.yaml
+get:
+  summary: 文章导航
+  tags:
+    - nav-article
+  operationId: get_api_v2_nav_article_nav_article_
+  description: |-
+    文集中 某个文章的 前一个，后一个
+
+    实现：`NavArticleController@show`
+  parameters:
+    -
+      name: nav_article
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  collect_id:
+                    type: integer
+                  article_id:
+                    type: integer
+                  level:
+                    type: integer
+                  title:
+                    type: string
+                  editor:
+                    type: string
+                  children:
+                    type: string
+                  status:
+                    type: integer
+                  deleted_at:
+                    type: string
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  format:
+                    type: string
+                  title_text:
+                    type: string
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+put:
+  summary: '更新 nav-article/{nav_article}'
+  tags:
+    - nav-article
+  operationId: put_api_v2_nav_article_nav_article_
+  description: 实现：`NavArticleController@update`
+  parameters:
+    -
+      name: nav_article
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+patch:
+  summary: '更新 nav-article/{nav_article}'
+  tags:
+    - nav-article
+  operationId: patch_api_v2_nav_article_nav_article_
+  description: 实现：`NavArticleController@update`
+  parameters:
+    -
+      name: nav_article
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+delete:
+  summary: '删除 nav-article/{nav_article}'
+  tags:
+    - nav-article
+  operationId: delete_api_v2_nav_article_nav_article_
+  description: 实现：`NavArticleController@destroy`
+  parameters:
+    -
+      name: nav_article
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

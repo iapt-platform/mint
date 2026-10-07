@@ -1,0 +1,125 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-health-check-health-check.yaml
+get:
+  summary: '获取单个 health-check/{health_check}'
+  tags:
+    - health-check
+  operationId: get_api_v2_health_check_health_check_
+  description: 实现：`HealthCheckController@show`
+  parameters:
+    -
+      name: health_check
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+put:
+  summary: '更新 health-check/{health_check}'
+  tags:
+    - health-check
+  operationId: put_api_v2_health_check_health_check_
+  description: 实现：`HealthCheckController@update`
+  parameters:
+    -
+      name: health_check
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+patch:
+  summary: '更新 health-check/{health_check}'
+  tags:
+    - health-check
+  operationId: patch_api_v2_health_check_health_check_
+  description: 实现：`HealthCheckController@update`
+  parameters:
+    -
+      name: health_check
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+delete:
+  summary: '删除 health-check/{health_check}'
+  tags:
+    - health-check
+  operationId: delete_api_v2_health_check_health_check_
+  description: 实现：`HealthCheckController@destroy`
+  parameters:
+    -
+      name: health_check
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

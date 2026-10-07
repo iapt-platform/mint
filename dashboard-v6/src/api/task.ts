@@ -275,3 +275,19 @@ export async function projectLoader({ params }: LoaderFunctionArgs) {
 
   return res.data;
 }
+
+export async function taskLoader({ params }: LoaderFunctionArgs) {
+  const taskId = params.taskId;
+
+  if (!taskId) {
+    throw new Response("Missing taskId", { status: 400 });
+  }
+
+  const res = await get<ITaskResponse>(`/api/v2/task/${taskId}`);
+
+  if (!res.ok) {
+    throw new Response("Task not found", { status: 404 });
+  }
+
+  return res.data;
+}

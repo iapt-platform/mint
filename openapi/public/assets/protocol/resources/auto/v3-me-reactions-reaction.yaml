@@ -1,0 +1,33 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-me-reactions-reaction.yaml
+delete:
+  summary: '删除我自己的 reaction'
+  tags:
+    - me
+  operationId: delete_api_v3_me_reactions_reaction_
+  description: |-
+    只能删自己那条（user_id 与当前用户不符返回 403）。
+    成功返回 **204 空体**：硬删就是删了，没有资源可回，计数也不在这里给
+    （见 v3-resource skill 硬规范第 2 条）。
+
+    实现：`V3\MeReactionController@destroy`
+  parameters:
+    -
+      name: reaction
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 'reaction 的 uuid'
+  responses:
+    204:
+      description: 删除成功，无响应体
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    403:
+      description: '只能删除自己的 reaction'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

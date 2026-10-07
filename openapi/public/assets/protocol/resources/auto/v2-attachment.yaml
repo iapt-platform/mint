@@ -1,0 +1,149 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-attachment.yaml
+get:
+  summary: '列出 attachment'
+  tags:
+    - attachment
+  operationId: get_api_v2_attachment
+  description: 实现：`AttachmentController@index`
+  parameters:
+    -
+      name: view
+      in: query
+      schema:
+        type: string
+        enum:
+          - studio
+    -
+      name: studio
+      in: query
+      schema:
+        type: string
+    -
+      name: search
+      in: query
+      schema:
+        type: string
+    -
+      name: content_type
+      in: query
+      schema:
+        type: string
+    -
+      name: order
+      in: query
+      schema:
+        type: string
+        default: updated_at
+    -
+      name: dir
+      in: query
+      schema:
+        type: string
+        default: desc
+    -
+      name: offset
+      in: query
+      schema:
+        type: string
+    -
+      name: limit
+      in: query
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  rows:
+                    type: array
+                    items:
+                      type: object
+                      properties: { id: { type: integer }, user_uid: { type: string }, name: { type: string }, filename: { type: string }, title: { type: string }, size: { type: string }, content_type: { type: string }, status: { type: integer }, created_at: { type: string }, updated_at: { type: string }, small: { type: string }, middle: { type: string }, url: { type: string }, thumbnail: { type: string } }
+                  count:
+                    type: integer
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+post:
+  summary: '新建 attachment'
+  tags:
+    - attachment
+  operationId: post_api_v2_attachment
+  description: 实现：`AttachmentController@store`
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            file:
+              type: string
+              description: 规则：required
+            id:
+              type: string
+            type:
+              type: string
+            studio:
+              type: string
+          required:
+            - file
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  user_uid:
+                    type: string
+                  name:
+                    type: string
+                  filename:
+                    type: string
+                  title:
+                    type: string
+                  size:
+                    type: string
+                  content_type:
+                    type: string
+                  status:
+                    type: integer
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  small:
+                    type: string
+                  middle:
+                    type: string
+                  url:
+                    type: string
+                  thumbnail:
+                    type: string
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

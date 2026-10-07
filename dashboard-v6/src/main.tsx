@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
+import { installApiErrorHandler } from "./api/error";
 import App from "./App.tsx";
 
 import "./index.css";
@@ -16,6 +17,9 @@ const removeAppLoading = () => {
     }, 300);
   }
 };
+
+// v3 API 错误的全局兜底：业务代码不 catch 时消掉 "Uncaught (in promise)" 噪音
+installApiErrorHandler();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

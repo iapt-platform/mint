@@ -1,0 +1,71 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-ai-model-token-ai-model.yaml
+get:
+  summary: '取得指定 AI 模型的 user token。'
+  tags:
+    - ai-model-token
+  operationId: get_api_v2_ai_model_token_ai_model_
+  description: |-
+    仅模型 owner 本人可调用（设计决策：模型只挂个人 studio，不支持 group studio）。
+    签出的 token 有效期 30 天，可用 destroy() 提前撤销；属高敏感凭据，故记入 ops 日志。
+
+    实现：`AiModelTokenController@show`
+  parameters:
+    -
+      name: ai_model
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+delete:
+  summary: '撤销该模型已签出的全部身份 token。'
+  tags:
+    - ai-model-token
+  operationId: delete_api_v2_ai_model_token_ai_model_
+  description: |-
+    版本号自增后，旧 token 里的 ver 立即对不上（见 AuthService::current()）。
+    无法只撤销其中一张——凭据泄漏时本就该全部作废。
+
+    实现：`AiModelTokenController@destroy`
+  parameters:
+    -
+      name: ai_model
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

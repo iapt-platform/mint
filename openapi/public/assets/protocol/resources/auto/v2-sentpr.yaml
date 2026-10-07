@@ -1,0 +1,161 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v2-sentpr.yaml
+get:
+  summary: '列出 sentpr'
+  tags:
+    - sentpr
+  operationId: get_api_v2_sentpr
+  description: 实现：`SentPrController@index`
+  parameters:
+    -
+      name: view
+      in: query
+      schema:
+        type: string
+        enum:
+          - sent-info
+    -
+      name: book
+      in: query
+      schema:
+        type: string
+    -
+      name: para
+      in: query
+      schema:
+        type: string
+    -
+      name: start
+      in: query
+      schema:
+        type: string
+    -
+      name: end
+      in: query
+      schema:
+        type: string
+    -
+      name: channel
+      in: query
+      schema:
+        type: string
+    -
+      name: search
+      in: query
+      description: 搜索关键字
+      schema:
+        type: string
+    -
+      name: order
+      in: query
+      description: 排序字段
+      schema:
+        type: string
+    -
+      name: dir
+      in: query
+      description: 排序方向
+      schema:
+        type: string
+        enum:
+          - desc
+          - asc
+    -
+      name: limit
+      in: query
+      description: 每页记录数
+      schema:
+        type: number
+    -
+      name: offset
+      in: query
+      description: 从第几条记录开始提取
+      schema:
+        type: number
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  rows:
+                    type: array
+                    items:
+                      type: object
+                      properties: { id: { type: integer }, uid: { type: string }, book: { type: string }, paragraph: { type: string }, word_start: { type: string }, word_end: { type: string }, editor: { type: string }, channel: { type: string }, content: { type: string }, html: { type: string }, role: { type: string }, created_at: { type: string }, updated_at: { type: string } }
+                  count:
+                    type: integer
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'
+post:
+  summary: '新建 sentpr'
+  tags:
+    - sentpr
+  operationId: post_api_v2_sentpr
+  description: 实现：`SentPrController@store`
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            notification:
+              type: string
+            webhook:
+              type: string
+  responses:
+    200:
+      description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ok:
+                type: boolean
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  uid:
+                    type: string
+                  book:
+                    type: string
+                  paragraph:
+                    type: string
+                  word_start:
+                    type: string
+                  word_end:
+                    type: string
+                  editor:
+                    type: string
+                  channel:
+                    type: string
+                  content:
+                    type: string
+                  html:
+                    type: string
+                  role:
+                    type: string
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+    401:
+      $ref: '../../main.yaml#/components/responses/Unauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ValidationError'

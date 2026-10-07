@@ -137,3 +137,10 @@ it('rejects pre-versioning model tokens', function () {
 it('leaves human tokens alone', function () {
     expect(currentUid(userToken('a-user-uid', 42)))->toBe('a-user-uid');
 });
+
+it('leaves the root human token alone even though its id is 0', function () {
+    // root 管理员的自增主键 id 恰好是 0（历史种子数据），
+    // 不能与「旧模型 token（无 typ、id 恒为 0）」混淆而误杀。
+    $uid = (string) Str::uuid();
+    expect(currentUid(userToken($uid, 0)))->toBe($uid);
+});

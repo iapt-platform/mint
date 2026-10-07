@@ -1,0 +1,142 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-tipitaka-reading-channel.yaml
+get:
+  summary: 读取译文
+  tags:
+    - tipitaka-reading
+  operationId: get_api_v3_tipitaka_reading_channel_
+  description: |-
+    取这个 channel 已经翻译的段落，按 (book, para) 升序，用游标分块。
+    不带任何查询串就是从头取整个 channel——下载场景要的就是这个；
+    阅读场景用 `book` + `chapter` 或 `book` + `para`/`to` 把范围收窄。
+    续传把 `meta.next_cursor` 原样传回 `after` 即可，它为 null 表示取完了。
+    **不要自己拼游标**：它的内部形式（`{book}-{para}`）是实现细节，会变。
+    `total` / `remaining` 只在带了 `book` 过滤时才给：不带过滤时结果集是整个
+    channel（实测最大的有 52 万段、跨 217 本书），每翻一页都去 count 一次不划算。
+    无过滤时用 `next_cursor` 是否为 null 判断结束，不要指望百分比。
+
+    实现：`V3\TipitakaReadingController@__invoke`
+  parameters:
+    -
+      name: channel
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '译文 channel 的 uuid'
+    -
+      name: book
+      in: query
+      schema:
+        type: integer
+      description: '典籍 id。与 chapter / para / to 一起用时必填'
+      example: 9002
+    -
+      name: chapter
+      in: query
+      schema:
+        type: integer
+      description: '章节起始段落号，服务端按 chapter_len 展开成段落区间。 与 para / to 互斥'
+    -
+      name: para
+      in: query
+      schema:
+        type: integer
+      description: 起始段落号
+    -
+      name: to
+      in: query
+      schema:
+        type: integer
+      description: '结束段落号（含）。不传则等于 para，即只取一段'
+    -
+      name: after
+      in: query
+      schema:
+        type: string
+      description: '游标，取 meta.next_cursor 原样回传'
+      example: 9002-15
+    -
+      name: page_size
+      in: query
+      schema:
+        type: integer
+        default: 10
+      description: '每块大小，含义由 unit 决定。上限 unit=para 时 200、 unit=byte 时 5000，超出不报错按上限算，meta.page_size 回实际生效的值'
+    -
+      name: unit
+      in: query
+      schema:
+        type: string
+        enum:
+          - para
+          - byte
+        default: para
+      description: '每块大小的单位：para 按段落数，byte 按段落长度累加。 两种单位下每块都至少一段、至多 200 段'
+    -
+      name: format
+      in: query
+      schema:
+        type: string
+        enum:
+          - html
+          - markdown
+          - react
+          - text
+        default: html
+      description: 内容格式
+    -
+      name: include
+      in: query
+      schema:
+        type: string
+        enum:
+          - display
+          - sentences
+          - all
+        default: display
+      description: '输出口径：display 整段合并，sentences 逐句，all 两者都给。 不叫 view 是因为 v2 的 `view=` 是必填互斥的业务路径开关，名字撞上会误导'
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    para:
+                      type: integer
+                    display:
+                      type: string
+                    book:
+                      type: integer
+              meta:
+                type: object
+                properties:
+                  page_size:
+                    type: integer
+                    description: '每块大小（按 unit 计）'
+                  page_size_unit:
+                    type: string
+                    description: '每块大小的单位：para 或 byte'
+                  next_cursor:
+                    type: string
+                    description: '下一块的游标，原样传回 after；为 null 表示取完'
+                  total:
+                    type: integer
+                    description: '过滤范围内已翻译的段落总数。仅在带了 book 过滤时出现'
+                  remaining:
+                    type: integer
+                    description: '本块之后过滤范围内还剩多少段。仅在带了 book 过滤时出现'
+    404:
+      description: '指定的 chapter 在 pali_texts 里不存在'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

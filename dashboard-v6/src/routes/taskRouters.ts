@@ -1,7 +1,7 @@
 // src/routes/taskRouters.ts
 import { lazy } from "react";
 import type { RouteObject } from "react-router";
-import { projectLoader } from "../api/task";
+import { projectLoader, taskLoader } from "../api/task";
 
 // 懒加载页面组件
 const hall = lazy(() => import("../pages/workspace/task/hall"));
@@ -11,6 +11,7 @@ const projects = lazy(() => import("../pages/workspace/task/projects"));
 const project = lazy(() => import("../pages/workspace/task/project"));
 const projectEdit = lazy(() => import("../pages/workspace/task/project-edit"));
 const workflows = lazy(() => import("../pages/workspace/task/workflow"));
+const show = lazy(() => import("../pages/workspace/task/show"));
 
 const taskRoutes: RouteObject[] = [
   {
@@ -31,6 +32,15 @@ const taskRoutes: RouteObject[] = [
         path: "list",
         Component: list,
         handle: { id: "workspace.task.list", crumb: "list" },
+      },
+      {
+        path: ":taskId",
+        Component: show,
+        loader: taskLoader,
+        handle: {
+          id: "workspace.task.show",
+          crumb: (match: { data: { title: string } }) => match.data.title,
+        },
       },
       {
         path: "project",
