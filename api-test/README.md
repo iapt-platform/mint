@@ -3,6 +3,42 @@
 用 openapi-generator 从 `openapi/public/assets/protocol/main.yaml` 生成 PHP（Guzzle）客户端，
 测试脚本是**纯 PHP**，用它来对 `/api/v3/*` 做契约冒烟 + 负向测试。**目前只测 v3 路由。**
 
+## 从零开始（全新环境）
+
+全新克隆后按顺序执行，到能跑出结果为止。
+
+### 0. 环境要求
+
+| 依赖 | 用途 | 版本 |
+| --- | --- | --- |
+| PHP | 跑测试脚本 | 8.1+（需 `ext-curl` / `ext-json` / `ext-mbstring`） |
+| Composer | 装 Guzzle 依赖 | 2.x |
+| Java | 仅「重新生成客户端」时用（openapi-generator 是 jar） | 17+ |
+| Node / npx | 仅「重新生成客户端」时用（redocly bundle） | 18+ |
+
+> 只跑测试、不重新生成客户端的话，Java / Node 不是必须的。
+
+### 1. 安装运行依赖（只需一次）
+
+生成客户端 `client/` 里只有代码，`vendor/` 被 gitignore 了，要先装 Guzzle：
+
+```bash
+cd api-test/client
+composer install --no-dev
+cd ../..
+```
+
+### 2. 运行测试
+
+```bash
+cd api-test
+php run.php --username=test161 --password=12345            # 调 /v2/sign-in 换 token，跑全量
+php run.php --username=test161 --password=12345 --server=staging
+php run.php --token=<bearer>                                # 或直接给 token
+```
+
+> 如需**重新生成客户端**（后端/规格改过之后），见下文「OpenAPI 修改后如何升级测试」。
+
 ## 运行
 
 ```bash
