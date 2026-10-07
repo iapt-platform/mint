@@ -1,0 +1,5 @@
+# 依赖与可再生的构建产物（tools/regen.sh 会重生成），不入库
+/client/vendor/
+/client/composer.lock
+/spec/openapi.json
+/spec/openapi-v3.json
