@@ -124,6 +124,7 @@ use App\Http\Controllers\WbwSentenceController;
 use App\Http\Controllers\WbwTemplateController;
 use App\Http\Controllers\WebHookController;
 use App\Http\Controllers\WordIndexController;
+use App\Http\Middleware\V3\NegotiateLocale;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -347,7 +348,8 @@ Route::group([
 | 新增一个领域就在这里加一行 require，并在 routes/v3/ 下建同名文件。
 |
 */
-Route::prefix('v3')->as('v3.')->group(function () {
+// 语言协商只给 v3：v2 的错误文案在 dashboard-v4 下线前保持原样
+Route::prefix('v3')->as('v3.')->middleware(NegotiateLocale::class)->group(function () {
     require __DIR__.'/v3/system.php';
     require __DIR__.'/v3/search.php';
     require __DIR__.'/v3/tipitaka.php';

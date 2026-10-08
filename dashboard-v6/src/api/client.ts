@@ -8,16 +8,24 @@
 import createClient, { type Middleware } from "openapi-fetch";
 
 import { get as getToken } from "../reducers/session";
+import { get as getUiLang } from "../locales";
 import { ApiError, reportApiError } from "./error";
 import type { paths } from "./schema";
 
-/** 每次请求注入 Bearer token，等价于 request.ts 里 options() 做的事 */
+/**
+ * 每次请求注入 Bearer token（等价于 request.ts 里 options() 做的事），
+ * 并用界面语言设置 Accept-Language。
+ *
+ * 后端 v3 按 Accept-Language 本地化错误文案（V3\NegotiateLocale）。浏览器自动带的
+ * Accept-Language 是系统语言，不是用户在界面里选的语言，所以这里显式覆盖。
+ */
 const authMiddleware: Middleware = {
   onRequest({ request }) {
     const token = getToken();
     if (token) {
       request.headers.set("Authorization", `Bearer ${token}`);
     }
+    request.headers.set("Accept-Language", getUiLang());
     return request;
   },
 };
