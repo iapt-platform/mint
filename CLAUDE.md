@@ -241,6 +241,22 @@ v4 有两处引用 v3，**均不构成生产依赖**：
 
 v6 全量稳定 → 下线 v4 → 删掉 C 类与 B 类的 v2 残留 → v2 前缀整体下线。
 
+### 认证迁移待办（2026-10 定）
+
+v2 认证端点**一律不动**（v4 部署已冻结，修了也上不去），漏洞随 v4 下线消失。
+找回密码、注册在 v3 新建端点（见「v2 → v3 对照表」）；之后还剩两件：
+
+- **TODO 登录 → `POST /v3/sessions` + `GET /v3/me`**：v6 + mobile 一起切
+  （mobile 的 `src/api/auth.ts` 在调 `/v2/sign-in`、`/v2/auth/current`）。
+  一次请求同时返回 token 与用户，消掉 v6 `SignIn.tsx` 的二次查询；
+  顺带修 `?url=` 跳转（现在 `atob` 后原样赋给 `location.href`，可开放重定向 /
+  `javascript:` XSS），只接受同源相对路径；登录加限流。
+- **TODO v4 下线后：md5 → bcrypt，删 v2 auth 全家**。v2 登录在 SQL 里比对
+  `md5(password)`，v4 在线时密码只能存 md5；v3 写密码统一走
+  `App\Services\V3\PasswordHasher`，届时只改那一处（登录时校验 md5 并就地
+  rehash，或加新列——加列由用户决定）。随后删 `sign-in`、`sign-up`、
+  `auth/*`、`email-certification`、`invite` 读取等 v2 路由与控制器。
+
 ## v3 重构
 
 正在把资源从 `/api/v2` 逐个迁到 `/api/v3`。原则是 `声明 → 生成 → 契约测试`：
