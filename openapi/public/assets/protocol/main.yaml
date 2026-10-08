@@ -22,8 +22,14 @@ servers:
     url: 'https://www.wikipali.org/api'
     description: 生产
   -
+    url: 'https://next.wikipali.org/api'
+    description: 生产预览
+  -
     url: 'https://www.wikipali.cc/api'
     description: 生产（中国）
+  -
+    url: 'https://next.wikipali.cc/api'
+    description: 生产预览（中国）
 components:
   securitySchemes:
     bearerAuth:

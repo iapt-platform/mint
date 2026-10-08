@@ -24,7 +24,7 @@
 
             <div class="home-nav__actions">
                 <a class="home-nav__legacy"
-                    href="{{ config('mint.server.dashboard_base_path') }}"
+                    href="{{ config('mint.server.dashboard_base_path') }}/"
                     target="_blank"
                     rel="noopener">
                     {{ __('home.legacy') }}
@@ -45,17 +45,16 @@
     {{-- 四张分流卡片，2×2 网格 --}}
     <div class="home-grid">
         @foreach ($cards as $card)
-            <x-home.card
-                :slug="$card['slug']"
-                :eyebrow="$card['eyebrow']"
-                :title="$card['title']"
-                :lead="$card['lead']"
-                :icon="$card['icon']"
-                :tint="$card['tint']"
-                :href="$card['href']"
-                :cta="$card['cta']"
-                :available="$card['available']"
-            />
+        <x-home.card
+            :slug="$card['slug']"
+            :eyebrow="$card['eyebrow']"
+            :title="$card['title']"
+            :lead="$card['lead']"
+            :icon="$card['icon']"
+            :tint="$card['tint']"
+            :href="$card['href']"
+            :cta="$card['cta']"
+            :available="$card['available']" />
         @endforeach
     </div>
 
@@ -64,18 +63,18 @@
         <div class="home-footer__inner">
             <span class="home-footer__item">© {{ now()->year }} WikiPāli</span>
             @if (!empty(config('mint.app.icp_code')))
-                <span class="home-footer__item">
-                    <span>ICP备案号：</span>
-                    <a href="https://beian.miit.gov.cn/" target="_blank" rel="noreferrer">{{ config('mint.app.icp_code') }}</a>
-                </span>
-                <span class="home-footer__item">
-                    <img src="{{ asset('assets/images/logo_mps.png') }}" alt="公安备案" class="home-footer__icon" />
-                    @if (empty(config('mint.app.mps_code')))
-                        <span>滇公网安备[审批中]号</span>
-                    @else
-                        <span>{{ config('mint.app.mps_code') }}</span>
-                    @endif
-                </span>
+            <span class="home-footer__item">
+                <span>ICP备案号：</span>
+                <a href="https://beian.miit.gov.cn/" target="_blank" rel="noreferrer">{{ config('mint.app.icp_code') }}</a>
+            </span>
+            <span class="home-footer__item">
+                <img src="{{ asset('assets/images/logo_mps.png') }}" alt="公安备案" class="home-footer__icon" />
+                @if (empty(config('mint.app.mps_code')))
+                <span>滇公网安备[审批中]号</span>
+                @else
+                <span>{{ config('mint.app.mps_code') }}</span>
+                @endif
+            </span>
             @endif
         </div>
     </footer>

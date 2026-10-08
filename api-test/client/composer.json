@@ -1,0 +1,39 @@
+{
+    "version": "1.0.0",
+    "description": "International Academy Of Pali Tipitaka(国际巴利三藏学院)  由 `php openapi/scripts/generate.php` 依据 api-v13 的路由与控制器源码生成。 响应统一封装为 `{ok, message, data}`；`ok=false` 时 `message` 为错误信息。",
+    "keywords": [
+        "openapitools",
+        "openapi-generator",
+        "openapi",
+        "php",
+        "sdk",
+        "rest",
+        "api"
+    ],
+    "homepage": "https://openapi-generator.tech",
+    "license": "unlicense",
+    "authors": [
+        {
+            "name": "OpenAPI",
+            "homepage": "https://openapi-generator.tech"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "ext-curl": "*",
+        "ext-json": "*",
+        "ext-mbstring": "*",
+        "guzzlehttp/guzzle": "^7.3",
+        "guzzlehttp/psr7": "^1.7 || ^2.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0 || ^9.0",
+        "friendsofphp/php-cs-fixer": "^3.5"
+    },
+    "autoload": {
+        "psr-4": { "WikipaliApi\\" : "lib/" }
+    },
+    "autoload-dev": {
+        "psr-4": { "WikipaliApi\\Test\\" : "test/" }
+    }
+}

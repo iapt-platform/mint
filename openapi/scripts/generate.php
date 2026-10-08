@@ -22,19 +22,19 @@ use PhpParser\ParserFactory;
 use Symfony\Component\Yaml\Yaml;
 
 $root = dirname(__DIR__, 2);
-$api = $root.'/api-v13';
-require $api.'/vendor/autoload.php';
+$api = $root . '/api-v13';
+require $api . '/vendor/autoload.php';
 
-$protocol = dirname(__DIR__).'/public/assets/protocol';
-$autoDir = $protocol.'/resources/auto';
-$overrideDir = $protocol.'/overrides';
+$protocol = dirname(__DIR__) . '/public/assets/protocol';
+$autoDir = $protocol . '/resources/auto';
+$overrideDir = $protocol . '/overrides';
 
 $parser = (new ParserFactory)->createForNewestSupportedVersion();
 $finder = new NodeFinder;
 
 /* ---------------------------------------------------------------- 路由 */
 
-exec('cd '.escapeshellarg($api).' && php artisan route:list --json 2>/dev/null', $out, $code);
+exec('cd ' . escapeshellarg($api) . ' && php artisan route:list --json 2>/dev/null', $out, $code);
 $routes = json_decode(implode('', $out), true);
 if (! is_array($routes)) {
     fwrite(STDERR, "无法读取 php artisan route:list --json\n");
@@ -48,13 +48,13 @@ function parseController(string $class, string $method): array
 {
     global $api, $parser, $finder, $methodCache;
 
-    $key = $class.'::'.$method;
+    $key = $class . '::' . $method;
     if (isset($methodCache[$key])) {
         return $methodCache[$key];
     }
     $empty = ['summary' => null, 'description' => null, 'params' => [], 'validate' => [], 'resource' => null, 'collection' => false, 'tags' => ['params' => [], 'deprecated' => false, 'unauthenticated' => false, 'responses' => [], 'meta' => []]];
 
-    $file = $api.'/'.str_replace(['App\\', '\\'], ['app/', '/'], $class).'.php';
+    $file = $api . '/' . str_replace(['App\\', '\\'], ['app/', '/'], $class) . '.php';
     if (! is_file($file)) {
         return $methodCache[$key] = $empty;
     }
@@ -103,7 +103,7 @@ function parseController(string $class, string $method): array
             }
             // 上一行是带标签的参数说明时，缩进的续行并入该参数的描述
             if ($tagLines && preg_match('/^@(queryParam|bodyParam|urlParam)\b/', end($tagLines))) {
-                $tagLines[count($tagLines) - 1] .= ' '.$line;
+                $tagLines[count($tagLines) - 1] .= ' ' . $line;
 
                 continue;
             }
@@ -120,7 +120,7 @@ function parseController(string $class, string $method): array
             'Show the form for creating a new resource.',
             'Show the form for editing the specified resource.',
         ];
-        $lines = array_values(array_filter($lines, fn ($l) => ! in_array($l, $stubs, true)));
+        $lines = array_values(array_filter($lines, fn($l) => ! in_array($l, $stubs, true)));
         if ($lines) {
             $info['summary'] = array_shift($lines);
             $info['description'] = $lines ? implode("\n", $lines) : null;
@@ -405,11 +405,11 @@ function resourceSchema(?string $class): ?array
         return null;
     }
     $class = ltrim($class, '\\');
-    $file = $api.'/'.str_replace(['App\\', '\\'], ['app/', '/'], $class).'.php';
+    $file = $api . '/' . str_replace(['App\\', '\\'], ['app/', '/'], $class) . '.php';
     // 控制器里通常写的是短类名（new ChannelResource(...)），按全名拼不出路径，
     // 回落到 app/Http/Resources 下同名文件
     if (! is_file($file) && ! str_contains($class, '\\')) {
-        $file = $api.'/app/Http/Resources/'.$class.'.php';
+        $file = $api . '/app/Http/Resources/' . $class . '.php';
     }
     if (! is_file($file)) {
         return null;
@@ -540,7 +540,7 @@ function shapeToProperties(string $inner): array
         }
         $schema = phpTypeToSchema(trim($type));
         if ($optional) {
-            $schema['description'] = trim(($schema['description'] ?? '').' 仅在部分查询口径下返回。');
+            $schema['description'] = trim(($schema['description'] ?? '') . ' 仅在部分查询口径下返回。');
         }
         $props[$key] = $schema;
     }
@@ -667,7 +667,7 @@ function metaSchema(array $info): array
 
 /* ------------------------------------------------------- 生成 operation */
 
-$listParams = Yaml::parseFile($protocol.'/resources/list_query.yaml');
+$listParams = Yaml::parseFile($protocol . '/resources/list_query.yaml');
 
 function buildOperation(array $route, string $httpMethod): array
 {
@@ -681,8 +681,8 @@ function buildOperation(array $route, string $httpMethod): array
     $op = [
         'summary' => $info['summary'] ?: defaultSummary($method, $route['uri']),
         'tags' => [$tag],
-        'operationId' => strtolower($httpMethod).'_'.preg_replace('/[^a-zA-Z0-9]+/', '_', $route['uri']),
-        'description' => trim(($info['description'] ?? '')."\n\n实现：`{$short}@{$method}`"),
+        'operationId' => strtolower($httpMethod) . '_' . preg_replace('/[^a-zA-Z0-9]+/', '_', $route['uri']),
+        'description' => trim(($info['description'] ?? '') . "\n\n实现：`{$short}@{$method}`"),
     ];
 
     if (! empty($info['tags']['deprecated'])) {
@@ -724,7 +724,7 @@ function buildOperation(array $route, string $httpMethod): array
     foreach ($names as $name) {
         $p = $info['params'][$name] ?? ['type' => 'string', 'default' => null];
         $doc = $documented[$name] ?? null;
-        if (preg_match('/\{'.preg_quote($name, '/').'\??\}/', $route['uri'])) {
+        if (preg_match('/\{' . preg_quote($name, '/') . '\??\}/', $route['uri'])) {
             continue;
         }
         // 文档注释把它标成 body 参数时，不再当查询参数输出
@@ -777,7 +777,7 @@ function buildOperation(array $route, string $httpMethod): array
         $props = [];
         $required = [];
         foreach ($info['validate'] as $field => $rule) {
-            $schema = ['type' => $rule['type'], 'description' => '规则：'.$rule['raw']];
+            $schema = ['type' => $rule['type'], 'description' => '规则：' . $rule['raw']];
             if (! empty($rule['enum'])) {
                 $schema['enum'] = $rule['enum'];
             }
@@ -980,7 +980,7 @@ foreach ($routes as $route) {
         if (in_array($httpMethod, ['HEAD', 'OPTIONS'], true)) {
             continue;
         }
-        $openapiPath = '/'.preg_replace('#^api/#', '', $uri);
+        $openapiPath = '/' . preg_replace('#^api/#', '', $uri);
         $openapiPath = preg_replace('/\{(\w+)\?\}/', '{$1}', $openapiPath);
         $paths[$openapiPath][strtolower($httpMethod)] = buildOperation($route, $httpMethod);
     }
@@ -1012,7 +1012,7 @@ function pathSlug(string $path): string
 
 $overridden = 0;
 foreach ($paths as $path => $ops) {
-    $file = $overrideDir.'/'.pathSlug($path).'.yaml';
+    $file = $overrideDir . '/' . pathSlug($path) . '.yaml';
     if (is_file($file)) {
         $paths[$path] = deepMerge($ops, Yaml::parseFile($file) ?: []);
         $overridden++;
@@ -1021,7 +1021,7 @@ foreach ($paths as $path => $ops) {
 
 /* ------------------------------------------------------------- 写文件 */
 
-foreach (glob($autoDir.'/*.yaml') ?: [] as $stale) {
+foreach (glob($autoDir . '/*.yaml') ?: [] as $stale) {
     unlink($stale);
 }
 @mkdir($autoDir, 0o755, true);
@@ -1029,11 +1029,11 @@ foreach (glob($autoDir.'/*.yaml') ?: [] as $stale) {
 
 $refs = [];
 foreach ($paths as $path => $ops) {
-    $name = pathSlug($path).'.yaml';
+    $name = pathSlug($path) . '.yaml';
     file_put_contents(
-        $autoDir.'/'.$name,
-        "# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/{$name}\n".
-        Yaml::dump($ops, 12, 2, Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK)
+        $autoDir . '/' . $name,
+        "# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/{$name}\n" .
+            Yaml::dump($ops, 12, 2, Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK)
     );
     $refs[$path] = ['$ref' => "./resources/auto/{$name}"];
 }
@@ -1042,8 +1042,8 @@ $main = [
     'openapi' => '3.0.3',
     'info' => [
         'title' => 'MINT API',
-        'description' => "International Academy Of Pali Tipitaka(国际巴利三藏学院)\n\n".
-            "由 `php openapi/scripts/generate.php` 依据 api-v13 的路由与控制器源码生成。\n".
+        'description' => "International Academy Of Pali Tipitaka(国际巴利三藏学院)\n\n" .
+            "由 `php openapi/scripts/generate.php` 依据 api-v13 的路由与控制器源码生成。\n" .
             "响应统一封装为 `{ok, message, data}`；`ok=false` 时 `message` 为错误信息。",
         'version' => date('Y.n.j'),
     ],
@@ -1052,7 +1052,9 @@ $main = [
         ['url' => '/api', 'description' => '同源（预览页里 Try it out 走 vite 代理，避免跨域）'],
         ['url' => 'http://127.0.0.1:8000/api', 'description' => '本地开发（直连，浏览器里会被 CORS 挡住）'],
         ['url' => 'https://staging.wikipali.org/api', 'description' => '测试'],
+        ['url' => 'https://next.wikipali.org/api', 'description' => '生产预览'],
         ['url' => 'https://www.wikipali.org/api', 'description' => '生产'],
+        ['url' => 'https://next.wikipali.cc/api', 'description' => '生产预览（中国）'],
         ['url' => 'https://www.wikipali.cc/api', 'description' => '生产（中国）'],
     ],
     'components' => [
@@ -1090,8 +1092,8 @@ $main = [
         'schemas' => [
             'ProblemDetails' => [
                 'type' => 'object',
-                'description' => "RFC 9457 Problem Details，v3 端点的错误响应体。\n".
-                    "由 bootstrap/app.php 的异常处理器统一渲染，控制器不自己拼。\n".
+                'description' => "RFC 9457 Problem Details，v3 端点的错误响应体。\n" .
+                    "由 bootstrap/app.php 的异常处理器统一渲染，控制器不自己拼。\n" .
                     'media type 是 application/problem+json。',
                 'properties' => [
                     'type' => ['type' => 'string', 'description' => '问题类型标识，形如 urn:problem:not-found', 'example' => 'urn:problem:not-found'],
@@ -1109,8 +1111,8 @@ $main = [
             ],
             'PaginationMeta' => [
                 'type' => 'object',
-                'description' => "v3 列表接口的分页信息，由 Laravel paginator 生成。\n".
-                    "刻意不含 links / path：那些是 APP_URL 拼出的绝对地址，反代下会拼错，前端也用不到。\n".
+                'description' => "v3 列表接口的分页信息，由 Laravel paginator 生成。\n" .
+                    "刻意不含 links / path：那些是 APP_URL 拼出的绝对地址，反代下会拼错，前端也用不到。\n" .
                     '手工分页的接口会附加自己的字段（如 has_more / first_para / page_size）。',
                 'properties' => [
                     'current_page' => ['type' => 'integer'],
@@ -1141,11 +1143,12 @@ $mainYaml = Yaml::dump($main, 8, 2, Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK);
 // 空数组被 dump 成 {  }，而 security requirement 的值必须是数组
 $mainYaml = str_replace('bearerAuth: {  }', 'bearerAuth: []', $mainYaml);
 file_put_contents(
-    $protocol.'/main.yaml',
-    "# 由 openapi/scripts/generate.php 生成，请勿手改\n".$mainYaml
+    $protocol . '/main.yaml',
+    "# 由 openapi/scripts/generate.php 生成，请勿手改\n" . $mainYaml
 );
 
-printf("生成 %d 个 path，%d 个 operation，%d 个 path 应用了 overrides\n",
+printf(
+    "生成 %d 个 path，%d 个 operation，%d 个 path 应用了 overrides\n",
     count($paths),
     array_sum(array_map('count', $paths)),
     $overridden
