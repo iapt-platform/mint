@@ -353,4 +353,5 @@ Route::prefix('v3')->as('v3.')->group(function () {
     require __DIR__.'/v3/tipitaka.php';
     require __DIR__.'/v3/channel.php';
     require __DIR__.'/v3/interaction.php';
+    require __DIR__.'/v3/auth.php';
 });

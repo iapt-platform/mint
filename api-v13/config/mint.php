@@ -59,13 +59,17 @@ return [
         ],
         'api' => [
             'default' => env('APP_API', 'http://localhost:8000/api'),
-            'bamboo' => env('BAMBOO_API_HOST', env('APP_URL') . '/api'),
+            'bamboo' => env('BAMBOO_API_HOST', env('APP_URL').'/api'),
         ],
         'assets' => env('ASSETS_SERVER', 'localhost:9999'),
 
         'dashboard_base_path' => env('DASHBOARD_BASE_PATH', 'http://127.0.0.1:4000/pcd-v2026'),
+        // dashboard-v6 的站点根。DASHBOARD_BASE_PATH 现在是 v4 的地址，v6 部署在它加 -v2026 的路径下，
+        // 与 workspace_base_path 同一约定。v3 发出的邮件链接（找回密码等）都指向 v6，用这一项。
         // TODO v4下线后需要修改
-        'workspace_base_path' => env('DASHBOARD_BASE_PATH', 'http://127.0.0.1:4000/pcd') . '-v2026/workspace',
+        'dashboard_v6_base_path' => env('DASHBOARD_BASE_PATH', 'http://127.0.0.1:4000/pcd').'-v2026',
+        // TODO v4下线后需要修改
+        'workspace_base_path' => env('DASHBOARD_BASE_PATH', 'http://127.0.0.1:4000/pcd').'-v2026/workspace',
 
         'cdn_urls' => explode(',', env('CDN_URLS', 'https://www.wikipali.cc/downloads')),
 

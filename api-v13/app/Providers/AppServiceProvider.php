@@ -10,9 +10,12 @@ use App\View\Composers\BlogViewComposer;
 use Carbon\CarbonImmutable;
 use Godruoyi\Snowflake\LaravelSequenceResolver;
 use Godruoyi\Snowflake\Snowflake;
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
@@ -99,6 +102,22 @@ class AppServiceProvider extends ServiceProvider
         */
         View::composer('blog.*', BlogViewComposer::class);
         View::composer('layouts.blog', BlogViewComposer::class);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Rate Limiters
+        |--------------------------------------------------------------------------
+        |
+        | 找回密码会往外发邮件：按 IP 限住撞库式的批量请求，按邮箱限住对同一个人的
+        | 邮件轰炸。设新密码的请求不带 email，只按 IP 计。
+        |
+        */
+        RateLimiter::for('password-resets', fn (Request $request): array => array_filter([
+            Limit::perMinute(10)->by('ip:'.$request->ip()),
+            $request->filled('email')
+                ? Limit::perHour(5)->by('email:'.mb_strtolower((string) $request->input('email')))
+                : null,
+        ]));
     }
 
     /**

@@ -19,4 +19,5 @@ return [
     'token' => '密碼重置令牌無效。',
     'user' => '找不到使用該信箱地址的用戶。',
 
+    'subject' => '重設 wikipali 密碼',
 ];

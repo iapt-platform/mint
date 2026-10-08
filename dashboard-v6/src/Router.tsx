@@ -58,20 +58,14 @@ const router = createBrowserRouter(
               handle: { crumb: "sign-up" },
             },
             { path: "forgot-password", Component: UsersForgotPassword },
+            // 找回密码邮件里的链接，由后端按 mint.server.dashboard_v6_base_path 拼出
+            { path: "reset-password/:token", Component: UsersResetPassword },
           ],
         },
         {
           path: "dashboard",
           Component: DashboardLayout,
-          children: [
-            { index: true, Component: DashboardIndex },
-            {
-              path: "users",
-              children: [
-                { path: "reset-password", Component: UsersResetPassword },
-              ],
-            },
-          ],
+          children: [{ index: true, Component: DashboardIndex }],
         },
         {
           path: "workspace",
@@ -110,7 +104,7 @@ const router = createBrowserRouter(
       ],
     },
   ],
-  { basename: import.meta.env.BASE_URL }
+  { basename: import.meta.env.BASE_URL },
 );
 
 const Widget = () => {

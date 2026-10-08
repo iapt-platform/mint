@@ -49,9 +49,10 @@ wikipali —— 开放的、基于语料库的巴利语学习与翻译平台。�
   测试连独立的 `mint_test` 库（不要让 `RefreshDatabase` 打到开发库）。
 - `storage/resources` 是 git submodule（clove）。
 - 面向用户的文案一律走 `__()`。翻译文件在 **`resources/lang/{locale}/`**（不是
-  `lang/`），共 8 个语言。**不要新建语言文件，合并进已有的 11 个**
-  （`site`/`labels`/`buttons`/`home`/`library`/`auth`/… 没有 `messages.php`）；
-  服务状态类文案放 `site.php`。至少补 `en` 与 `zh-Hans`，其余自动回退 en。
+  `lang/`），共 8 个语言。**不要新建语言文件，合并进已有的 12 个**
+  （`site`/`messages`/`labels`/`buttons`/`home`/`library`/`auth`/…）；
+  服务状态类文案（停机维护、404 等）放 `site.php`，操作结果提示（如「邮件发送失败」）
+  放 `messages.php`。至少补 `en` 与 `zh-Hans`，其余自动回退 en。
 
 ## 前端 dashboard-v6
 
@@ -330,6 +331,7 @@ Resource / FormRequest / 测试同理；URL 只换版本前缀
 | `like` / `LikeController` | `reactions` / `V3\ReactionController` 等 | `likes` 表早已不只存点赞：`type` 的实际取值有 `like`、`dislike`、`favorite`、`watch`、`bookmark`、`download` 六种 |
 | （无对应 v2 端点） | `tipitaka-reading/{channel}` / `V3\TipitakaReadingController` | 新能力：单 channel 的只读渲染 + 游标式下载。曾叫 `tipitaka-read-para` / `tipitaka-read-chapter`（两条），也短暂叫过 `channels/{c}/books/{b}/paragraphs\|chapters`，2026-09-24 并成一条 |
 | `related-paragraph` / `RelatedParagraphController` | `tipitaka-related-paragraphs` (+`/aggregate`) / `V3\TipitakaRelatedParagraphController` + `V3\TipitakaRelatedParagraphAggregateController` | 字段改名 `book_title_pali`→`title`、`cs6_para`→`cs_para`；响应 `{ok,…}`→原生 Resource；消除逐行 N+1（批量 whereIn）；新增 `book_name`/`cs_para` 过滤器与独立 `/aggregate` 聚合端点（`group_by=book_id`→book_name 列表 / `group_by=book_name`→cs_para 列表，分页） |
+| `auth/forgot-password` + `auth/reset-password` / `ForgotPasswordController` + `ResetPasswordController` | `password-resets` (+`/{token}`) / `V3\PasswordResetController` | 三条并成一个资源：POST 发信、GET 看账号、PATCH 设密码（204）。库里只存 token 的 sha256、60 分钟过期、邮箱未注册也 204、不收 `dashboard` 参数（链接用 `mint.server.dashboard_v6_base_path` 拼到 v6 的 `/anonymous/reset-password/{token}`）、限流 |
 
 **注意**：`tipitaka-reading` **不是** v2 `paragraph-content` / `chapter-content` 的替代品。
 那两个 v2 端点支持多 channel（`channels=a,b,c`）与 edit 模式、返回 sentenceIds 供编辑器用；

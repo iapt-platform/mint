@@ -645,10 +645,11 @@ v3 端点可以自由改：v4 那两处 v3 引用（`ChatInput.tsx:127`、`agent
    `lang/`，本项目把 langPath 指到了 resources 下）。支持 8 个语言：
    `en`、`zh-Hans`、`zh-Hant`、`my`、`th`、`si`、`vi`、`lo`。
 
-   **不要新建语言文件，合并进已有的那 11 个**：`site`、`labels`、`buttons`、
-   `home`、`library`、`auth`、`validation`、`passwords`、`pagination`、
-   `grammar`、`language`。（注意没有 `messages.php`。）
-   API 的服务状态类文案放 **`site.php`**，界面标签放 `labels.php`，
+   **不要新建语言文件，合并进已有的那 12 个**：`site`、`messages`、`labels`、
+   `buttons`、`home`、`library`、`auth`、`validation`、`passwords`、`pagination`、
+   `grammar`、`language`。
+   API 的服务状态类文案（停机维护、404 等）放 **`site.php`**，操作结果提示
+   （如「邮件发送失败」）放 **`messages.php`**，界面标签放 `labels.php`，
    按钮文字放 `buttons.php`，各就各位。
 
    新增文案至少补 `en` 与 `zh-Hans` 两份，其余语言缺失会自动回退到 `en`，

@@ -11,9 +11,11 @@ const items = {
   "message.result": "{count} 条结果",
   "message.send.reset.email":
     "系统将向您的注册邮箱发送邮件。请输入您的注册邮箱。并确保该邮箱可以接受邮件。",
-  "message.send.reset.email.successful": "重置密码的邮件已经发送到您的邮箱",
+  "message.send.reset.email.successful":
+    "如果该邮箱已注册，重置密码的邮件已经发出，请在 60 分钟内点击邮件中的链接。",
   "message.password.reset.successful": "重置密码成功",
   "message.password.reset": "请设置新的密码",
+  "message.reset.link.invalid": "链接无效或已过期，请重新申请重置密码。",
   "message.get.token.fail": "获取token失败",
   "message.confirm-password.validate.fail": "两次密码不一致",
   "message.delete.success": "成功删除{count}条数据",

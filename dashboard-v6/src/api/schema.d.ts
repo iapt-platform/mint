@@ -963,7 +963,10 @@ export interface paths {
         put?: never;
         /**
          * 新建 auth/forgot-password
-         * @description 实现：`ForgotPasswordController@store`
+         * @deprecated
+         * @description 已被 `POST /v3/password-resets` 取代，保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
+         *
+         *     已知问题（v2 冻结不修）：`dashboard` 参数原样拼进邮件链接；token 不过期；邮箱未注册时回 404。
          */
         post: operations["post_api_v2_auth_forgot_password"];
         delete?: never;
@@ -1019,7 +1022,10 @@ export interface paths {
         put?: never;
         /**
          * 新建 auth/reset-password
-         * @description 实现：`ResetPasswordController@store`
+         * @deprecated
+         * @description 已被 `PATCH /v3/password-resets/{token}` 取代，保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
+         *
+         *     已知问题（v2 冻结不修）：成功时 `data` 是 user_infos 整行，含密码哈希。
          */
         post: operations["post_api_v2_auth_reset_password"];
         delete?: never;
@@ -1037,7 +1043,8 @@ export interface paths {
         };
         /**
          * 根据token获取用户名.
-         * @description 实现：`ResetPasswordController@show`
+         * @deprecated
+         * @description 已被 `GET /v3/password-resets/{token}` 取代，保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         get: operations["get_api_v2_auth_reset_password_reset_password_"];
         /**
@@ -7774,6 +7781,59 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/v3/password-resets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 申请重置密码（发邮件）
+         * @description 无论邮箱是否注册都返回 204，不泄露账号是否存在。邮件是同步发出的，
+         *     返回时已经发完，所以是 204 而不是 202。邮件里的链接指向
+         *     dashboard-v6 的 `/anonymous/reset-password/{token}`，60 分钟内有效。
+         *     按 IP 与邮箱限流，超出返回 429。
+         *
+         *     实现：`V3\PasswordResetController@store`
+         */
+        post: operations["post_api_v3_password_resets"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/password-resets/{token}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 查看一次待完成的重置
+         * @description 重置页用它显示「正在为哪个账号设置新密码」。token 不存在或已过期一律 404。
+         *
+         *     实现：`V3\PasswordResetController@show`
+         */
+        get: operations["get_api_v3_password_resets_token_"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * 设置新密码
+         * @description 成功后 token 作废，返回 204 空体；之后用新密码走登录。
+         *
+         *     实现：`V3\PasswordResetController@update`
+         */
+        patch: operations["patch_api_v3_password_resets_token_"];
         trace?: never;
     };
     "/v3/progress": {
@@ -34218,6 +34278,136 @@ export interface operations {
             401: components["responses"]["ProblemUnauthorized"];
             /** @description 只能删除自己的 reaction */
             403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    post_api_v3_password_resets: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /**
+                     * @description 账号邮箱
+                     * @example someone@example.com
+                     */
+                    email: string;
+                    /**
+                     * @description 邮件语言，没有对应模板的回落 en
+                     * @enum {string}
+                     */
+                    lang?: "en" | "en-US" | "zh-Hans" | "zh-Hant";
+                };
+            };
+        };
+        responses: {
+            /** @description 已发送（或邮箱未注册），无响应体 */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            422: components["responses"]["ProblemValidation"];
+            /** @description 请求过于频繁 */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description 邮件发送失败 */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    get_api_v3_password_resets_token_: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 邮件链接里的 token */
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            username?: string;
+                            expires_at?: string;
+                        };
+                    };
+                };
+            };
+            /** @description token 无效或已过期 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    patch_api_v3_password_resets_token_: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 邮件链接里的 token */
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description 新密码，6–32 位 */
+                    password: string;
+                    /** @description 再输一次新密码 */
+                    password_confirmation: string;
+                };
+            };
+        };
+        responses: {
+            /** @description 已重置，无响应体 */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description token 无效或已过期 */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };

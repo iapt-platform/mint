@@ -4,122 +4,116 @@ import {
   type ProFormInstance,
   ProFormText,
 } from "@ant-design/pro-components";
-import { Alert, type AlertProps, message } from "antd";
+import { Alert, Button, Result, Skeleton } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
+import { useEffect, useRef, useState } from "react";
+import { Link, useNavigate } from "react-router";
 
-import { get, post } from "../../request";
-import { useRef, useState } from "react";
-import type { RuleObject } from "antd/lib/form";
-import type { StoreValue } from "antd/lib/form/interface";
-import LoginButton from "../auth/LoginButton";
+import {
+  completePasswordReset,
+  fetchPasswordReset,
+  type PasswordReset,
+} from "../../api/password-reset";
+import { fieldErrorsOf } from "../../api/error";
+import { TO_SIGN_IN } from "../../reducers/current-user";
 
 interface IFormData {
-  username: string;
-  token?: string | null;
-  password?: string;
-  confirmPassword?: string;
-}
-interface IResetPasswordResponse {
-  ok: boolean;
-  message: string;
-  data: { username: string };
+  password: string;
+  password_confirmation: string;
 }
 
+type TState =
+  | { kind: "loading" }
+  | { kind: "invalid" }
+  | { kind: "ready"; reset: PasswordReset }
+  | { kind: "done" };
+
 interface IWidget {
-  token?: string | null;
+  token?: string;
 }
 const Widget = ({ token }: IWidget) => {
   const intl = useIntl();
-  const [notify, setNotify] = useState<React.ReactNode>();
-  const [type, setType] = useState<AlertProps["type"]>("info");
-  const formRef = useRef<ProFormInstance | undefined>(undefined);
-  const [ok, setOk] = useState(false);
+  const navigate = useNavigate();
+  const formRef = useRef<ProFormInstance<IFormData> | undefined>(undefined);
+  const [state, setState] = useState<TState>(
+    token ? { kind: "loading" } : { kind: "invalid" },
+  );
 
-  const checkPass2 = (
-    _rule: RuleObject,
-    value: StoreValue,
-    callback: (error?: string) => void
-  ) => {
-    if (value && value !== formRef.current?.getFieldValue("password")) {
-      callback(
-        intl.formatMessage({
-          id: "message.confirm-password.validate.fail",
-        })
-      );
-    } else {
-      callback();
+  useEffect(() => {
+    if (!token) {
+      return;
     }
-  };
+    let active = true;
+    fetchPasswordReset(token)
+      .then((reset) => active && setState({ kind: "ready", reset }))
+      .catch(() => active && setState({ kind: "invalid" }));
+    return () => {
+      active = false;
+    };
+  }, [token]);
+
+  if (state.kind === "loading") {
+    return <Skeleton active />;
+  }
+
+  if (state.kind === "invalid") {
+    return (
+      <Result
+        status="warning"
+        title={intl.formatMessage({ id: "message.reset.link.invalid" })}
+        extra={
+          <Link to="/anonymous/forgot-password">
+            {intl.formatMessage({ id: "buttons.forgot.password" })}
+          </Link>
+        }
+      />
+    );
+  }
+
+  if (state.kind === "done") {
+    return (
+      <Result
+        status="success"
+        title={intl.formatMessage({ id: "message.password.reset.successful" })}
+        extra={
+          <Button type="primary" onClick={() => navigate(TO_SIGN_IN)}>
+            {intl.formatMessage({ id: "buttons.sign-in" })}
+          </Button>
+        }
+      />
+    );
+  }
 
   return (
     <>
-      {notify ? (
-        <Alert
-          message={notify}
-          type={type}
-          showIcon
-          action={ok ? <LoginButton /> : undefined}
-        />
-      ) : (
-        <></>
-      )}
+      <Alert
+        title={intl.formatMessage({ id: "message.password.reset" })}
+        type="info"
+        showIcon
+      />
       <ProForm<IFormData>
         formRef={formRef}
         onFinish={async (values: IFormData) => {
-          if (!token) {
+          try {
+            await completePasswordReset(
+              token ?? "",
+              values.password,
+              values.password_confirmation,
+            );
+          } catch (e) {
+            // 提示已由 unwrapVoid 弹过；422 时把字段级错误挂到对应输入框上
+            const fields = fieldErrorsOf(e);
+            if (fields) {
+              formRef.current?.setFields(
+                Object.entries(fields).map(([name, errors]) => ({
+                  name: name as keyof IFormData,
+                  errors,
+                })),
+              );
+            }
             return;
           }
-          console.debug(values);
-          values["token"] = token;
-          const url = "/api/v2/auth/reset-password";
-          console.info("reset password url", url, values);
-          const result = await post<IFormData, IResetPasswordResponse>(
-            url,
-            values
-          );
-          if (result.ok) {
-            console.log("token", result.data);
-            setType("success");
-            setNotify(
-              intl.formatMessage({
-                id: "message.password.reset.successful",
-              })
-            );
-            setOk(true);
-            message.success(intl.formatMessage({ id: "flashes.success" }));
-          } else {
-            setType("error");
-            setNotify(result.message);
-          }
-        }}
-        request={async () => {
-          const url = `/api/v2/auth/reset-password/${token}`;
-          console.log("url", url);
-          try {
-            const res = await get<IResetPasswordResponse>(url);
-            console.log("ResetPassword get", res);
-            if (res.ok) {
-              setType("info");
-              setNotify(intl.formatMessage({ id: "message.password.reset" }));
-              return {
-                username: res.data.username,
-              };
-            } else {
-              return {
-                username: "",
-              };
-            }
-          } catch (err) {
-            //error
-            if (err === 404) {
-              setNotify(intl.formatMessage({ id: "获取token失败" }));
-              setType("error");
-            }
-            console.error(err);
-          }
-          return {
-            username: "",
-          };
+          setState({ kind: "done" });
         }}
       >
         <ProForm.Group>
@@ -127,11 +121,10 @@ const Widget = ({ token }: IWidget) => {
             width="md"
             name="username"
             readonly
-            required
+            initialValue={state.reset.username}
             label={intl.formatMessage({
               id: "forms.fields.username.label",
             })}
-            rules={[{ required: true, max: 255, min: 2 }]}
           />
         </ProForm.Group>
         <ProForm.Group>
@@ -139,7 +132,6 @@ const Widget = ({ token }: IWidget) => {
             width="md"
             name="password"
             fieldProps={{
-              type: "password",
               iconRender: (visible) =>
                 visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />,
             }}
@@ -153,9 +145,9 @@ const Widget = ({ token }: IWidget) => {
         <ProForm.Group>
           <ProFormText.Password
             width="md"
-            name="password2"
+            name="password_confirmation"
+            dependencies={["password"]}
             fieldProps={{
-              type: "password",
               iconRender: (visible) =>
                 visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />,
             }}
@@ -163,7 +155,21 @@ const Widget = ({ token }: IWidget) => {
             label={intl.formatMessage({
               id: "forms.fields.confirm-password.label",
             })}
-            rules={[{ required: true, max: 32, min: 6, validator: checkPass2 }]}
+            rules={[
+              { required: true },
+              ({ getFieldValue }) => ({
+                validator: (_, value) =>
+                  !value || value === getFieldValue("password")
+                    ? Promise.resolve()
+                    : Promise.reject(
+                        new Error(
+                          intl.formatMessage({
+                            id: "message.confirm-password.validate.fail",
+                          }),
+                        ),
+                      ),
+              }),
+            ]}
           />
         </ProForm.Group>
       </ProForm>
