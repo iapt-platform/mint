@@ -4,10 +4,12 @@
 import {
   get as getToken,
   guest,
-  type IUser,
   signIn,
   studioSignIn,
 } from "./reducers/current-user";
+import { remove as removeToken } from "./reducers/session";
+import { fetchMe } from "./api/session";
+import { ApiError } from "./api/error";
 //import { DURATION } from "./reducers/current-user";
 import { type ISite, refresh as refreshLayout } from "./reducers/layout";
 import {
@@ -39,20 +41,6 @@ export interface ISiteInfoResponse {
   subhead: string;
   models?: ISettingModels;
 }
-interface IUserData {
-  id: string;
-  nickName: string;
-  realName: string;
-  avatar: string;
-  roles: string[];
-  token: string;
-}
-export interface ITokenRefreshResponse {
-  ok: boolean;
-  message: string;
-  data: IUserData;
-}
-
 interface ITermResponse {
   ok: boolean;
   message: string;
@@ -95,22 +83,15 @@ const init = () => {
   //获取用户登录信息
   const token = getToken();
   if (token) {
-    get<ITokenRefreshResponse>("/api/v2/auth/current").then((response) => {
-      console.log("auth", response);
-      if (response.ok) {
-        const it: IUser = {
-          id: response.data.id,
-          nickName: response.data.nickName,
-          realName: response.data.realName,
-          avatar: response.data.avatar,
-          roles: response.data.roles,
-        };
-        store.dispatch(signIn([it, response.data.token]));
-      } else {
-        localStorage.removeItem("token");
+    // token 失效（401）才清掉；网络或服务故障时保留，下次启动再试
+    fetchMe()
+      .then((user) => store.dispatch(signIn([user, token])))
+      .catch((e: unknown) => {
+        if (e instanceof ApiError && e.status === 401) {
+          removeToken();
+        }
         store.dispatch(guest(true));
-      }
-    });
+      });
 
     get<IGroupMemberListResponse>("/api/v2/group-member?view=user").then(
       (response) => {

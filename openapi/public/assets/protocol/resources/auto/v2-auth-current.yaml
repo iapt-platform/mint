@@ -4,7 +4,8 @@ get:
   tags:
     - auth
   operationId: get_api_v2_auth_current
-  description: 实现：`AuthController@getUserInfoByToken`
+  description: |
+    已被 `GET /v3/me` 取代。保留给 dashboard-v4 与 wikipali-mobile（尚未切换），待两者都不再使用后删除。
   responses:
     200:
       description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
@@ -36,3 +37,4 @@ get:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
       $ref: '../../main.yaml#/components/responses/ValidationError'
+  deprecated: true

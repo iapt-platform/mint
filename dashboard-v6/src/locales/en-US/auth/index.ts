@@ -40,6 +40,7 @@ const items = {
   "auth.sign-up.success.hint": "Sign in with your username or email.",
   "auth.sign-up.invite.invalid":
     "This invitation is invalid or has already been used",
+  "auth.sign-in.failed": "Incorrect username or password",
 };
 
 export default items;

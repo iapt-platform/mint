@@ -7,13 +7,13 @@
 |
 | 由 routes/api.php 的 v3 组 require 进来，前缀已在那边加好。
 |
-| 登录（sessions / me）还在 v2，见根目录 CLAUDE.md「认证迁移待办」。
-|
 */
 
 use App\Http\Controllers\V3\EmailCertificationController;
 use App\Http\Controllers\V3\InviteController;
+use App\Http\Controllers\V3\MeController;
 use App\Http\Controllers\V3\PasswordResetController;
+use App\Http\Controllers\V3\SessionController;
 use App\Http\Controllers\V3\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -43,3 +43,11 @@ Route::get('invites/{invite}', [InviteController::class, 'show'])
 Route::post('users', [UserController::class, 'store'])
     ->middleware('throttle:sign-up')
     ->name('users.store');
+
+// 登录与「我是谁」。退出登录是客户端丢掉 token，服务端不存会话，所以没有 DELETE sessions
+Route::post('sessions', [SessionController::class, 'store'])
+    ->middleware('throttle:sessions')
+    ->name('sessions.store');
+Route::get('me', [MeController::class, 'show'])
+    ->middleware('auth.v3')
+    ->name('me.show');

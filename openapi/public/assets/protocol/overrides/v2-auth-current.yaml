@@ -1,5 +1,8 @@
 # 手写补充：GET /v2/auth/current 的 data 逐字段类型（对齐移动端 AuthUser）。
 get:
+  deprecated: true
+  description: |
+    已被 `GET /v3/me` 取代。保留给 dashboard-v4 与 wikipali-mobile（尚未切换），待两者都不再使用后删除。
   responses:
     200:
       content:

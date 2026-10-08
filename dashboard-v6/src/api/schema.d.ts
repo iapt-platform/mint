@@ -937,7 +937,8 @@ export interface paths {
         };
         /**
          * getUserInfoByToken auth/current
-         * @description 实现：`AuthController@getUserInfoByToken`
+         * @deprecated
+         * @description 已被 `GET /v3/me` 取代。保留给 dashboard-v4 与 wikipali-mobile（尚未切换），待两者都不再使用后删除。
          */
         get: operations["get_api_v2_auth_current"];
         put?: never;
@@ -5908,7 +5909,8 @@ export interface paths {
         put?: never;
         /**
          * signIn sign-in
-         * @description 实现：`AuthController@signIn`
+         * @deprecated
+         * @description 已被 `POST /v3/sessions` 取代。保留给 dashboard-v4 与 wikipali-mobile（尚未切换），待两者都不再使用后删除。
          */
         post: operations["post_api_v2_sign_in"];
         delete?: never;
@@ -7803,6 +7805,29 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v3/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 我的资料
+         * @description 前端启动时用已存的 token 调它恢复登录态；401 表示 token 无效或过期，应清掉 token。
+         *     不回传 token（v2 的 auth/current 会把请求里的 token 原样回显）。
+         *
+         *     实现：`V3\MeController@show`
+         */
+        get: operations["get_api_v3_me"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v3/me/reactions": {
         parameters: {
             query?: never;
@@ -8050,6 +8075,30 @@ export interface paths {
         get: operations["get_api_v3_search_search_"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/sessions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 登录
+         * @description 用用户名或邮箱 + 密码换取 bearer token，同时返回当前用户资料，前端不必再查一次。
+         *     账号或密码不对返回 422（errors.login），不区分是哪一个错。
+         *     按 IP 与账号限流，超出返回 429。
+         *
+         *     实现：`V3\SessionController@store`
+         */
+        post: operations["post_api_v3_sessions"];
         delete?: never;
         options?: never;
         head?: never;
@@ -34375,6 +34424,38 @@ export interface operations {
             422: components["responses"]["ProblemValidation"];
         };
     };
+    get_api_v3_me: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            nickName?: string;
+                            userName?: string;
+                            realName?: string;
+                            sn?: number;
+                            avatar?: string | null;
+                            roles?: string[];
+                            email?: string;
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+        };
+    };
     get_api_v3_me_reactions: {
         parameters: {
             query?: {
@@ -35010,6 +35091,82 @@ export interface operations {
                 };
             };
             422: components["responses"]["ProblemValidation"];
+        };
+    };
+    post_api_v3_sessions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description 用户名或邮箱（邮箱不区分大小写） */
+                    login: string;
+                    /** @description 密码 */
+                    password: string;
+                };
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            token?: string;
+                            user?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string | null;
+                                roles?: string[];
+                                email?: string;
+                            };
+                        };
+                    };
+                };
+            };
+            /** @description 登录成功 */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            token?: string;
+                            user?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string | null;
+                                roles?: string[];
+                                email?: string;
+                            };
+                        };
+                    };
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+            /** @description 尝试过于频繁 */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
         };
     };
     get_api_v3_tipitaka_reading_channel_: {

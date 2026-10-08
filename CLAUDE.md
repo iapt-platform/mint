@@ -245,14 +245,13 @@ v6 全量稳定 → 下线 v4 → 删掉 C 类与 B 类的 v2 残留 → v2 前�
 ### 认证迁移待办（2026-10 定）
 
 v2 认证端点**一律不动**（v4 部署已冻结，修了也上不去），漏洞随 v4 下线消失。
-找回密码、注册在 v3 新建端点（见「v2 → v3 对照表」）；之后还剩两件：
+找回密码、注册、登录在 v3 新建端点（见「v2 → v3 对照表」）；之后还剩两件：
 
-- **TODO 登录 → `POST /v3/sessions` + `GET /v3/me`**：v6 + mobile 一起切
-  （mobile 的 `src/api/auth.ts` 在调 `/v2/sign-in`、`/v2/auth/current`）。
-  一次请求同时返回 token 与用户，消掉 v6 `SignIn.tsx` 的二次查询；
-  顺带修 `?url=` 跳转（现在 `atob` 后原样赋给 `location.href`，可开放重定向 /
-  `javascript:` XSS），只接受同源相对路径；登录加限流。
-- **TODO v4 下线后：md5 → bcrypt，删 v2 auth 全家**。v2 登录在 SQL 里比对
+- **TODO mobile 登录切 v3**：后端 `POST /v3/sessions` + `GET /v3/me` 与 v6 已切完；
+  wikipali-mobile 的 `src/api/auth.ts` 仍调 `/v2/sign-in`、`/v2/auth/current`，
+  它是独立仓库，由用户决定何时切。v3 的 user 字段与 v2 auth/current 同名（驼峰），
+  另多 `email`、少回显的 `token`。
+- **TODO v4 下线（且 mobile 已切）后：md5 → bcrypt，删 v2 auth 全家**。v2 登录在 SQL 里比对
   `md5(password)`，v4 在线时密码只能存 md5；v3 写密码统一走
   `App\Services\V3\PasswordHasher`，届时只改那一处（登录时校验 md5 并就地
   rehash，或加新列——加列由用户决定）。随后删 `sign-in`、`sign-up`、
@@ -333,6 +332,7 @@ Resource / FormRequest / 测试同理；URL 只换版本前缀
 | `related-paragraph` / `RelatedParagraphController` | `tipitaka-related-paragraphs` (+`/aggregate`) / `V3\TipitakaRelatedParagraphController` + `V3\TipitakaRelatedParagraphAggregateController` | 字段改名 `book_title_pali`→`title`、`cs6_para`→`cs_para`；响应 `{ok,…}`→原生 Resource；消除逐行 N+1（批量 whereIn）；新增 `book_name`/`cs_para` 过滤器与独立 `/aggregate` 聚合端点（`group_by=book_id`→book_name 列表 / `group_by=book_name`→cs_para 列表，分页） |
 | `auth/forgot-password` + `auth/reset-password` / `ForgotPasswordController` + `ResetPasswordController` | `password-resets` (+`/{token}`) / `V3\PasswordResetController` | 三条并成一个资源：POST 发信、GET 看账号、PATCH 设密码（204）。库里只存 token 的 sha256、60 分钟过期、邮箱未注册也 204、不收 `dashboard` 参数（链接用 `mint.server.dashboard_v6_base_path` 拼到 v6 的 `/anonymous/reset-password/{token}`）、限流 |
 | `email-certification` + `invite/{id}`（读）+ `sign-up` / `EmailCertificationController` + `InviteController@show` + `SignUpController@store` | `email-certifications` + `invites` (+`/{invite}`) + `users` / `V3\EmailCertificationController` + `V3\InviteController` + `V3\UserController` | 注册。验证码改在服务端比对：v2 的 `GET email-certification/{id}`（把码交给前端）在 v3 没有对应端点，换成 `POST invites {email, code}` 签发 invite；自助与邀请注册都凭 invite 走 `POST users`。验证码 6 位、30 分钟、试错 5 次作废；验证通过前不写 invites 表。studio 发邀请（`POST /v2/invite`）不在此列，将来迁成 `studios/{studio}/invites` |
+| `sign-in` + `auth/current` / `AuthController@signIn` + `@getUserInfoByToken` | `sessions` + `me` / `V3\SessionController` + `V3\MeController` | 登录一次返回 `{token, user}`，不再二次查询；`login` 字段收用户名或邮箱（邮箱不区分大小写），失败统一 422 `errors.login`；按账号 + IP 限流。`me` 的字段沿用 v2 的驼峰用户摘要（`UserService::profile()`），`roles` 恒为数组，另加 `email`，不再回显 token。token 与 v2 完全相同、两边互认 |
 
 **注意**：`tipitaka-reading` **不是** v2 `paragraph-content` / `chapter-content` 的替代品。
 那两个 v2 端点支持多 channel（`channels=a,b,c`）与 edit 模式、返回 sentenceIds 供编辑器用；

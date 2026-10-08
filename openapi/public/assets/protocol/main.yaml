@@ -689,6 +689,8 @@ paths:
     $ref: ./resources/auto/v3-invites.yaml
   '/v3/invites/{invite}':
     $ref: ./resources/auto/v3-invites-invite.yaml
+  /v3/me:
+    $ref: ./resources/auto/v3-me.yaml
   /v3/me/reactions:
     $ref: ./resources/auto/v3-me-reactions.yaml
   '/v3/me/reactions/{reaction}':
@@ -709,6 +711,8 @@ paths:
     $ref: ./resources/auto/v3-search-suggest.yaml
   '/v3/search/{search}':
     $ref: ./resources/auto/v3-search-search.yaml
+  /v3/sessions:
+    $ref: ./resources/auto/v3-sessions.yaml
   '/v3/tipitaka-reading/{channel}':
     $ref: ./resources/auto/v3-tipitaka-reading-channel.yaml
   /v3/tipitaka-related-paragraphs:

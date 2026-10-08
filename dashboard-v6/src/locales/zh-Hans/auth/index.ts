@@ -37,6 +37,7 @@ const items = {
   "auth.sign-up.success": "注册成功",
   "auth.sign-up.success.hint": "请用用户名或邮箱登录。",
   "auth.sign-up.invite.invalid": "邀请无效或已被使用",
+  "auth.sign-in.failed": "用户名或密码错误",
 };
 
 export default items;

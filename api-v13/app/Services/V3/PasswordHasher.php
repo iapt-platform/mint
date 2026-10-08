@@ -17,4 +17,12 @@ class PasswordHasher
     {
         return md5($password);
     }
+
+    /**
+     * 明文是否与库里存的哈希相符。用 hash_equals 防计时攻击。
+     */
+    public function check(string $password, string $stored): bool
+    {
+        return hash_equals($stored, $this->hash($password));
+    }
 }

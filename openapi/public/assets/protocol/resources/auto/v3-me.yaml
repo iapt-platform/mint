@@ -1,0 +1,43 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-me.yaml
+get:
+  summary: 我的资料
+  tags:
+    - me
+  operationId: get_api_v3_me
+  description: |-
+    前端启动时用已存的 token 调它恢复登录态；401 表示 token 无效或过期，应清掉 token。
+    不回传 token（v2 的 auth/current 会把请求里的 token 原样回显）。
+
+    实现：`V3\MeController@show`
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  nickName:
+                    type: string
+                  userName:
+                    type: string
+                  realName:
+                    type: string
+                  sn:
+                    type: integer
+                  avatar:
+                    type: string
+                    nullable: true
+                  roles:
+                    type: array
+                    items:
+                      type: string
+                  email:
+                    type: string
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
