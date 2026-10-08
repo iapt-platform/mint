@@ -32,8 +32,8 @@ cd ../..
 
 ```bash
 cd api-test
-php run.php --username=test161 --password=12345            # 调 /v2/sign-in 换 token，跑全量
-php run.php --username=test161 --password=12345 --server=staging
+php run.php --username=<username> --password=<password>            # 调 /v2/sign-in 换 token，跑全量
+php run.php --username=<username> --password=<password>  --server=staging
 php run.php --token=<bearer>                                # 或直接给 token
 ```
 
