@@ -1,0 +1,83 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-sessions.yaml
+post:
+  summary: 登录
+  tags:
+    - sessions
+  operationId: post_api_v3_sessions
+  description: |-
+    用用户名或邮箱 + 密码换取 bearer token，同时返回当前用户资料，前端不必再查一次。
+    账号或密码不对返回 422（errors.login），不区分是哪一个错。
+    按 IP 与账号限流，超出返回 429。
+
+    实现：`V3\SessionController@store`
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            login:
+              type: string
+              description: 用户名或邮箱（邮箱不区分大小写）
+            password:
+              type: string
+              description: 密码
+          required:
+            - login
+            - password
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string, nullable: true }
+                      roles: { type: array, items: { type: string } }
+                      email: { type: string }
+    201:
+      description: 登录成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string, nullable: true }
+                      roles: { type: array, items: { type: string } }
+                      email: { type: string }
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'
+    429:
+      description: 尝试过于频繁
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'

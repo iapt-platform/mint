@@ -10,9 +10,12 @@ use App\View\Composers\BlogViewComposer;
 use Carbon\CarbonImmutable;
 use Godruoyi\Snowflake\LaravelSequenceResolver;
 use Godruoyi\Snowflake\Snowflake;
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
@@ -99,6 +102,39 @@ class AppServiceProvider extends ServiceProvider
         */
         View::composer('blog.*', BlogViewComposer::class);
         View::composer('layouts.blog', BlogViewComposer::class);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Rate Limiters
+        |--------------------------------------------------------------------------
+        |
+        | 找回密码会往外发邮件：按 IP 限住撞库式的批量请求，按邮箱限住对同一个人的
+        | 邮件轰炸。设新密码的请求不带 email，只按 IP 计。
+        |
+        */
+        RateLimiter::for('password-resets', fn (Request $request): array => array_filter([
+            Limit::perMinute(10)->by('ip:'.$request->ip()),
+            $request->filled('email')
+                ? Limit::perHour(5)->by('email:'.mb_strtolower((string) $request->input('email')))
+                : null,
+        ]));
+
+        // 注册验证码同样往外发邮件，口径与找回密码一致
+        RateLimiter::for('email-certifications', fn (Request $request): array => array_filter([
+            Limit::perMinute(10)->by('ip:'.$request->ip()),
+            $request->filled('email')
+                ? Limit::perHour(5)->by('email:'.mb_strtolower((string) $request->input('email')))
+                : null,
+        ]));
+
+        // 比对验证码、建账号：按 IP 限，挡住对 6 位验证码的穷举（单个码另有 5 次试错上限）
+        RateLimiter::for('sign-up', fn (Request $request): Limit => Limit::perMinute(20)->by('ip:'.$request->ip()));
+
+        // 登录：按「账号 + IP」挡住对单个账号的猜密码，按 IP 挡住换着账号撞库
+        RateLimiter::for('sessions', fn (Request $request): array => [
+            Limit::perMinute(5)->by('login:'.mb_strtolower((string) $request->input('login')).'|'.$request->ip()),
+            Limit::perMinute(30)->by('ip:'.$request->ip()),
+        ]);
     }
 
     /**

@@ -1,6 +1,6 @@
 // src/Router.tsx
 import { lazy } from "react";
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, redirect } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import { testRoutes } from "./routes/testRoutes";
 import { buildRouteConfig } from "./routes/buildRoutes";
@@ -27,6 +27,7 @@ const TestLayout = lazy(() => import("./layouts/test"));
 
 const UsersSignIn = lazy(() => import("./pages/users/sign-in"));
 const UsersSignUp = lazy(() => import("./pages/users/sign-up"));
+const UsersSignUpInvite = lazy(() => import("./pages/users/sign-up-invite"));
 const UsersForgotPassword = lazy(() => import("./pages/users/forgot-password"));
 const UsersResetPassword = lazy(() => import("./pages/users/reset-password"));
 const DashboardIndex = lazy(() => import("./pages/dashboard/index"));
@@ -57,21 +58,27 @@ const router = createBrowserRouter(
               Component: UsersSignUp,
               handle: { crumb: "sign-up" },
             },
+            {
+              path: "sign-up/:token",
+              Component: UsersSignUpInvite,
+              handle: { crumb: "sign-up" },
+            },
+            // studio 邀请邮件仍由 v2（POST /v2/invite → InviteMail）发出，链接是 v4 的
+            // 路径形状 /anonymous/users/sign-up/{uuid}。邀请创建迁 v3 之后删掉这条。
+            {
+              path: "users/sign-up/:token",
+              loader: ({ params }) =>
+                redirect(`/anonymous/sign-up/${params.token ?? ""}`),
+            },
             { path: "forgot-password", Component: UsersForgotPassword },
+            // 找回密码邮件里的链接，由后端按 mint.server.dashboard_v6_base_path 拼出
+            { path: "reset-password/:token", Component: UsersResetPassword },
           ],
         },
         {
           path: "dashboard",
           Component: DashboardLayout,
-          children: [
-            { index: true, Component: DashboardIndex },
-            {
-              path: "users",
-              children: [
-                { path: "reset-password", Component: UsersResetPassword },
-              ],
-            },
-          ],
+          children: [{ index: true, Component: DashboardIndex }],
         },
         {
           path: "workspace",
@@ -110,7 +117,7 @@ const router = createBrowserRouter(
       ],
     },
   ],
-  { basename: import.meta.env.BASE_URL }
+  { basename: import.meta.env.BASE_URL },
 );
 
 const Widget = () => {

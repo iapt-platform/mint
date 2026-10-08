@@ -43,9 +43,8 @@
 
         <div class="course-card__foot">
             @if($course['number'] > 0)
-            <span class="course-card__period">{{ __('library.course_period', ['n' => $course['number']]) }}</span>
+            <span class="course-card__quota">{{ __('library.course_quota', ['n' => $course['number']]) }}</span>
             @endif
-            <span class="course-card__members">{{ __('library.course_members', ['n' => $course['member_count']]) }}</span>
         </div>
     </div>
 

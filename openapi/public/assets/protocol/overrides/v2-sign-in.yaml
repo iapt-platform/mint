@@ -1,5 +1,8 @@
 # 手写补充：POST /v2/sign-in 的 data 是 token 字符串，不是对象。
 post:
+  deprecated: true
+  description: |
+    已被 `POST /v3/sessions` 取代。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
   responses:
     200:
       content:

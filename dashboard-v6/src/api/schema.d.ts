@@ -937,7 +937,8 @@ export interface paths {
         };
         /**
          * getUserInfoByToken auth/current
-         * @description 实现：`AuthController@getUserInfoByToken`
+         * @deprecated
+         * @description 已被 `GET /v3/me` 取代。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         get: operations["get_api_v2_auth_current"];
         put?: never;
@@ -963,7 +964,10 @@ export interface paths {
         put?: never;
         /**
          * 新建 auth/forgot-password
-         * @description 实现：`ForgotPasswordController@store`
+         * @deprecated
+         * @description 已被 `POST /v3/password-resets` 取代，保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
+         *
+         *     已知问题（v2 冻结不修）：`dashboard` 参数原样拼进邮件链接；token 不过期；邮箱未注册时回 404。
          */
         post: operations["post_api_v2_auth_forgot_password"];
         delete?: never;
@@ -1019,7 +1023,10 @@ export interface paths {
         put?: never;
         /**
          * 新建 auth/reset-password
-         * @description 实现：`ResetPasswordController@store`
+         * @deprecated
+         * @description 已被 `PATCH /v3/password-resets/{token}` 取代，保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
+         *
+         *     已知问题（v2 冻结不修）：成功时 `data` 是 user_infos 整行，含密码哈希。
          */
         post: operations["post_api_v2_auth_reset_password"];
         delete?: never;
@@ -1037,7 +1044,8 @@ export interface paths {
         };
         /**
          * 根据token获取用户名.
-         * @description 实现：`ResetPasswordController@show`
+         * @deprecated
+         * @description 已被 `GET /v3/password-resets/{token}` 取代，保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         get: operations["get_api_v2_auth_reset_password_reset_password_"];
         /**
@@ -2748,7 +2756,8 @@ export interface paths {
         put?: never;
         /**
          * 新建 email-certification
-         * @description 实现：`EmailCertificationController@store`
+         * @deprecated
+         * @description 已被 `POST /v3/email-certifications` 取代，保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         post: operations["post_api_v2_email_certification"];
         delete?: never;
@@ -2766,7 +2775,11 @@ export interface paths {
         };
         /**
          * 获取单个 email-certification/{email_certification}
-         * @description 实现：`EmailCertificationController@show`
+         * @deprecated
+         * @description v3 没有对应端点：验证码改在服务端比对（`POST /v3/invites`），不再回传给前端。
+         *     保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
+         *
+         *     已知问题（v2 冻结不修）：直接返回验证码，邮箱验证可被绕过。
          */
         get: operations["get_api_v2_email_certification_email_certification_"];
         /**
@@ -3310,7 +3323,8 @@ export interface paths {
         };
         /**
          * 获取单个 invite/{invite}
-         * @description 实现：`InviteController@show`
+         * @deprecated
+         * @description 已被 `GET /v3/invites/{invite}` 取代，保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         get: operations["get_api_v2_invite_invite_"];
         /**
@@ -5895,7 +5909,8 @@ export interface paths {
         put?: never;
         /**
          * signIn sign-in
-         * @description 实现：`AuthController@signIn`
+         * @deprecated
+         * @description 已被 `POST /v3/sessions` 取代。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         post: operations["post_api_v2_sign_in"];
         delete?: never;
@@ -5919,7 +5934,10 @@ export interface paths {
         put?: never;
         /**
          * 新建 sign-up
-         * @description 实现：`SignUpController@store`
+         * @deprecated
+         * @description 已被 `POST /v3/users` 取代，保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
+         *
+         *     已知问题（v2 冻结不修）：invite 校验漏了 return，形同虚设。
          */
         post: operations["post_api_v2_sign_up"];
         delete?: never;
@@ -7689,6 +7707,29 @@ export interface paths {
         patch: operations["patch_api_v2_webhook_webhook_"];
         trace?: never;
     };
+    "/v3/email-certifications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 发送注册验证码
+         * @description 向邮箱发一个 6 位验证码，30 分钟内有效；重复申请会作废上一个。
+         *     邮箱已注册时返回 422。按 IP 与邮箱限流，超出返回 429。
+         *
+         *     实现：`V3\EmailCertificationController@store`
+         */
+        post: operations["post_api_v3_email_certifications"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v3/heartbeat": {
         parameters: {
             query?: never;
@@ -7711,6 +7752,74 @@ export interface paths {
          *     实现：`V3\HeartbeatController@show`
          */
         get: operations["get_api_v3_heartbeat"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/invites": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 用验证码换注册邀请
+         * @description 验证码正确则返回该邮箱的 invite（已有则复用，状态重置为未使用），验证码随即作废。
+         *     验证码错误、过期或试错 5 次后返回 422（errors.code）。
+         *
+         *     实现：`V3\InviteController@store`
+         */
+        post: operations["post_api_v3_invites"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/invites/{invite}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 查看一条可用的注册邀请
+         * @description 邀请注册页用它显示邮箱。不存在或已被使用都返回 404。
+         *
+         *     实现：`V3\InviteController@show`
+         */
+        get: operations["get_api_v3_invites_invite_"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 我的资料
+         * @description 前端启动时用已存的 token 调它恢复登录态；401 表示 token 无效或过期，应清掉 token。
+         *     不回传 token（v2 的 auth/current 会把请求里的 token 原样回显）。
+         *
+         *     实现：`V3\MeController@show`
+         */
+        get: operations["get_api_v3_me"];
         put?: never;
         post?: never;
         delete?: never;
@@ -7774,6 +7883,59 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/v3/password-resets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 申请重置密码（发邮件）
+         * @description 无论邮箱是否注册都返回 204，不泄露账号是否存在。邮件是同步发出的，
+         *     返回时已经发完，所以是 204 而不是 202。邮件里的链接指向
+         *     dashboard-v6 的 `/anonymous/reset-password/{token}`，60 分钟内有效。
+         *     按 IP 与邮箱限流，超出返回 429。
+         *
+         *     实现：`V3\PasswordResetController@store`
+         */
+        post: operations["post_api_v3_password_resets"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/password-resets/{token}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 查看一次待完成的重置
+         * @description 重置页用它显示「正在为哪个账号设置新密码」。token 不存在或已过期一律 404。
+         *
+         *     实现：`V3\PasswordResetController@show`
+         */
+        get: operations["get_api_v3_password_resets_token_"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * 设置新密码
+         * @description 成功后 token 作废，返回 204 空体；之后用新密码走登录。
+         *
+         *     实现：`V3\PasswordResetController@update`
+         */
+        patch: operations["patch_api_v3_password_resets_token_"];
         trace?: never;
     };
     "/v3/progress": {
@@ -7919,6 +8081,30 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v3/sessions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 登录
+         * @description 用用户名或邮箱 + 密码换取 bearer token，同时返回当前用户资料，前端不必再查一次。
+         *     账号或密码不对返回 422（errors.login），不区分是哪一个错。
+         *     按 IP 与账号限流，超出返回 429。
+         *
+         *     实现：`V3\SessionController@store`
+         */
+        post: operations["post_api_v3_sessions"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v3/tipitaka-reading/{channel}": {
         parameters: {
             query?: never;
@@ -8031,6 +8217,30 @@ export interface paths {
         get: operations["get_api_v3_upgrade"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 注册账号
+         * @description 凭 invite（邀请邮件里的，或 `POST /v3/invites` 换来的）建账号，同时建一个
+         *     私有的 draft 译文 channel，invite 标为已用。邮箱取自 invite。
+         *     注册不等于登录：返回 201 与新账号，之后用用户名/邮箱 + 密码走登录。
+         *
+         *     实现：`V3\UserController@store`
+         */
+        post: operations["post_api_v3_users"];
         delete?: never;
         options?: never;
         head?: never;
@@ -34023,6 +34233,58 @@ export interface operations {
             422: components["responses"]["ValidationError"];
         };
     };
+    post_api_v3_email_certifications: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /**
+                     * @description 待注册的邮箱
+                     * @example someone@example.com
+                     */
+                    email: string;
+                    /**
+                     * @description 邮件语言，没有对应模板的回落 en
+                     * @enum {string}
+                     */
+                    lang?: "en" | "en-US" | "zh-Hans" | "zh-Hant";
+                };
+            };
+        };
+        responses: {
+            /** @description 已发送，无响应体 */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            422: components["responses"]["ProblemValidation"];
+            /** @description 请求过于频繁 */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description 邮件发送失败 */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
     get_api_v3_heartbeat: {
         parameters: {
             query?: never;
@@ -34055,6 +34317,143 @@ export interface operations {
                     "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
             };
+        };
+    };
+    post_api_v3_invites: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description 收到验证码的邮箱 */
+                    email: string;
+                    /**
+                     * @description 邮件里的 6 位验证码
+                     * @example 123456
+                     */
+                    code: string;
+                };
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            email?: string;
+                            status?: string;
+                            created_at?: string | null;
+                        };
+                    };
+                };
+            };
+            /** @description 首次为该邮箱签发 invite。响应体与 200 同形；复用已有 invite 时是 200 */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            email?: string;
+                            status?: string;
+                            created_at?: string | null;
+                        };
+                    };
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+            /** @description 请求过于频繁 */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    get_api_v3_invites_invite_: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 邀请邮件链接里的 uuid */
+                invite: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            email?: string;
+                            status?: string;
+                            created_at?: string | null;
+                        };
+                    };
+                };
+            };
+            /** @description 邀请不存在或已被使用 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    get_api_v3_me: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            nickName?: string;
+                            userName?: string;
+                            realName?: string;
+                            sn?: number;
+                            avatar?: string | null;
+                            roles?: string[];
+                            email?: string;
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
         };
     };
     get_api_v3_me_reactions: {
@@ -34218,6 +34617,136 @@ export interface operations {
             401: components["responses"]["ProblemUnauthorized"];
             /** @description 只能删除自己的 reaction */
             403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    post_api_v3_password_resets: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /**
+                     * @description 账号邮箱
+                     * @example someone@example.com
+                     */
+                    email: string;
+                    /**
+                     * @description 邮件语言，没有对应模板的回落 en
+                     * @enum {string}
+                     */
+                    lang?: "en" | "en-US" | "zh-Hans" | "zh-Hant";
+                };
+            };
+        };
+        responses: {
+            /** @description 已发送（或邮箱未注册），无响应体 */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            422: components["responses"]["ProblemValidation"];
+            /** @description 请求过于频繁 */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description 邮件发送失败 */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    get_api_v3_password_resets_token_: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 邮件链接里的 token */
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            username?: string;
+                            expires_at?: string;
+                        };
+                    };
+                };
+            };
+            /** @description token 无效或已过期 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    patch_api_v3_password_resets_token_: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 邮件链接里的 token */
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description 新密码，6–32 位 */
+                    password: string;
+                    /** @description 再输一次新密码 */
+                    password_confirmation: string;
+                };
+            };
+        };
+        responses: {
+            /** @description 已重置，无响应体 */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description token 无效或已过期 */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -34564,6 +35093,82 @@ export interface operations {
             422: components["responses"]["ProblemValidation"];
         };
     };
+    post_api_v3_sessions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description 用户名或邮箱（邮箱不区分大小写） */
+                    login: string;
+                    /** @description 密码 */
+                    password: string;
+                };
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            token?: string;
+                            user?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string | null;
+                                roles?: string[];
+                                email?: string;
+                            };
+                        };
+                    };
+                };
+            };
+            /** @description 登录成功 */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            token?: string;
+                            user?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string | null;
+                                roles?: string[];
+                                email?: string;
+                            };
+                        };
+                    };
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+            /** @description 尝试过于频繁 */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
     get_api_v3_tipitaka_reading_channel_: {
         parameters: {
             query?: {
@@ -34796,6 +35401,81 @@ export interface operations {
                         data?: Record<string, never>[];
                         meta?: components["schemas"]["PaginationMeta"];
                     };
+                };
+            };
+        };
+    };
+    post_api_v3_users: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description 注册邀请的 uuid */
+                    invite: string;
+                    /** @description 用户名，6–32 位字母、数字、下划线 */
+                    username: string;
+                    /** @description 昵称，不传或空白时用 username */
+                    nickname?: string;
+                    /** @description 密码，6–32 位 */
+                    password: string;
+                    /** @description 再输一次密码 */
+                    password_confirmation: string;
+                    /**
+                     * @description 常用译文语言，用作 draft channel 的语言
+                     * @example zh-Hans
+                     */
+                    lang: string;
+                };
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            username?: string;
+                            nickname?: string;
+                            email?: string;
+                            created_at?: string | null;
+                        };
+                    };
+                };
+            };
+            /** @description 已创建 */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            username?: string;
+                            nickname?: string;
+                            email?: string;
+                            created_at?: string | null;
+                        };
+                    };
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+            /** @description 请求过于频繁 */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
             };
         };

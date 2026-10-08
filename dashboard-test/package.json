@@ -9,6 +9,7 @@
     "test:ui": "playwright test --ui",
     "test:headed": "playwright test --headed",
     "test:channel": "playwright test channel",
+    "test:users": "playwright test users",
     "report": "playwright show-report",
     "codegen": "playwright codegen http://127.0.0.1:4000/pcd-v2026"
   },

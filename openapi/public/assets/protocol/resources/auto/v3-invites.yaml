@@ -1,0 +1,75 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-invites.yaml
+post:
+  summary: 用验证码换注册邀请
+  tags:
+    - invites
+  operationId: post_api_v3_invites
+  description: |-
+    验证码正确则返回该邮箱的 invite（已有则复用，状态重置为未使用），验证码随即作废。
+    验证码错误、过期或试错 5 次后返回 422（errors.code）。
+
+    实现：`V3\InviteController@store`
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            email:
+              type: string
+              description: 收到验证码的邮箱
+            code:
+              type: string
+              description: '邮件里的 6 位验证码'
+              example: '123456'
+          required:
+            - email
+            - code
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  email:
+                    type: string
+                  status:
+                    type: string
+                  created_at:
+                    type: string
+                    nullable: true
+    201:
+      description: '首次为该邮箱签发 invite。响应体与 200 同形；复用已有 invite 时是 200'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  email:
+                    type: string
+                  status:
+                    type: string
+                  created_at:
+                    type: string
+                    nullable: true
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'
+    429:
+      description: 请求过于频繁
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'

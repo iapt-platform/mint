@@ -645,10 +645,11 @@ v3 端点可以自由改：v4 那两处 v3 引用（`ChatInput.tsx:127`、`agent
    `lang/`，本项目把 langPath 指到了 resources 下）。支持 8 个语言：
    `en`、`zh-Hans`、`zh-Hant`、`my`、`th`、`si`、`vi`、`lo`。
 
-   **不要新建语言文件，合并进已有的那 11 个**：`site`、`labels`、`buttons`、
-   `home`、`library`、`auth`、`validation`、`passwords`、`pagination`、
-   `grammar`、`language`。（注意没有 `messages.php`。）
-   API 的服务状态类文案放 **`site.php`**，界面标签放 `labels.php`，
+   **不要新建语言文件，合并进已有的那 12 个**：`site`、`messages`、`labels`、
+   `buttons`、`home`、`library`、`auth`、`validation`、`passwords`、`pagination`、
+   `grammar`、`language`。
+   API 的服务状态类文案（停机维护、404 等）放 **`site.php`**，操作结果提示
+   （如「邮件发送失败」）放 **`messages.php`**，界面标签放 `labels.php`，
    按钮文字放 `buttons.php`，各就各位。
 
    新增文案至少补 `en` 与 `zh-Hans` 两份，其余语言缺失会自动回退到 `en`，
@@ -668,9 +669,16 @@ v3 端点可以自由改：v4 那两处 v3 引用（`ChatInput.tsx:127`、`agent
    expect($detail)->not->toBe('site.maintenance');
    ```
 
-   > ⚠️ 已知问题：`SetLocale` 中间件只挂在 `web` 组，**api 组没有语言协商**，
-   > 所以目前 API 响应永远是 `en`，`Accept-Language` 与 `?lang=` 均无效。
-   > 文案仍然必须外置到翻译文件（否则将来想修也修不了），但别指望它现在会变中文。
+   **语言协商**：v3 路由组挂了 `App\Http\Middleware\V3\NegotiateLocale`，按请求头
+   `Accept-Language` 选语言（q 值排序；`zh-CN`→`zh-Hans`、`zh-TW`→`zh-Hant`；匹配不上用
+   `mint.default_language`），响应带 `Content-Language` 与 `Vary: Accept-Language`。
+   **只认请求头**：不读 `?lang=`（不少端点的 `lang` 是业务参数，如译文语言）、不读写
+   cookie / session。前端：dashboard-v6 的 `src/api/client.ts` 按界面语言设置这个头。
+   v2 不挂（错误文案在 v4 下线前保持原样）。
+
+   测试里要验证某种语言，直接带头：
+   `$this->postJson($url, $data, ['Accept-Language' => 'zh-Hans'])`，范例见
+   `tests/Feature/LocaleV3Test.php`。
 
 ## 路由怎么设计
 

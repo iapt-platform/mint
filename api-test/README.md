@@ -32,7 +32,7 @@ cd ../..
 
 ```bash
 cd api-test
-php run.php --username=<username> --password=<password>            # 调 /v2/sign-in 换 token，跑全量
+php run.php --username=<username> --password=<password>            # 调 /v3/sessions 换 token，跑全量
 php run.php --username=<username> --password=<password>  --server=staging
 php run.php --token=<bearer>                                # 或直接给 token
 ```
@@ -52,7 +52,7 @@ php run.php --list                   # 列出可用服务器
 
 # 跑 /v3/me/*（需登录）用例 —— 两种给 token 的方式：
 php run.php --token=<bearer>                                   # 直接给 token
-php run.php --username=alice --password=secret                 # 调 /v2/sign-in 现换 token
+php run.php --username=alice --password=secret                 # 调 /v3/sessions 现换 token
 ```
 
 ### 可用 `--server` 一览
@@ -70,16 +70,25 @@ php run.php --username=alice --password=secret                 # 调 /v2/sign-in
 
 - 服务器切换优先级：`--server=` / `API_TEST_BASE` > `config.php` 的 `default_server`。
 - **鉴权优先级**：`--token=` > 环境变量 `API_TEST_TOKEN` > `--username/--password`
-  （或 `API_TEST_USERNAME`/`API_TEST_PASSWORD`）调 `POST /v2/sign-in` 登录换 token。
+  （或 `API_TEST_USERNAME`/`API_TEST_PASSWORD`）调 `POST /v3/sessions` 登录换 token。
   v3 只认 bearer token，**不用 username/password**——那两样只用于登录换 token。
 - **测试逻辑**：需要登录的 `/v3/me/reactions`（GET/POST/DELETE）各测两种情况——
   无 token → 期望 401；带 token → 正常。带 token 的用例**缺 token 就 FAIL，不 SKIP**，
   所以跑全量前要带 `--token=` 或 `--username/--password`。
 - **写操作在所有服务器上都真实执行**（POST 建 / DELETE 删，用垃圾 target_id，测完即删），
   包括 prod。会产生少量垃圾数据，由测试账号定期清理。
-- 登录接口 `POST /v2/sign-in`：`username` 可以是用户名或邮箱；响应是 v2 信封
-  `{ok,message,data}`，**成败看 `ok` 字段**（失败时 HTTP 可能是 200 也可能是 400），
-  `data` 即 JWT。
+- 登录接口 `POST /v3/sessions {login, password}`：`login` 可以是用户名或邮箱；成功 201
+  `{data:{token, user}}`，账号或密码不对 422。**目标服务器还没部署 v3 登录时**，
+  改用 `--token=` 直接给 token（v2 / v3 签的 token 一样，可以从 v4 登录后拿）。
+- **登录有限流：同一账号 + IP 每分钟 5 次。** 一次全量登录 2 次（run.php 换 token 一次、
+  sessions 用例一次）。刚跑过 dashboard-test（它也用 test161 登录多次）或连跑几遍时
+  会撞 429，表现为「登录失败（HTTP 429）」+ 带 token 的用例全挂，等一分钟再跑。
+- **账号类端点（`cases/06_auth.php`）例外：只走无副作用的路径**——不给真实邮箱发信、
+  不建账号。找回密码只用未注册的 `.invalid` 邮箱（服务端什么都不发）；注册验证码、
+  建号只测校验失败和不存在的 invite。完整成功路径由 api-v13 的 Pest 测试覆盖
+  （`SignUpV3Test`、`PasswordResetV3Test`，Mail 是 fake 的）。
+- **账号类端点有限流**：`password-resets` / `email-certifications` 同 IP 每分钟 10 次。
+  一次全量只打几次，但**一分钟内连跑两三遍全量会撞 429**，等一分钟再跑即可。
 - 退出码：`0` 全绿；`1` 有失败/错误；`2` 参数/加载错误。
 
 ## 目录结构
@@ -181,6 +190,9 @@ Problem Details、成败只看状态码）。正确的长期修法在 api-v13 �
 - **staging 的 OpenSearch**：`/v3/search`、`/v3/search-suggest` 在 staging 会 500
   （索引 mapping 与代码不一致：`resource_type` 缺 fielddata、`content.suggest.pali` 没映射）。
   这是 staging 环境问题，本地跑这几条是绿的。
+- **`registered_email` 种子**：`email-certifications` 的「已注册邮箱 → 422」用例需要一个
+  真实存在的账号邮箱，从环境变量 `API_TEST_REGISTERED_EMAIL` 读，没给就 SKIP。它只走
+  校验、不发信。
 - **种子数据按环境不同**：`fixtures.php` 里的 channel/target_id/doc_id 取自本地开发库，
   换环境后可能需要更新。跨环境跑时，数据不存在通常只是返回空集（仍 200），不会假红，
   但 `search/{id}` 的 200 用例依赖真实 doc id。

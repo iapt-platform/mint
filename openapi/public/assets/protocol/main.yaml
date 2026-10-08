@@ -7,7 +7,7 @@ info:
 
     由 `php openapi/scripts/generate.php` 依据 api-v13 的路由与控制器源码生成。
     响应统一封装为 `{ok, message, data}`；`ok=false` 时 `message` 为错误信息。
-  version: 2026.9.28
+  version: 2026.10.8
 servers:
   -
     url: /api
@@ -19,17 +19,17 @@ servers:
     url: 'https://staging.wikipali.org/api'
     description: 测试
   -
-    url: 'https://www.wikipali.org/api'
-    description: 生产
-  -
     url: 'https://next.wikipali.org/api'
     description: 生产预览
   -
-    url: 'https://www.wikipali.cc/api'
-    description: 生产（中国）
+    url: 'https://www.wikipali.org/api'
+    description: 生产
   -
     url: 'https://next.wikipali.cc/api'
     description: 生产预览（中国）
+  -
+    url: 'https://www.wikipali.cc/api'
+    description: 生产（中国）
 components:
   securitySchemes:
     bearerAuth:
@@ -681,12 +681,24 @@ paths:
     $ref: ./resources/auto/v2-webhook.yaml
   '/v2/webhook/{webhook}':
     $ref: ./resources/auto/v2-webhook-webhook.yaml
+  /v3/email-certifications:
+    $ref: ./resources/auto/v3-email-certifications.yaml
   /v3/heartbeat:
     $ref: ./resources/auto/v3-heartbeat.yaml
+  /v3/invites:
+    $ref: ./resources/auto/v3-invites.yaml
+  '/v3/invites/{invite}':
+    $ref: ./resources/auto/v3-invites-invite.yaml
+  /v3/me:
+    $ref: ./resources/auto/v3-me.yaml
   /v3/me/reactions:
     $ref: ./resources/auto/v3-me-reactions.yaml
   '/v3/me/reactions/{reaction}':
     $ref: ./resources/auto/v3-me-reactions-reaction.yaml
+  /v3/password-resets:
+    $ref: ./resources/auto/v3-password-resets.yaml
+  '/v3/password-resets/{token}':
+    $ref: ./resources/auto/v3-password-resets-token.yaml
   /v3/progress:
     $ref: ./resources/auto/v3-progress.yaml
   /v3/reactions:
@@ -699,6 +711,8 @@ paths:
     $ref: ./resources/auto/v3-search-suggest.yaml
   '/v3/search/{search}':
     $ref: ./resources/auto/v3-search-search.yaml
+  /v3/sessions:
+    $ref: ./resources/auto/v3-sessions.yaml
   '/v3/tipitaka-reading/{channel}':
     $ref: ./resources/auto/v3-tipitaka-reading-channel.yaml
   /v3/tipitaka-related-paragraphs:
@@ -709,3 +723,5 @@ paths:
     $ref: ./resources/auto/v3-tipitaka-related-paragraphs-aggregate-book-name.yaml
   /v3/upgrade:
     $ref: ./resources/auto/v3-upgrade.yaml
+  /v3/users:
+    $ref: ./resources/auto/v3-users.yaml

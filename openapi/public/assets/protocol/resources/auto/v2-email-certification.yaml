@@ -69,7 +69,8 @@ post:
   tags:
     - email-certification
   operationId: post_api_v2_email_certification
-  description: 实现：`EmailCertificationController@store`
+  description: |
+    已被 `POST /v3/email-certifications` 取代，保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
   requestBody:
     required: false
     content:
@@ -102,3 +103,4 @@ post:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
       $ref: '../../main.yaml#/components/responses/ValidationError'
+  deprecated: true

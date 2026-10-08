@@ -153,7 +153,7 @@ return [
     'course_view_all' => 'Xem tất cả',
     'course_status_open' => 'Đang ghi danh',
     'course_status_closed' => 'Đã kết thúc',
-    'course_period' => 'Khóa :n',
+    'course_quota' => ':n chỗ',
     'course_members' => ':n học viên',
     'course_signup' => 'Ghi danh',
     'course_no_latest' => 'Chưa có khóa học nào',

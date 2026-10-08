@@ -6,7 +6,6 @@ use App\Http\Api\UserApi;
 use App\Http\Controllers\Controller;
 use App\Models\Attachment;
 use App\Models\Course;
-use App\Models\CourseMember;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -44,17 +43,44 @@ class CourseController extends Controller
      */
     public function index(): View
     {
-        $today = Carbon::today()->toDateString();
+        $now = Carbon::now();
         $base = Course::where('publicity', 30);
 
-        $latest = (clone $base)->orderByDesc('created_at')->take(4)->get();
-        $open = (clone $base)->whereDate('start_at', '>', $today)->orderBy('start_at')->get();
-        $history = (clone $base)->whereDate('start_at', '<=', $today)->orderByDesc('start_at')->take(5)->get();
+        // 可报名：当前处于报名窗口内（报名开始 <= 现在 <= 报名结束）
+        $signUpOpen = fn ($query) => $query
+            ->where('sign_up_start_at', '<=', $now)
+            ->where('sign_up_end_at', '>=', $now);
+
+        // 进行中：当前处于课程时间窗口内（课程开始 <= 现在 <= 课程结束）
+        $inProgress = fn ($query) => $query
+            ->where('start_at', '<=', $now)
+            ->where('end_at', '>=', $now);
+
+        // 最新课程：可报名 且 进行中（已结束的课程无论多新都不出现在这里）
+        $latest = (clone $base)
+            ->where($signUpOpen)
+            ->where($inProgress)
+            ->orderByDesc('created_at')
+            ->take(4)
+            ->get();
+
+        // 开放报名：可报名
+        $open = (clone $base)
+            ->where($signUpOpen)
+            ->orderBy('start_at')
+            ->get();
+
+        // 历史课程：已结束（课程时间已过）
+        $history = (clone $base)
+            ->where('end_at', '<', $now)
+            ->orderByDesc('end_at')
+            ->take(5)
+            ->get();
 
         $stats = [
             'total' => (clone $base)->count(),
-            'open' => (clone $base)->whereDate('start_at', '>', $today)->count(),
-            'closed' => (clone $base)->whereDate('start_at', '<=', $today)->count(),
+            'open' => (clone $base)->where($signUpOpen)->count(),
+            'closed' => (clone $base)->where('end_at', '<', $now)->count(),
         ];
 
         return view('library.course.index', [
@@ -66,16 +92,15 @@ class CourseController extends Controller
     }
 
     /**
-     * 历史课程列表页：分页展示已开课/已结束的公开课程。
+     * 历史课程列表页：分页展示已结束的公开课程。
      */
     public function history(Request $request): View
     {
-        $today = Carbon::today()->toDateString();
         $perPage = 10;
 
         $paginator = Course::where('publicity', 30)
-            ->whereDate('start_at', '<=', $today)
-            ->orderByDesc('start_at')
+            ->where('end_at', '<', Carbon::now())
+            ->orderByDesc('end_at')
             ->paginate($perPage);
 
         $paginator->setCollection($this->present($paginator->getCollection()));
@@ -87,20 +112,13 @@ class CourseController extends Controller
     }
 
     // -------------------------------------------------------------------------
-    // 将 Course 集合加工为视图所需数组：批量解析讲师与报名人数，避免 N+1
+    // 将 Course 集合加工为视图所需数组：批量解析讲师，避免 N+1
     // -------------------------------------------------------------------------
     private function present(Collection $courses): Collection
     {
         if ($courses->isEmpty()) {
             return collect();
         }
-
-        // 报名人数：按 course_id 一次聚合
-        $memberCounts = CourseMember::whereIn('course_id', $courses->pluck('id'))
-            ->where('is_current', true)
-            ->selectRaw('course_id, count(*) as cnt')
-            ->groupBy('course_id')
-            ->pluck('cnt', 'course_id');
 
         // 讲师：按 teacher uuid 一次批量解析
         $teacherUids = $courses->pluck('teacher')->filter()->unique()->values();
@@ -110,7 +128,7 @@ class CourseController extends Controller
 
         $baseUrl = rtrim(config('mint.server.workspace_base_path'), '/');
 
-        return $courses->values()->map(function (Course $course, int $index) use ($memberCounts, $teachers, $baseUrl) {
+        return $courses->values()->map(function (Course $course, int $index) use ($teachers, $baseUrl) {
             $teacher = $teachers->get($course->teacher);
 
             return [
@@ -128,20 +146,22 @@ class CourseController extends Controller
                 'cover_url' => $this->coverUrl($course),
                 'cover_gradient' => $this->coverGradients[$this->colorIndex($course->id) % count($this->coverGradients)],
                 'teacher' => $this->formatTeacher($teacher, $index),
-                'member_count' => (int) ($memberCounts[$course->id] ?? 0),
-                'status' => $this->statusOf($course->start_at),
+                'status' => $this->statusOf($course),
                 'detail_url' => $baseUrl.'/course/'.$course->id,
             ];
         });
     }
 
-    private function statusOf(mixed $startAt): string
+    private function statusOf(Course $course): string
     {
-        if (! $startAt) {
+        if (! $course->sign_up_start_at || ! $course->sign_up_end_at) {
             return 'closed';
         }
 
-        return Carbon::parse($startAt)->startOfDay()->isAfter(Carbon::today()) ? 'open' : 'closed';
+        return Carbon::now()->between(
+            Carbon::parse($course->sign_up_start_at),
+            Carbon::parse($course->sign_up_end_at)
+        ) ? 'open' : 'closed';
     }
 
     private function formatTeacher(?array $teacher, int $index): array

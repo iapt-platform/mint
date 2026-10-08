@@ -11,9 +11,11 @@ const items = {
   "message.result": "{count} 條結果",
   "message.send.reset.email":
     "系統將向您的註冊郵箱傳送郵件。請輸入您的註冊郵箱。並確保該郵箱可以接受郵件。",
-  "message.send.reset.email.successful": "重置密碼的郵件已經發送到您的郵箱",
+  "message.send.reset.email.successful":
+    "如果該郵箱已註冊，重置密碼的郵件已經發出，請在 60 分鐘內點擊郵件中的連結。",
   "message.password.reset.successful": "重置密碼成功",
   "message.password.reset": "請設定新的密碼",
+  "message.reset.link.invalid": "連結無效或已過期，請重新申請重置密碼。",
   "message.get.token.fail": "獲取token失敗",
   "message.confirm-password.validate.fail": "兩次密碼不一致",
   "message.delete.success": "成功刪除{count}條資料",

@@ -25,24 +25,6 @@ export type TRole =
   | "assistant"
   | "unknown";
 
-export interface ISignUpRequest {
-  token: string;
-  username: string;
-  nickname: string;
-  email: string;
-  password: string;
-  lang: string;
-}
-export interface ISignUpVerifyResponse {
-  ok: boolean;
-  message: string | { email: boolean; username: boolean };
-  data: string;
-}
-export interface ISignInResponse {
-  ok: boolean;
-  message: string;
-  data: string;
-}
 export interface IUserRequest {
   id?: string;
   userName?: string;
@@ -128,12 +110,6 @@ export interface IInviteResponse {
   ok: boolean;
   message: string;
   data: IInviteData;
-}
-
-export interface IEmailCertificationResponse {
-  ok: boolean;
-  message: string;
-  data: number;
 }
 
 export type TSoftwareEdition = "basic" | "pro";

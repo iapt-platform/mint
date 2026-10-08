@@ -1,0 +1,7 @@
+# 手写补充：标记已被 v3 取代。
+post:
+  deprecated: true
+  description: |
+    已被 `POST /v3/users` 取代，保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
+
+    已知问题（v2 冻结不修）：invite 校验漏了 return，形同虚设。

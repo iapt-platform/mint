@@ -3,31 +3,37 @@ import { ProForm, ProFormText } from "@ant-design/pro-components";
 import { Alert, message } from "antd";
 import { useNavigate, useSearchParams } from "react-router";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
+import { useState } from "react";
 
 import { useAppDispatch } from "../../hooks";
-import { type IUser, signIn, TO_WORKSPACE } from "../../reducers/current-user";
-import { get, post } from "../../request";
-import { useState } from "react";
-import { set } from "../../reducers/session";
+import { signIn, TO_WORKSPACE } from "../../reducers/current-user";
+import { signInWithPassword } from "../../api/session";
+import { ApiError } from "../../api/error";
 
 interface IFormData {
-  email: string;
+  login: string;
   password: string;
 }
-interface ISignInResponse {
-  ok: boolean;
-  message: string;
-  data: string;
-}
-interface IUserResponse {
-  ok: boolean;
-  message: string;
-  data: IUser;
-}
-interface ISignInRequest {
-  username: string;
-  password: string;
-}
+
+/**
+ * 登录后要回到的地址。
+ *
+ * `?url=` 是 base64 编码的完整地址（见 LoginButton）。只接受**同源**地址：
+ * 原先 `atob()` 后原样赋给 location.href，传 `javascript:` 就是 XSS，
+ * 传别的域名就是开放重定向。
+ */
+const safeReturnUrl = (encoded: string | null): string | null => {
+  if (!encoded) {
+    return null;
+  }
+  try {
+    const url = new URL(atob(encoded), window.location.origin);
+    return url.origin === window.location.origin ? url.href : null;
+  } catch {
+    return null;
+  }
+};
+
 const Widget = () => {
   const intl = useIntl();
   const dispatch = useAppDispatch();
@@ -41,56 +47,44 @@ const Widget = () => {
       <ProForm<IFormData>
         onFinish={async (values: IFormData) => {
           setError(undefined);
-          const user = {
-            username: values.email.trim(),
-            password: values.password.trim(),
-          };
-          const res = await post<ISignInRequest, ISignInResponse>(
-            "/api/v2/sign-in",
-            user
-          );
-          if (!res.ok) {
-            setError("用户名或密码错误");
+          let session: Awaited<ReturnType<typeof signInWithPassword>>;
+          try {
+            // 只去掉账号两端的空格；密码原样提交，空格也是密码的一部分
+            session = await signInWithPassword(
+              values.login.trim(),
+              values.password,
+            );
+          } catch (e) {
+            setError(
+              e instanceof ApiError && e.status === 422
+                ? intl.formatMessage({ id: "auth.sign-in.failed" })
+                : e instanceof Error
+                  ? e.message
+                  : String(e),
+            );
             return;
           }
-          //TODO sign-in 同时返回用户信息，之后直接dispatch 无需二次查询
-          set(res.data);
-          try {
-            const json = await get<IUserResponse>("/api/v2/auth/current");
-            if (!json.ok) {
-              setError("用户名或密码错误");
-              console.error(json.message);
-              return;
-            }
-            console.debug("获取用户信息成功", json.data);
-            dispatch(signIn([json.data, res.data]));
-            let url: string | null = null;
-            searchParams.forEach((value: string, key: string) => {
-              if (key === "url") {
-                url = value;
-              }
-            });
-            if (url) {
-              window.location.href = atob(url);
-            } else {
-              navigate(TO_WORKSPACE);
-            }
-            message.success(intl.formatMessage({ id: "flashes.success" }));
-          } catch (e) {
-            console.error(e);
-            setError("登录失败，请重试");
+
+          dispatch(signIn([session.user, session.token]));
+          message.success(intl.formatMessage({ id: "flashes.success" }));
+
+          const back = safeReturnUrl(searchParams.get("url"));
+          if (back) {
+            window.location.href = back;
+          } else {
+            navigate(TO_WORKSPACE);
           }
         }}
       >
         <ProForm.Group>
           <ProFormText
             width="md"
-            name="email"
+            name="login"
             required
             label={intl.formatMessage({
               id: "forms.fields.email.or.username.label",
             })}
-            rules={[{ required: true, max: 255, min: 4 }]}
+            rules={[{ required: true, max: 256 }]}
           />
         </ProForm.Group>
         <ProForm.Group>
@@ -105,7 +99,7 @@ const Widget = () => {
             label={intl.formatMessage({
               id: "forms.fields.password.label",
             })}
-            rules={[{ required: true, max: 32, min: 4 }]}
+            rules={[{ required: true, max: 64 }]}
           />
         </ProForm.Group>
       </ProForm>

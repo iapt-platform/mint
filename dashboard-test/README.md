@@ -39,6 +39,7 @@ cd ../dashboard-v6 && npm run dev            # http://127.0.0.1:4000/pcd-v2026/
 ```bash
 npm test                    # 跑全部
 npm run test:channel        # 只跑 channel 路由
+npm run test:users          # 只跑匿名账号页面（登录 / 注册 / 找回密码 / 重置密码）
 npm run test:ui             # UI Mode，可视化单步调试
 npm run test:headed         # 显示浏览器窗口
 npm run report              # 打开上次的 HTML 报告
@@ -73,7 +74,8 @@ dashboard-test/
 ├── src/
 │   ├── tests/
 │   │   ├── auth.setup.ts      登录一次，存 storageState
-│   │   └── channel.spec.ts    /workspace/channel 及子路由
+│   │   ├── channel.spec.ts    /workspace/channel 及子路由
+│   │   └── users.spec.ts      /anonymous 下的登录、注册、邀请注册、找回密码、重置密码
 │   └── lib/
 │       └── collect.ts         console / pageerror / HTTP 错误采集与噪音过滤
 ├── documents/
@@ -114,7 +116,16 @@ dashboard-test/
 - BUG-1 Webhooks 页签不应跳到已废弃的 `/studio/...`
 - BUG-4 不存在的频道不应出现 `Unexpected Application Error`
 
-所以 `npm test` 现在是 **4 通过 / 2 失败**，两个失败即上述待修项。
+所以 `npm test` 现在是 **11 通过 / 2 失败**（channel 4/2、users 7/0），两个失败即上述待修项。
+
+修复后的缺陷断言保留作回归保护：`src/tests/users.spec.ts` 的「回归」组里有
+BUG-5（中文界面下 v3 错误文案应为中文，2026-10-08 修复）。
+
+### 限流
+
+登录（同账号 + IP 每分钟 5 次）、找回密码 / 注册验证码（同 IP 每分钟 10 次）有限流。
+setup 与 `users.spec.ts` 都用 `E2E_USER` 登录，api-test 也用同一个账号；**一分钟内连跑
+两三遍就会撞 429**（页面上出现「Too Many Attempts.」），隔一分钟再跑。
 
 ### 破坏性操作
 
@@ -125,6 +136,12 @@ dashboard-test/
 - 涉及第三方的操作（转让、分享授权）只验证弹窗渲染，不提交
 - `E2E_DESTRUCTIVE=0` 可整体跳过
 
+**会发邮件、或建出删不掉的数据的请求，不打真实后端，用 `page.route` 拦截。**
+开发机的邮件是真实 SMTP；注册建出的账号没有删除接口。拦截后验证前端流程、错误展示
+和**前端实际发出的请求体**（`route.request().postDataJSON()`），后端行为交给 api-v13
+的 Pest 测试。没有副作用的请求（无效邀请、错误验证码、未注册邮箱申请重置）照常走真实后端。
+`users.spec.ts` 是范例。
+
 ### 测试日志
 
 每次正式测试在 `documents/testlog/` 下写一个
@@ -134,4 +151,7 @@ dashboard-test/
 （每条一个 `- [ ]` 代办，含日志片段、截图、定位到文件行号的原因、修复方向）→
 三、未覆盖 / 待确认。
 
-已有记录：[`documents/testlog/channel_20260907_034904.md`](./documents/testlog/channel_20260907_034904.md)
+已有记录：
+
+- [`documents/testlog/channel_20260907_034904.md`](./documents/testlog/channel_20260907_034904.md)
+- [`documents/testlog/users_20261008_072502.md`](./documents/testlog/users_20261008_072502.md)

@@ -154,7 +154,7 @@ return [
     'course_view_all' => '查看全部',
     'course_status_open' => '報名中',
     'course_status_closed' => '已結束',
-    'course_period' => '第 :n 期',
+    'course_quota' => '招生 :n 人',
     'course_members' => ':n 人',
     'course_signup' => '報名',
     'course_no_latest' => '暫無課程',

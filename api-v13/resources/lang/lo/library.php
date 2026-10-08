@@ -153,7 +153,7 @@ return [
     'course_view_all' => 'ເບິ່ງທັງໝົດ',
     'course_status_open' => 'ຮັບສະໝັກ',
     'course_status_closed' => 'ສິ້ນສຸດແລ້ວ',
-    'course_period' => 'ຮຸ່ນທີ :n',
+    'course_quota' => ':n ບ່ອນ',
     'course_members' => 'ຜູ້ຮຽນ :n ຄົນ',
     'course_signup' => 'ສະໝັກຮຽນ',
     'course_no_latest' => 'ຍັງບໍ່ມີຫຼັກສູດ',

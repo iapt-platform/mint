@@ -1,0 +1,46 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-invites-invite.yaml
+get:
+  summary: 查看一条可用的注册邀请
+  tags:
+    - invites
+  operationId: get_api_v3_invites_invite_
+  description: |-
+    邀请注册页用它显示邮箱。不存在或已被使用都返回 404。
+
+    实现：`V3\InviteController@show`
+  parameters:
+    -
+      name: invite
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '邀请邮件链接里的 uuid'
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  email:
+                    type: string
+                  status:
+                    type: string
+                  created_at:
+                    type: string
+                    nullable: true
+    404:
+      description: 邀请不存在或已被使用
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

@@ -1,0 +1,8 @@
+# 手写补充：标记已被 v3 取代。
+get:
+  deprecated: true
+  description: |
+    v3 没有对应端点：验证码改在服务端比对（`POST /v3/invites`），不再回传给前端。
+    保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
+
+    已知问题（v2 冻结不修）：直接返回验证码，邮箱验证可被绕过。

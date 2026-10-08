@@ -1,0 +1,49 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-email-certifications.yaml
+post:
+  summary: 发送注册验证码
+  tags:
+    - email-certifications
+  operationId: post_api_v3_email_certifications
+  description: |-
+    向邮箱发一个 6 位验证码，30 分钟内有效；重复申请会作废上一个。
+    邮箱已注册时返回 422。按 IP 与邮箱限流，超出返回 429。
+
+    实现：`V3\EmailCertificationController@store`
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            email:
+              type: string
+              description: 待注册的邮箱
+              example: someone@example.com
+            lang:
+              type: string
+              description: '邮件语言，没有对应模板的回落 en'
+              enum:
+                - en
+                - en-US
+                - zh-Hans
+                - zh-Hant
+          required:
+            - email
+  responses:
+    204:
+      description: 已发送，无响应体
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'
+    429:
+      description: 请求过于频繁
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+    503:
+      description: 邮件发送失败
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'

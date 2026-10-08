@@ -14,6 +14,33 @@ const items = {
   "auth.type.group": "group",
   "auth.sign-up.email-certification": "E-Mail certification",
   "auth.sign-up.info": "完善个人信息",
+  "auth.sign-up.basic.description": "Sign up for wikipali Basic",
+  "auth.sign-up.guest.notice":
+    "Reading, the dictionary and search work without an account.",
+  "auth.sign-up.feature.reading": "Read the texts",
+  "auth.sign-up.feature.dict": "Dictionary",
+  "auth.sign-up.feature.search": "Search the texts",
+  "auth.sign-up.feature.wbw": "Word-by-word analysis",
+  "auth.sign-up.feature.translate": "Translate",
+  "auth.sign-up.feature.join-course": "Join courses",
+  "auth.sign-up.feature.publish-translation":
+    "Publish translations and word-by-word analysis",
+  "auth.sign-up.feature.publish-term": "Publish user dictionaries and terms",
+  "auth.sign-up.feature.create-course": "Create courses",
+  "auth.sign-up.feature.create-group": "Create groups",
+  "auth.sign-up.understand": "I understand the limits of the Basic edition",
+  "auth.sign-up.code.placeholder": "Enter the 6-digit code from the email",
+  "auth.sign-up.code.get": "Get code",
+  "auth.sign-up.code.countdown": "Resend in {count}s",
+  "auth.sign-up.code.sent":
+    "Code sent. Check your inbox; it is valid for 30 minutes.",
+  "auth.sign-up.username.pattern": "Letters, digits and underscores only",
+  "auth.sign-up.lang.label": "Main translation language",
+  "auth.sign-up.success": "Account created",
+  "auth.sign-up.success.hint": "Sign in with your username or email.",
+  "auth.sign-up.invite.invalid":
+    "This invitation is invalid or has already been used",
+  "auth.sign-in.failed": "Incorrect username or password",
 };
 
 export default items;

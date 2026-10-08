@@ -4,7 +4,11 @@ get:
   tags:
     - email-certification
   operationId: get_api_v2_email_certification_email_certification_
-  description: 实现：`EmailCertificationController@show`
+  description: |
+    v3 没有对应端点：验证码改在服务端比对（`POST /v3/invites`），不再回传给前端。
+    保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
+
+    已知问题（v2 冻结不修）：直接返回验证码，邮箱验证可被绕过。
   parameters:
     -
       name: email_certification
@@ -30,6 +34,7 @@ get:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
       $ref: '../../main.yaml#/components/responses/ValidationError'
+  deprecated: true
 put:
   summary: '更新 email-certification/{email_certification}'
   tags:

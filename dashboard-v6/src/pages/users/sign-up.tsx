@@ -1,12 +1,10 @@
 import { Card } from "antd";
 import { useIntl } from "react-intl";
-import { useParams } from "react-router";
 import SharedLinks from "../../components/users/NonSignInSharedLinks";
-import SignUp from "../../components/users/SignUp";
+import SelfSignUp from "../../components/users/SelfSignUp";
 
 const Widget = () => {
   const intl = useIntl();
-  const { token } = useParams(); //url 参数
 
   return (
     <>
@@ -16,7 +14,7 @@ const Widget = () => {
           id: "buttons.sign-up",
         })}
       >
-        <SignUp token={token} />
+        <SelfSignUp />
         <SharedLinks />
       </Card>
     </>

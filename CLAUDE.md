@@ -49,9 +49,10 @@ wikipali —— 开放的、基于语料库的巴利语学习与翻译平台。�
   测试连独立的 `mint_test` 库（不要让 `RefreshDatabase` 打到开发库）。
 - `storage/resources` 是 git submodule（clove）。
 - 面向用户的文案一律走 `__()`。翻译文件在 **`resources/lang/{locale}/`**（不是
-  `lang/`），共 8 个语言。**不要新建语言文件，合并进已有的 11 个**
-  （`site`/`labels`/`buttons`/`home`/`library`/`auth`/… 没有 `messages.php`）；
-  服务状态类文案放 `site.php`。至少补 `en` 与 `zh-Hans`，其余自动回退 en。
+  `lang/`），共 8 个语言。**不要新建语言文件，合并进已有的 12 个**
+  （`site`/`messages`/`labels`/`buttons`/`home`/`library`/`auth`/…）；
+  服务状态类文案（停机维护、404 等）放 `site.php`，操作结果提示（如「邮件发送失败」）
+  放 `messages.php`。至少补 `en` 与 `zh-Hans`，其余自动回退 en。
 
 ## 前端 dashboard-v6
 
@@ -241,6 +242,18 @@ v4 有两处引用 v3，**均不构成生产依赖**：
 
 v6 全量稳定 → 下线 v4 → 删掉 C 类与 B 类的 v2 残留 → v2 前缀整体下线。
 
+### 认证迁移待办（2026-10 定）
+
+v2 认证端点**一律不动**（v4 部署已冻结，修了也上不去），漏洞随 v4 下线消失。
+找回密码、注册、登录在 v3 新建端点（见「v2 → v3 对照表」），dashboard-v6 与
+wikipali-mobile 都已切到 v3，**v2 认证端点只剩 dashboard-v4 在用**。还剩一件：
+
+- **TODO v4 下线后：md5 → bcrypt，删 v2 auth 全家**。v2 登录在 SQL 里比对
+  `md5(password)`，v4 在线时密码只能存 md5；v3 写密码统一走
+  `App\Services\V3\PasswordHasher`，届时只改那一处（登录时校验 md5 并就地
+  rehash，或加新列——加列由用户决定）。随后删 `sign-in`、`sign-up`、
+  `auth/*`、`email-certification`、`invite` 读取等 v2 路由与控制器。
+
 ## v3 重构
 
 正在把资源从 `/api/v2` 逐个迁到 `/api/v3`。原则是 `声明 → 生成 → 契约测试`：
@@ -314,6 +327,9 @@ Resource / FormRequest / 测试同理；URL 只换版本前缀
 | `like` / `LikeController` | `reactions` / `V3\ReactionController` 等 | `likes` 表早已不只存点赞：`type` 的实际取值有 `like`、`dislike`、`favorite`、`watch`、`bookmark`、`download` 六种 |
 | （无对应 v2 端点） | `tipitaka-reading/{channel}` / `V3\TipitakaReadingController` | 新能力：单 channel 的只读渲染 + 游标式下载。曾叫 `tipitaka-read-para` / `tipitaka-read-chapter`（两条），也短暂叫过 `channels/{c}/books/{b}/paragraphs\|chapters`，2026-09-24 并成一条 |
 | `related-paragraph` / `RelatedParagraphController` | `tipitaka-related-paragraphs` (+`/aggregate`) / `V3\TipitakaRelatedParagraphController` + `V3\TipitakaRelatedParagraphAggregateController` | 字段改名 `book_title_pali`→`title`、`cs6_para`→`cs_para`；响应 `{ok,…}`→原生 Resource；消除逐行 N+1（批量 whereIn）；新增 `book_name`/`cs_para` 过滤器与独立 `/aggregate` 聚合端点（`group_by=book_id`→book_name 列表 / `group_by=book_name`→cs_para 列表，分页） |
+| `auth/forgot-password` + `auth/reset-password` / `ForgotPasswordController` + `ResetPasswordController` | `password-resets` (+`/{token}`) / `V3\PasswordResetController` | 三条并成一个资源：POST 发信、GET 看账号、PATCH 设密码（204）。库里只存 token 的 sha256、60 分钟过期、邮箱未注册也 204、不收 `dashboard` 参数（链接用 `mint.server.dashboard_v6_base_path` 拼到 v6 的 `/anonymous/reset-password/{token}`）、限流 |
+| `email-certification` + `invite/{id}`（读）+ `sign-up` / `EmailCertificationController` + `InviteController@show` + `SignUpController@store` | `email-certifications` + `invites` (+`/{invite}`) + `users` / `V3\EmailCertificationController` + `V3\InviteController` + `V3\UserController` | 注册。验证码改在服务端比对：v2 的 `GET email-certification/{id}`（把码交给前端）在 v3 没有对应端点，换成 `POST invites {email, code}` 签发 invite；自助与邀请注册都凭 invite 走 `POST users`。验证码 6 位、30 分钟、试错 5 次作废；验证通过前不写 invites 表。studio 发邀请（`POST /v2/invite`）不在此列，将来迁成 `studios/{studio}/invites` |
+| `sign-in` + `auth/current` / `AuthController@signIn` + `@getUserInfoByToken` | `sessions` + `me` / `V3\SessionController` + `V3\MeController` | 登录一次返回 `{token, user}`，不再二次查询；`login` 字段收用户名或邮箱（邮箱不区分大小写），失败统一 422 `errors.login`；按账号 + IP 限流。`me` 的字段沿用 v2 的驼峰用户摘要（`UserService::profile()`），`roles` 恒为数组，另加 `email`，不再回显 token。token 与 v2 完全相同、两边互认 |
 
 **注意**：`tipitaka-reading` **不是** v2 `paragraph-content` / `chapter-content` 的替代品。
 那两个 v2 端点支持多 channel（`channels=a,b,c`）与 edit 模式、返回 sentenceIds 供编辑器用；
