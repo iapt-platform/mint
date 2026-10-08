@@ -23,4 +23,8 @@ return [
     // 搜索关键词 + 一条真实 OpenSearch 文档 id（search/{id} 的 200 用例）
     'search_q'       => 'dukkha',
     'search_doc_id'  => 'term_f8afdcaa-ad68-4795-b3d8-d5f12bdb3a5f',
+
+    // 一个已注册账号的邮箱（email-certifications 的「已注册」用例；只校验、不发信）。
+    // 留空则该用例 SKIP。
+    'registered_email' => getenv('API_TEST_REGISTERED_EMAIL') ?: null,
 ];

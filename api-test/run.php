@@ -12,7 +12,7 @@
  *   php run.php --server=https://foo/api
  *   php run.php --filter=search
  *   php run.php --list                   # 列出可用服务器
- *   php run.php --username=alice --password=secret   # 调 /v2/sign-in 换 token
+ *   php run.php --username=alice --password=secret   # 调 /v3/sessions 换 token
  *
  * 退出码：0 全绿；1 有失败/错误；2 参数或加载错误。
  */
@@ -71,12 +71,12 @@ $GLOBALS['fixtures'] = require __DIR__ . '/fixtures.php';
 
 require __DIR__ . '/src/bootstrap.php';
 
-// 没给 token 但给了账号密码 → 调 /v2/sign-in 现换一个
+// 没给 token 但给了账号密码 → 调 /v3/sessions 现换一个
 if (empty($config['token']) && $config['username'] && $config['password']) {
     try {
         $config['token'] = login($config['username'], $config['password']);
         $GLOBALS['config']['token'] = $config['token'];
-        echo "已用 {$config['username']} 登录（/v2/sign-in）换取 token\n\n";
+        echo "已用 {$config['username']} 登录（/v3/sessions）换取 token\n\n";
     } catch (Fail $e) {
         echo "登录失败：{$e->getMessage()}（需登录的用例将 FAIL）\n\n";
     }

@@ -66,13 +66,14 @@ if ($v3Paths === []) {
 }
 
 // 2) 修正鉴权语义：源 spec 用全局 security 把全部路径标成 bearerAuth，
-//    但 v3 实际只有 /v3/me/* 挂 auth.v3。这里逐 operation 写准，并清掉全局 security。
+//    但 v3 实际只有 /v3/me 与 /v3/me/* 挂 auth.v3。这里逐 operation 写准，并清掉全局 security。
+//    注意 /v3/me 本身（不带斜杠）也要算进去，否则生成的客户端不带 token。
 foreach ($v3Paths as $path => &$item) {
     foreach ($item as $method => &$op) {
         if (!is_array($op) || strtolower($method) === 'parameters') {
             continue;
         }
-        $op['security'] = str_starts_with((string) $path, '/v3/me/')
+        $op['security'] = ($path === '/v3/me' || str_starts_with((string) $path, '/v3/me/'))
             ? [['bearerAuth' => []]]
             : [];
     }

@@ -135,17 +135,18 @@ function normalize(mixed $content): mixed
 }
 
 /**
- * 调 v2 登录接口换 bearer token。
- * `POST /v2/sign-in`（username 可以是用户名或邮箱），成功返回 {ok,data:JWT}，
- * 失败也是 JSON（{ok:false,message}）且 HTTP 可能 200 或 400，所以只看 ok 字段。
+ * 调 v3 登录接口换 bearer token。
+ * `POST /v3/sessions {login, password}`（login 可以是用户名或邮箱），成功 201
+ * `{data:{token, user}}`；账号或密码不对 422，尝试过频 429（同账号 + IP 每分钟 5 次）。
  */
 function login(string $username, string $password): string
 {
-    $res = raw('POST', '/v2/sign-in', null, ['username' => $username, 'password' => $password]);
-    if (($res['body']['ok'] ?? false) === true && is_string($res['body']['data'] ?? null) && $res['body']['data'] !== '') {
-        return $res['body']['data'];
+    $res = raw('POST', '/v3/sessions', null, ['login' => $username, 'password' => $password]);
+    $token = $res['body']['data']['token'] ?? null;
+    if ($res['status'] === 201 && is_string($token) && $token !== '') {
+        return $token;
     }
-    fail(sprintf('登录失败（HTTP %d）：%s', $res['status'], $res['body']['message'] ?? '未知错误'));
+    fail(sprintf('登录失败（HTTP %d）：%s', $res['status'], $res['body']['detail'] ?? $res['body']['title'] ?? '未知错误'));
 }
 
 /** 取当前 token；没有就 FAIL（需登录用例不跳过，缺 token 就是失败）。 */
@@ -153,7 +154,7 @@ function required_token(): string
 {
     $token = config()['token'];
     if (! $token) {
-        fail('缺少 token：请用 --token= 或 --username/--password（自动调 /v2/sign-in）');
+        fail('缺少 token：请用 --token= 或 --username/--password（自动调 /v3/sessions）');
     }
 
     return $token;
@@ -196,4 +197,14 @@ function assert_problem(array $res, string $what): void
         fail(sprintf('%s：不是 Problem Details（缺 type/title/status），body=%s', $what, substr((string) json_encode($b, JSON_UNESCAPED_UNICODE), 0, 400)));
     }
     assert_eq($res['status'], (int) $b['status'], $what . '：Problem.status 与 HTTP 状态码不一致');
+}
+
+/** 断言 422 Problem Details 的 `errors` 里有指定字段（FormRequest / ValidationException 的字段级错误）。 */
+function assert_field_error(string $field, array $res, string $what): void
+{
+    assert_status(422, $res, $what);
+    assert_problem($res, $what);
+    if (! isset($res['body']['errors'][$field])) {
+        fail(sprintf('%s：errors 里缺少字段 `%s`，body=%s', $what, $field, substr((string) json_encode($res['body'], JSON_UNESCAPED_UNICODE), 0, 400)));
+    }
 }
