@@ -43,10 +43,8 @@
             @endif
 
             @if($course['number'] > 0)
-            <span class="course-row__period">{{ __('library.course_period', ['n' => $course['number']]) }}</span>
+            <span class="course-row__quota">{{ __('library.course_quota', ['n' => $course['number']]) }}</span>
             @endif
-
-            <span class="course-row__members">{{ __('library.course_members', ['n' => $course['member_count']]) }}</span>
 
             @if($course['start_date'])
             <span class="course-row__date">{{ $course['start_date'] }}</span>

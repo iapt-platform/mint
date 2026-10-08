@@ -340,8 +340,7 @@
     font-variant-numeric: tabular-nums;
 }
 
-.course-row__period,
-.course-row__members,
+.course-row__quota,
 .course-row__date {
     white-space: nowrap;
 }

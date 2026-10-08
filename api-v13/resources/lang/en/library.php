@@ -154,7 +154,7 @@ return [
     'course_view_all' => 'View All',
     'course_status_open' => 'Enrolling',
     'course_status_closed' => 'Ended',
-    'course_period' => 'Cohort :n',
+    'course_quota' => 'Capacity :n',
     'course_members' => ':n learners',
     'course_signup' => 'Enroll',
     'course_no_latest' => 'No courses yet',
