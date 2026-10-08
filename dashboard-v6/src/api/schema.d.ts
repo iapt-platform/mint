@@ -2755,7 +2755,8 @@ export interface paths {
         put?: never;
         /**
          * 新建 email-certification
-         * @description 实现：`EmailCertificationController@store`
+         * @deprecated
+         * @description 已被 `POST /v3/email-certifications` 取代，保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         post: operations["post_api_v2_email_certification"];
         delete?: never;
@@ -2773,7 +2774,11 @@ export interface paths {
         };
         /**
          * 获取单个 email-certification/{email_certification}
-         * @description 实现：`EmailCertificationController@show`
+         * @deprecated
+         * @description v3 没有对应端点：验证码改在服务端比对（`POST /v3/invites`），不再回传给前端。
+         *     保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
+         *
+         *     已知问题（v2 冻结不修）：直接返回验证码，邮箱验证可被绕过。
          */
         get: operations["get_api_v2_email_certification_email_certification_"];
         /**
@@ -3317,7 +3322,8 @@ export interface paths {
         };
         /**
          * 获取单个 invite/{invite}
-         * @description 实现：`InviteController@show`
+         * @deprecated
+         * @description 已被 `GET /v3/invites/{invite}` 取代，保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         get: operations["get_api_v2_invite_invite_"];
         /**
@@ -5926,7 +5932,10 @@ export interface paths {
         put?: never;
         /**
          * 新建 sign-up
-         * @description 实现：`SignUpController@store`
+         * @deprecated
+         * @description 已被 `POST /v3/users` 取代，保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
+         *
+         *     已知问题（v2 冻结不修）：invite 校验漏了 return，形同虚设。
          */
         post: operations["post_api_v2_sign_up"];
         delete?: never;
@@ -7696,6 +7705,29 @@ export interface paths {
         patch: operations["patch_api_v2_webhook_webhook_"];
         trace?: never;
     };
+    "/v3/email-certifications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 发送注册验证码
+         * @description 向邮箱发一个 6 位验证码，30 分钟内有效；重复申请会作废上一个。
+         *     邮箱已注册时返回 422。按 IP 与邮箱限流，超出返回 429。
+         *
+         *     实现：`V3\EmailCertificationController@store`
+         */
+        post: operations["post_api_v3_email_certifications"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v3/heartbeat": {
         parameters: {
             query?: never;
@@ -7718,6 +7750,51 @@ export interface paths {
          *     实现：`V3\HeartbeatController@show`
          */
         get: operations["get_api_v3_heartbeat"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/invites": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 用验证码换注册邀请
+         * @description 验证码正确则返回该邮箱的 invite（已有则复用，状态重置为未使用），验证码随即作废。
+         *     验证码错误、过期或试错 5 次后返回 422（errors.code）。
+         *
+         *     实现：`V3\InviteController@store`
+         */
+        post: operations["post_api_v3_invites"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/invites/{invite}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 查看一条可用的注册邀请
+         * @description 邀请注册页用它显示邮箱。不存在或已被使用都返回 404。
+         *
+         *     实现：`V3\InviteController@show`
+         */
+        get: operations["get_api_v3_invites_invite_"];
         put?: never;
         post?: never;
         delete?: never;
@@ -8091,6 +8168,30 @@ export interface paths {
         get: operations["get_api_v3_upgrade"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 注册账号
+         * @description 凭 invite（邀请邮件里的，或 `POST /v3/invites` 换来的）建账号，同时建一个
+         *     私有的 draft 译文 channel，invite 标为已用。邮箱取自 invite。
+         *     注册不等于登录：返回 201 与新账号，之后用用户名/邮箱 + 密码走登录。
+         *
+         *     实现：`V3\UserController@store`
+         */
+        post: operations["post_api_v3_users"];
         delete?: never;
         options?: never;
         head?: never;
@@ -34083,6 +34184,58 @@ export interface operations {
             422: components["responses"]["ValidationError"];
         };
     };
+    post_api_v3_email_certifications: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /**
+                     * @description 待注册的邮箱
+                     * @example someone@example.com
+                     */
+                    email: string;
+                    /**
+                     * @description 邮件语言，没有对应模板的回落 en
+                     * @enum {string}
+                     */
+                    lang?: "en" | "en-US" | "zh-Hans" | "zh-Hant";
+                };
+            };
+        };
+        responses: {
+            /** @description 已发送，无响应体 */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            422: components["responses"]["ProblemValidation"];
+            /** @description 请求过于频繁 */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description 邮件发送失败 */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
     get_api_v3_heartbeat: {
         parameters: {
             query?: never;
@@ -34115,6 +34268,111 @@ export interface operations {
                     "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
             };
+        };
+    };
+    post_api_v3_invites: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description 收到验证码的邮箱 */
+                    email: string;
+                    /**
+                     * @description 邮件里的 6 位验证码
+                     * @example 123456
+                     */
+                    code: string;
+                };
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            email?: string;
+                            status?: string;
+                            created_at?: string | null;
+                        };
+                    };
+                };
+            };
+            /** @description 首次为该邮箱签发 invite。响应体与 200 同形；复用已有 invite 时是 200 */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            email?: string;
+                            status?: string;
+                            created_at?: string | null;
+                        };
+                    };
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+            /** @description 请求过于频繁 */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    get_api_v3_invites_invite_: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 邀请邮件链接里的 uuid */
+                invite: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            email?: string;
+                            status?: string;
+                            created_at?: string | null;
+                        };
+                    };
+                };
+            };
+            /** @description 邀请不存在或已被使用 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
         };
     };
     get_api_v3_me_reactions: {
@@ -34986,6 +35244,81 @@ export interface operations {
                         data?: Record<string, never>[];
                         meta?: components["schemas"]["PaginationMeta"];
                     };
+                };
+            };
+        };
+    };
+    post_api_v3_users: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description 注册邀请的 uuid */
+                    invite: string;
+                    /** @description 用户名，6–32 位字母、数字、下划线 */
+                    username: string;
+                    /** @description 昵称，不传或空白时用 username */
+                    nickname?: string;
+                    /** @description 密码，6–32 位 */
+                    password: string;
+                    /** @description 再输一次密码 */
+                    password_confirmation: string;
+                    /**
+                     * @description 常用译文语言，用作 draft channel 的语言
+                     * @example zh-Hans
+                     */
+                    lang: string;
+                };
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            username?: string;
+                            nickname?: string;
+                            email?: string;
+                            created_at?: string | null;
+                        };
+                    };
+                };
+            };
+            /** @description 已创建 */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            username?: string;
+                            nickname?: string;
+                            email?: string;
+                            created_at?: string | null;
+                        };
+                    };
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+            /** @description 请求过于频繁 */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
             };
         };

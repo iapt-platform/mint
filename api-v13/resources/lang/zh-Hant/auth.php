@@ -16,5 +16,6 @@ return [
     'failed' => '用戶名或密碼錯誤。',
     'password' => '密碼不正確。',
     'throttle' => '登入嘗試次數過多，請在 :seconds 秒後重試。',
+    'email_certification_subject' => 'wikipali 註冊驗證碼',
 
 ];

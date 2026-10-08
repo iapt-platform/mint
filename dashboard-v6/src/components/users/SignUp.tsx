@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useIntl } from "react-intl";
 import {
   ProForm,
@@ -6,68 +6,58 @@ import {
   type ProFormInstance,
   ProFormText,
 } from "@ant-design/pro-components";
-import { Button, message, Result } from "antd";
+import { Button, Result, Skeleton } from "antd";
 import { useNavigate } from "react-router";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 
-import { get } from "../../request";
-
 import LangSelect from "../general/LangSelect";
-import type { IInviteResponse } from "../../api/Auth";
-import { onSignIn } from "./utils";
+import {
+  type AccountInput,
+  createAccount,
+  fetchInvite,
+  type Invite,
+} from "../../api/sign-up";
 import { TO_SIGN_IN } from "../../reducers/current-user";
+import { applyFieldErrors } from "./form-errors";
 
-export interface IAccountForm {
-  email: string;
-  username: string;
-  nickname: string;
-  password: string;
-  password2: string;
-  lang: string;
+/** 账号信息表单的字段；invite 由调用方补上 */
+export type AccountFormValues = Omit<AccountInput, "invite">;
+
+interface IAccountFields {
+  /** 只读展示的邮箱（来自 invite，不可改） */
+  email?: string;
 }
-interface IAccountInfo {
-  email?: boolean;
-}
-export const AccountInfo = ({ email = true }: IAccountInfo) => {
+/**
+ * 账号信息字段：自助注册与邀请注册共用。规则与后端 StoreUserRequest 一致。
+ */
+export const AccountFields = ({ email }: IAccountFields) => {
   const intl = useIntl();
-  const [nickname, setNickname] = useState<string>();
+  const eyeIcon = (visible: boolean) =>
+    visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />;
 
   return (
     <>
       {email ? (
-        <ProForm.Group>
-          <ProFormText
-            width="md"
-            name="email"
-            required
-            label={intl.formatMessage({
-              id: "forms.fields.email.label",
-            })}
-            rules={[{ required: true, max: 255, min: 4 }]}
-            disabled
-          />
-        </ProForm.Group>
-      ) : (
-        <></>
-      )}
+        // 不给 name：只展示，不进表单值，也就不会跟着提交
+        <ProForm.Item
+          label={intl.formatMessage({ id: "forms.fields.email.label" })}
+        >
+          {email}
+        </ProForm.Item>
+      ) : undefined}
       <ProForm.Group>
         <ProFormText
           width="md"
           name="username"
           required
-          fieldProps={{
-            onChange: (event) => {
-              setNickname(event.target.value);
-            },
-          }}
-          label={intl.formatMessage({
-            id: "forms.fields.username.label",
-          })}
+          label={intl.formatMessage({ id: "forms.fields.username.label" })}
           rules={[
-            { required: true, max: 32, min: 6 },
+            { required: true, min: 6, max: 32 },
             {
-              pattern: new RegExp("^[0-9a-zA-Z_]{1,}", "g"),
-              message: "只允许数字，字母，下划线",
+              pattern: /^[A-Za-z0-9_]+$/,
+              message: intl.formatMessage({
+                id: "auth.sign-up.username.pattern",
+              }),
             },
           ]}
         />
@@ -76,61 +66,57 @@ export const AccountInfo = ({ email = true }: IAccountInfo) => {
         <ProFormText.Password
           width="md"
           name="password"
-          fieldProps={{
-            type: "password",
-
-            iconRender: (visible) =>
-              visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />,
-          }}
+          fieldProps={{ iconRender: eyeIcon }}
           required
-          label={intl.formatMessage({
-            id: "forms.fields.password.label",
-          })}
-          rules={[{ required: true, max: 32, min: 6 }]}
+          label={intl.formatMessage({ id: "forms.fields.password.label" })}
+          rules={[{ required: true, min: 6, max: 32 }]}
         />
       </ProForm.Group>
       <ProForm.Group>
         <ProFormText.Password
           width="md"
-          name="password2"
-          fieldProps={{
-            type: "password",
-            iconRender: (visible) =>
-              visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />,
-          }}
+          name="password_confirmation"
+          dependencies={["password"]}
+          fieldProps={{ iconRender: eyeIcon }}
           required
           label={intl.formatMessage({
             id: "forms.fields.confirm-password.label",
           })}
-          rules={[{ required: true, max: 32, min: 6 }]}
+          rules={[
+            { required: true },
+            ({ getFieldValue }) => ({
+              validator: (_, value) =>
+                !value || value === getFieldValue("password")
+                  ? Promise.resolve()
+                  : Promise.reject(
+                      new Error(
+                        intl.formatMessage({
+                          id: "message.confirm-password.validate.fail",
+                        }),
+                      ),
+                    ),
+            }),
+          ]}
         />
       </ProForm.Group>
       <ProForm.Group>
         <ProFormDependency name={["username"]}>
-          {({ username }) => {
-            return (
-              <ProFormText
-                width="md"
-                fieldProps={{
-                  placeholder: username,
-                  value: nickname ? nickname : username,
-                  onChange: (event) => {
-                    setNickname(event.target.value);
-                  },
-                }}
-                name="nickname"
-                required
-                label={intl.formatMessage({
-                  id: "forms.fields.nickname.label",
-                })}
-                rules={[{ required: false, max: 32, min: 4 }]}
-              />
-            );
-          }}
+          {({ username }) => (
+            <ProFormText
+              width="md"
+              name="nickname"
+              // 不填就用用户名，后端同样处理
+              fieldProps={{ placeholder: username }}
+              label={intl.formatMessage({ id: "forms.fields.nickname.label" })}
+              rules={[{ max: 32 }]}
+            />
+          )}
         </ProFormDependency>
       </ProForm.Group>
       <ProForm.Group>
-        <LangSelect label="常用的译文语言" />
+        <LangSelect
+          label={intl.formatMessage({ id: "auth.sign-up.lang.label" })}
+        />
       </ProForm.Group>
     </>
   );
@@ -142,61 +128,82 @@ export const SignUpSuccess = () => {
   return (
     <Result
       status="success"
-      title="注册成功"
-      subTitle={
+      title={intl.formatMessage({ id: "auth.sign-up.success" })}
+      subTitle={intl.formatMessage({ id: "auth.sign-up.success.hint" })}
+      extra={
         <Button type="primary" onClick={() => navigate(TO_SIGN_IN)}>
-          {intl.formatMessage({
-            id: "buttons.sign-in",
-          })}
+          {intl.formatMessage({ id: "buttons.sign-in" })}
         </Button>
       }
     />
   );
 };
 
-interface IWidget {
+type TInviteState =
+  | { kind: "loading" }
+  | { kind: "invalid" }
+  | { kind: "ready"; invite: Invite }
+  | { kind: "done" };
+
+interface IInviteSignUp {
+  /** 邀请邮件链接里的 invite id */
   token?: string;
 }
-const SignUpWidget = ({ token }: IWidget) => {
-  const [success, setSuccess] = useState(false);
+/**
+ * 邀请注册：凭邮件链接里的 invite 直接填账号信息，邮箱已由邀请确定。
+ */
+const InviteSignUp = ({ token }: IInviteSignUp) => {
+  const intl = useIntl();
   const formRef = useRef<ProFormInstance | undefined>(undefined);
-  return success ? (
-    <SignUpSuccess />
-  ) : (
-    <ProForm<IAccountForm>
+  const [state, setState] = useState<TInviteState>(
+    token ? { kind: "loading" } : { kind: "invalid" },
+  );
+
+  useEffect(() => {
+    if (!token) {
+      return;
+    }
+    let active = true;
+    fetchInvite(token)
+      .then((invite) => active && setState({ kind: "ready", invite }))
+      .catch(() => active && setState({ kind: "invalid" }));
+    return () => {
+      active = false;
+    };
+  }, [token]);
+
+  if (state.kind === "loading") {
+    return <Skeleton active />;
+  }
+  if (state.kind === "invalid") {
+    return (
+      <Result
+        status="warning"
+        title={intl.formatMessage({ id: "auth.sign-up.invite.invalid" })}
+      />
+    );
+  }
+  if (state.kind === "done") {
+    return <SignUpSuccess />;
+  }
+
+  return (
+    <ProForm<AccountFormValues>
       formRef={formRef}
-      onFinish={async (values: IAccountForm) => {
-        if (typeof token === "undefined") {
+      initialValues={{ lang: "zh-Hans" }}
+      onFinish={async (values) => {
+        try {
+          await createAccount({ ...values, invite: state.invite.id ?? "" });
+        } catch (e) {
+          applyFieldErrors(formRef.current, e);
           return;
         }
-        const signUp = await onSignIn(token, values);
-        if (signUp) {
-          if (signUp.ok) {
-            setSuccess(true);
-          } else {
-            message.error(signUp.message);
-          }
-        }
-      }}
-      request={async () => {
-        const url = `/api/v2/invite/${token}`;
-        console.info("api request", url);
-        const res = await get<IInviteResponse>(url);
-        console.debug("api response", res.data);
-        return {
-          id: res.data.id,
-          username: "",
-          nickname: "",
-          password: "",
-          password2: "",
-          email: res.data.email,
-          lang: "zh-Hans",
-        };
+        setState({ kind: "done" });
       }}
     >
-      <AccountInfo />
+      <AccountFields email={state.invite.email} />
     </ProForm>
   );
 };
 
-export default SignUpWidget;
+export default InviteSignUp;

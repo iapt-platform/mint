@@ -13,5 +13,8 @@ return [
     */
 
     'mail_send_failed' => '邮件发送失败，请稍后再试。',
+    'email_registered' => '该邮箱已注册。',
+    'sign_up_code_invalid' => '验证码不正确或已过期。',
+    'invite_invalid' => '邀请无效或已被使用。',
 
 ];

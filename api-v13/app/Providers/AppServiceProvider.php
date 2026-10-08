@@ -118,6 +118,17 @@ class AppServiceProvider extends ServiceProvider
                 ? Limit::perHour(5)->by('email:'.mb_strtolower((string) $request->input('email')))
                 : null,
         ]));
+
+        // 注册验证码同样往外发邮件，口径与找回密码一致
+        RateLimiter::for('email-certifications', fn (Request $request): array => array_filter([
+            Limit::perMinute(10)->by('ip:'.$request->ip()),
+            $request->filled('email')
+                ? Limit::perHour(5)->by('email:'.mb_strtolower((string) $request->input('email')))
+                : null,
+        ]));
+
+        // 比对验证码、建账号：按 IP 限，挡住对 6 位验证码的穷举（单个码另有 5 次试错上限）
+        RateLimiter::for('sign-up', fn (Request $request): Limit => Limit::perMinute(20)->by('ip:'.$request->ip()));
     }
 
     /**

@@ -13,5 +13,8 @@ return [
     */
 
     'mail_send_failed' => 'The email could not be sent. Please try again later.',
+    'email_registered' => 'This email is already registered.',
+    'sign_up_code_invalid' => 'The verification code is incorrect or has expired.',
+    'invite_invalid' => 'This invitation is invalid or has already been used.',
 
 ];

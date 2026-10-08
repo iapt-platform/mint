@@ -4,7 +4,8 @@ get:
   tags:
     - invite
   operationId: get_api_v2_invite_invite_
-  description: 实现：`InviteController@show`
+  description: |
+    已被 `GET /v3/invites/{invite}` 取代，保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
   parameters:
     -
       name: invite
@@ -30,6 +31,7 @@ get:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
       $ref: '../../main.yaml#/components/responses/ValidationError'
+  deprecated: true
 put:
   summary: '更新 invite/{invite}'
   tags:

@@ -681,8 +681,14 @@ paths:
     $ref: ./resources/auto/v2-webhook.yaml
   '/v2/webhook/{webhook}':
     $ref: ./resources/auto/v2-webhook-webhook.yaml
+  /v3/email-certifications:
+    $ref: ./resources/auto/v3-email-certifications.yaml
   /v3/heartbeat:
     $ref: ./resources/auto/v3-heartbeat.yaml
+  /v3/invites:
+    $ref: ./resources/auto/v3-invites.yaml
+  '/v3/invites/{invite}':
+    $ref: ./resources/auto/v3-invites-invite.yaml
   /v3/me/reactions:
     $ref: ./resources/auto/v3-me-reactions.yaml
   '/v3/me/reactions/{reaction}':
@@ -713,3 +719,5 @@ paths:
     $ref: ./resources/auto/v3-tipitaka-related-paragraphs-aggregate-book-name.yaml
   /v3/upgrade:
     $ref: ./resources/auto/v3-upgrade.yaml
+  /v3/users:
+    $ref: ./resources/auto/v3-users.yaml
