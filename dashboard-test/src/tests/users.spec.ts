@@ -109,11 +109,9 @@ test.describe('自助注册 /anonymous/sign-up', () => {
       // 没有真的发过码，服务端 Cache 里查不到 → 必然 422 errors.code，不写库
       await page.getByPlaceholder('请输入邮件里的 6 位验证码').fill('000000');
       await page.getByRole('button', { name: '下一步' }).click();
-      // 文案语言不在这里断言：v3 的错误文案目前总是英文，见下面 BUG-5
+      // 中文界面 → 后端按 Accept-Language 返回中文（BUG-5 已修复）
       await expect(
-        page.locator('.ant-form-item-explain-error', {
-          hasText: /验证码不正确或已过期|verification code is incorrect/,
-        })
+        page.locator('.ant-form-item-explain-error', { hasText: '验证码不正确或已过期' })
       ).toBeVisible();
       await shot(page, '03-signup-wrong-code');
       log.dump('3. 错误验证码（预期 HTTP 422）');
@@ -413,14 +411,14 @@ test.describe('登录 /anonymous/sign-in', () => {
   });
 });
 
-test.describe('已知缺陷', () => {
+test.describe('回归', () => {
   /**
-   * BUG-5 v3 接口的错误文案没有本地化：中文界面里显示英文。
+   * BUG-5（2026-10-08 发现并修复）v3 接口的错误文案没有本地化：中文界面里显示英文。
    *
-   * 后端 `SetLocale` 中间件只挂在 web 组，api 组没有语言协商，`__()` 永远取 en
-   * （v3-resource skill 第 11 条已记录）。前端 `src/api/client.ts` 也没有把界面语言
-   * 告诉后端。修复需要两边一起：v3 路由组挂语言协商 + client 中间件带上界面语言。
-   * 修复前保持红灯。
+   * 原因：api 组没有语言协商，`__()` 永远取 en；前端也没把界面语言告诉后端。
+   * 修复：后端 v3 路由组挂 `V3\NegotiateLocale`（只读 Accept-Language），
+   * dashboard-v6 `src/api/client.ts` 按界面语言设置 Accept-Language。
+   * 这条断言保留作回归保护。
    */
   test('BUG-5 中文界面下，v3 的字段错误应为中文', async ({ page }) => {
     await page.goto('anonymous/sign-up', { waitUntil: 'networkidle' });

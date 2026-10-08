@@ -233,3 +233,30 @@ test('GET /v3/me（带 token）→ 200，不回显 token', function () {
         fail('me.data 不应回显 token（v2 auth/current 会）');
     }
 });
+
+/* ---- 语言协商（v3 按 Accept-Language 本地化 detail / errors，title 保持英文）---- */
+// 探针用「错验证码换 invite」：不写库、不发信，走 sign-up 限流（同 IP 每分钟 20 次），
+// 不占登录的「账号 + IP」额度；返回的是 messages.php 里的文案。
+
+/** 用指定 Accept-Language 发一次错验证码请求 */
+function auth_wrong_code_in(string $acceptLanguage): array
+{
+    return raw('POST', '/v3/invites', null, [
+        'email' => auth_unregistered_email(),
+        'code' => '000000',
+    ], null, ['Accept-Language' => $acceptLanguage]);
+}
+
+test('Accept-Language: zh-Hans → 中文错误文案 + Content-Language', function () {
+    $res = auth_wrong_code_in('zh-Hans');
+    assert_field_error('code', $res, 'invites 错验证码（zh-Hans）');
+    assert_eq('验证码不正确或已过期。', $res['body']['errors']['code'][0] ?? null, 'errors.code');
+    assert_eq('zh-Hans', $res['headers']['Content-Language'][0] ?? null, 'Content-Language');
+});
+
+test('Accept-Language: zh-TW → 繁体；不支持的语言 → en', function () {
+    $hant = auth_wrong_code_in('zh-TW');
+    assert_eq('驗證碼不正確或已過期。', $hant['body']['errors']['code'][0] ?? null, 'zh-TW 的 errors.code');
+    $fr = auth_wrong_code_in('fr-FR');
+    assert_eq('en', $fr['headers']['Content-Language'][0] ?? null, 'fr-FR 的 Content-Language');
+});

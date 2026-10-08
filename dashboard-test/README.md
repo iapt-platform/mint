@@ -116,11 +116,10 @@ dashboard-test/
 - BUG-1 Webhooks 页签不应跳到已废弃的 `/studio/...`
 - BUG-4 不存在的频道不应出现 `Unexpected Application Error`
 
-`src/tests/users.spec.ts` 有一条：
+所以 `npm test` 现在是 **11 通过 / 2 失败**（channel 4/2、users 7/0），两个失败即上述待修项。
 
-- BUG-5 中文界面下 v3 接口的错误文案应为中文（目前 api 组没有语言协商，总是英文）
-
-所以 `npm test` 现在是 **10 通过 / 3 失败**（channel 4/2、users 6/1），三个失败即上述待修项。
+修复后的缺陷断言保留作回归保护：`src/tests/users.spec.ts` 的「回归」组里有
+BUG-5（中文界面下 v3 错误文案应为中文，2026-10-08 修复）。
 
 ### 限流
 

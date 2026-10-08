@@ -97,10 +97,10 @@ function request(callable $fn): array
  * 原始 HTTP 请求：绕过生成客户端的必填参数校验，用于「缺参/非法组合」这类负向用例。
  * $path 以 / 开头（如 /v3/reactions），base URL 已含 /api 前缀。
  */
-function raw(string $method, string $path, ?array $query = null, ?array $json = null, ?string $token = null): array
+function raw(string $method, string $path, ?array $query = null, ?array $json = null, ?string $token = null, array $headers = []): array
 {
     $http = new Client(['timeout' => config()['timeout'], 'http_errors' => false]);
-    $opts = ['headers' => []];
+    $opts = ['headers' => $headers];
     if ($query !== null) {
         $opts['query'] = $query;
     }
