@@ -245,13 +245,10 @@ v6 全量稳定 → 下线 v4 → 删掉 C 类与 B 类的 v2 残留 → v2 前�
 ### 认证迁移待办（2026-10 定）
 
 v2 认证端点**一律不动**（v4 部署已冻结，修了也上不去），漏洞随 v4 下线消失。
-找回密码、注册、登录在 v3 新建端点（见「v2 → v3 对照表」）；之后还剩两件：
+找回密码、注册、登录在 v3 新建端点（见「v2 → v3 对照表」），dashboard-v6 与
+wikipali-mobile 都已切到 v3，**v2 认证端点只剩 dashboard-v4 在用**。还剩一件：
 
-- **TODO mobile 登录切 v3**：后端 `POST /v3/sessions` + `GET /v3/me` 与 v6 已切完；
-  wikipali-mobile 的 `src/api/auth.ts` 仍调 `/v2/sign-in`、`/v2/auth/current`，
-  它是独立仓库，由用户决定何时切。v3 的 user 字段与 v2 auth/current 同名（驼峰），
-  另多 `email`、少回显的 `token`。
-- **TODO v4 下线（且 mobile 已切）后：md5 → bcrypt，删 v2 auth 全家**。v2 登录在 SQL 里比对
+- **TODO v4 下线后：md5 → bcrypt，删 v2 auth 全家**。v2 登录在 SQL 里比对
   `md5(password)`，v4 在线时密码只能存 md5；v3 写密码统一走
   `App\Services\V3\PasswordHasher`，届时只改那一处（登录时校验 md5 并就地
   rehash，或加新列——加列由用户决定）。随后删 `sign-in`、`sign-up`、

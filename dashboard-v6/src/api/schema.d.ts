@@ -938,7 +938,7 @@ export interface paths {
         /**
          * getUserInfoByToken auth/current
          * @deprecated
-         * @description 已被 `GET /v3/me` 取代。保留给 dashboard-v4 与 wikipali-mobile（尚未切换），待两者都不再使用后删除。
+         * @description 已被 `GET /v3/me` 取代。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         get: operations["get_api_v2_auth_current"];
         put?: never;
@@ -5910,7 +5910,7 @@ export interface paths {
         /**
          * signIn sign-in
          * @deprecated
-         * @description 已被 `POST /v3/sessions` 取代。保留给 dashboard-v4 与 wikipali-mobile（尚未切换），待两者都不再使用后删除。
+         * @description 已被 `POST /v3/sessions` 取代。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         post: operations["post_api_v2_sign_in"];
         delete?: never;

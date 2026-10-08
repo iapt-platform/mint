@@ -2,7 +2,7 @@
 post:
   deprecated: true
   description: |
-    已被 `POST /v3/sessions` 取代。保留给 dashboard-v4 与 wikipali-mobile（尚未切换），待两者都不再使用后删除。
+    已被 `POST /v3/sessions` 取代。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
   responses:
     200:
       content:
