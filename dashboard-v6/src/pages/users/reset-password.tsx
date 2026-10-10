@@ -15,6 +15,7 @@ const Widget = () => {
         title={intl.formatMessage({
           id: "buttons.reset.password",
         })}
+        style={{ width: 400, maxWidth: "100%" }}
       >
         <ResetPassword token={token} />
         <Divider />

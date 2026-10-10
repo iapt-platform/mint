@@ -1,4 +1,4 @@
-import { Card } from "antd";
+import { Card, Divider } from "antd";
 import { useIntl } from "react-intl";
 import SharedLinks from "../../components/users/NonSignInSharedLinks";
 import SelfSignUp from "../../components/users/SelfSignUp";
@@ -13,8 +13,10 @@ const Widget = () => {
         title={intl.formatMessage({
           id: "buttons.sign-up",
         })}
+        style={{ width: 760, maxWidth: "100%" }}
       >
         <SelfSignUp />
+        <Divider />
         <SharedLinks />
       </Card>
     </>

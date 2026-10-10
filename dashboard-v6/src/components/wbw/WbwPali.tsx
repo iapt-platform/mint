@@ -141,28 +141,30 @@ const WbwPaliWidget = ({
   }, [tempSettings]);
 
   /**
-   * 修复2：popPlacement 用 useState 存储，但只在事件处理器中更新。
-   * 在事件处理器（用户点击）里读取 DOM ref 并 setState 完全合法，
-   * 不会产生"effect 内 setState"的级联渲染警告。
+   * 修复2：只在打开弹窗时（事件处理器里）读 DOM，记下单词是否贴近右边缘；
+   * 上/下方向由 popOnTop 派生。这样弹窗打开期间切换「顶端/底端弹窗」能立即生效。
    */
-  const [popPlacement, setPopPlacement] = useState<TooltipPlacement>("bottom");
+  const [nearRightEdge, setNearRightEdge] = useState(false);
+
+  const popPlacement = useMemo<TooltipPlacement>(
+    () =>
+      popOnTop
+        ? nearRightEdge
+          ? "topRight"
+          : "top"
+        : nearRightEdge
+          ? "bottomRight"
+          : "bottom",
+    [popOnTop, nearRightEdge]
+  );
 
   const computeAndSetPlacement = useCallback(() => {
     const rightPanel = document.getElementById("article_right_panel");
     const rightPanelWidth = rightPanel?.offsetWidth ?? 0;
     const containerWidth = window.innerWidth - rightPanelWidth;
     const divRight = divShell.current?.getBoundingClientRect().right ?? 0;
-    const toDivRight = containerWidth - divRight;
-    setPopPlacement(
-      popOnTop
-        ? toDivRight > 200
-          ? "top"
-          : "topRight"
-        : toDivRight > 200
-          ? "bottom"
-          : "bottomRight"
-    );
-  }, [popOnTop]);
+    setNearRightEdge(containerWidth - divRight <= 200);
+  }, []);
 
   // ── Popover open/close ────────────────────────────────────────────────────
   const popOpenChange = useCallback(
@@ -392,6 +394,12 @@ const WbwPaliWidget = ({
           <Popover
             content={wbwDialog}
             placement={popPlacement}
+            // 上下方向由「顶端/底端弹窗」按钮决定，不让 antd 因空间不足自动翻转，
+            // 否则贴近视口顶部的词切到顶端后会被翻回底部，按钮看起来像失效。
+            // 保留 shiftY：空间不够时整体平移回视口，切换按钮始终点得到。
+            // antd 类型写的是 0 | 1，但 rc-trigger 按 `val >= 0` 判断，0 也算开启，
+            // 只有 false 才真正关掉，故断言。
+            autoAdjustOverflow={{ adjustX: 1, adjustY: false as unknown as 0 }}
             trigger="click"
             open={finalPopOpen}
           >
