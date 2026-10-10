@@ -14,6 +14,7 @@ const Widget = () => {
         title={intl.formatMessage({
           id: "buttons.forgot.password",
         })}
+        style={{ width: 400, maxWidth: "100%" }}
       >
         <ForgotPassword />
         <Divider />
