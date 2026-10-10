@@ -39,15 +39,29 @@ interface INissayaCardModal {
   trigger?: JSX.Element | string;
 }
 
-export const NissayaCardPop = ({ text, trigger }: INissayaCardModal) => (
-  <Popover
-    style={{ width: 700 }}
-    content={<NissayaCardWidget text={text} cache hideEditButton />}
-    placement="bottom"
-  >
-    <Typography.Link>{trigger}</Typography.Link>
-  </Popover>
-);
+export const NissayaCardPop = ({ text, trigger }: INissayaCardModal) => {
+  const intl = useIntl();
+
+  return (
+    <Popover
+      style={{ width: 700 }}
+      title={
+        <div style={{ textAlign: "right" }}>
+          <Link to={`/workspace/nissaya/ending/${text}`} target="_blank">
+            {intl.formatMessage(
+              { id: "buttons.open.in.new.tab" },
+              { item: "" }
+            )}
+          </Link>
+        </div>
+      }
+      content={<NissayaCardWidget text={text} cache hideEditButton />}
+      placement="bottom"
+    >
+      <Typography.Link>{trigger}</Typography.Link>
+    </Popover>
+  );
+};
 
 export const NissayaCardModal = ({ text, trigger }: INissayaCardModal) => {
   const [open, setOpen] = useState(false);
@@ -84,7 +98,6 @@ const NissayaCardWidget = ({
   cache = false,
   hideEditButton = false,
 }: IWidgetProps) => {
-  const intl = useIntl();
   // antd v6: use App.useApp() instead of static message/notification
   const { message } = App.useApp();
 
@@ -171,19 +184,7 @@ const NissayaCardWidget = ({
           )}
         </Title>
 
-        <div>
-          <Link to={`/nissaya/ending/${term?.word}`} target="_blank">
-            {intl.formatMessage(
-              { id: "buttons.open.in.new.tab" },
-              { item: "" }
-            )}
-          </Link>
-          <Button
-            type="link"
-            icon={<ReloadOutlined />}
-            onClick={handleReload}
-          />
-        </div>
+        <Button type="link" icon={<ReloadOutlined />} onClick={handleReload} />
       </div>
 
       <Paragraph>{term?.meaning}</Paragraph>
