@@ -1,5 +1,13 @@
 import { useEffect, useState, type JSX } from "react";
-import { App, Button, Modal, Popover, Skeleton, Typography } from "antd";
+import {
+  App,
+  Button,
+  Modal,
+  Popover,
+  Skeleton,
+  Typography,
+  theme,
+} from "antd";
 import { EditOutlined, ReloadOutlined } from "@ant-design/icons";
 import { Link } from "react-router";
 import { useIntl } from "react-intl";
@@ -41,6 +49,7 @@ interface INissayaCardModal {
 
 export const NissayaCardPop = ({ text, trigger }: INissayaCardModal) => {
   const intl = useIntl();
+  const { token } = theme.useToken();
 
   return (
     <Popover
@@ -57,6 +66,17 @@ export const NissayaCardPop = ({ text, trigger }: INissayaCardModal) => {
       }
       content={<NissayaCardWidget text={text} cache hideEditButton />}
       placement="bottom"
+      // 垂直方向始终贴在锚点下方：不翻转、不平移回视口，宁可超出可视范围也不遮挡锚点；
+      // 横向仍自动适应窗口。autoAdjustOverflow 做不到——antd 在 shiftY 关闭时会
+      // 强制打开 adjustY——所以自己给出 bottom 的对齐规则，offset 同 antd 默认算法
+      builtinPlacements={{
+        bottom: {
+          points: ["tc", "bc"],
+          offset: [0, token.sizePopupArrow / 2 + token.marginXXS],
+          overflow: { adjustX: true, shiftX: true },
+          htmlRegion: "visibleFirst",
+        },
+      }}
     >
       <Typography.Link>{trigger}</Typography.Link>
     </Popover>
