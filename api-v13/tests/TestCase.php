@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use App\Facades\RedisCache;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
@@ -43,5 +44,16 @@ abstract class TestCase extends BaseTestCase
         }
 
         return parent::createApplication();
+    }
+
+    /**
+     * RedisCache 默认换成内存实现，相当于原来 CACHE_STORE=array 的作用：
+     * 测试不碰开发 Redis，CI 也不需要起 Redis。
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        RedisCache::fake();
     }
 }
