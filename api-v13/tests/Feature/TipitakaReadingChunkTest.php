@@ -186,9 +186,9 @@ it('clamps page_size to the per-block ceiling and reports the effective value', 
     expect($this->getJson($base.'&page_size=1000')->assertOk()->json('meta'))
         ->toMatchArray(['page_size' => 200, 'page_size_unit' => 'para']);
 
-    // 字节模式上限 5000
-    expect($this->getJson($base.'&page_size=20000&unit=byte')->assertOk()->json('meta'))
-        ->toMatchArray(['page_size' => 5000, 'page_size_unit' => 'byte']);
+    // 字节模式上限 50000
+    expect($this->getJson($base.'&page_size=200000&unit=byte')->assertOk()->json('meta'))
+        ->toMatchArray(['page_size' => 50000, 'page_size_unit' => 'byte']);
 
     // 没到上限的照常返回原值
     expect($this->getJson($base.'&page_size=3')->assertOk()->json('meta.page_size'))->toBe(3);
