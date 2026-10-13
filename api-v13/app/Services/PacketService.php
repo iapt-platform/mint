@@ -2,10 +2,10 @@
 
 namespace App\Services;
 
+use App\Facades\RedisCache;
 use App\Http\Api\ChannelApi;
 use App\Models\Channel;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -304,10 +304,10 @@ class PacketService
     {
         $key = '/offline/index';
 
-        if (! Cache::has($key)) {
+        if (! RedisCache::has($key)) {
             return [];
         }
-        $fileInfo = Cache::get($key);
+        $fileInfo = RedisCache::get($key);
         $output = [];
         foreach ($fileInfo as $key => $file) {
             if ($id) {

@@ -2,13 +2,13 @@
 
 namespace App\Http\Resources;
 
+use App\Facades\RedisCache;
 use App\Http\Api\ChannelApi;
 use App\Models\PaliText;
 use App\Models\Sentence;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Cache;
 
 class SearchResource extends JsonResource
 {
@@ -35,7 +35,7 @@ class SearchResource extends JsonResource
         } elseif (isset($this->content)) {
             $data['content'] = $this->content;
         } else {
-            $channelId = Cache::remember('_System_Pali_VRI_', config('mint.cache.expire'), function () {
+            $channelId = RedisCache::remember('_System_Pali_VRI_', config('mint.cache.expire'), function () {
                 return ChannelApi::getSysChannel('_System_Pali_VRI_');
             });
 

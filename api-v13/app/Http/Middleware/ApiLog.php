@@ -2,9 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use App\Facades\RedisCache;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -68,11 +68,11 @@ class ApiLog
         $delayKey = "{$key}/delay";
 
         // 原子操作（Redis 驱动下安全）
-        Cache::increment($countKey);
-        Cache::increment($delayKey, $delay);
+        RedisCache::increment($countKey);
+        RedisCache::increment($delayKey, $delay);
 
         // increment 不会刷新 TTL，需手动补
-        Cache::put($countKey, Cache::get($countKey, 0), $ttl);
-        Cache::put($delayKey, Cache::get($delayKey, 0), $ttl);
+        RedisCache::put($countKey, RedisCache::get($countKey, 0), $ttl);
+        RedisCache::put($delayKey, RedisCache::get($delayKey, 0), $ttl);
     }
 }

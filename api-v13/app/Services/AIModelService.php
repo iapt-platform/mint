@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
+use App\Facades\RedisCache;
 use App\Http\Resources\AiModelResource;
 use App\Models\AiModel;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
 
 class AIModelService
@@ -48,7 +48,7 @@ class AIModelService
 
         $sysModels = [];
         foreach ($types as $key => $type) {
-            $sysModels[$type] = $this->getModelsById(Cache::get('/ai/model/system/'.$type) ?? []);
+            $sysModels[$type] = $this->getModelsById(RedisCache::get('/ai/model/system/'.$type) ?? []);
         }
         if (! empty($type)) {
             return $sysModels[$type];

@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Cache;
+use App\Facades\RedisCache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -57,10 +57,10 @@ class SummaryService
         $cacheKey = 'summary_'.md5($text);
 
         // 2️⃣ 检查缓存命中
-        if (! $forceRefresh && Cache::has($cacheKey)) {
+        if (! $forceRefresh && RedisCache::has($cacheKey)) {
             Log::debug('SummaryService cache hit', ['key' => $cacheKey]);
 
-            return Cache::get($cacheKey);
+            return RedisCache::get($cacheKey);
         }
 
         Log::debug('SummaryService generating new summary', [
@@ -94,7 +94,7 @@ class SummaryService
         }
 
         // 4️⃣ 写入缓存（默认缓存 1 周）
-        Cache::put($cacheKey, $finalSummary, now()->addWeek());
+        RedisCache::put($cacheKey, $finalSummary, now()->addWeek());
 
         Log::debug('SummaryService cached new summary', [
             'key' => $cacheKey,

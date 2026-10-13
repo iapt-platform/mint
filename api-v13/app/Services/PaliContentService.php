@@ -4,6 +4,7 @@
 
 namespace App\Services;
 
+use App\Facades\RedisCache;
 use App\Http\Api\ChannelApi;
 use App\Http\Api\MdRender;
 use App\Http\Api\StudioApi;
@@ -18,7 +19,6 @@ use App\Models\SentSimIndex;
 use App\Models\Wbw;
 use App\Models\WbwBlock;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -73,7 +73,7 @@ class PaliContentService
         } else {
             $keyCanRead .= 'guest';
         }
-        $channelCanRead = Cache::remember(
+        $channelCanRead = RedisCache::remember(
             $keyCanRead,
             config('mint.cache.expire'),
             function () use ($userUuid) {
@@ -338,7 +338,7 @@ class PaliContentService
 
                                 break;
                             case 'nissaya':
-                                $newSent['html'] = Cache::remember(
+                                $newSent['html'] = RedisCache::remember(
                                     "/sent/{$channelId}/{$ids}/{$format}",
                                     config('mint.cache.expire'),
                                     function () use ($row, $mode, $format) {
@@ -663,7 +663,7 @@ class PaliContentService
         $level = $this->paragraphLevel($book, $para);
         // 缓存句子，段落外壳与标题级别有关，不进缓存
         $key = self::paragraphCacheKey($book, $para, $channelUid, $format);
-        $cached = Cache::remember(
+        $cached = RedisCache::remember(
             $key,
             config('mint.cache.expire'),
             function () use ($book, $para, $channelUid, $format) {
@@ -734,7 +734,7 @@ class PaliContentService
     public static function forgetParagraph(int $book, int $para, string $channelUid): void
     {
         foreach (self::FORMATS as $format) {
-            Cache::forget(self::paragraphCacheKey($book, $para, $channelUid, $format));
+            RedisCache::forget(self::paragraphCacheKey($book, $para, $channelUid, $format));
         }
     }
 

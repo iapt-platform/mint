@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\RedisCache;
 use App\Models\WordIndex;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -21,7 +22,7 @@ class WordIndexController extends Controller
             case 'key':
                 $key = $request->input('key');
                 /*
-                $result = Cache::remember("/word_index/{$key}",10,function() use($key){
+                $result = RedisCache::remember("/word_index/{$key}",10,function() use($key){
                     return WordIndex::where('word','like',$key."%")
                                     ->whereOr('word_en','like',$key."%")
                                     ->orderBy('word_en')

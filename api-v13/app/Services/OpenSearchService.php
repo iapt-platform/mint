@@ -4,17 +4,17 @@
 
 namespace App\Services;
 
+use App\Facades\RedisCache;
 use Exception;
 use GuzzleHttp\Client;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-
 use OpenSearch\GuzzleClientFactory;
-
 
 class OpenSearchService
 {
+    private const EMBEDDING_CACHE_VERSION_KEY = 'embedding/version';
+
     protected $client;
 
     protected $http;
@@ -395,12 +395,12 @@ class OpenSearchService
     {
         try {
             $info = $this->client->info();
-            $message = 'OpenSearch 连接成功: ' . json_encode($info['version']['number']);
+            $message = 'OpenSearch 连接成功: '.json_encode($info['version']['number']);
             Log::info($message);
 
             return [true, $message];
         } catch (Exception $e) {
-            $message = 'OpenSearch 连接失败: ' . $e->getMessage();
+            $message = 'OpenSearch 连接失败: '.$e->getMessage();
             Log::error($message);
 
             return [false, $message];
@@ -497,14 +497,13 @@ class OpenSearchService
     public function updatePaliSynonymsPath(string $filename): array
     {
 
-
         $index = config('mint.opensearch.index');
 
         if (! $this->client->indices()->exists(['index' => $index])) {
             throw new Exception("Index [$index] does not exist.");
         }
 
-        $path = Str::finish(config('mint.opensearch.config.synonyms_path'), '/') . $filename;
+        $path = Str::finish(config('mint.opensearch.config.synonyms_path'), '/').$filename;
 
         Log::debug('OpenSearchService::updatePaliSynonymsPath', [
             'index' => $index,
@@ -879,7 +878,7 @@ class OpenSearchService
     {
         $fields = [];
         foreach ($this->weights['fuzzy'] as $field => $weight) {
-            $fields[] = $field . '^' . $weight;
+            $fields[] = $field.'^'.$weight;
         }
 
         return [
@@ -910,7 +909,7 @@ class OpenSearchService
             if (in_array($field, ['fuzzy_ratio', 'semantic_ratio'])) {
                 continue;
             }
-            $fuzzyFields[] = $field . '^' . $weight;
+            $fuzzyFields[] = $field.'^'.$weight;
         }
 
         $fuzzyPart = [
@@ -970,7 +969,7 @@ class OpenSearchService
      * 调用 OpenAI Embedding API 将文本转为向量
      *
      * 使用 Redis 缓存（TTL 7 天），相同文本不会重复请求 API，
-     * 缓存 key 格式为 "embedding:{md5(text)}"。
+     * 缓存 key 格式见 embeddingCacheKey()。
      *
      * @param  string  $text  输入文本
      * @return array 1536 维 float 向量
@@ -983,29 +982,40 @@ class OpenSearchService
             throw new Exception('请在 .env 设置 OPENAI_API_KEY');
         }
 
-        $cacheKey = 'embedding:' . md5($text);
+        return RedisCache::remember($this->embeddingCacheKey($text), now()->addDays(7), function () use ($text) {
+            $response = $this->http->post('embeddings', [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$this->openaiApiKey,
+                    'Content-Type' => 'application/json',
+                ],
+                'json' => [
+                    'model' => 'text-embedding-3-small',
+                    'input' => $text,
+                ],
+            ]);
 
-        return Cache::tags(['embedding'])
-            ->remember($cacheKey, now()->addDays(7), function () use ($text) {
-                $response = $this->http->post('embeddings', [
-                    'headers' => [
-                        'Authorization' => 'Bearer ' . $this->openaiApiKey,
-                        'Content-Type' => 'application/json',
-                    ],
-                    'json' => [
-                        'model' => 'text-embedding-3-small',
-                        'input' => $text,
-                    ],
-                ]);
+            $json = json_decode((string) $response->getBody(), true);
 
-                $json = json_decode((string) $response->getBody(), true);
+            if (empty($json['data'][0]['embedding'])) {
+                throw new Exception('OpenAI embedding 返回异常: '.json_encode($json));
+            }
 
-                if (empty($json['data'][0]['embedding'])) {
-                    throw new Exception('OpenAI embedding 返回异常: ' . json_encode($json));
-                }
+            return $json['data'][0]['embedding'];
+        });
+    }
 
-                return $json['data'][0]['embedding'];
-            });
+    /**
+     * embedding 缓存键："embedding/v{版本}/{md5(text)}"。
+     *
+     * 版本号存在 EMBEDDING_CACHE_VERSION_KEY，clearAllEmbeddingCache() 把它加一，
+     * 旧版本的键就再也不会被读到，7 天后自然过期。原来用 Cache::tags()，
+     * tag 索引是另外的 key，在 Redis Cluster 上跨 slot。
+     */
+    private function embeddingCacheKey(string $text): string
+    {
+        $version = RedisCache::get(self::EMBEDDING_CACHE_VERSION_KEY, 0);
+
+        return "embedding/v{$version}/".md5($text);
     }
 
     /**
@@ -1019,25 +1029,20 @@ class OpenSearchService
      */
     public function clearEmbeddingCache(string $text): bool
     {
-        $cacheKey = 'embedding:' . md5($text);
-
-        return Cache::forget($cacheKey);
+        return RedisCache::forget($this->embeddingCacheKey($text));
     }
 
     /**
-     * 清除 Redis 中所有 embedding 缓存
+     * 让所有 embedding 缓存失效
      *
-     * 匹配 "embedding:*" 模式的全部键，生产环境请谨慎调用。
-     *
-     * @return int 已删除的缓存条数
+     * 不逐条删除，而是把版本号加一；旧键 7 天内自然过期。
      *
      * @example
-     *   $count = $service->clearAllEmbeddingCache();
-     *   echo "已清理缓存 {$count} 条";
+     *   $service->clearAllEmbeddingCache();
      */
     public function clearAllEmbeddingCache(): void
     {
-        Cache::tags(['embedding'])->flush();
+        RedisCache::increment(self::EMBEDDING_CACHE_VERSION_KEY);
     }
 
     /**
@@ -1097,7 +1102,7 @@ class OpenSearchService
         // 过滤无效字段
         $searchFields = array_values(array_filter(
             $searchFields,
-            fn($field) => isset($fieldMap[$field])
+            fn ($field) => isset($fieldMap[$field])
         ));
 
         if (empty($searchFields)) {
@@ -1107,7 +1112,7 @@ class OpenSearchService
         // 构建 suggest DSL
         $suggests = [];
         foreach ($searchFields as $field) {
-            $suggests[$field . '_suggest'] = [
+            $suggests[$field.'_suggest'] = [
                 'prefix' => $query,
                 'completion' => [
                     'field' => $fieldMap[$field],
@@ -1131,7 +1136,7 @@ class OpenSearchService
         // 整理结果，附加来源字段
         $results = [];
         foreach ($searchFields as $field) {
-            $options = $response['suggest'][$field . '_suggest'][0]['options'] ?? [];
+            $options = $response['suggest'][$field.'_suggest'][0]['options'] ?? [];
 
             foreach ($options as $opt) {
                 $results[] = [
@@ -1145,7 +1150,7 @@ class OpenSearchService
         }
 
         // 按分数降序排序
-        usort($results, fn($a, $b) => $b['score'] <=> $a['score']);
+        usort($results, fn ($a, $b) => $b['score'] <=> $a['score']);
 
         return $results;
     }
@@ -1198,10 +1203,10 @@ class OpenSearchService
         ]);
 
         $tokens = array_map(
-            fn($token) => $token['token'] ?? '',
+            fn ($token) => $token['token'] ?? '',
             $response['tokens'] ?? []
         );
 
-        return array_values(array_unique(array_filter($tokens, fn($t) => $t !== '')));
+        return array_values(array_unique(array_filter($tokens, fn ($t) => $t !== '')));
     }
 }

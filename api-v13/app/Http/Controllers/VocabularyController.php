@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\RedisCache;
 use App\Http\Resources\VocabularyResource;
 use App\Models\Vocabulary;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Cache;
 
 class VocabularyController extends Controller
 {
@@ -25,7 +25,7 @@ class VocabularyController extends Controller
                     return $this->ok(['rows' => [], 'count' => 0]);
                 }
 
-                $payload = Cache::remember(
+                $payload = RedisCache::remember(
                     'v13:dict_vocabulary:'.md5($key),
                     config('mint.cache.expire'),
                     function () use ($key) {

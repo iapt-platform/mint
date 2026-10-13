@@ -2,8 +2,8 @@
 
 namespace App\Tools;
 
+use App\Facades\RedisCache;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -70,7 +70,7 @@ class ExportDownload
         if ($this->downloadUrl) {
             $data['url'] = $this->downloadUrl;
         }
-        Cache::put(
+        RedisCache::put(
             $this->currStatusKey,
             $data,
             $this->statusExpiry
@@ -82,7 +82,7 @@ class ExportDownload
 
     public function getStatus()
     {
-        return Cache::get($this->currStatusKey);
+        return RedisCache::get($this->currStatusKey);
     }
 
     public function upload(string $type, $sections, $bookMeta)

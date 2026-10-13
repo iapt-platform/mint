@@ -4,9 +4,9 @@ namespace App\Tools;
 
 require_once __DIR__.'/../../public/app/public/casesuf.inc';
 
+use App\Facades\RedisCache;
 use App\Models\UserDict;
 use App\Models\WordPart;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class TurboSplit
@@ -196,7 +196,7 @@ class TurboSplit
         $search = $word;
 
         // 获取单词权重
-        $weight = Cache::remember(
+        $weight = RedisCache::remember(
             'palicanon/wordpart/weight/'.$search,
             config('mint.cache.expire'),
             function () use ($search) {
@@ -229,7 +229,7 @@ class TurboSplit
             $base_weight = 0;
             $len = 0;
             foreach ($newWord as $x => $x_len) {
-                $weight = Cache::remember(
+                $weight = RedisCache::remember(
                     'palicanon/wordpart/weight/'.$x,
                     config('mint.cache.expire'),
                     function () use ($x) {
@@ -260,7 +260,7 @@ class TurboSplit
 
         $isFound = false;
         $count = 0;
-        $wordPart = Cache::remember(
+        $wordPart = RedisCache::remember(
             "turbosplit/part/{$word}",
             config('mint.cache.expire'),
             function () use ($word) {
@@ -284,18 +284,20 @@ class TurboSplit
 
         // fomular of confidence value 信心值计算公式
         if ($isFound) {
-            $cf = Cache::remember(
-                'turbosplit/confidence/'.$word,
-                config('mint.cache.expire'),
-                function () use ($word, $count, $case_len) {
-                    $len = mb_strlen($word, 'UTF-8') - $case_len;
-                    $len_correct = 1.2;
-                    $count2 = 1.1 + pow($count, 1.18);
-                    $conf_num = pow(1 / $count2, pow(($len - 0.5), $len_correct));
+            // 词本身就是语尾时 $len = 0，pow(-0.5, 1.2) 得 NAN；JSON 存不了 NAN，这种值不进缓存
+            $cacheKey = 'turbosplit/confidence/'.$word;
+            $cf = RedisCache::get($cacheKey);
+            if ($cf === null) {
+                $len = mb_strlen($word, 'UTF-8') - $case_len;
+                $len_correct = 1.2;
+                $count2 = 1.1 + pow($count, 1.18);
+                $conf_num = pow(1 / $count2, pow(($len - 0.5), $len_correct));
+                $cf = round(1 / (1 + 640 * $conf_num), 9);
 
-                    return round(1 / (1 + 640 * $conf_num), 9);
+                if (is_finite($cf)) {
+                    RedisCache::put($cacheKey, $cf, config('mint.cache.expire'));
                 }
-            );
+            }
 
             return $cf;
         } else {
