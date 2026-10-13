@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Facades\RedisCache;
 use App\Http\Api\MdRender;
 use App\Models\Channel;
 use App\Models\PaliSentence;
@@ -15,7 +16,6 @@ use App\Tools\Markdown;
 use App\Tools\Tools;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 
 class UpgradeProgressChapter extends Command
@@ -36,7 +36,7 @@ class UpgradeProgressChapter extends Command
         }
 
         if ($this->option('fresh')) {
-            Cache::forget(self::CACHE_KEY);
+            RedisCache::forget(self::CACHE_KEY);
             $this->info('Cleared cached cursor.');
         }
 
@@ -61,7 +61,7 @@ class UpgradeProgressChapter extends Command
         $books = $this->buildBookList($book);
 
         // 从缓存恢复断点：跳过上次已完成的 book
-        $lastBookId = Cache::get(self::CACHE_KEY);
+        $lastBookId = RedisCache::get(self::CACHE_KEY);
         if ($lastBookId && ! $book) {
             $books = $books->filter(fn ($b) => $b->book_id > $lastBookId)->values();
             $this->info("Resuming after book={$lastBookId}");
@@ -112,11 +112,11 @@ class UpgradeProgressChapter extends Command
             }
 
             // 每完成一本书，保存断点
-            Cache::put(self::CACHE_KEY, $bookRow->book_id, now()->addHours(48));
+            RedisCache::put(self::CACHE_KEY, $bookRow->book_id, now()->addHours(48));
         }
 
         // 全部完成，清除断点缓存
-        Cache::forget(self::CACHE_KEY);
+        RedisCache::forget(self::CACHE_KEY);
 
         $time = time() - $startTime;
         $this->info("upgrade:progress.chapter finished in {$time}s tag count:{$tagCount}");

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\RedisCache;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Cache;
 
 class NissayaCoverController extends Controller
 {
@@ -16,7 +16,7 @@ class NissayaCoverController extends Controller
     public function index()
     {
         //
-        $cover = Cache::get('/statistics/nissaya/cover');
+        $cover = RedisCache::get('/statistics/nissaya/cover');
 
         return $this->ok($cover);
     }

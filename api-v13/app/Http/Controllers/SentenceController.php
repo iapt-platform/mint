@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\RedisCache;
 use App\Http\Api\ChannelApi;
 use App\Http\Api\Mq;
 use App\Http\Api\PaliTextApi;
@@ -16,7 +17,6 @@ use App\Services\SentenceService;
 use App\Tools\OpsLog;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Str;
 
@@ -496,7 +496,7 @@ class SentenceController extends Controller
         // 清除cache
         $channelId = $param[4];
         $currSentId = "{$param[0]}-{$param[1]}-{$param[2]}-{$param[3]}";
-        Cache::forget("/sent/{$channelId}/{$currSentId}");
+        RedisCache::forget("/sent/{$channelId}/{$currSentId}");
         // 保存历史记录
         if ($request->has('prEditor')) {
             $this->sentenceService->saveHistory(
@@ -564,8 +564,8 @@ class SentenceController extends Controller
             if (! empty($word->meaning->value)) {
                 $newData['data'] = $word->meaning->value;
                 WbwAnalysis::insert($newData);
-                Cache::put("{$prefix}/{$word->real->value}/3/{$editorId}", $word->meaning->value);
-                Cache::put("{$prefix}/{$word->real->value}/3/0", $word->meaning->value);
+                RedisCache::put("{$prefix}/{$word->real->value}/3/{$editorId}", $word->meaning->value);
+                RedisCache::put("{$prefix}/{$word->real->value}/3/0", $word->meaning->value);
             }
             if (isset($word->factors) && isset($word->factorMeaning)) {
                 $factors = explode('+', str_replace('-', '+', $word->factors->value));
@@ -577,8 +577,8 @@ class SentenceController extends Controller
                             $newData['data'] = $factorMeaning[$key];
                             $newData['type'] = 5;
                             WbwAnalysis::insert($newData);
-                            Cache::put("{$prefix}/{$factor}/5/{$editorId}", $factorMeaning[$key]);
-                            Cache::put("{$prefix}/{$factor}/5/0", $factorMeaning[$key]);
+                            RedisCache::put("{$prefix}/{$factor}/5/{$editorId}", $factorMeaning[$key]);
+                            RedisCache::put("{$prefix}/{$factor}/5/0", $factorMeaning[$key]);
                         }
                     }
                 }

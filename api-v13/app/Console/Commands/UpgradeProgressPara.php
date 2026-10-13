@@ -2,12 +2,12 @@
 
 namespace App\Console\Commands;
 
+use App\Facades\RedisCache;
 use App\Models\PaliSentence;
 use App\Models\Progress;
 use App\Models\Sentence;
 use App\Tools\Tools;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class UpgradeProgressPara extends Command
@@ -26,7 +26,7 @@ class UpgradeProgressPara extends Command
         }
 
         if ($this->option('fresh')) {
-            Cache::forget(self::CACHE_KEY);
+            RedisCache::forget(self::CACHE_KEY);
             $this->info('Cleared cached cursor.');
         }
 
@@ -45,7 +45,7 @@ class UpgradeProgressPara extends Command
         $sentences = $this->buildQuery($book, $para, $channelId);
 
         // 从缓存恢复断点：跳过上次已处理的记录
-        $cursor = Cache::get(self::CACHE_KEY);
+        $cursor = RedisCache::get(self::CACHE_KEY);
         if ($cursor && ! $this->option('book')) {
             $sentences = $this->applyResumeFilter($sentences, $cursor);
             $this->info("Resuming from book={$cursor['book']}, para={$cursor['para']}");
@@ -95,7 +95,7 @@ class UpgradeProgressPara extends Command
 
             // 每 500 条保存一次断点到缓存
             if ($curr % 500 === 0) {
-                Cache::put(self::CACHE_KEY, [
+                RedisCache::put(self::CACHE_KEY, [
                     'book' => $sentence->book_id,
                     'para' => $sentence->paragraph,
                 ], now()->addHours(48));
@@ -107,7 +107,7 @@ class UpgradeProgressPara extends Command
         }
 
         // 全部完成，清除断点缓存
-        Cache::forget(self::CACHE_KEY);
+        RedisCache::forget(self::CACHE_KEY);
 
         $time = time() - $startTime;
         $this->info("upgrade:progress.para finished in {$time}s");

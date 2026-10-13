@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Facades\RedisCache;
 use App\Http\Api\ChannelApi;
 use App\Models\PaliText;
 use App\Models\ProgressChapter;
@@ -12,7 +13,6 @@ use App\Services\SearchPaliDataService;
 use App\Services\SummaryService;
 use App\Services\TagService;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class IndexTipitaka extends Command
@@ -395,7 +395,7 @@ class IndexTipitaka extends Command
             $document['title']['text']['pali'] = $title;
         }
         $document['content']['display'] = $param['content'];             // 展示
-        Cache::put($docId, $param['content']);
+        RedisCache::put($docId, $param['content']);
 
         if ($this->isTest) {
             $this->info($param['content']);

@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Facades\RedisCache;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Cache;
 
 class ClearAppCache extends Command
 {
@@ -40,7 +40,7 @@ class ClearAppCache extends Command
         if (! $name && ! $this->option('all')) {
             $this->line('可清理的缓存项：');
             foreach (self::CACHES as $key => $item) {
-                $cached = collect($item['keys'])->filter(fn ($k) => Cache::has($k))->count();
+                $cached = collect($item['keys'])->filter(fn ($k) => RedisCache::has($k))->count();
                 $state = $cached > 0 ? "已缓存 {$cached}/".count($item['keys']) : '未缓存';
                 $this->line(sprintf('  %-14s %-34s [%s]', $key, $item['desc'], $state));
             }
@@ -62,8 +62,8 @@ class ClearAppCache extends Command
         foreach ($targets as $key => $item) {
             foreach ($item['keys'] as $cacheKey) {
                 // forget 对不存在的 key 也返回 true，所以先问一次才能如实报告清了几条
-                $existed = Cache::has($cacheKey);
-                Cache::forget($cacheKey);
+                $existed = RedisCache::has($cacheKey);
+                RedisCache::forget($cacheKey);
                 if ($existed) {
                     $cleared++;
                     $this->info("已清理 {$key}：{$cacheKey}");

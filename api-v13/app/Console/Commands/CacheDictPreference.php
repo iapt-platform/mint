@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Facades\RedisCache;
 use App\Models\UserDict;
 use App\Tools\Tools;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class CacheDictPreference extends Command
@@ -61,7 +61,7 @@ class CacheDictPreference extends Command
             $meaning = trim($meaning, ' $');
             if (! empty($meaning)) {
                 $m = explode('$', $meaning);
-                Cache::put("{$prefix}/{$word->word}/{$word->language}", $m[0]);
+                RedisCache::put("{$prefix}/{$word->word}/{$word->language}", $m[0]);
             }
             $bar->advance();
             $count++;

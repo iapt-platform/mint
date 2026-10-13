@@ -2,11 +2,11 @@
 
 namespace App\Console\Commands;
 
+use App\Facades\RedisCache;
 use App\Models\DhammaTerm;
 use App\Services\OpenSearchService;
 use App\Services\TermIndexService;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class IndexTerm extends Command
@@ -40,7 +40,7 @@ class IndexTerm extends Command
         }
 
         if ($this->option('fresh')) {
-            Cache::forget(self::CACHE_KEY);
+            RedisCache::forget(self::CACHE_KEY);
             $this->info('Cleared cached cursor.');
         }
 
@@ -61,7 +61,7 @@ class IndexTerm extends Command
             }
 
             // 从缓存恢复断点：跳过上次已处理的记录
-            $lastId = Cache::get(self::CACHE_KEY);
+            $lastId = RedisCache::get(self::CACHE_KEY);
             if ($lastId && ! $word) {
                 $terms = $terms->where('id', '>', $lastId);
                 $this->info("Resuming after id={$lastId}");
@@ -79,7 +79,7 @@ class IndexTerm extends Command
                     $this->info("[{$percent}%]-{$curr}/{$total}  {$term->word}");
 
                     // 每 10 条保存一次断点
-                    Cache::put(self::CACHE_KEY, $term->id, now()->addHours(48));
+                    RedisCache::put(self::CACHE_KEY, $term->id, now()->addHours(48));
                 }
 
                 if ($this->isTest) {
@@ -91,7 +91,7 @@ class IndexTerm extends Command
             }
 
             // 全部完成，清除断点缓存
-            Cache::forget(self::CACHE_KEY);
+            RedisCache::forget(self::CACHE_KEY);
             $this->info("index-term finished. total: {$curr}");
 
             return 0;

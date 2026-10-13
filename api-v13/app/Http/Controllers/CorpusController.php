@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\RedisCache;
 use App\Http\Api\ChannelApi;
 use App\Http\Api\MdRender;
 use App\Http\Api\StudioApi;
@@ -22,7 +23,6 @@ use App\Services\PaliContentService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Str;
@@ -768,7 +768,7 @@ class CorpusController extends Controller
 
                             break;
                         case 'nissaya':
-                            $newSent['html'] = Cache::remember(
+                            $newSent['html'] = RedisCache::remember(
                                 "/sent/{$channelId}/{$currSentId}/{$format}",
                                 config('mint.cache.expire'),
                                 function () use ($row, $mode, $format) {
@@ -1055,7 +1055,7 @@ class CorpusController extends Controller
         } else {
             $keyCanRead .= 'guest';
         }
-        $channelCanRead = Cache::remember(
+        $channelCanRead = RedisCache::remember(
             $keyCanRead,
             config('mint.cache.expire'),
             function () use ($userUuid) {

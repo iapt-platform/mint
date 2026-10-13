@@ -2,6 +2,7 @@
 
 namespace App\Http\Api;
 
+use App\Facades\RedisCache;
 use App\Http\Controllers\CorpusController;
 use App\Models\BookTitle as BookSeries;
 use App\Models\Channel;
@@ -11,7 +12,6 @@ use App\Models\PageNumber;
 use App\Models\PaliText;
 use App\Services\ArticleService;
 use App\Tools\Tools;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -832,7 +832,7 @@ class TemplateRender
     {
         $paraId = $this->get_param($this->param, 'para', 1);
         $channelId = $this->channel_id[0];
-        $props = Cache::remember(
+        $props = RedisCache::remember(
             "/quote/{$channelId}/{$paraId}",
             config('mint.cache.expire'),
             function () use ($paraId, $channelId) {

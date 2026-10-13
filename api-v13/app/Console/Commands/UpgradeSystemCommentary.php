@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Facades\RedisCache;
 use App\Helpers\LlmResponseParser;
 use App\Http\Api\ChannelApi;
 use App\Http\Resources\AiModelResource;
@@ -16,7 +17,6 @@ use App\Services\OpenAIService;
 use App\Services\SearchPaliDataService;
 use App\Services\SentenceService;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class UpgradeSystemCommentary extends Command
@@ -124,7 +124,7 @@ class UpgradeSystemCommentary extends Command
         }
 
         if ($this->option('fresh')) {
-            Cache::forget(self::CACHE_KEY);
+            RedisCache::forget(self::CACHE_KEY);
             $this->info('Cleared cached cursor.');
         }
 
@@ -137,7 +137,7 @@ class UpgradeSystemCommentary extends Command
         $isFullRun = ! $this->option('book') && ! $this->option('para');
 
         // 从缓存恢复已完成的 (book_name, cs_para) 集合，作为重入时的稳定游标
-        $done = Cache::get(self::CACHE_KEY, []);
+        $done = RedisCache::get(self::CACHE_KEY, []);
 
         // 需要跳过的 book_name 规则，逗号分隔，以 * 结尾为前缀匹配，否则全等匹配
         $skipPatterns = [];
@@ -294,13 +294,13 @@ class UpgradeSystemCommentary extends Command
 
                 // 该处理单元全部写库完成后再标记游标，确保中途中断不会误跳过
                 $done[$cursor] = true;
-                Cache::put(self::CACHE_KEY, $done, now()->addHours(24));
+                RedisCache::put(self::CACHE_KEY, $done, now()->addHours(24));
             }
         }
 
         // 完整遍历正常结束，清空断点缓存
         if ($isFullRun) {
-            Cache::forget(self::CACHE_KEY);
+            RedisCache::forget(self::CACHE_KEY);
         }
 
         return 0;

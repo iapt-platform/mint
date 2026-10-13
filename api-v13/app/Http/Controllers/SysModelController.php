@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\RedisCache;
 use App\Http\Resources\AiModelResource;
 use App\Models\AiModel;
 use App\Services\AuthService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Cache;
 
 class SysModelController extends Controller
 {
@@ -25,7 +25,7 @@ class SysModelController extends Controller
         if (! $user) {
             return $this->error(__('auth.failed'), 401, 401);
         }
-        $modelsId = Cache::get($this->key.$request->input('view', 'wbw'));
+        $modelsId = RedisCache::get($this->key.$request->input('view', 'wbw'));
         if (! is_array($modelsId)) {
             $modelsId = [];
         }
@@ -52,7 +52,7 @@ class SysModelController extends Controller
         if (! $user) {
             return $this->error(__('auth.failed'), 401, 401);
         }
-        Cache::put(
+        RedisCache::put(
             $this->key.$request->input('view', 'wbw'),
             $request->input('models')
         );

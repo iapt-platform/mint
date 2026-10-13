@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Facades\RedisCache;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Cache;
 
 #[Signature('app:upgrade-progress {--fresh : Clear cached progress and start from scratch}')]
 #[Description('Run upgrade progress commands (reentrant via Cache)')]
@@ -17,11 +17,11 @@ class UpgradeProgress extends Command
     public function handle(): int
     {
         if ($this->option('fresh')) {
-            Cache::forget(self::CACHE_KEY);
+            RedisCache::forget(self::CACHE_KEY);
             $this->info('Cleared cached progress.');
         }
 
-        $completedSteps = Cache::get(self::CACHE_KEY, []);
+        $completedSteps = RedisCache::get(self::CACHE_KEY, []);
 
         $steps = [
             'para' => 'upgrade:progress.para',
@@ -45,10 +45,10 @@ class UpgradeProgress extends Command
             }
 
             $completedSteps[] = $key;
-            Cache::put(self::CACHE_KEY, $completedSteps, now()->addHours(48));
+            RedisCache::put(self::CACHE_KEY, $completedSteps, now()->addHours(48));
         }
 
-        Cache::forget(self::CACHE_KEY);
+        RedisCache::forget(self::CACHE_KEY);
         $this->info('All steps completed.');
 
         return 0;

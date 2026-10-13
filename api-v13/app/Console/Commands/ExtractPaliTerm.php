@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Facades\RedisCache;
 use App\Helpers\LlmResponseParser;
 use App\Http\Api\ChannelApi;
 use App\Http\Resources\AiModelResource;
@@ -11,7 +12,6 @@ use App\Services\OpenAIService;
 use App\Services\SentenceService;
 use App\Services\TermService;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class ExtractPaliTerm extends Command
@@ -113,7 +113,7 @@ class ExtractPaliTerm extends Command
         }
 
         if ($this->option('fresh')) {
-            Cache::forget(self::CURSOR_KEY);
+            RedisCache::forget(self::CURSOR_KEY);
             $this->info('cleared checkpoint');
         }
 
@@ -131,7 +131,7 @@ class ExtractPaliTerm extends Command
             return 1;
         }
 
-        $cursor = Cache::get(self::CURSOR_KEY, []);
+        $cursor = RedisCache::get(self::CURSOR_KEY, []);
 
         // ---------- 模式二：仅 book —— 同一 book 从断点续，跑完即止，不跳到下一 book ----------
         if ($this->option('book')) {
@@ -156,7 +156,7 @@ class ExtractPaliTerm extends Command
             $this->runBook($book, $glossaryJson, $book === $startBook ? $cursor : []);
         }
         // 全部完成，清空断点
-        Cache::forget(self::CURSOR_KEY);
+        RedisCache::forget(self::CURSOR_KEY);
         $this->info('all books completed');
 
         return 0;
@@ -221,7 +221,7 @@ class ExtractPaliTerm extends Command
             $this->processChapter($book, $start, $end, $glossaryJson);
 
             // 该 chapter 完成后写入断点（中途中断时不会误标记未完成的 chapter）
-            Cache::put(self::CURSOR_KEY, ['book' => $book, 'paragraph' => $start], now()->addHours(48));
+            RedisCache::put(self::CURSOR_KEY, ['book' => $book, 'paragraph' => $start], now()->addHours(48));
         }
     }
 

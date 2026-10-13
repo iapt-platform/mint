@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Facades\RedisCache;
 use App\Models\Channel;
 use App\Tools\Tools;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Cache;
 
 class RemoveTermCache extends Command
 {
@@ -50,9 +50,9 @@ class RemoveTermCache extends Command
         } else {
             foreach ($channels as $key => $channel) {
                 $key = "/term/{$channel}/{$word}";
-                if (Cache::has($key)) {
+                if (RedisCache::has($key)) {
                     $this->info('has:'.$key);
-                    Cache::forget($key);
+                    RedisCache::forget($key);
                 }
             }
         }

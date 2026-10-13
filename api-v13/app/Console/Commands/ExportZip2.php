@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Facades\RedisCache;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Process\Process;
@@ -142,7 +142,7 @@ class ExportZip2 extends Command
         |--------------------------------------------------------------------------
         */
 
-        $info = Cache::get('/offline/index', []);
+        $info = RedisCache::get('/offline/index', []);
         if (! is_array($info)) {
             $info = [];
         }
@@ -158,12 +158,12 @@ class ExportZip2 extends Command
             'filename' => $zipFile,
             'url' => $url,
             'create_at' => now()->toDateTimeString(),
-            'chapter' => Cache::get('/export/chapter/count'),
+            'chapter' => RedisCache::get('/export/chapter/count'),
             'filesize' => filesize($zipFullFileName),
             'min_app_ver' => '1.3',
         ];
 
-        Cache::put('/offline/index', $info);
+        RedisCache::put('/offline/index', $info);
 
         /*
         |--------------------------------------------------------------------------

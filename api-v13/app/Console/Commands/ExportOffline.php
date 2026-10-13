@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Facades\RedisCache;
 use App\Tools\Tools;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class ExportOffline extends Command
@@ -55,7 +55,7 @@ class ExportOffline extends Command
         }
 
         // 清空redis
-        Cache::put('/offline/index', []);
+        RedisCache::put('/offline/index', []);
 
         // 删除全部的旧文件
         foreach (scandir($exportDir) as $key => $file) {

@@ -2,12 +2,12 @@
 
 namespace App\Console\Commands;
 
+use App\Facades\RedisCache;
 use App\Models\Channel;
 use App\Models\PaliSentence;
 use App\Models\Sentence;
 use App\Tools\Tools;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Cache;
 
 class StatisticsNissayaCover extends Command
 {
@@ -353,7 +353,7 @@ class StatisticsNissayaCover extends Command
             $this->info($type.'='.$pali.'='.$final);
             $output[] = ['type' => $type, 'total' => $pali, 'final' => $final];
         }
-        Cache::put('/statistics/nissaya/cover', $output, 48 * 3600);
+        RedisCache::put('/statistics/nissaya/cover', $output, 48 * 3600);
 
         return 0;
     }

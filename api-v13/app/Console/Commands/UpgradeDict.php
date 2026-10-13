@@ -2,11 +2,11 @@
 
 namespace App\Console\Commands;
 
+use App\Facades\RedisCache;
 use App\Models\DictInfo;
 use App\Models\UserDict;
 use App\Tools\Tools;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -132,7 +132,7 @@ class UpgradeDict extends Command
                                                         if (isset($newPart[$part])) {
                                                             $newPart[$part][0]++;
                                                         } else {
-                                                            $partExists = Cache::remember('dict/part/'.$part, config('cache.expire', 1000), function () use ($part) {
+                                                            $partExists = RedisCache::remember('dict/part/'.$part, config('cache.expire', 1000), function () use ($part) {
                                                                 return UserDict::where('word', $part)->exists();
                                                             });
                                                             if (! $partExists) {
