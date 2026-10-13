@@ -11,10 +11,10 @@
 
 namespace App\Console\Commands;
 
+use App\Facades\RedisCache;
 use App\Models\UserDict;
 use App\Tools\Tools;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class UpgradeDictDefaultMeaning extends Command
@@ -117,7 +117,7 @@ class UpgradeDictDefaultMeaning extends Command
                     ->cursor() as $word
             ) {
                 if (! empty($word['note'])) {
-                    Cache::put("dict_first_mean/{$thisLang}/{$word['word']}", mb_substr($word['note'], 0, 50, 'UTF-8'));
+                    RedisCache::put("dict_first_mean/{$thisLang}/{$word['word']}", mb_substr($word['note'], 0, 50, 'UTF-8'));
                 }
                 $bar->advance();
             }
@@ -138,7 +138,7 @@ class UpgradeDictDefaultMeaning extends Command
                         if (! empty($_word) && $word['word'] === $_word) {
                             Log::info($cacheKey.':'.$cacheValue);
                         }
-                        Cache::put($cacheKey, $cacheValue);
+                        RedisCache::put($cacheKey, $cacheValue);
                     }
 
                     if ($count % 1000 === 0) {

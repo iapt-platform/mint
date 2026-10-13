@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\RedisCache;
 use App\Http\Api\StudioApi;
 use App\Models\Channel;
 use App\Models\Like;
@@ -13,7 +14,6 @@ use App\Models\View;
 use App\Services\AuthService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -241,7 +241,7 @@ class ProgressChapterController extends Controller
                     $chapters[$key]->studio = StudioApi::getById($value->owner_uid);
                     $chapters[$key]->channel = ['uid' => $value->channel_id, 'name' => $value->name, 'type' => $value->type];
                     $progress_key = "/chapter_dynamic/{$value->book}/{$value->para}/ch_{$value->channel_id}";
-                    $chapters[$key]->progress_line = Cache::get($progress_key);
+                    $chapters[$key]->progress_line = RedisCache::get($progress_key);
                 }
 
                 $all_count = count($chapters);

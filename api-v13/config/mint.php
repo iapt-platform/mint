@@ -87,6 +87,16 @@ return [
         'expire' => env('CACHE_EXPIRE', 36000),
     ],
 
+    /**
+     * 集群使用独立的配置
+     * 而且不能用laravel 原生Redis, Cache 需要手写连接函数
+     * https://github.com/phpredis/phpredis/blob/develop/cluster.md
+     */
+    'redis_cluster' => [
+        'host' => env('REDIS_CLUSTER_HOST', '127.0.0.1'),
+        'port' => env('REDIS_CLUSTER_PORT', '6379'),
+        'prefix' => env('REDIS_CLUSTER_PREFIX', ''),
+    ],
     /*
     |--------------------------------------------------------------------------
     | 另外增添的路径

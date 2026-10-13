@@ -2,12 +2,14 @@
 
 namespace App\Services\Template;
 
+use App\Facades\RedisCache;
 use App\Services\Template\Renderers\RendererFactory;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class TemplateService
 {
+    private const CACHE_VERSION_KEY = 'template/version';
+
     private TemplateParser $parser;
 
     private bool $cacheEnabled;
@@ -30,8 +32,8 @@ class TemplateService
             // 生成缓存键
             $cacheKey = $this->generateCacheKey($content, $format);
 
-            if ($this->cacheEnabled && Cache::has($cacheKey)) {
-                return Cache::get($cacheKey);
+            if ($this->cacheEnabled && RedisCache::has($cacheKey)) {
+                return RedisCache::get($cacheKey);
             }
 
             // 解析内容
@@ -48,7 +50,7 @@ class TemplateService
 
             // 缓存结果
             if ($this->cacheEnabled) {
-                Cache::put($cacheKey, $result, $this->cacheTtl);
+                RedisCache::put($cacheKey, $result, $this->cacheTtl);
             }
 
             return $result;
@@ -137,20 +139,27 @@ class TemplateService
     }
 
     /**
-     * 生成缓存键
+     * 生成缓存键。
+     *
+     * 键里带版本号：模板定义变了就把版本号加一，旧版本的缓存不再被读到、到期自然消失。
      */
     private function generateCacheKey(string $content, string $format): string
     {
-        return 'template_'.$format.'_'.md5($content);
+        $version = RedisCache::get(self::CACHE_VERSION_KEY, 0);
+
+        return "template/v{$version}/{$format}/".md5($content);
     }
 
     /**
-     * 清除模板相关缓存
+     * 让所有模板渲染缓存失效。
+     *
+     * 缓存键是内容的 md5，按模板名查不出受影响的键，所以整体换版本号。
+     * 原来用的是 Cache::flush()，在 Redis Cluster 上会清空所有 master，
+     * 连队列和其他业务缓存一起清掉。
      */
     private function clearTemplateCache(string $templateName): void
     {
-        // 这里可以实现更精确的缓存清除逻辑
-        Cache::flush(); // 简单起见，清除所有缓存
+        RedisCache::increment(self::CACHE_VERSION_KEY);
     }
 
     /**

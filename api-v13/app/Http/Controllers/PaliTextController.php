@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\RedisCache;
 use App\Http\Resources\PaliTextResource;
 use App\Models\BookTitle;
 use App\Models\PaliText;
@@ -10,7 +11,6 @@ use App\Models\TagMap;
 use App\Services\PaliTextService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class PaliTextController extends Controller
@@ -310,7 +310,7 @@ class PaliTextController extends Controller
                 if (is_object($value)) {
                     // TODO $value->book 可能不存在
                     $progress_key = "/chapter_dynamic/{$value->book}/{$value->paragraph}/global";
-                    $chapters[$key]->progress_line = Cache::get($progress_key);
+                    $chapters[$key]->progress_line = RedisCache::get($progress_key);
                 }
             }
         }

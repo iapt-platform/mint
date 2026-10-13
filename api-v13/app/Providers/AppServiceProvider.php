@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Services\PaliSeriesesService;
+use App\Services\RedisCache;
 use App\Services\RomanizeService;
 use App\Services\UserService;
 use App\Tools\QueryBuilderMacro;
@@ -53,6 +54,15 @@ class AppServiceProvider extends ServiceProvider
         |--------------------------------------------------------------------------
         */
         $this->app->singleton(RomanizeService::class);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Redis Cache（业务代码专用，门面 App\Facades\RedisCache，连 Redis Cluster）
+        |--------------------------------------------------------------------------
+        | 只登记这个类，不替换框架的 cache 绑定：RateLimiter、schedule 互斥锁、
+        | snowflake 序列等框架内部仍走 Laravel Cache（config/cache.php）。
+        */
+        $this->app->singleton(RedisCache::class);
 
         /*
         |--------------------------------------------------------------------------

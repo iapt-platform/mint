@@ -36,8 +36,8 @@ class ClearEmbeddingsCache extends Command
                 $this->warn("缓存不存在: \"{$text}\"");
             }
         } else {
-            $count = $service->clearAllEmbeddingCache();
-            $this->info("已清理所有 embedding 缓存，共 {$count} 条");
+            $service->clearAllEmbeddingCache();
+            $this->info('已让所有 embedding 缓存失效，旧缓存 7 天内自然过期');
         }
 
         return 0;

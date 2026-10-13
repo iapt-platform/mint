@@ -2,13 +2,13 @@
 
 namespace App\Console\Commands;
 
+use App\Facades\RedisCache;
 use App\Http\Resources\AiModelResource;
 use App\Services\AIAssistant\AITermService;
 use App\Services\AIModelService;
 use App\Services\AuthService;
 use App\Services\TermService;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Cache;
 
 class UpgradeAITerm extends Command
 {
@@ -82,7 +82,7 @@ class UpgradeAITerm extends Command
         $this->aiTermService->setThinking($this->thinking);
 
         if ($this->option('fresh')) {
-            Cache::forget(self::CURSOR_KEY);
+            RedisCache::forget(self::CURSOR_KEY);
             $this->info('cleared checkpoint');
         }
 
@@ -114,7 +114,7 @@ class UpgradeAITerm extends Command
         $this->info("{$total} terms");
 
         $startIndex = 0;
-        $cursor = Cache::get(self::CURSOR_KEY, []);
+        $cursor = RedisCache::get(self::CURSOR_KEY, []);
         if (! empty($cursor)) {
             $pos = array_search($cursor['word'] ?? null, $terms, true);
             $startIndex = $pos !== false ? (int) $pos + 1 : (int) ($cursor['index'] ?? -1) + 1;
@@ -128,11 +128,11 @@ class UpgradeAITerm extends Command
             $this->info("[{$term}]content ".substr($result, 0, 30));
 
             // 该术语完成后写入断点（中途中断时不会误标记未完成的术语）
-            Cache::put(self::CURSOR_KEY, ['index' => $key, 'word' => $term], now()->addHours(48));
+            RedisCache::put(self::CURSOR_KEY, ['index' => $key, 'word' => $term], now()->addHours(48));
         }
 
         // 全部完成，清空断点
-        Cache::forget(self::CURSOR_KEY);
+        RedisCache::forget(self::CURSOR_KEY);
         $this->info('all terms completed');
     }
 }

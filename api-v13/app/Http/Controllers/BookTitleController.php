@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\RedisCache;
 use App\Http\Resources\BookTitleResource;
 use App\Models\BookTitle;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class BookTitleController extends Controller
@@ -28,7 +28,7 @@ class BookTitleController extends Controller
     public function index()
     {
         //
-        $data = Cache::remember(self::CACHE_KEY, self::CACHE_TTL, function () {
+        $data = RedisCache::remember(self::CACHE_KEY, self::CACHE_TTL, function () {
             $result = BookTitle::orderBy('sn')->get();
             $meta = $this->paliTextMeta($result);
             $relatedNames = $this->relatedNames($result);

@@ -2,11 +2,11 @@
 
 namespace App\Console\Commands;
 
+use App\Facades\RedisCache;
 use App\Http\Api\Mq;
 use App\Tools\Tools;
 use Illuminate\Console\Command;
 use Illuminate\Http\Client\RequestException;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -63,12 +63,12 @@ class MqAiTranslate extends Command
             // 获取model token
             $first = $messages[0];
             $taskId = $first->task->info->id;
-            Cache::put("/task/{$taskId}/message_id", $messageId);
+            RedisCache::put("/task/{$taskId}/message_id", $messageId);
             $pointerKey = "/message/{$messageId}/pointer";
             $pointer = 0;
-            if (Cache::has($pointerKey)) {
+            if (RedisCache::has($pointerKey)) {
                 // 回到上次中断的点
-                $pointer = Cache::get($pointerKey);
+                $pointer = RedisCache::get($pointerKey);
             }
 
             $modelToken = $first->model->token;
@@ -95,7 +95,7 @@ class MqAiTranslate extends Command
             }
 
             for ($i = $pointer; $i < count($messages); $i++) {
-                Cache::put($pointerKey, $i);
+                RedisCache::put($pointerKey, $i);
                 $message = $messages[$i];
                 $taskDiscussionContent = [];
                 $param = [
@@ -326,7 +326,7 @@ class MqAiTranslate extends Command
                     $this->setTaskStatus($message->task->info->id, 'done', $modelToken);
                 }
             }
-            Cache::forget($pointerKey);
+            RedisCache::forget($pointerKey);
             $this->info('ai translate task complete');
 
             return 0;

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\RedisCache;
 use App\Http\Api\ChannelApi;
 use App\Http\Api\ShareApi;
 use App\Http\Api\StudioApi;
@@ -14,7 +15,6 @@ use App\Services\AuthService;
 use App\Services\TermIndexService;
 use App\Tools\Tools;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -192,7 +192,7 @@ class DhammaTermController extends Controller
                 break;
             case 'hot-meaning':
                 $key = 'term/hot_meaning';
-                $value = Cache::remember($key, config('mint.cache.expire'), function () use ($request) {
+                $value = RedisCache::remember($key, config('mint.cache.expire'), function () use ($request) {
                     $hotMeaning = [];
                     $words = DhammaTerm::select('word')
                         ->where('language', $request->input('language'))
@@ -218,9 +218,9 @@ class DhammaTermController extends Controller
                             ];
                         }
                     }
-                    // FIXME: 外层 Cache::remember 已负责写缓存，这里重复写入且 TTL（3600）
+                    // FIXME: 外层 RedisCache::remember 已负责写缓存，这里重复写入且 TTL（3600）
                     // 与 config('mint.cache.expire') 不一致；应删除这一行。
-                    Cache::put($key, $hotMeaning, 3600);
+                    RedisCache::put($key, $hotMeaning, 3600);
 
                     return $hotMeaning;
                 });
@@ -404,10 +404,10 @@ class DhammaTermController extends Controller
             foreach ($channels as $channel) {
                 // FIXME: $channel 是 Eloquent 模型对象，插值后得到的是 JSON 而非 uid，
                 // 缓存键与写入时的键对不上，studio 级术语的缓存实际没被清掉；应用 $channel->uid。
-                Cache::forget("/term/{$channel}/{$term->word}");
+                RedisCache::forget("/term/{$channel}/{$term->word}");
             }
         } else {
-            Cache::forget("/term/{$term->channal}/{$term->word}");
+            RedisCache::forget("/term/{$term->channal}/{$term->word}");
         }
     }
 

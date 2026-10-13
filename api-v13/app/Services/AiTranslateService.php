@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Exceptions\SectionTimeoutException;
 use App\Exceptions\TaskFailException;
+use App\Facades\RedisCache;
 use App\Http\Api\ChannelApi;
 use App\Http\Api\MdRender;
 use App\Models\AiModel;
@@ -13,7 +14,6 @@ use App\Models\Sentence;
 use App\Models\Task;
 use App\Tools\Tools;
 use Illuminate\Http\Client\RequestException;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -68,12 +68,12 @@ class AiTranslateService
         $first = $messages[0];
         $this->task = $first->task->info;
         $taskId = $this->task->id;
-        Cache::put("/task/{$taskId}/message_id", $messageId);
+        RedisCache::put("/task/{$taskId}/message_id", $messageId);
         $pointerKey = "/task/{$taskId}/pointer";
         $pointer = 0;
-        if (Cache::has($pointerKey)) {
+        if (RedisCache::has($pointerKey)) {
             // 回到上次中断的点
-            $pointer = Cache::get($pointerKey);
+            $pointer = RedisCache::get($pointerKey);
             Log::info("last break point {$pointer}");
         }
 
@@ -108,7 +108,7 @@ class AiTranslateService
                 return false;
             }
 
-            Cache::put($pointerKey, $i);
+            RedisCache::put($pointerKey, $i);
             $message = $messages[$i];
             $taskDiscussionContent = [];
 
@@ -206,7 +206,7 @@ class AiTranslateService
         // 任务完成 修改任务状态为 done
         if ($i === count($messages)) {
             $this->setTaskStatus($this->task->id, 'done');
-            Cache::forget($pointerKey);
+            RedisCache::forget($pointerKey);
             Log::info('ai translate task complete');
         }
 
@@ -619,9 +619,9 @@ class AiTranslateService
         $aiModel['token'] = $modelToken;
 
         /**
-         * 返回值会被 ProcessAITranslateJob::publish() 写入缓存。Laravel 13 默认
-         * 拒绝从缓存反序列化对象（cache.serializable_classes = false），所以这里
-         * 先把模型摊平成数组。JSON 输出与直接编码模型完全一致。
+         * 返回值会被 ProcessAITranslateJob::publish() 写入缓存。RedisCache 存 JSON，
+         * 对象读回来会变成关联数组，所以这里先把模型摊平成数组，写入前后形状一致。
+         * JSON 输出与直接编码模型完全一致。
          */
         $aiModelData = $aiModel->toArray();
         $taskData = $task->toArray();

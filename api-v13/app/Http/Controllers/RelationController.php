@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\RedisCache;
 use App\Http\Resources\RelationResource;
 use App\Models\Relation;
 use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Support\Facades\Cache;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
@@ -30,7 +30,7 @@ class RelationController extends Controller
     {
         if ($request->boolean('vocabulary')) {
             return $this->ok(
-                Cache::remember(
+                RedisCache::remember(
                     self::VOCABULARY_CACHE_KEY,
                     config('mint.cache.expire'),
                     fn () => $this->buildVocabularyPayload()
@@ -67,7 +67,7 @@ class RelationController extends Controller
         $relation->editor_id = $user['user_uid'];
         $relation->save();
 
-        Cache::forget(self::VOCABULARY_CACHE_KEY);
+        RedisCache::forget(self::VOCABULARY_CACHE_KEY);
 
         return $this->ok(new RelationResource($relation));
     }
@@ -101,7 +101,7 @@ class RelationController extends Controller
         $relation->editor_id = $user['user_uid'];
         $relation->save();
 
-        Cache::forget(self::VOCABULARY_CACHE_KEY);
+        RedisCache::forget(self::VOCABULARY_CACHE_KEY);
 
         return $this->ok(new RelationResource($relation));
     }
@@ -120,7 +120,7 @@ class RelationController extends Controller
 
         $deleted = $relation->delete();
 
-        Cache::forget(self::VOCABULARY_CACHE_KEY);
+        RedisCache::forget(self::VOCABULARY_CACHE_KEY);
 
         return $this->ok($deleted);
     }
@@ -204,7 +204,7 @@ class RelationController extends Controller
             $currLine++;
         }
 
-        Cache::forget(self::VOCABULARY_CACHE_KEY);
+        RedisCache::forget(self::VOCABULARY_CACHE_KEY);
 
         $success = $currLine - 2 - $countFail;
 

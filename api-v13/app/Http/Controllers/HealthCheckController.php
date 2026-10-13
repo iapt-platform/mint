@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\RedisCache;
 use App\Services\OpenSearchService;
 use App\Services\RabbitMQService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -34,8 +34,8 @@ class HealthCheckController extends Controller
 
         // Cache
         try {
-            Cache::put('health_check', true, 5);
-            Cache::get('health_check');
+            RedisCache::put('health_check', true, 5);
+            RedisCache::get('health_check');
             $checks['cache'] = true;
         } catch (\Throwable $e) {
             $checks['cache'] = false;

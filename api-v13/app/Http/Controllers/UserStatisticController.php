@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\RedisCache;
 use App\Http\Api\UserApi;
 use App\Models\DhammaTerm;
 use App\Models\Sentence;
@@ -11,7 +12,6 @@ use App\Models\UserOperationLog;
 use App\Models\Wbw;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Cache;
 
 class UserStatisticController extends Controller
 {
@@ -68,7 +68,7 @@ class UserStatisticController extends Controller
         $myDictCount = 0;
         // 总经验值
         if (! $request->has('view') || $request->input('view') === 'exp-sum') {
-            $expSum = Cache::remember(
+            $expSum = RedisCache::remember(
                 "user/{$userName}/exp/sum",
                 $cacheExpiry,
                 function () use ($queryUserId) {
@@ -80,7 +80,7 @@ class UserStatisticController extends Controller
 
         // 逐词解析
         if (! $request->has('view') || $request->input('view') === 'wbw-count') {
-            $wbwCount = Cache::remember(
+            $wbwCount = RedisCache::remember(
                 "user/{$userName}/wbw/count",
                 $cacheExpiry,
                 function () use ($queryUserId) {
@@ -92,7 +92,7 @@ class UserStatisticController extends Controller
 
         // 查字典次数
         if (! $request->has('view') || $request->input('view') === 'lookup-count') {
-            $lookupCount = Cache::remember(
+            $lookupCount = RedisCache::remember(
                 "user/{$userName}/lookup/count",
                 $cacheExpiry,
                 function () use ($queryUserId) {
@@ -105,7 +105,7 @@ class UserStatisticController extends Controller
         // 译文
         // TODO 判断是否是译文channel
         if (! $request->has('view') || $request->input('view') === 'translation-count') {
-            $translationCount = Cache::remember(
+            $translationCount = RedisCache::remember(
                 "user/{$userName}/translation/count",
                 $cacheExpiry,
                 function () use ($queryUserUuid) {
@@ -113,7 +113,7 @@ class UserStatisticController extends Controller
                         ->count();
                 }
             );
-            $translationCountPub = Cache::remember(
+            $translationCountPub = RedisCache::remember(
                 "user/{$userName}/translation/count-pub",
                 $cacheExpiry,
                 function () use ($queryUserUuid) {
@@ -125,7 +125,7 @@ class UserStatisticController extends Controller
         }
         // 术语
         if (! $request->has('view') || $request->input('view') === 'term-count') {
-            $termCount = Cache::remember(
+            $termCount = RedisCache::remember(
                 "user/{$userName}/term/count",
                 $cacheExpiry,
                 function () use ($queryUserId) {
@@ -133,7 +133,7 @@ class UserStatisticController extends Controller
                         ->count();
                 }
             );
-            $termCountWithNote = Cache::remember(
+            $termCountWithNote = RedisCache::remember(
                 "user/{$userName}/term/count-note",
                 $cacheExpiry,
                 function () use ($queryUserId) {
@@ -145,7 +145,7 @@ class UserStatisticController extends Controller
         }
         // 单词本
         if (! $request->has('view') || $request->input('view') === 'my-dict-count') {
-            $myDictCount = Cache::remember(
+            $myDictCount = RedisCache::remember(
                 "user/{$userName}/dict/count",
                 $cacheExpiry,
                 function () use ($queryUserId) {

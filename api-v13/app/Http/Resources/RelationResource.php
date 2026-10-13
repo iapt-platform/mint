@@ -15,9 +15,9 @@ class RelationResource extends JsonResource
      * Transform the resource into an array.
      *
      * The payload must contain only scalars and arrays: it is cached by
-     * RelationController, and Laravel 13 refuses to unserialize objects from
-     * cache unless they are listed in cache.serializable_classes. Hence the
-     * associative json_decode() and the ISO-8601 date strings.
+     * RelationController, and RedisCache stores JSON, so objects would come
+     * back as associative arrays anyway. Hence the associative json_decode()
+     * and the ISO-8601 date strings.
      *
      * @param  Request  $request
      * @return array|Arrayable|\JsonSerializable

@@ -1,10 +1,10 @@
 <?php
 
+use App\Facades\RedisCache;
 use App\Models\PaliText;
 use App\Models\Sentence;
 use App\Services\PaliContentService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 uses(RefreshDatabase::class);
@@ -157,13 +157,13 @@ it('caches the paragraph and drops the cache when a sentence changes', function 
     $this->getJson($url)->assertOk();
 
     $key = PaliContentService::paragraphCacheKey(9001, 1, $channel, 'html');
-    expect(Cache::has($key))->toBeTrue();
+    expect(RedisCache::has($key))->toBeTrue();
 
     $sentence = Sentence::where('book_id', 9001)->where('paragraph', 1)->orderBy('word_start')->first();
     $sentence->content = 'changed sentence';
     $sentence->save();
 
-    expect(Cache::has($key))->toBeFalse();
+    expect(RedisCache::has($key))->toBeFalse();
     expect($this->getJson($url)->json('data.0.display'))->toContain('changed sentence');
 });
 

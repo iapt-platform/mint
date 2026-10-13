@@ -2,13 +2,13 @@
 
 namespace App\Console\Commands;
 
+use App\Facades\RedisCache;
 use App\Models\PaliText;
 use App\Models\ProgressChapter;
 use App\Models\SentHistory;
 use App\Tools\Tools;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class UpgradeChapterDynamicWeekly extends Command
@@ -89,13 +89,13 @@ class UpgradeChapterDynamicWeekly extends Command
                 $progress[] = $count;
             }
             $key = "/chapter_dynamic/{$chapter->book}/{$chapter->para}/global";
-            Cache::put($key, $progress, 3600 * 24 * 7);
+            RedisCache::put($key, $progress, 3600 * 24 * 7);
 
             $bar->advance();
 
             if ($this->option('test')) {
                 $this->info("key:{$key}");
-                if (Cache::has($key)) {
+                if (RedisCache::has($key)) {
                     $this->info('has key '.$key);
                 }
                 break; // 调试代码
@@ -146,12 +146,12 @@ class UpgradeChapterDynamicWeekly extends Command
                 $progress[] = $count;
             }
             $key = "/chapter_dynamic/{$chapter->book}/{$chapter->para}/ch_{$chapter->channel_id}";
-            Cache::put($key, $progress, 3600 * 24 * 7);
+            RedisCache::put($key, $progress, 3600 * 24 * 7);
             $bar->advance();
 
             if ($this->option('test')) {
                 $this->info("key:{$key}");
-                if (Cache::has($key)) {
+                if (RedisCache::has($key)) {
                     $this->info('has key '.$key);
                 }
                 break; // 调试代码

@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Facades\RedisCache;
 use App\Models\WbwAnalysis;
 use App\Tools\Tools;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class CacheWbwPreference extends Command
@@ -74,7 +74,7 @@ class CacheWbwPreference extends Command
                     ->where('editor_id', $value->editor_id)
                     ->orderBy('updated_at', 'desc')
                     ->value('data');
-                Cache::put("{$prefix}/{$value->wbw_word}/{$value->type}/{$value->editor_id}", $data);
+                RedisCache::put("{$prefix}/{$value->wbw_word}/{$value->type}/{$value->editor_id}", $data);
                 $bar->advance();
                 $count++;
                 if ($count % 1000 === 0) {
@@ -109,7 +109,7 @@ class CacheWbwPreference extends Command
                     ->orderBy('count', 'desc')
                     ->first();
 
-                Cache::put("{$prefix}/{$value->wbw_word}/{$value->type}/0", $data->data);
+                RedisCache::put("{$prefix}/{$value->wbw_word}/{$value->type}/0", $data->data);
                 $bar->advance();
             }
             $bar->finish();

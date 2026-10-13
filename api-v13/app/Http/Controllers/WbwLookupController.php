@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\RedisCache;
 use App\Http\Api\DictApi;
 use App\Models\Channel;
 use App\Models\DictInfo;
@@ -11,7 +12,6 @@ use App\Services\AuthService;
 use App\Tools\CaseMan;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Cache;
 
 class WbwLookupController extends Controller
 {
@@ -167,11 +167,11 @@ class WbwLookupController extends Controller
             'case' => 8,
         ];
         $fieldId = $fieldMap[$field];
-        $myPreference = Cache::get("{$prefix}/{$word}/{$fieldId}/{$userId}");
+        $myPreference = RedisCache::get("{$prefix}/{$word}/{$fieldId}/{$userId}");
         if (! empty($myPreference)) {
             return ['value' => $myPreference, 'status' => 5];
         } else {
-            $myPreference = Cache::get("{$prefix}/{$word}/3/0");
+            $myPreference = RedisCache::get("{$prefix}/{$word}/3/0");
             if (! empty($myPreference)) {
                 return ['value' => $myPreference, 'status' => 5];
             }

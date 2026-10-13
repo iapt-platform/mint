@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\RedisCache;
 use App\Http\Resources\InviteResource;
 use App\Mail\EmailCertif;
 use App\Models\Invite;
 use App\Models\UserInfo;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -74,7 +74,7 @@ class EmailCertificationController extends Controller
     public function show(string $id)
     {
         //
-        $code = Cache::get('/email/certification/'.$id);
+        $code = RedisCache::get('/email/certification/'.$id);
         if (empty($code)) {
             return $this->error('Certification is avalide', 200, 200);
         }

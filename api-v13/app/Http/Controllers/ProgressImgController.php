@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\RedisCache;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Cache;
 
 class ProgressImgController extends Controller
 {
@@ -39,10 +39,10 @@ class ProgressImgController extends Controller
         //
         return response()->stream(function () use ($id) {
             $key = str_replace('-', '/', $id);
-            $svg = Cache::remember('svg/'.$key, config('mint.cache.expire'), function () use ($key) {
+            $svg = RedisCache::remember('svg/'.$key, config('mint.cache.expire'), function () use ($key) {
                 $viewHeight = 60;
                 $svg = "<svg xmlns='http://www.w3.org/2000/svg'  fill='currentColor' viewBox='0 0 300 60'>";
-                $data = Cache::get($key);
+                $data = RedisCache::get($key);
                 if (is_array($data)) {
                     $point = [];
                     foreach ($data as $key => $value) {

@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Facades\RedisCache;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 
 class TestRedis extends Command
@@ -71,10 +71,10 @@ class TestRedis extends Command
         $this->info('testing cache put');
         $key = 'cache-key';
 
-        Cache::put($key, $value, 1000);
-        if (Cache::has($key)) {
+        RedisCache::put($key, $value, 1000);
+        if (RedisCache::has($key)) {
             $this->info("cache::put() exist key={$key}");
-            if (Cache::get($key) == $value) {
+            if (RedisCache::get($key) == $value) {
                 $this->info("cache::get() ok value={$value}");
             } else {
                 $this->error('cache::get() fail ');
@@ -83,27 +83,13 @@ class TestRedis extends Command
             $this->error('no key cache-key');
         }
 
-        $key = 'cache-key-2';
-        $this->info('testing cache() function');
-        $this->info("cache() key={$key} value={$value}");
-        cache(['cache-key-2' => $value]);
-        if (Cache::has($key)) {
-            if (Cache::get($key) == $value) {
-                $this->info("cache() get ok value={$value}");
-            } else {
-                $this->error('cache::get() fail ');
-            }
-        } else {
-            $this->error('no key cache-key-2');
-        }
-
         $key = 'cache-key-3';
         $this->info('testing cache remember()');
-        $value = Cache::remember($key, 600, function () {
+        $value = RedisCache::remember($key, 600, function () {
             return 'cache-value-3';
         });
-        if (Cache::has($key)) {
-            $this->info("{$key} exist value=".Cache::get($key));
+        if (RedisCache::has($key)) {
+            $this->info("{$key} exist value=".RedisCache::get($key));
         } else {
             $this->error('cache::remember() fail.');
         }

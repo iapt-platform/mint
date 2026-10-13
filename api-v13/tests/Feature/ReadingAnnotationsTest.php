@@ -1,9 +1,9 @@
 <?php
 
+use App\Facades\RedisCache;
 use App\Models\Discussion;
 use App\Services\PaliContentService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 uses(RefreshDatabase::class);
@@ -89,9 +89,9 @@ it('drops the paragraph cache when either kind of annotation changes', function 
     $this->getJson($url)->assertOk();
 
     $key = PaliContentService::paragraphCacheKey(9101, 1, $channel, 'html');
-    expect(Cache::has($key))->toBeTrue();
+    expect(RedisCache::has($key))->toBeTrue();
 
     makeAnnotation($sentence->uid, 'note', '译者按。', 5);
-    expect(Cache::has($key))->toBeFalse();
+    expect(RedisCache::has($key))->toBeFalse();
     expect($this->getJson($url)->json('data.0.display'))->toContain('译者按。');
 });

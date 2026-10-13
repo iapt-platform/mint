@@ -3,11 +3,11 @@
 namespace App\Services\V3;
 
 use App\Exceptions\BusinessException;
+use App\Facades\RedisCache;
 use App\Mail\V3\EmailCertificationMail;
 use App\Models\Channel;
 use App\Models\Invite;
 use App\Models\UserInfo;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -63,7 +63,7 @@ class SignUpService
     public function sendCode(string $email, ?string $lang): void
     {
         $code = (string) random_int(100000, 999999);
-        Cache::put($this->codeKey($email), [
+        RedisCache::put($this->codeKey($email), [
             'digest' => hash('sha256', $code),
             'attempts' => 0,
         ], now()->addMinutes(self::CODE_TTL_MINUTES));
@@ -89,20 +89,20 @@ class SignUpService
     public function verifyCode(string $email, string $code): Invite
     {
         $key = $this->codeKey($email);
-        $entry = Cache::get($key);
+        $entry = RedisCache::get($key);
 
         if (! is_array($entry) || ! hash_equals($entry['digest'], hash('sha256', $code))) {
             if (is_array($entry)) {
                 $attempts = $entry['attempts'] + 1;
                 $attempts >= self::CODE_MAX_ATTEMPTS
-                    ? Cache::forget($key)
-                    : Cache::put($key, [...$entry, 'attempts' => $attempts], now()->addMinutes(self::CODE_TTL_MINUTES));
+                    ? RedisCache::forget($key)
+                    : RedisCache::put($key, [...$entry, 'attempts' => $attempts], now()->addMinutes(self::CODE_TTL_MINUTES));
             }
 
             throw ValidationException::withMessages(['code' => __('messages.sign_up_code_invalid')]);
         }
 
-        Cache::forget($key);
+        RedisCache::forget($key);
 
         $invite = Invite::whereRaw('lower(email) = ?', [mb_strtolower($email)])->first()
             ?? (new Invite)->forceFill([

@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\RedisCache;
 use App\Http\Resources\SentResource;
 use App\Models\PaliSentence;
 use App\Models\PaliText;
 use App\Models\Sentence;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Cache;
 
 class SentenceInfoController extends Controller
 {
@@ -114,7 +114,7 @@ class SentenceInfoController extends Controller
             foreach ($sentFinished as $sent) {
                 // code...
                 $key_sent_id = $sent->book_id.'-'.$sent->paragraph.'-'.$sent->word_start.'-'.$sent->word_end;
-                $para_strlen += Cache::remember(
+                $para_strlen += RedisCache::remember(
                     'pali-sent/strlen/'.$key_sent_id,
                     config('mint.cache.expire'),
                     function () use ($sent) {
