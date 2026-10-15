@@ -59,6 +59,10 @@ docs/Model/PostApiV3AgentGrants200Response.md
 docs/Model/PostApiV3AgentGrants200ResponseData.md
 docs/Model/PostApiV3AgentGrantsRequest.md
 docs/Model/PostApiV3Discussions200Response.md
+docs/Model/PostApiV3DiscussionsBatchCount200Response.md
+docs/Model/PostApiV3DiscussionsBatchCount200ResponseDataInner.md
+docs/Model/PostApiV3DiscussionsBatchCountRequest.md
+docs/Model/PostApiV3DiscussionsBatchCountRequestTargetsInner.md
 docs/Model/PostApiV3DiscussionsDiscussionRepliesRequest.md
 docs/Model/PostApiV3DiscussionsRequest.md
 docs/Model/PostApiV3EmailCertificationsRequest.md
@@ -137,6 +141,10 @@ lib/Model/PostApiV3AgentGrants200Response.php
 lib/Model/PostApiV3AgentGrants200ResponseData.php
 lib/Model/PostApiV3AgentGrantsRequest.php
 lib/Model/PostApiV3Discussions200Response.php
+lib/Model/PostApiV3DiscussionsBatchCount200Response.php
+lib/Model/PostApiV3DiscussionsBatchCount200ResponseDataInner.php
+lib/Model/PostApiV3DiscussionsBatchCountRequest.php
+lib/Model/PostApiV3DiscussionsBatchCountRequestTargetsInner.php
 lib/Model/PostApiV3DiscussionsDiscussionRepliesRequest.php
 lib/Model/PostApiV3DiscussionsRequest.php
 lib/Model/PostApiV3EmailCertificationsRequest.php
@@ -211,6 +219,10 @@ test/Model/PostApiV3AgentGrants200ResponseDataTest.php
 test/Model/PostApiV3AgentGrants200ResponseTest.php
 test/Model/PostApiV3AgentGrantsRequestTest.php
 test/Model/PostApiV3Discussions200ResponseTest.php
+test/Model/PostApiV3DiscussionsBatchCount200ResponseDataInnerTest.php
+test/Model/PostApiV3DiscussionsBatchCount200ResponseTest.php
+test/Model/PostApiV3DiscussionsBatchCountRequestTargetsInnerTest.php
+test/Model/PostApiV3DiscussionsBatchCountRequestTest.php
 test/Model/PostApiV3DiscussionsDiscussionRepliesRequestTest.php
 test/Model/PostApiV3DiscussionsRequestTest.php
 test/Model/PostApiV3EmailCertificationsRequestTest.php

@@ -41,7 +41,7 @@ cd ../dashboard-v6 && npm run dev            # http://127.0.0.1:4000/pcd-v2026/
 npm test                    # 跑全部
 npm run test:channel        # 只跑 channel 路由
 npm run test:users          # 只跑匿名账号页面（登录 / 注册 / 找回密码 / 重置密码）
-npm run test:discussion     # 只跑讨论话题页 /discussion/topic/:id
+npm run test:discussion     # 只跑讨论：话题页、对象的全部讨论页、文章底部问答区、讨论角标
 npm run test:ui             # UI Mode，可视化单步调试
 npm run test:headed         # 显示浏览器窗口
 npm run report              # 打开上次的 HTML 报告
@@ -69,6 +69,7 @@ E2E_SHOT=testlog/assets/channel_20260907_034904 npm run test:channel
 | `E2E_SHOT`                | `testlog/assets/<路由>_latest`            | 截图输出目录                                    |
 | `E2E_DESTRUCTIVE`         | 未设置（执行）                            | 设为 `0` 跳过增删改用例                         |
 | `E2E_DISCUSSION_SENTENCE` | `ee5259be-…`（本地开发库）                | 讨论用例挂的句子：须在测试账号自己的 channel 里 |
+| `E2E_ARTICLE`             | `f24cfd88-…`（本地开发库）                | 测试账号自己的文章：文章底部问答区、讨论角标请求 |
 
 ---
 
@@ -84,7 +85,7 @@ dashboard-test/
 │   ├── tests/
 │   │   ├── auth.setup.ts      登录一次，存 storageState
 │   │   ├── channel.spec.ts    /workspace/channel 及子路由
-│   │   ├── discussion.spec.ts /discussion/topic/:id（讨论话题页，数据经 v3 API 建删）
+│   │   ├── discussion.spec.ts 讨论话题页、/discussion/show、文章底部问答区、讨论角标（数据经 v3 API 建删）
 │   │   └── users.spec.ts      /anonymous 下的登录、注册、邀请注册、找回密码、重置密码
 │   └── lib/
 │       ├── collect.ts         console / pageerror / HTTP 错误采集与噪音过滤
@@ -127,7 +128,7 @@ dashboard-test/
 - BUG-1 Webhooks 页签不应跳到已废弃的 `/studio/...`
 - BUG-4 不存在的频道不应出现 `Unexpected Application Error`
 
-所以 `npm test` 现在是 **15 通过 / 2 失败**（含 setup；channel 3/2、users 7/0、discussion 4/0），
+所以 `npm test` 现在是 **22 通过 / 2 失败**（含 setup；channel 3/2、users 7/0、discussion 11/0），
 两个失败即上述待修项。
 
 修复后的缺陷断言保留作回归保护：`src/tests/users.spec.ts` 的「回归」组里有

@@ -15,6 +15,8 @@ export const USER = required('E2E_USER');
 export const PASS = required('E2E_PASS');
 export const DISCUSSION_SENTENCE =
   process.env.E2E_DISCUSSION_SENTENCE || 'ee5259be-5d1e-4408-a2a6-566a5773eef1';
+/** 测试账号自己的一篇文章（文章底部问答区、讨论角标请求） */
+export const ARTICLE = process.env.E2E_ARTICLE || 'f24cfd88-5e0c-486d-844b-8d237b5b80d7';
 export const DESTRUCTIVE = process.env.E2E_DESTRUCTIVE !== '0';
 
 /** 截图目录：E2E_SHOT 优先，否则 testlog/assets/<name>_latest */

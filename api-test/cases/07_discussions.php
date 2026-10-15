@@ -2,6 +2,8 @@
 
 use \WikipaliApi\Api\DiscussionsApi;
 use \WikipaliApi\Model\PatchApiV3DiscussionsDiscussionRequest;
+use \WikipaliApi\Model\PostApiV3DiscussionsBatchCountRequest;
+use \WikipaliApi\Model\PostApiV3DiscussionsBatchCountRequestTargetsInner;
 use \WikipaliApi\Model\PostApiV3DiscussionsDiscussionRepliesRequest;
 use \WikipaliApi\Model\PostApiV3DiscussionsRequest;
 
@@ -61,6 +63,29 @@ test('PUT /v3/discussions/{id} → 405（只有 PATCH）', function () {
     assert_status(405, $res, 'PUT');
 });
 
+test('POST /v3/discussions/batch-count → 200，按请求顺序、没有讨论的给 0', function () {
+    $sentence = new PostApiV3DiscussionsBatchCountRequestTargetsInner();
+    $sentence->setType('sentence');
+    $sentence->setId(discussion_target());
+    $wbw = new PostApiV3DiscussionsBatchCountRequestTargetsInner();
+    $wbw->setType('wbw');
+    $wbw->setId('00000000-0000-4000-8000-000000000000');
+    $body = new PostApiV3DiscussionsBatchCountRequest();
+    $body->setTargets([$sentence, $wbw]);
+
+    $res = request(fn () => api(DiscussionsApi::class)->postApiV3DiscussionsBatchCountWithHttpInfo($body));
+    assert_status(200, $res, 'batch-count');
+    assert_eq(discussion_target(), $res['body']['data'][0]['target_id'] ?? null, 'batch-count 顺序');
+    assert_eq(0, $res['body']['data'][1]['total'] ?? null, 'batch-count 没有讨论给 0');
+    assert_eq(0, $res['body']['data'][0]['mine'] ?? null, '匿名 mine 恒为 0');
+});
+
+test('POST /v3/discussions/batch-count（空 / 非法类型）→ 422', function () {
+    assert_status(422, raw('POST', '/v3/discussions/batch-count', null, ['targets' => []]), 'batch-count 空');
+    $bad = raw('POST', '/v3/discussions/batch-count', null, ['targets' => [['type' => 'article', 'id' => discussion_target()]]]);
+    assert_field_error('targets.0.type', $bad, 'batch-count 非法类型');
+});
+
 /* ---- 无 token → 401 ---- */
 
 test('POST /v3/discussions（无 token）→ 401', function () {
@@ -110,6 +135,12 @@ test('discussions 一轮：建话题 → 回复 → 关闭后回复 409 → 重�
         ], $token);
         assert_status(422, $bad, 'discussion 带 severity');
         assert_field_error('severity', $bad, 'discussion 带 severity');
+
+        // 角标：数到这个话题，而且是我发起的
+        $badge = raw('POST', '/v3/discussions/batch-count', null, ['targets' => [['type' => 'sentence', 'id' => discussion_target()]]], $token);
+        if (($badge['body']['data'][0]['mine'] ?? 0) < 1) {
+            fail('batch-count：mine 应至少为 1，body=' . json_encode($badge['body']));
+        }
 
         // 列表里查得到
         $list = request(fn () => $client->getApiV3DiscussionsWithHttpInfo('sentence', discussion_target(), 50, 'issue'));
