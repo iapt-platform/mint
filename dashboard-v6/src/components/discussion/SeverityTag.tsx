@@ -4,7 +4,7 @@ const COLORS: Record<string, string> = {
   error: "red",
   urgent: "red",
   warning: "orange",
-  info: "blue",
+  suggestion: "blue",
   normal: "default",
 };
 

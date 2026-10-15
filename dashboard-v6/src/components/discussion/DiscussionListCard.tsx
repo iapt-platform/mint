@@ -6,7 +6,7 @@ import { get } from "../../request";
 
 import { type ActionType, ProList } from "@ant-design/pro-components";
 import DiscussionCreate from "./DiscussionCreate";
-import User from "../auth/User";
+import DiscussionAuthors from "./DiscussionAuthors";
 import type { IArticleListResponse } from "../../api/article";
 import { useAppSelector } from "../../hooks";
 import { currentUser as _currentUser } from "../../reducers/current-user";
@@ -87,7 +87,10 @@ const DiscussionListCardWidget = ({
             render(_dom, entity, _index, _action, _schema) {
               return (
                 <>
-                  <User {...entity.user} showName={false} />
+                  <DiscussionAuthors
+                    user={entity.user}
+                    coEditor={entity.coEditor}
+                  />
                 </>
               );
             },
