@@ -86,8 +86,8 @@ dashboard-v6 的 `package.json`、`package-lock.json`、`node_modules` **零改�
 | `src/lib/collect.ts`                            | 日志采集与噪音过滤                         |
 | `README.md`                                     | 运行方式与环境变量                         |
 | `documents/development/testing-strategy.md`     | 本文：方案取舍与约定                       |
-| `documents/testlog/<路由名>_<时间戳>.md`        | 每次测试的日志，待修项用 `- [ ]` 代办标记  |
-| `documents/testlog/assets/<路由名>_<时间戳>/`   | 该次测试的截图，在 md 中内嵌引用           |
+| `testlog/<路由名>_<时间戳>.md`        | 每次测试的日志，待修项用 `- [ ]` 代办标记  |
+| `testlog/assets/<路由名>_<时间戳>/`   | 该次测试的截图，在 md 中内嵌引用           |
 
 目录布局参照 `dashboard-v6`：代码在 `src/`，文档在 `documents/`。
 

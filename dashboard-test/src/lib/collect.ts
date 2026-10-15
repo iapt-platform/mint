@@ -2,7 +2,7 @@ import type { Page } from '@playwright/test';
 
 /** 已知的第三方库废弃警告 / React 开发态噪音，不计入问题清单 */
 const NOISE =
-  /Spin.*deprecated|destroyOnClose|Dropdown\.Button.*deprecated|ProList.*deprecated|Alert.*deprecated|React does not recognize|Invalid DOM property|empty string \(""\) was passed|Static function can not consume|React DevTools/;
+  /Spin.*deprecated|destroyOnClose|Dropdown\.Button.*deprecated|ProList.*deprecated|`List` component is deprecated|Alert.*deprecated|React does not recognize|Invalid DOM property|empty string \(""\) was passed|Static function can not consume|React DevTools/;
 
 /**
  * 挂上 console / pageerror / 请求失败 / HTTP 4xx-5xx 采集。
