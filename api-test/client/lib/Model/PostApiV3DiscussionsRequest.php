@@ -313,7 +313,7 @@ class PostApiV3DiscussionsRequest implements ModelInterface, ArrayAccess, \JsonS
     public const TYPE_COMMENTARY = 'commentary';
     public const SEVERITY_ERROR = 'error';
     public const SEVERITY_WARNING = 'warning';
-    public const SEVERITY_INFO = 'info';
+    public const SEVERITY_SUGGESTION = 'suggestion';
     public const SEVERITY_URGENT = 'urgent';
     public const SEVERITY_NORMAL = 'normal';
 
@@ -360,7 +360,7 @@ class PostApiV3DiscussionsRequest implements ModelInterface, ArrayAccess, \JsonS
         return [
             self::SEVERITY_ERROR,
             self::SEVERITY_WARNING,
-            self::SEVERITY_INFO,
+            self::SEVERITY_SUGGESTION,
             self::SEVERITY_URGENT,
             self::SEVERITY_NORMAL,
         ];
