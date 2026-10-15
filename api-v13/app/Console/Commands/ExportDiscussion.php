@@ -52,6 +52,8 @@ class ExportDiscussion extends Command
         $total = DB::table('discussions')
             ->where('editor_uid', $editorUid)
             ->where('status', 'active')
+            // discussions 已改为软删除；裸 DB::table() 不走模型的全局作用域，要自己排除
+            ->whereNull('deleted_at')
             ->count();
 
         if ($total === 0) {
@@ -85,6 +87,8 @@ class ExportDiscussion extends Command
         DB::table('discussions')
             ->where('editor_uid', $editorUid)
             ->where('status', 'active')
+            // discussions 已改为软删除；裸 DB::table() 不走模型的全局作用域，要自己排除
+            ->whereNull('deleted_at')
             ->orderBy('created_at', 'asc')
             ->select(['id', 'res_id', 'res_type', 'content', 'created_at'])
             ->chunk(50, function ($discussions) use ($progressBar) {

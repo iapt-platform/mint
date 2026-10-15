@@ -153,6 +153,14 @@ class UserService
     }
 
     /**
+     * 只有 AI 一条关系时的预加载声明（如协作者 co_editor），用法同 {@see self::eagerLoadActor()}。
+     */
+    public static function eagerLoadAssistant(string $relation): string
+    {
+        return $relation.':'.implode(',', self::ASSISTANT_COLUMNS);
+    }
+
+    /**
      * 批量取摘要，返回**位置数组**：保持传入顺序，解析不到的整条丢弃。
      *
      * 这是 `UserApi::getListByUuid()` 的既有口径，只为兼容旧调用点而存在。

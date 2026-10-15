@@ -9,6 +9,7 @@
 |
 */
 
+use App\Http\Controllers\V3\AgentGrantController;
 use App\Http\Controllers\V3\EmailCertificationController;
 use App\Http\Controllers\V3\InviteController;
 use App\Http\Controllers\V3\MeController;
@@ -51,3 +52,8 @@ Route::post('sessions', [SessionController::class, 'store'])
 Route::get('me', [MeController::class, 'show'])
     ->middleware('auth.v3')
     ->name('me.show');
+
+// agent 协作：人类授权自己名下的 AI 模型代写某个 channel（见 AgentGrantService）
+Route::post('agent-grants', [AgentGrantController::class, 'store'])
+    ->middleware('auth.v3')
+    ->name('agent-grants.store');
