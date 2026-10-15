@@ -681,6 +681,8 @@ paths:
     $ref: ./resources/auto/v2-webhook.yaml
   '/v2/webhook/{webhook}':
     $ref: ./resources/auto/v2-webhook-webhook.yaml
+  /v3/agent-grants:
+    $ref: ./resources/auto/v3-agent-grants.yaml
   /v3/discussions:
     $ref: ./resources/auto/v3-discussions.yaml
   /v3/discussions/summary:

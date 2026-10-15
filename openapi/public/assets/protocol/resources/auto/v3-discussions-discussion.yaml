@@ -65,10 +65,36 @@ get:
                   tpl_id:
                     type: string
                     nullable: true
+                  pos_start:
+                    type: integer
+                    nullable: true
+                  pos_end:
+                    type: integer
+                    nullable: true
+                  quote_exact:
+                    type: string
+                    nullable: true
+                  quote_prefix:
+                    type: string
+                    nullable: true
+                  quote_suffix:
+                    type: string
+                    nullable: true
                   reply_count:
                     type: integer
                     description: 仅在部分查询口径下返回。
                   editor:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string }
+                      roles: { type: array, items: { type: string } }
+                    nullable: true
+                  co_editor:
                     type: object
                     properties:
                       id: { type: string }
@@ -101,7 +127,8 @@ delete:
     - discussions
   operationId: delete_api_v3_discussions_discussion_
   description: |-
-    目前只有作者本人能删。删话题不动回复：有回复的话题以墓碑形式留在列表里。
+    作者本人或挂靠对象的管理者（句子 / 逐词所在 channel、文章的编辑者）能删；
+    v2 只允许作者。删话题不动回复：有回复的话题以墓碑形式留在列表里。
     返回删除后的资源（200），不是 204——软删的资源并没有消失。
 
     实现：`V3\DiscussionController@destroy`
@@ -160,10 +187,36 @@ delete:
                   tpl_id:
                     type: string
                     nullable: true
+                  pos_start:
+                    type: integer
+                    nullable: true
+                  pos_end:
+                    type: integer
+                    nullable: true
+                  quote_exact:
+                    type: string
+                    nullable: true
+                  quote_prefix:
+                    type: string
+                    nullable: true
+                  quote_suffix:
+                    type: string
+                    nullable: true
                   reply_count:
                     type: integer
                     description: 仅在部分查询口径下返回。
                   editor:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string }
+                      roles: { type: array, items: { type: string } }
+                    nullable: true
+                  co_editor:
                     type: object
                     properties:
                       id: { type: string }
@@ -191,7 +244,7 @@ delete:
     401:
       $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
     403:
-      description: 只能删除自己发表的内容
+      description: 既不是作者，也不是挂靠对象的管理者
       content:
         application/problem+json:
           schema:
@@ -207,6 +260,10 @@ patch:
     只改传了的字段。title / status / type / severity 只对话题有效，回复传了 422。
     作者或对象的管理者（句子、逐词所在 channel 的编辑者，文章的编辑者）可改；
     改 type 时回复跟着改，新类型不收原来的 severity 时 severity 清空。
+    批注：没有 status，type 只能在 note / commentary 之间改（不能与评论线程互转），
+    正文不能清空，可改锚点。
+    改了内容（标题、正文、锚点）时 co_editor 跟着这次写入走：人亲自改则清空，AI 代改则换成该模型；
+    只改 status / type / severity 不动 co_editor。
 
     实现：`V3\DiscussionController@update`
   security:
@@ -241,12 +298,14 @@ patch:
                 - close
             type:
               type: string
-              description: 话题类型（只限话题）
+              description: 类型（只限话题；评论线程与批注不能互转）
               enum:
                 - discussion
                 - qa
                 - help
                 - issue
+                - note
+                - commentary
             severity:
               type: string
               description: '严重程度（只限话题），null 表示清空'
@@ -256,6 +315,21 @@ patch:
                 - info
                 - urgent
                 - normal
+            pos_start:
+              type: integer
+              description: 锚点起始偏移（只限批注）
+            pos_end:
+              type: integer
+              description: 锚点结束偏移（只限批注）
+            quote_exact:
+              type: string
+              description: 锚定的原文片段（只限批注）
+            quote_prefix:
+              type: string
+              description: 锚定片段前的上下文（只限批注）
+            quote_suffix:
+              type: string
+              description: 锚定片段后的上下文（只限批注）
   responses:
     200:
       description: 成功
@@ -300,10 +374,36 @@ patch:
                   tpl_id:
                     type: string
                     nullable: true
+                  pos_start:
+                    type: integer
+                    nullable: true
+                  pos_end:
+                    type: integer
+                    nullable: true
+                  quote_exact:
+                    type: string
+                    nullable: true
+                  quote_prefix:
+                    type: string
+                    nullable: true
+                  quote_suffix:
+                    type: string
+                    nullable: true
                   reply_count:
                     type: integer
                     description: 仅在部分查询口径下返回。
                   editor:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string }
+                      roles: { type: array, items: { type: string } }
+                    nullable: true
+                  co_editor:
                     type: object
                     properties:
                       id: { type: string }

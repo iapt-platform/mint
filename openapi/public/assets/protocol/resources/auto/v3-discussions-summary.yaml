@@ -44,7 +44,9 @@ get:
           - qa
           - help
           - issue
-      description: 只数这种类型的话题
+          - note
+          - commentary
+      description: 只数这种类型，不传则只数评论线程
   responses:
     200:
       description: 成功

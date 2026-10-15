@@ -80,10 +80,29 @@ get:
                     tpl_id:
                       type: string
                       nullable: true
+                    pos_start:
+                      type: integer
+                      nullable: true
+                    pos_end:
+                      type: integer
+                      nullable: true
+                    quote_exact:
+                      type: string
+                      nullable: true
+                    quote_prefix:
+                      type: string
+                      nullable: true
+                    quote_suffix:
+                      type: string
+                      nullable: true
                     reply_count:
                       type: integer
                       description: 仅在部分查询口径下返回。
                     editor:
+                      type: object
+                      properties: { id: { type: string }, nickName: { type: string }, userName: { type: string }, realName: { type: string }, sn: { type: integer }, avatar: { type: string }, roles: { type: array, items: { type: string } } }
+                      nullable: true
+                    co_editor:
                       type: object
                       properties: { id: { type: string }, nickName: { type: string }, userName: { type: string }, realName: { type: string }, sn: { type: integer }, avatar: { type: string }, roles: { type: array, items: { type: string } } }
                       nullable: true
@@ -108,6 +127,7 @@ post:
   operationId: post_api_v3_discussions_discussion_replies
   description: |-
     类型与挂靠对象继承话题。已关闭的话题不能回复（409），对一条回复再回复 422。
+    AI 代写同 `POST /v3/discussions`（`X-Agent-Grant` 请求头）。
     文章上的 qa 只有文章的编辑者能回答。默认发通知，`notify=false` 关闭。
 
     实现：`V3\DiscussionReplyController@store`
@@ -182,10 +202,36 @@ post:
                   tpl_id:
                     type: string
                     nullable: true
+                  pos_start:
+                    type: integer
+                    nullable: true
+                  pos_end:
+                    type: integer
+                    nullable: true
+                  quote_exact:
+                    type: string
+                    nullable: true
+                  quote_prefix:
+                    type: string
+                    nullable: true
+                  quote_suffix:
+                    type: string
+                    nullable: true
                   reply_count:
                     type: integer
                     description: 仅在部分查询口径下返回。
                   editor:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string }
+                      roles: { type: array, items: { type: string } }
+                    nullable: true
+                  co_editor:
                     type: object
                     properties:
                       id: { type: string }
@@ -253,10 +299,36 @@ post:
                   tpl_id:
                     type: string
                     nullable: true
+                  pos_start:
+                    type: integer
+                    nullable: true
+                  pos_end:
+                    type: integer
+                    nullable: true
+                  quote_exact:
+                    type: string
+                    nullable: true
+                  quote_prefix:
+                    type: string
+                    nullable: true
+                  quote_suffix:
+                    type: string
+                    nullable: true
                   reply_count:
                     type: integer
                     description: 仅在部分查询口径下返回。
                   editor:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string }
+                      roles: { type: array, items: { type: string } }
+                    nullable: true
+                  co_editor:
                     type: object
                     properties:
                       id: { type: string }
