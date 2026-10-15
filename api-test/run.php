@@ -49,8 +49,11 @@ if ($envBase !== null) {
     $config['base_url'] = $servers[$serverArg];
 } elseif ($serverArg !== null && preg_match('#^https?://#', $serverArg)) {
     $config['base_url'] = rtrim($serverArg, '/');
-} else {
+} elseif (isset($servers[$config['default_server']])) {
     $config['base_url'] = $servers[$config['default_server']];
+} else {
+    // config.local.php 的 default_server 也可以直接写完整 base URL
+    $config['base_url'] = rtrim($config['default_server'], '/');
 }
 
 // token 覆盖
@@ -67,7 +70,7 @@ if (is_string($opts['password'] ?? null) && $opts['password'] !== '') {
 }
 
 $GLOBALS['config'] = $config;
-$GLOBALS['fixtures'] = require __DIR__ . '/fixtures.php';
+$GLOBALS['fixtures'] = array_replace(require __DIR__ . '/fixtures.php', $config['fixtures']);
 
 require __DIR__ . '/src/bootstrap.php';
 

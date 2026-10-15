@@ -1,6 +1,5 @@
 <?php
 
-use \WikipaliApi\Api\MeApi;
 use \WikipaliApi\Api\ReactionsApi;
 use \WikipaliApi\Model\PostApiV3MeReactionsRequest;
 
@@ -37,7 +36,7 @@ test('GET /v3/reactions/tally（缺 target_id）→ 422', function () {
 /* ---- /v3/me/reactions：无 token → 401（每个动作各一条）---- */
 
 test('GET /v3/me/reactions（无 token）→ 401', function () {
-    $res = request(fn () => api(MeApi::class)->getApiV3MeReactionsWithHttpInfo());
+    $res = request(fn () => api(ReactionsApi::class)->getApiV3MeReactionsWithHttpInfo());
     assert_status(401, $res, 'me/reactions 无 token');
     assert_problem($res, 'me/reactions 无 token');
 });
@@ -47,13 +46,13 @@ test('POST /v3/me/reactions（无 token）→ 401', function () {
     $body->setType('watch');
     $body->setTargetId('11111111-1111-4111-8111-111111111111');
     $body->setTargetType('collection');
-    $res = request(fn () => api(MeApi::class)->postApiV3MeReactionsWithHttpInfo($body));
+    $res = request(fn () => api(ReactionsApi::class)->postApiV3MeReactionsWithHttpInfo($body));
     assert_status(401, $res, 'me/reactions POST 无 token');
     assert_problem($res, 'me/reactions POST 无 token');
 });
 
 test('GET /v3/me/reactions（非法 token）→ 401', function () {
-    $res = request(fn () => api(MeApi::class, 'garbage-token')->getApiV3MeReactionsWithHttpInfo());
+    $res = request(fn () => api(ReactionsApi::class, 'garbage-token')->getApiV3MeReactionsWithHttpInfo());
     assert_status(401, $res, 'me/reactions 非法 token');
     assert_problem($res, 'me/reactions 非法 token');
 });
@@ -71,7 +70,7 @@ test('me/reactions 增删查：POST 建 → GET 查到 → 再 POST 幂等 → �
     $body->setTargetType('collection');
 
     // 增：POST
-    $create = request(fn () => api(MeApi::class, $token)->postApiV3MeReactionsWithHttpInfo($body));
+    $create = request(fn () => api(ReactionsApi::class, $token)->postApiV3MeReactionsWithHttpInfo($body));
     if (! in_array($create['status'], [200, 201], true)) {
         fail('POST 创建：期望 201（新建）或 200（已存在），实际 ' . $create['status']);
     }
@@ -81,7 +80,7 @@ test('me/reactions 增删查：POST 建 → GET 查到 → 再 POST 幂等 → �
     }
 
     // 查：GET 按 type 过滤，能查到刚建的（用 target_id 定位，因为列表没有 target_id 过滤参数）
-    $list = request(fn () => api(MeApi::class, $token)->getApiV3MeReactionsWithHttpInfo(200, 'watch'));
+    $list = request(fn () => api(ReactionsApi::class, $token)->getApiV3MeReactionsWithHttpInfo(200, 'watch'));
     assert_status(200, $list, 'GET 列表');
     $found = false;
     foreach (($list['body']['data'] ?? []) as $row) {
@@ -95,7 +94,7 @@ test('me/reactions 增删查：POST 建 → GET 查到 → 再 POST 幂等 → �
     }
 
     // 幂等：再 POST 同一条 → 200，id 不变
-    $again = request(fn () => api(MeApi::class, $token)->postApiV3MeReactionsWithHttpInfo($body));
+    $again = request(fn () => api(ReactionsApi::class, $token)->postApiV3MeReactionsWithHttpInfo($body));
     assert_status(200, $again, '再 POST 幂等');
     assert_eq($id, $again['body']['data']['id'] ?? null, '幂等：两次 id 一致');
 
@@ -105,11 +104,11 @@ test('me/reactions 增删查：POST 建 → GET 查到 → 再 POST 幂等 → �
     assert_problem($noTokenDel, '无 token DELETE');
 
     // 删：DELETE → 204
-    $del = request(fn () => api(MeApi::class, $token)->deleteApiV3MeReactionsReactionWithHttpInfo($id));
+    $del = request(fn () => api(ReactionsApi::class, $token)->deleteApiV3MeReactionsReactionWithHttpInfo($id));
     assert_status(204, $del, 'DELETE');
 
     // 再删：已删除 → 404
-    $delAgain = request(fn () => api(MeApi::class, $token)->deleteApiV3MeReactionsReactionWithHttpInfo($id));
+    $delAgain = request(fn () => api(ReactionsApi::class, $token)->deleteApiV3MeReactionsReactionWithHttpInfo($id));
     assert_status(404, $delAgain, '再 DELETE');
     assert_problem($delAgain, '再 DELETE');
 });

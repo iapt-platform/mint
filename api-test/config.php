@@ -11,18 +11,25 @@
  * alias 对齐 openapi/public/assets/protocol/main.yaml 里的 servers。
  * 第一个 `/api` 是同源地址，CLI 客户端用不到，故略。
  *
- * token（测试 /v3/me/* 用）优先级：
+ * 本机的账号、默认服务器、种子数据覆盖写在 config.local.php（模板
+ * config.local.example.php，已 gitignore）。
+ *
+ * token（需登录的用例用）优先级：
  *   1. `php run.php --token=...`
  *   2. 环境变量 `API_TEST_TOKEN`
- *   3. 都没有时，用下面的 username/password 调 `POST /v2/sign-in` 现换一个 token
+ *   3. config.local.php 的 `token`
+ *   4. 都没有时，用下面的 username/password 调 `POST /v3/sessions` 现换一个 token
  *
  * username/password（登录换 token 用）优先级：
  *   1. `php run.php --username=... --password=...`
  *   2. 环境变量 `API_TEST_USERNAME` / `API_TEST_PASSWORD`
+ *   3. config.local.php
  *
  * 写操作（POST/DELETE）在**所有服务器上都真实执行**，包括 prod——会产生垃圾数据，
  * 由测试账号定期清理。
  */
+
+$local = is_file(__DIR__ . '/config.local.php') ? require __DIR__ . '/config.local.php' : [];
 
 return [
     // alias => 完整 base URL（含 /api 前缀）
@@ -34,14 +41,17 @@ return [
         'next-cn' => 'https://next.wikipali.cc/api',
         'prod-cn' => 'https://www.wikipali.cc/api',
     ],
-    'default_server' => 'local',
+    'default_server' => $local['default_server'] ?? 'local',
 
     // bearer token；没有则 /v3/me/* 的“带 token”用例会 FAIL（不跳过）。
-    'token' => getenv('API_TEST_TOKEN') ?: null,
+    'token' => getenv('API_TEST_TOKEN') ?: ($local['token'] ?? null),
 
     // 登录凭据：sign-in 用 username（也可以是 email）+ password。
-    'username' => getenv('API_TEST_USERNAME') ?: null,
-    'password' => getenv('API_TEST_PASSWORD') ?: null,
+    'username' => getenv('API_TEST_USERNAME') ?: ($local['username'] ?? null),
+    'password' => getenv('API_TEST_PASSWORD') ?: ($local['password'] ?? null),
+
+    // 覆盖 fixtures.php 的种子数据
+    'fixtures' => $local['fixtures'] ?? [],
 
     'timeout' => 20,
 ];
