@@ -8,6 +8,10 @@ get:
     直接从 OpenSearch 按文档 id 取回，不走检索。取不到返回 404。
 
     实现：`V3\SearchPlusController@show`
+  security:
+    - {  }
+    -
+      bearerAuth: []
   parameters:
     -
       name: search

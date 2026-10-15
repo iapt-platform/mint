@@ -2,9 +2,12 @@
 get:
   summary: '列出我自己的 reactions'
   tags:
-    - me
+    - reactions
   operationId: get_api_v3_me_reactions
   description: 实现：`V3\MeReactionController@index`
+  security:
+    -
+      bearerAuth: []
   parameters:
     -
       name: per_page
@@ -86,7 +89,7 @@ get:
 post:
   summary: '添加一条我自己的 reaction（幂等）'
   tags:
-    - me
+    - reactions
   operationId: post_api_v3_me_reactions
   description: |-
     唯一键是 (type, target_id, user_id)：重复提交不会产生第二条记录，返回同一条。
@@ -99,6 +102,9 @@ post:
     下次读 tally 时校正。见 v3-resource skill 硬规范第 2 条。
 
     实现：`V3\MeReactionController@store`
+  security:
+    -
+      bearerAuth: []
   requestBody:
     required: true
     content:

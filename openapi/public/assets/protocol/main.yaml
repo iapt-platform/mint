@@ -7,7 +7,7 @@ info:
 
     由 `php openapi/scripts/generate.php` 依据 api-v13 的路由与控制器源码生成。
     响应统一封装为 `{ok, message, data}`；`ok=false` 时 `message` 为错误信息。
-  version: 2026.10.8
+  version: 2026.10.15
 servers:
   -
     url: /api
@@ -681,6 +681,14 @@ paths:
     $ref: ./resources/auto/v2-webhook.yaml
   '/v2/webhook/{webhook}':
     $ref: ./resources/auto/v2-webhook-webhook.yaml
+  /v3/discussions:
+    $ref: ./resources/auto/v3-discussions.yaml
+  /v3/discussions/summary:
+    $ref: ./resources/auto/v3-discussions-summary.yaml
+  '/v3/discussions/{discussion}':
+    $ref: ./resources/auto/v3-discussions-discussion.yaml
+  '/v3/discussions/{discussion}/replies':
+    $ref: ./resources/auto/v3-discussions-discussion-replies.yaml
   /v3/email-certifications:
     $ref: ./resources/auto/v3-email-certifications.yaml
   /v3/heartbeat:

@@ -9,6 +9,10 @@ post:
     验证码错误、过期或试错 5 次后返回 422（errors.code）。
 
     实现：`V3\InviteController@store`
+  security:
+    - {  }
+    -
+      bearerAuth: []
   requestBody:
     required: true
     content:

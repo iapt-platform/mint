@@ -1,0 +1,340 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-discussions-discussion.yaml
+get:
+  summary: 获取单条话题或回复
+  tags:
+    - discussions
+  operationId: get_api_v3_discussions_discussion_
+  description: |-
+    删除了但还有回复的话题返回墓碑；删除了的回复、删除了且没有回复的话题返回 404。
+    当前用户看不见的话题同样 404。
+
+    实现：`V3\DiscussionController@show`
+  security:
+    - {  }
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: discussion
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '话题或回复的 uuid'
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  target_type:
+                    type: string
+                  target_id:
+                    type: string
+                  parent_id:
+                    type: string
+                    nullable: true
+                  type:
+                    type: string
+                  severity:
+                    type: string
+                    nullable: true
+                  status:
+                    type: string
+                  title:
+                    type: string
+                    nullable: true
+                  content:
+                    type: string
+                    nullable: true
+                  content_type:
+                    type: string
+                  html:
+                    type: string
+                    description: 仅在部分查询口径下返回。
+                  summary:
+                    type: string
+                    description: 仅在部分查询口径下返回。
+                  tpl_id:
+                    type: string
+                    nullable: true
+                  reply_count:
+                    type: integer
+                    description: 仅在部分查询口径下返回。
+                  editor:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string }
+                      roles: { type: array, items: { type: string } }
+                    nullable: true
+                  abilities:
+                    type: object
+                    properties:
+                      update: { type: boolean }
+                      delete: { type: boolean }
+                      close: { type: boolean }
+                      reply: { type: boolean }
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  deleted_at:
+                    type: string
+                    nullable: true
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'
+delete:
+  summary: 删除话题或回复（软删除）
+  tags:
+    - discussions
+  operationId: delete_api_v3_discussions_discussion_
+  description: |-
+    目前只有作者本人能删。删话题不动回复：有回复的话题以墓碑形式留在列表里。
+    返回删除后的资源（200），不是 204——软删的资源并没有消失。
+
+    实现：`V3\DiscussionController@destroy`
+  security:
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: discussion
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '话题或回复的 uuid'
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  target_type:
+                    type: string
+                  target_id:
+                    type: string
+                  parent_id:
+                    type: string
+                    nullable: true
+                  type:
+                    type: string
+                  severity:
+                    type: string
+                    nullable: true
+                  status:
+                    type: string
+                  title:
+                    type: string
+                    nullable: true
+                  content:
+                    type: string
+                    nullable: true
+                  content_type:
+                    type: string
+                  html:
+                    type: string
+                    description: 仅在部分查询口径下返回。
+                  summary:
+                    type: string
+                    description: 仅在部分查询口径下返回。
+                  tpl_id:
+                    type: string
+                    nullable: true
+                  reply_count:
+                    type: integer
+                    description: 仅在部分查询口径下返回。
+                  editor:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string }
+                      roles: { type: array, items: { type: string } }
+                    nullable: true
+                  abilities:
+                    type: object
+                    properties:
+                      update: { type: boolean }
+                      delete: { type: boolean }
+                      close: { type: boolean }
+                      reply: { type: boolean }
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  deleted_at:
+                    type: string
+                    nullable: true
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    403:
+      description: 只能删除自己发表的内容
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'
+patch:
+  summary: 修改话题或回复（局部更新）
+  tags:
+    - discussions
+  operationId: patch_api_v3_discussions_discussion_
+  description: |-
+    只改传了的字段。title / status / type / severity 只对话题有效，回复传了 422。
+    作者或对象的管理者（句子、逐词所在 channel 的编辑者，文章的编辑者）可改；
+    改 type 时回复跟着改，新类型不收原来的 severity 时 severity 清空。
+
+    实现：`V3\DiscussionController@update`
+  security:
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: discussion
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '话题或回复的 uuid'
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            title:
+              type: string
+              description: 标题（只限话题）
+            content:
+              type: string
+              description: 正文（markdown）
+            status:
+              type: string
+              description: 状态（只限话题）
+              enum:
+                - active
+                - close
+            type:
+              type: string
+              description: 话题类型（只限话题）
+              enum:
+                - discussion
+                - qa
+                - help
+                - issue
+            severity:
+              type: string
+              description: '严重程度（只限话题），null 表示清空'
+              enum:
+                - error
+                - warning
+                - info
+                - urgent
+                - normal
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  target_type:
+                    type: string
+                  target_id:
+                    type: string
+                  parent_id:
+                    type: string
+                    nullable: true
+                  type:
+                    type: string
+                  severity:
+                    type: string
+                    nullable: true
+                  status:
+                    type: string
+                  title:
+                    type: string
+                    nullable: true
+                  content:
+                    type: string
+                    nullable: true
+                  content_type:
+                    type: string
+                  html:
+                    type: string
+                    description: 仅在部分查询口径下返回。
+                  summary:
+                    type: string
+                    description: 仅在部分查询口径下返回。
+                  tpl_id:
+                    type: string
+                    nullable: true
+                  reply_count:
+                    type: integer
+                    description: 仅在部分查询口径下返回。
+                  editor:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string }
+                      roles: { type: array, items: { type: string } }
+                    nullable: true
+                  abilities:
+                    type: object
+                    properties:
+                      update: { type: boolean }
+                      delete: { type: boolean }
+                      close: { type: boolean }
+                      reply: { type: boolean }
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  deleted_at:
+                    type: string
+                    nullable: true
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    403:
+      description: 没有修改权限
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

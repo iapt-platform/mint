@@ -9,6 +9,10 @@ get:
     没有关联段落时返回空集（这是正常结果，不是错误）。
 
     实现：`V3\TipitakaRelatedParagraphController@index`
+  security:
+    - {  }
+    -
+      bearerAuth: []
   parameters:
     -
       name: book

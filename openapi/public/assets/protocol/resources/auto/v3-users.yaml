@@ -10,6 +10,10 @@ post:
     注册不等于登录：返回 201 与新账号，之后用用户名/邮箱 + 密码走登录。
 
     实现：`V3\UserController@store`
+  security:
+    - {  }
+    -
+      bearerAuth: []
   requestBody:
     required: true
     content:

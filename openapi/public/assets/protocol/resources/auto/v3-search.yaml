@@ -9,6 +9,10 @@ get:
     同样的参数也可以用 POST /v3/search 提交（参数多、URL 放不下时用）。
 
     实现：`V3\SearchPlusController@index`
+  security:
+    - {  }
+    -
+      bearerAuth: []
   parameters:
     -
       name: q
@@ -155,6 +159,10 @@ post:
     尤其是 page_refs / related_id 这类数组时，URL 放不下。
 
     实现：`V3\SearchPlusController@store`
+  security:
+    - {  }
+    -
+      bearerAuth: []
   requestBody:
     required: true
     content:

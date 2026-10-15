@@ -8,6 +8,10 @@ get:
     data 是去重、>0 的 cs_para（升序），每条形如 {cs_para}，分页由 Laravel paginator 提供。
 
     实现：`V3\TipitakaRelatedParagraphAggregateController@show`
+  security:
+    - {  }
+    -
+      bearerAuth: []
   parameters:
     -
       name: book_name

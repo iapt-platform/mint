@@ -1,0 +1,299 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-discussions-discussion-replies.yaml
+get:
+  summary: 列出话题的回复
+  tags:
+    - discussions
+  operationId: get_api_v3_discussions_discussion_replies
+  description: |-
+    按时间正序。删除了的话题（墓碑）下的回复照样可读。
+
+    实现：`V3\DiscussionReplyController@index`
+  security:
+    - {  }
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: discussion
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '话题的 uuid'
+    -
+      name: per_page
+      in: query
+      schema:
+        type: integer
+        default: 50
+      description: '每页数量，最大 200'
+    -
+      name: page
+      in: query
+      schema:
+        type: integer
+        default: 1
+      description: 页码
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    target_type:
+                      type: string
+                    target_id:
+                      type: string
+                    parent_id:
+                      type: string
+                      nullable: true
+                    type:
+                      type: string
+                    severity:
+                      type: string
+                      nullable: true
+                    status:
+                      type: string
+                    title:
+                      type: string
+                      nullable: true
+                    content:
+                      type: string
+                      nullable: true
+                    content_type:
+                      type: string
+                    html:
+                      type: string
+                      description: 仅在部分查询口径下返回。
+                    summary:
+                      type: string
+                      description: 仅在部分查询口径下返回。
+                    tpl_id:
+                      type: string
+                      nullable: true
+                    reply_count:
+                      type: integer
+                      description: 仅在部分查询口径下返回。
+                    editor:
+                      type: object
+                      properties: { id: { type: string }, nickName: { type: string }, userName: { type: string }, realName: { type: string }, sn: { type: integer }, avatar: { type: string }, roles: { type: array, items: { type: string } } }
+                      nullable: true
+                    abilities:
+                      type: object
+                      properties: { update: { type: boolean }, delete: { type: boolean }, close: { type: boolean }, reply: { type: boolean } }
+                    created_at:
+                      type: string
+                    updated_at:
+                      type: string
+                    deleted_at:
+                      type: string
+                      nullable: true
+              meta:
+                $ref: '../../main.yaml#/components/schemas/PaginationMeta'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'
+post:
+  summary: 回复话题
+  tags:
+    - discussions
+  operationId: post_api_v3_discussions_discussion_replies
+  description: |-
+    类型与挂靠对象继承话题。已关闭的话题不能回复（409），对一条回复再回复 422。
+    文章上的 qa 只有文章的编辑者能回答。默认发通知，`notify=false` 关闭。
+
+    实现：`V3\DiscussionReplyController@store`
+  security:
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: discussion
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '话题的 uuid'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            content:
+              type: string
+              description: 正文（markdown）
+            notify:
+              type: boolean
+              description: 是否发通知
+              default: true
+          required:
+            - content
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  target_type:
+                    type: string
+                  target_id:
+                    type: string
+                  parent_id:
+                    type: string
+                    nullable: true
+                  type:
+                    type: string
+                  severity:
+                    type: string
+                    nullable: true
+                  status:
+                    type: string
+                  title:
+                    type: string
+                    nullable: true
+                  content:
+                    type: string
+                    nullable: true
+                  content_type:
+                    type: string
+                  html:
+                    type: string
+                    description: 仅在部分查询口径下返回。
+                  summary:
+                    type: string
+                    description: 仅在部分查询口径下返回。
+                  tpl_id:
+                    type: string
+                    nullable: true
+                  reply_count:
+                    type: integer
+                    description: 仅在部分查询口径下返回。
+                  editor:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string }
+                      roles: { type: array, items: { type: string } }
+                    nullable: true
+                  abilities:
+                    type: object
+                    properties:
+                      update: { type: boolean }
+                      delete: { type: boolean }
+                      close: { type: boolean }
+                      reply: { type: boolean }
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  deleted_at:
+                    type: string
+                    nullable: true
+    201:
+      description: 回复成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  target_type:
+                    type: string
+                  target_id:
+                    type: string
+                  parent_id:
+                    type: string
+                    nullable: true
+                  type:
+                    type: string
+                  severity:
+                    type: string
+                    nullable: true
+                  status:
+                    type: string
+                  title:
+                    type: string
+                    nullable: true
+                  content:
+                    type: string
+                    nullable: true
+                  content_type:
+                    type: string
+                  html:
+                    type: string
+                    description: 仅在部分查询口径下返回。
+                  summary:
+                    type: string
+                    description: 仅在部分查询口径下返回。
+                  tpl_id:
+                    type: string
+                    nullable: true
+                  reply_count:
+                    type: integer
+                    description: 仅在部分查询口径下返回。
+                  editor:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string }
+                      roles: { type: array, items: { type: string } }
+                    nullable: true
+                  abilities:
+                    type: object
+                    properties:
+                      update: { type: boolean }
+                      delete: { type: boolean }
+                      close: { type: boolean }
+                      reply: { type: boolean }
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  deleted_at:
+                    type: string
+                    nullable: true
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    403:
+      description: 当前用户不能回复这个话题
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+    409:
+      description: 话题已关闭
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

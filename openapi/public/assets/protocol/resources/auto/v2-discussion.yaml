@@ -4,14 +4,12 @@ get:
   tags:
     - discussion
   operationId: get_api_v2_discussion
-  description: |-
-    按 view 指定的口径返回 discussion 列表，支持状态过滤、分页与排序。
-    权限：未登录用户请求 type=discussion 时直接返回空结果；basic 角色用户在自己无编辑权限的
-    channel 上只能看到自己发表的 discussion；view=topic-by-user 必须登录，否则返回 403。
-    返回 rows、count（当前口径总数）、active/close（顶级节点的活跃与关闭数）、
-    can_create/can_reply（当前用户能否发起与回复，按 type 与 res_type 计算）。
-
-    实现：`DiscussionController@index`
+  description: |
+    已被 v3 取代，保留仅为 dashboard-v4 兼容，待 v4 下线后删除：
+    - `view=question` / `view=res_id` / `view=question-by-topic` → `GET /v3/discussions?target_type=&target_id=`
+    - `view=answer` → `GET /v3/discussions/{discussion}/replies`
+    - 响应里的 `active` / `close` / `can_create` → `GET /v3/discussions/summary`
+    - `view=topic-by-user`、`view=all` 与课程参数（`course` / `show_student`）在 v3 暂无对应端点
   parameters:
     -
       name: view
@@ -145,19 +143,15 @@ get:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
       $ref: '../../main.yaml#/components/responses/ValidationError'
+  deprecated: true
 post:
   summary: '发表讨论 / 批注或回复'
   tags:
     - discussion
   operationId: post_api_v2_discussion
-  description: |-
-    必须登录，未登录返回 401。传了 parent 即为回复：res_id 与 res_type 继承自父节点，
-    无需再传，父节点不存在返回 no record，保存后父节点 children_count 自增；
-    不传 parent 为顶级节点，此时 res_id、res_type、title 均为必填。
-    锚点字段（pos_start/pos_end/quote_exact/quote_prefix/quote_suffix）两种情况都可选。
-    默认会向消息队列 discussion 推送通知，可用 notification=false 关闭。
-
-    实现：`DiscussionController@store`
+  description: |
+    已被 v3 取代，保留仅为 dashboard-v4 兼容，待 v4 下线后删除：
+    不带 `parent` → `POST /v3/discussions`；带 `parent` → `POST /v3/discussions/{discussion}/replies`。
   requestBody:
     required: true
     content:
@@ -284,3 +278,4 @@ post:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
       $ref: '../../main.yaml#/components/responses/ValidationError'
+  deprecated: true

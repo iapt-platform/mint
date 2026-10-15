@@ -688,6 +688,15 @@ function buildOperation(array $route, string $httpMethod): array
     if (! empty($info['tags']['deprecated'])) {
         $op['deprecated'] = true;
     }
+    // v3 的鉴权按路由中间件逐个写准（v2 沿用全局 security，不动）：
+    // 挂了 auth.v3 → 必须带 token；没挂 → 匿名可用，带了 token 就按登录用户处理
+    // （讨论列表的可见性、tally 的「我点过没有」），所以是「可选」。生成的客户端据此
+    // 决定发不发 Authorization——同一路径读公开、写要登录（middlewareFor）也能分清。
+    if (str_starts_with($route['uri'], 'api/v3/')) {
+        $op['security'] = in_array('auth.v3', $route['middleware'] ?? [], true)
+            ? [['bearerAuth' => []]]
+            : [[], ['bearerAuth' => []]];
+    }
     $documented = $info['tags']['params'] ?? [];
 
     $params = [];
@@ -950,9 +959,16 @@ function defaultSummary(string $method, string $uri): string
     };
 }
 
+/**
+ * 取路径第一段当 tag。openapi-generator 按第一个 tag 分 Api 类，
+ * 所以 tag 必须是资源名：`me/` 只是「当前用户」这个主体，要剥掉，
+ * 否则 /v3/me/reactions、/v3/me/discussions 会全挤进一个 MeApi。
+ * 单独的 /v3/me（当前用户档案）剥完为空，仍归 me。
+ */
 function tagOf(string $uri): string
 {
     $path = preg_replace('#^api/(v2|v3|ops)/#', '', $uri);
+    $path = preg_replace('#^me/(?=.)#', '', $path);
     $first = explode('/', $path)[0];
 
     return $first === '' ? 'misc' : $first;
@@ -1033,7 +1049,8 @@ foreach ($paths as $path => $ops) {
     file_put_contents(
         $autoDir . '/' . $name,
         "# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/{$name}\n" .
-            Yaml::dump($ops, 12, 2, Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK)
+            // 同 main.yaml：security requirement 的值必须是数组，空数组会被 dump 成 {  }
+            str_replace('bearerAuth: {  }', 'bearerAuth: []', Yaml::dump($ops, 12, 2, Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK))
     );
     $refs[$path] = ['$ref' => "./resources/auto/{$name}"];
 }

@@ -15,6 +15,10 @@ get:
     无过滤时用 `next_cursor` 是否为 null 判断结束，不要指望百分比。
 
     实现：`V3\TipitakaReadingController@__invoke`
+  security:
+    - {  }
+    -
+      bearerAuth: []
   parameters:
     -
       name: channel

@@ -8,6 +8,10 @@ get:
     一次聚合查询出各 type 的 count；登录时再查一次当前用户的选择，补 selected / id。
 
     实现：`V3\ReactionTallyController@index`
+  security:
+    - {  }
+    -
+      bearerAuth: []
   parameters:
     -
       name: target_id
