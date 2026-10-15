@@ -41,7 +41,7 @@ cd ../dashboard-v6 && npm run dev            # http://127.0.0.1:4000/pcd-v2026/
 npm test                    # 跑全部
 npm run test:channel        # 只跑 channel 路由
 npm run test:users          # 只跑匿名账号页面（登录 / 注册 / 找回密码 / 重置密码）
-npm run test:discussion     # 只跑讨论：话题页、对象的全部讨论页、文章底部问答区、讨论角标
+npm run test:discussion     # 只跑讨论：话题页、对象的全部讨论页（/workspace/discussion/*）、文章底部问答区、讨论角标
 npm run test:ui             # UI Mode，可视化单步调试
 npm run test:headed         # 显示浏览器窗口
 npm run report              # 打开上次的 HTML 报告

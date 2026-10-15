@@ -6,7 +6,7 @@ import { collect } from '../lib/collect.js';
 import { ARTICLE, BASE, DISCUSSION_SENTENCE, shotDir } from '../lib/env.js';
 
 /**
- * 讨论话题页 /discussion/topic/:topicId（「复制链接」拷出的地址）
+ * 讨论话题页 /workspace/discussion/topic/:topicId（「复制链接」拷出的地址）
  *
  * 数据：测试前用 v3 API 在测试账号自己的句子上建一个 discussion 话题 + 一条回复
  * （notify=false，不发通知），测试后把剩下的回复和话题删掉。删除是软删，
@@ -69,7 +69,7 @@ async function menu(page: Page, id: string, label: string) {
     .click();
 }
 
-test.describe('话题页 /discussion/topic/:id', () => {
+test.describe('话题页 /workspace/discussion/topic/:id', () => {
   const stamp = `e2e-tmp-${Date.now()}`;
   let topicId = '';
   let replyId = '';
@@ -107,7 +107,7 @@ test.describe('话题页 /discussion/topic/:id', () => {
     const log = collect(page);
 
     await test.step('1. 打开话题页', async () => {
-      await page.goto(`discussion/topic/${topicId}`, { waitUntil: 'networkidle' });
+      await page.goto(`workspace/discussion/topic/${topicId}`, { waitUntil: 'networkidle' });
       await expect(page.getByText(stamp, { exact: true })).toBeVisible();
       await expect(items(page)).toHaveCount(2); // 话题 + 一条回复
       await expect(editors(page)).toHaveCount(1); // 回复框
@@ -156,34 +156,34 @@ test.describe('话题页 /discussion/topic/:id', () => {
   });
 
   test('回复链接带 #锚点：定位到那条回复', async ({ page }) => {
-    await page.goto(`discussion/topic/${topicId}#${replyId}`, { waitUntil: 'networkidle' });
+    await page.goto(`workspace/discussion/topic/${topicId}#${replyId}`, { waitUntil: 'networkidle' });
     await expect(page.locator(`#answer-${replyId}`)).toBeInViewport();
   });
 
-  test('匿名访问 discussion 类话题 → 无权查看', async ({ browser }) => {
-    // discussion / issue 是协作类，匿名不可见（后端 404）
+  test('未登录访问话题页 → 跳到登录页', async ({ browser }) => {
+    // 讨论页在 workspace 里，workspace 要求登录
     const context = await browser.newContext({
       baseURL: BASE,
       storageState: { cookies: [], origins: [] },
     });
     const page = await context.newPage();
-    await page.goto(`discussion/topic/${topicId}`, { waitUntil: 'networkidle' });
-    await expect(page.getByText('话题不存在或无权查看')).toBeVisible();
+    await page.goto(`workspace/discussion/topic/${topicId}`, { waitUntil: 'networkidle' });
+    await expect(page).toHaveURL(/anonymous\/sign-in/);
     await expect(page.getByText(stamp)).toHaveCount(0);
     await shot(page, '05-anonymous');
     await context.close();
   });
 
   test('话题页上方显示讨论挂在哪一句，并链到这里的全部讨论', async ({ page }) => {
-    await page.goto(`discussion/topic/${topicId}`, { waitUntil: 'networkidle' });
+    await page.goto(`workspace/discussion/topic/${topicId}`, { waitUntil: 'networkidle' });
     await expect(page.locator('.ant-card').first()).toBeVisible();
     await page.getByRole('link', { name: '这里的全部讨论' }).click();
-    await expect(page).toHaveURL(new RegExp(`discussion/show/sentence/${SENTENCE}$`));
+    await expect(page).toHaveURL(new RegExp(`workspace/discussion/show/sentence/${SENTENCE}$`));
   });
 
-  test('对象的全部讨论 /discussion/show/:type/:id：列表里有这个话题，点开在原地看', async ({ page }) => {
+  test('对象的全部讨论 /workspace/discussion/show/:type/:id：列表里有这个话题，点开在原地看', async ({ page }) => {
     const log = collect(page);
-    await page.goto(`discussion/show/sentence/${SENTENCE}`, { waitUntil: 'networkidle' });
+    await page.goto(`workspace/discussion/show/sentence/${SENTENCE}`, { waitUntil: 'networkidle' });
     await page.getByText(stamp, { exact: true }).click();
     await expect(items(page).filter({ hasText: '第一条回复' })).toHaveCount(1);
     await shot(page, '06-show');
@@ -200,18 +200,18 @@ test.describe('话题页 /discussion/topic/:id', () => {
           (b: { target_id: string; total: number }) => b.target_id === SENTENCE && b.total >= 1,
         ),
     );
-    await page.goto(`discussion/show/sentence/${SENTENCE}`);
+    await page.goto(`workspace/discussion/show/sentence/${SENTENCE}`);
     await counted;
   });
 
   test('不支持的对象类型 → 提示页', async ({ page }) => {
-    await page.goto(`discussion/show/channel/${SENTENCE}`, { waitUntil: 'networkidle' });
+    await page.goto(`workspace/discussion/show/channel/${SENTENCE}`, { waitUntil: 'networkidle' });
     await expect(page.getByText('不支持的讨论对象')).toBeVisible();
   });
 
   test('不存在的话题 → 404 页，不崩', async ({ page }) => {
     const log = collect(page);
-    await page.goto('discussion/topic/00000000-0000-4000-8000-000000000000', {
+    await page.goto('workspace/discussion/topic/00000000-0000-4000-8000-000000000000', {
       waitUntil: 'networkidle',
     });
     await expect(page.getByText('话题不存在或无权查看')).toBeVisible();
