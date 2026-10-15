@@ -354,6 +354,42 @@ function normalizeType(string $type): string
     };
 }
 
+/**
+ * 把点号写法的数组元素字段（`targets.*.id`、`ids.*`）折进父字段的 items。
+ *
+ * Laravel 的校验规则和文档注释都用这种写法；不折的话它们会变成名字里带点的顶层字段，
+ * 前端类型与生成的客户端都对不上。只处理一层（`a.*` / `a.*.b`），更深的嵌套原样留着。
+ *
+ * @param  array<string, array>  $props
+ * @param  list<string>  $required
+ * @return array{0: array<string, array>, 1: list<string>}
+ */
+function nestDotted(array $props, array $required): array
+{
+    foreach (array_keys($props) as $key) {
+        if (! preg_match('/^([^.]+)\.\*(?:\.([^.*]+))?$/', $key, $m)) {
+            continue;
+        }
+        [$parent, $child] = [$m[1], $m[2] ?? null];
+        $schema = $props[$key];
+        unset($props[$key]);
+        $props[$parent] = ($props[$parent] ?? []) + ['type' => 'array'];
+        $props[$parent]['type'] = 'array';
+        if ($child === null) {
+            $props[$parent]['items'] = $schema;
+        } else {
+            $props[$parent]['items'] ??= ['type' => 'object', 'properties' => []];
+            $props[$parent]['items']['properties'][$child] = $schema;
+            if (in_array($key, $required, true)) {
+                $props[$parent]['items']['required'][] = $child;
+            }
+        }
+        $required = array_values(array_filter($required, fn ($name) => $name !== $key));
+    }
+
+    return [$props, $required];
+}
+
 /** 验证规则数组 → [字段 => ['required'=>bool,'type'=>string,'enum'=>[]]] */
 function rulesFromArray(Node\Expr\Array_ $array): array
 {
@@ -831,6 +867,7 @@ function buildOperation(array $route, string $httpMethod): array
                 $required[] = $name;
             }
         }
+        [$props, $required] = nestDotted($props, $required);
         if ($props) {
             $body = ['type' => 'object', 'properties' => $props];
             if ($required) {

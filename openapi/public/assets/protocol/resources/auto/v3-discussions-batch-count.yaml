@@ -1,0 +1,70 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-discussions-batch-count.yaml
+post:
+  summary: 批量取讨论角标
+  tags:
+    - discussions
+  operationId: post_api_v3_discussions_batch_count
+  description: |-
+    每个对象返回未关闭的评论线程数（total）与其中当前用户发起的数目（mine，未登录为 0），
+    按请求顺序、一个不少（没有讨论的为 0）。只数评论线程（discussion / qa / help / issue），
+    批注与已删除的不算；可见性与列表相同：未登录不数协作类话题，basic 角色在无权管理的
+    对象上只数自己发起的协作类话题。最多 500 个对象。
+    与 v2 的区别：入参是对象 uid 而不是句子坐标；只给计数不给明细；v2 不分类型、不管可见性。
+
+    实现：`V3\DiscussionBatchCountController@__invoke`
+  security:
+    - {  }
+    -
+      bearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            targets:
+              type: array
+              description: '讨论对象列表，每项 {type, id}，最多 500 个'
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    description: 对象类型
+                    enum:
+                      - sentence
+                      - wbw
+                  id:
+                    type: string
+                    description: '对象 uid'
+                required:
+                  - type
+                  - id
+          required:
+            - targets
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    target_type:
+                      type: string
+                    target_id:
+                      type: string
+                    total:
+                      type: integer
+                    mine:
+                      type: integer
+              meta:
+                $ref: '../../main.yaml#/components/schemas/PaginationMeta'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

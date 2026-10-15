@@ -685,6 +685,8 @@ paths:
     $ref: ./resources/auto/v3-agent-grants.yaml
   /v3/discussions:
     $ref: ./resources/auto/v3-discussions.yaml
+  /v3/discussions/batch-count:
+    $ref: ./resources/auto/v3-discussions-batch-count.yaml
   /v3/discussions/summary:
     $ref: ./resources/auto/v3-discussions-summary.yaml
   '/v3/discussions/{discussion}':
