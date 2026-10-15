@@ -12,11 +12,6 @@ import store from "../../store";
 import Discussion from "./Discussion";
 import type { IComment } from "../../api/discussion";
 
-export interface IAnswerCount {
-  id: string;
-  count: number;
-}
-
 const DiscussionBoxWidget = () => {
   const [topicId, setTopicId] = useState<string>();
   const [currTopic, setCurrTopic] = useState<IComment>();
@@ -53,7 +48,6 @@ const DiscussionBoxWidget = () => {
         resId={discussionMessage?.resId}
         resType={discussionMessage?.resType}
         focus={discussionMessage?.comment}
-        showStudent={discussionMessage?.withStudent}
         showTopicId={topicId}
         onTopicReady={(value: IComment) => {
           setCurrTopic(value);

@@ -72,7 +72,7 @@ const DiscussionWidget = ({
             focus={focus}
             hideTitle
             onTopicReady={(value: IComment) => {
-              setTopicTitle(value.title);
+              setTopicTitle(value.title ?? undefined);
               if (typeof onTopicReady !== "undefined") {
                 onTopicReady(value);
               }

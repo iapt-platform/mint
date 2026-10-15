@@ -32,6 +32,8 @@ const UsersSignUpInvite = lazy(() => import("./pages/users/sign-up-invite"));
 const UsersForgotPassword = lazy(() => import("./pages/users/forgot-password"));
 const UsersResetPassword = lazy(() => import("./pages/users/reset-password"));
 const DashboardIndex = lazy(() => import("./pages/dashboard/index"));
+const DiscussionTopic = lazy(() => import("./pages/discussion/topic"));
+const DiscussionShow = lazy(() => import("./pages/discussion/show"));
 
 const Home = lazy(() => import("./pages/home"));
 const WorkspaceHome = lazy(() => import("./pages/workspace/home"));
@@ -76,6 +78,10 @@ const router = createBrowserRouter(
             { path: "reset-password/:token", Component: UsersResetPassword },
           ],
         },
+        // 「复制链接」拷出的话题地址，匿名可读（可见性由后端判定）
+        { path: "discussion/topic/:topicId", Component: DiscussionTopic },
+        // 某个对象上的全部讨论（讨论抽屉的「新窗口打开」）
+        { path: "discussion/show/:type/:id", Component: DiscussionShow },
         {
           path: "dashboard",
           Component: DashboardLayout,

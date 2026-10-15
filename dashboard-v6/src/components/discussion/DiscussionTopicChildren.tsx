@@ -1,13 +1,15 @@
-import { App, List, Skeleton } from "antd";
+import { List, Skeleton } from "antd";
 
 import { useEffect, useState } from "react";
-import { useIntl } from "react-intl";
 
 import { get } from "../../request";
-import type { ICommentListResponse } from "../../api/Comment";
 
 import DiscussionCreate from "./DiscussionCreate";
-import type { IComment, TResType } from "../../api/discussion";
+import {
+  fetchReplies,
+  type IComment,
+  type TResType,
+} from "../../api/discussion";
 import type {
   ISentHistoryData,
   ISentHistoryListResponse,
@@ -43,8 +45,6 @@ const DiscussionTopicChildrenWidget = ({
   onItemCountChange,
   onTopicCreate,
 }: IWidget) => {
-  const intl = useIntl();
-  const { message } = App.useApp();
   const [data, setData] = useState<IComment[]>([]);
   const [loading, setLoading] = useState(false);
   const [history, setHistory] = useState<ISentHistoryData[]>([]);
@@ -154,40 +154,10 @@ const DiscussionTopicChildrenWidget = ({
       return;
     }
     setLoading(true);
-    const url = `/api/v2/discussion?view=answer&id=${topicId}`;
-    console.info("api request", url);
-    get<ICommentListResponse>(url)
-      .then((json) => {
-        console.debug("api response", json);
-        if (json.ok) {
-          const discussions: IComment[] = json.data.rows.map((item) => {
-            return {
-              id: item.id,
-              resId: item.res_id,
-              resType: item.res_type,
-              type: item.type,
-              user: item.editor,
-              parent: item.parent,
-              title: item.title,
-              content: item.content,
-              status: item.status,
-              childrenCount: item.children_count,
-              createdAt: item.created_at,
-              updatedAt: item.updated_at,
-            };
-          });
-          setData(discussions);
-        } else {
-          message.error(json.message);
-        }
-      })
-      .finally(() => {
-        setLoading(false);
-      })
-      .catch((e) => {
-        message.error(e.message);
-      });
-  }, [intl, message, topicId]);
+    fetchReplies(topicId)
+      .then(setData)
+      .finally(() => setLoading(false));
+  }, [topicId]);
   return (
     <div>
       {loading ? (
@@ -232,15 +202,15 @@ const DiscussionTopicChildrenWidget = ({
           }}
         />
       )}
-      {hideReply ? (
+      {hideReply ||
+      // 话题关闭、删除或没有回复权限时不给回复框；尚未创建的模板话题由回复框负责创建
+      (topic && !topic.newTpl && !topic.abilities.reply) ? (
         <></>
       ) : (
         <DiscussionCreate
           resId={resId}
           resType={resType}
-          contentType="markdown"
           parent={topicId}
-          topicId={topicId}
           topic={topic}
           onCreated={(value: IComment) => {
             const newData = JSON.parse(JSON.stringify(value));

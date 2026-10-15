@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 
-import { get } from "../../request";
-import type { ICommentListResponse } from "../../api/Comment";
 import DiscussionItem from "./DiscussionItem";
-import type { IComment, TResType } from "../../api/discussion";
+import {
+  asDiscussionTarget,
+  fetchTopics,
+  type IComment,
+  type TResType,
+} from "../../api/discussion";
 
 interface IWidget {
   resId?: string;
@@ -13,75 +16,40 @@ interface IWidget {
     value: IComment
   ) => void;
 }
+/**
+ * 某个对象上的问答（qa）话题，最早的在前。点开话题再看回答（由 QaBox 负责）。
+ */
 const QaListWidget = ({ resId, resType, onSelect }: IWidget) => {
   const [data, setData] = useState<IComment[]>();
 
   useEffect(() => {
-    if (!resType || !resType) {
+    const target = asDiscussionTarget(resType);
+    if (!resId || !target) {
       return;
     }
-    let url: string = `/api/v2/discussion?res_type=${resType}&view=res_id&id=${resId}`;
-    url += "&dir=asc&type=qa&status=active,close";
-    console.info("api request", url);
-    get<ICommentListResponse>(url).then((json) => {
-      if (json.ok) {
-        console.debug("discussion api response", json);
-        const items: IComment[] = json.data.rows.map((item) => {
-          return {
-            id: item.id,
-            resId: item.res_id,
-            resType: item.res_type,
-            type: item.type,
-            user: item.editor,
-            title: item.title,
-            parent: item.parent,
-            tplId: item.tpl_id,
-            content: item.content,
-            summary: item.summary,
-            status: item.status,
-            childrenCount: item.children_count,
-            createdAt: item.created_at,
-            updatedAt: item.updated_at,
-          };
-        });
+    fetchTopics({
+      target_type: target,
+      target_id: resId,
+      type: "qa",
+      sort: "created_at",
+      per_page: 200,
+    }).then((res) => setData(res.items));
+  }, [resId, resType]);
 
-        setData(items);
-      }
-    });
-  }, []);
   return (
     <>
-      {data
-        ?.filter((value) => !value.parent)
-        .map((question, index) => {
-          return (
-            <div key={`div_${index}`}>
-              <DiscussionItem
-                key={index}
-                data={question}
-                onSelect={(
-                  e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
-                  value: IComment
-                ) => {
-                  onSelect?.(e, value);
-                }}
-              />
-              <div
-                style={{
-                  marginLeft: 16,
-                  borderLeft: "2px solid gray",
-                  padding: 4,
-                }}
-              >
-                {data
-                  ?.filter((value) => value.parent === question.id)
-                  .map((item, id) => {
-                    return <DiscussionItem key={id} data={item} />;
-                  })}
-              </div>
-            </div>
-          );
-        })}
+      {data?.map((question) => (
+        <DiscussionItem
+          key={question.id}
+          data={question}
+          onSelect={(
+            e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
+            value: IComment
+          ) => {
+            onSelect?.(e, value);
+          }}
+        />
+      ))}
     </>
   );
 };

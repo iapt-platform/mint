@@ -2510,25 +2510,20 @@ export interface paths {
         };
         /**
          * 列出讨论 / 批注
-         * @description 按 view 指定的口径返回 discussion 列表，支持状态过滤、分页与排序。
-         *     权限：未登录用户请求 type=discussion 时直接返回空结果；basic 角色用户在自己无编辑权限的
-         *     channel 上只能看到自己发表的 discussion；view=topic-by-user 必须登录，否则返回 403。
-         *     返回 rows、count（当前口径总数）、active/close（顶级节点的活跃与关闭数）、
-         *     can_create/can_reply（当前用户能否发起与回复，按 type 与 res_type 计算）。
-         *
-         *     实现：`DiscussionController@index`
+         * @deprecated
+         * @description 已被 v3 取代，保留仅为 dashboard-v4 兼容，待 v4 下线后删除：
+         *     - `view=question` / `view=res_id` / `view=question-by-topic` → `GET /v3/discussions?target_type=&target_id=`
+         *     - `view=answer` → `GET /v3/discussions/{discussion}/replies`
+         *     - 响应里的 `active` / `close` / `can_create` → `GET /v3/discussions/summary`
+         *     - `view=topic-by-user`、`view=all` 与课程参数（`course` / `show_student`）在 v3 暂无对应端点
          */
         get: operations["get_api_v2_discussion"];
         put?: never;
         /**
          * 发表讨论 / 批注或回复
-         * @description 必须登录，未登录返回 401。传了 parent 即为回复：res_id 与 res_type 继承自父节点，
-         *     无需再传，父节点不存在返回 no record，保存后父节点 children_count 自增；
-         *     不传 parent 为顶级节点，此时 res_id、res_type、title 均为必填。
-         *     锚点字段（pos_start/pos_end/quote_exact/quote_prefix/quote_suffix）两种情况都可选。
-         *     默认会向消息队列 discussion 推送通知，可用 notification=false 关闭。
-         *
-         *     实现：`DiscussionController@store`
+         * @deprecated
+         * @description 已被 v3 取代，保留仅为 dashboard-v4 兼容，待 v4 下线后删除：
+         *     不带 `parent` → `POST /v3/discussions`；带 `parent` → `POST /v3/discussions/{discussion}/replies`。
          */
         post: operations["post_api_v2_discussion"];
         delete?: never;
@@ -2645,42 +2640,30 @@ export interface paths {
         };
         /**
          * 查询单条讨论
-         * @description 按路径参数做路由模型绑定并直接返回，不做登录与权限校验。
-         *
-         *     实现：`DiscussionController@show`
+         * @deprecated
+         * @description 已被 `GET /v3/discussions/{discussion}` 取代。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         get: operations["get_api_v2_discussion_discussion_"];
         /**
          * 修改讨论 / 批注
-         * @description 必须登录，未登录返回 403。作者本人可改；非作者则要求是资源所属 channel 的可编辑者
-         *     （res_type=sentence 取 sentence.channel_uid，res_type=wbw 经 wbw block 取 channel_uid），
-         *     两者都不满足返回 403。
-         *     title、content、status 按请求覆盖，未提交时分别回落为 null、null、active；
-         *     type 与五个锚点字段为增量更新，只改请求里出现的字段，未提交的原样保留。
-         *
-         *     实现：`DiscussionController@update`
+         * @deprecated
+         * @description 已被 `PATCH /v3/discussions/{discussion}`（局部更新）取代。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         put: operations["put_api_v2_discussion_discussion_"];
         post?: never;
         /**
          * 删除讨论 / 批注
-         * @description 必须登录，未登录返回 401。目前只允许作者本人删除，其他人返回 403。
-         *     不会级联删除子回复，也不会回退父节点的 children_count。
-         *
-         *     实现：`DiscussionController@destroy`
+         * @deprecated
+         * @description 已被 `DELETE /v3/discussions/{discussion}` 取代。2026-10-15 起两边都是软删除。
+         *     保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         delete: operations["delete_api_v2_discussion_discussion_"];
         options?: never;
         head?: never;
         /**
          * 修改讨论 / 批注
-         * @description 必须登录，未登录返回 403。作者本人可改；非作者则要求是资源所属 channel 的可编辑者
-         *     （res_type=sentence 取 sentence.channel_uid，res_type=wbw 经 wbw block 取 channel_uid），
-         *     两者都不满足返回 403。
-         *     title、content、status 按请求覆盖，未提交时分别回落为 null、null、active；
-         *     type 与五个锚点字段为增量更新，只改请求里出现的字段，未提交的原样保留。
-         *
-         *     实现：`DiscussionController@update`
+         * @deprecated
+         * @description 已被 `PATCH /v3/discussions/{discussion}`（局部更新）取代。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         patch: operations["patch_api_v2_discussion_discussion_"];
         trace?: never;
@@ -7705,6 +7688,190 @@ export interface paths {
          * @description 实现：`WebHookController@update`
          */
         patch: operations["patch_api_v2_webhook_webhook_"];
+        trace?: never;
+    };
+    "/v3/agent-grants": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 签发 agent 写入授权
+         * @description 必须用人类的登录 token 调用（模型 token 403）；模型必须归当前用户所有，当前用户
+         *     必须能编辑该 channel。授权 7 天有效，只能由指定的模型使用；撤销该模型的 token
+         *     （token_version 自增）时一并失效。
+         *     模型写入时用自己的模型 token 登录，并带请求头 `X-Agent-Grant: <token>`；
+         *     写入的记录 editor 为授权人、co_editor 为模型，权限按授权人判断。
+         *
+         *     实现：`V3\AgentGrantController@store`
+         */
+        post: operations["post_api_v3_agent_grants"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/discussions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 列出某个对象上的话题
+         * @description 只列话题（不含回复），删除了但还有回复的话题以墓碑出现（deleted_at 有值、内容为空）。
+         *     未登录看不到协作类话题（discussion / issue）；basic 角色在自己无权管理的对象上只看得到
+         *     自己发起的协作类话题。各状态的数量与「能发起哪些类型」见 `GET /v3/discussions/summary`。
+         *     不传 type 时只列评论线程（discussion / qa / help / issue），批注要显式 type=note / commentary。
+         *
+         *     实现：`V3\DiscussionController@index`
+         */
+        get: operations["get_api_v3_discussions"];
+        put?: never;
+        /**
+         * 发起话题或新建批注
+         * @description discussion / issue 登录即可发；qa / help 只能发在文章上，且只有文章的编辑者能发。
+         *     severity 的取值随 type：issue 为 error / warning / info，help 为 urgent / normal，
+         *     其它类型不收。默认会通知对象的作者（站内信 + webhook），`notify=false` 关闭。
+         *     批注（note / commentary）只能加在句子上，且只有该句所在 channel 的编辑者能加；
+         *     标题可省、正文必填，commentary 的正文必须是义注句子模板 `{{book-para-start-end}}`
+         *     （可多句并列）；可带锚点 pos_* / quote_*（评论线程传了 422）；不发通知。
+         *
+         *     实现：`V3\DiscussionController@store`
+         */
+        post: operations["post_api_v3_discussions"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/discussions/batch-count": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 批量取讨论角标
+         * @description 每个对象返回未关闭的评论线程数（total）与其中当前用户发起的数目（mine，未登录为 0），
+         *     按请求顺序、一个不少（没有讨论的为 0）。只数评论线程（discussion / qa / help / issue），
+         *     批注与已删除的不算；可见性与列表相同：未登录不数协作类话题，basic 角色在无权管理的
+         *     对象上只数自己发起的协作类话题。最多 500 个对象。
+         *     与 v2 的区别：入参是对象 uid 而不是句子坐标；只给计数不给明细；v2 不分类型、不管可见性。
+         *
+         *     实现：`V3\DiscussionBatchCountController@__invoke`
+         */
+        post: operations["post_api_v3_discussions_batch_count"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/discussions/summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 话题概况
+         * @description 各状态的话题数（只数没删除的、当前用户看得见的），以及当前用户能在这个对象上
+         *     发起哪些类型的话题（未登录为空数组）。
+         *
+         *     实现：`V3\DiscussionSummaryController@__invoke`
+         */
+        get: operations["get_api_v3_discussions_summary"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/discussions/{discussion}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 获取单条话题或回复
+         * @description 删除了但还有回复的话题返回墓碑；删除了的回复、删除了且没有回复的话题返回 404。
+         *     当前用户看不见的话题同样 404。
+         *
+         *     实现：`V3\DiscussionController@show`
+         */
+        get: operations["get_api_v3_discussions_discussion_"];
+        put?: never;
+        post?: never;
+        /**
+         * 删除话题或回复（软删除）
+         * @description 作者本人或挂靠对象的管理者（句子 / 逐词所在 channel、文章的编辑者）能删；
+         *     v2 只允许作者。删话题不动回复：有回复的话题以墓碑形式留在列表里。
+         *     返回删除后的资源（200），不是 204——软删的资源并没有消失。
+         *
+         *     实现：`V3\DiscussionController@destroy`
+         */
+        delete: operations["delete_api_v3_discussions_discussion_"];
+        options?: never;
+        head?: never;
+        /**
+         * 修改话题或回复（局部更新）
+         * @description 只改传了的字段。title / status / type / severity 只对话题有效，回复传了 422。
+         *     作者或对象的管理者（句子、逐词所在 channel 的编辑者，文章的编辑者）可改；
+         *     改 type 时回复跟着改，新类型不收原来的 severity 时 severity 清空。
+         *     批注：没有 status，type 只能在 note / commentary 之间改（不能与评论线程互转），
+         *     正文不能清空，可改锚点。
+         *     改了内容（标题、正文、锚点）时 co_editor 跟着这次写入走：人亲自改则清空，AI 代改则换成该模型；
+         *     只改 status / type / severity 不动 co_editor。
+         *
+         *     实现：`V3\DiscussionController@update`
+         */
+        patch: operations["patch_api_v3_discussions_discussion_"];
+        trace?: never;
+    };
+    "/v3/discussions/{discussion}/replies": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 列出话题的回复
+         * @description 按时间正序。删除了的话题（墓碑）下的回复照样可读。
+         *
+         *     实现：`V3\DiscussionReplyController@index`
+         */
+        get: operations["get_api_v3_discussions_discussion_replies"];
+        put?: never;
+        /**
+         * 回复话题
+         * @description 类型与挂靠对象继承话题。已关闭的话题不能回复（409），对一条回复再回复 422。
+         *     AI 代写同 `POST /v3/discussions`（`X-Agent-Grant` 请求头）。
+         *     文章上的 qa 只有文章的编辑者能回答。默认发通知，`notify=false` 关闭。
+         *
+         *     实现：`V3\DiscussionReplyController@store`
+         */
+        post: operations["post_api_v3_discussions_discussion_replies"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/v3/email-certifications": {
@@ -34231,6 +34398,979 @@ export interface operations {
             };
             401: components["responses"]["Unauthorized"];
             422: components["responses"]["ValidationError"];
+        };
+    };
+    post_api_v3_agent_grants: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description 被授权的 AI 模型 uid */
+                    ai_model: string;
+                    /**
+                     * @description 授权范围的类型
+                     * @enum {string}
+                     */
+                    target_type: "channel";
+                    /** @description channel 的 uid */
+                    target_id: string;
+                    /**
+                     * @description 限定 book，0 或不传表示不限
+                     * @default 0
+                     */
+                    book?: number;
+                };
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            token?: string;
+                            grantor?: string;
+                            ai_model?: string;
+                            target_type?: string;
+                            target_id?: string;
+                            book?: number;
+                            expires_at?: string;
+                        };
+                    };
+                };
+            };
+            /** @description 签发成功 */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            token?: string;
+                            grantor?: string;
+                            ai_model?: string;
+                            target_type?: string;
+                            target_id?: string;
+                            book?: number;
+                            expires_at?: string;
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            /** @description 用模型 token 调用、模型不归当前用户，或当前用户不能编辑该 channel */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    get_api_v3_discussions: {
+        parameters: {
+            query: {
+                /** @description 每页数量，最大 200 */
+                per_page?: number;
+                /** @description 挂靠对象的类型 */
+                target_type: "sentence" | "wbw" | "article" | "term" | "task";
+                /** @description 挂靠对象的 uuid */
+                target_id: string;
+                /** @description 类型，不传则只列评论线程 */
+                type?: "discussion" | "qa" | "help" | "issue" | "note" | "commentary";
+                /** @description 话题状态，不传则两种都要 */
+                status?: "active" | "close";
+                /**
+                 * @description 严重程度，逗号分隔多选
+                 * @example error,warning
+                 */
+                severity?: string;
+                /** @description 排序，前缀 - 表示倒序 */
+                sort?: "created_at" | "-created_at" | "updated_at" | "-updated_at";
+                /** @description 页码 */
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            target_type?: string;
+                            target_id?: string;
+                            parent_id?: string | null;
+                            type?: string;
+                            severity?: string | null;
+                            status?: string;
+                            title?: string | null;
+                            content?: string | null;
+                            content_type?: string;
+                            /** @description 仅在部分查询口径下返回。 */
+                            html?: string;
+                            /** @description 仅在部分查询口径下返回。 */
+                            summary?: string;
+                            tpl_id?: string | null;
+                            pos_start?: number | null;
+                            pos_end?: number | null;
+                            quote_exact?: string | null;
+                            quote_prefix?: string | null;
+                            quote_suffix?: string | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            reply_count?: number;
+                            editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            co_editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            abilities?: {
+                                update?: boolean;
+                                delete?: boolean;
+                                close?: boolean;
+                                reply?: boolean;
+                            };
+                            created_at?: string;
+                            updated_at?: string;
+                            deleted_at?: string | null;
+                        }[];
+                        meta?: components["schemas"]["PaginationMeta"];
+                    };
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    post_api_v3_discussions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /**
+                     * @description 挂靠对象的类型
+                     * @enum {string}
+                     */
+                    target_type: "sentence" | "wbw" | "article" | "term" | "task";
+                    /** @description 挂靠对象的 uuid */
+                    target_id: string;
+                    /**
+                     * @description 类型
+                     * @default discussion
+                     * @enum {string}
+                     */
+                    type?: "discussion" | "qa" | "help" | "issue" | "note" | "commentary";
+                    /** @description 标题，最长 256 字符；评论线程必填，批注可省 */
+                    title?: string;
+                    /** @description 正文（markdown）；批注必填 */
+                    content?: string;
+                    /**
+                     * @description 严重程度
+                     * @enum {string}
+                     */
+                    severity?: "error" | "warning" | "info" | "urgent" | "normal";
+                    /** @description 批注锚点在句子文本中的起始偏移（只限批注） */
+                    pos_start?: number;
+                    /** @description 批注锚点的结束偏移，批注插在这里（只限批注） */
+                    pos_end?: number;
+                    /** @description 锚定的原文片段（只限批注） */
+                    quote_exact?: string;
+                    /** @description 锚定片段前的上下文，用于重新定位（只限批注） */
+                    quote_prefix?: string;
+                    /** @description 锚定片段后的上下文，用于重新定位（只限批注） */
+                    quote_suffix?: string;
+                    /** @description 话题模板（文章）的 uuid */
+                    tpl_id?: string;
+                    /**
+                     * @description 是否发通知（批注不发）
+                     * @default true
+                     */
+                    notify?: boolean;
+                };
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            target_type?: string;
+                            target_id?: string;
+                            parent_id?: string | null;
+                            type?: string;
+                            severity?: string | null;
+                            status?: string;
+                            title?: string | null;
+                            content?: string | null;
+                            content_type?: string;
+                            /** @description 仅在部分查询口径下返回。 */
+                            html?: string;
+                            /** @description 仅在部分查询口径下返回。 */
+                            summary?: string;
+                            tpl_id?: string | null;
+                            pos_start?: number | null;
+                            pos_end?: number | null;
+                            quote_exact?: string | null;
+                            quote_prefix?: string | null;
+                            quote_suffix?: string | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            reply_count?: number;
+                            editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            co_editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            abilities?: {
+                                update?: boolean;
+                                delete?: boolean;
+                                close?: boolean;
+                                reply?: boolean;
+                            };
+                            created_at?: string;
+                            updated_at?: string;
+                            deleted_at?: string | null;
+                        };
+                    };
+                };
+            };
+            /** @description 创建成功 */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            target_type?: string;
+                            target_id?: string;
+                            parent_id?: string | null;
+                            type?: string;
+                            severity?: string | null;
+                            status?: string;
+                            title?: string | null;
+                            content?: string | null;
+                            content_type?: string;
+                            /** @description 仅在部分查询口径下返回。 */
+                            html?: string;
+                            /** @description 仅在部分查询口径下返回。 */
+                            summary?: string;
+                            tpl_id?: string | null;
+                            pos_start?: number | null;
+                            pos_end?: number | null;
+                            quote_exact?: string | null;
+                            quote_prefix?: string | null;
+                            quote_suffix?: string | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            reply_count?: number;
+                            editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            co_editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            abilities?: {
+                                update?: boolean;
+                                delete?: boolean;
+                                close?: boolean;
+                                reply?: boolean;
+                            };
+                            created_at?: string;
+                            updated_at?: string;
+                            deleted_at?: string | null;
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            /** @description 当前用户不能在这个对象上发起这种类型的话题 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    post_api_v3_discussions_batch_count: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description 讨论对象列表，每项 {type, id}，最多 500 个 */
+                    targets: {
+                        /**
+                         * @description 对象类型
+                         * @enum {string}
+                         */
+                        type: "sentence" | "wbw";
+                        /** @description 对象 uid */
+                        id: string;
+                    }[];
+                };
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            target_type?: string;
+                            target_id?: string;
+                            total?: number;
+                            mine?: number;
+                        }[];
+                        meta?: components["schemas"]["PaginationMeta"];
+                    };
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    get_api_v3_discussions_summary: {
+        parameters: {
+            query: {
+                /** @description 挂靠对象的类型 */
+                target_type: "sentence" | "wbw" | "article" | "term" | "task";
+                /** @description 挂靠对象的 uuid */
+                target_id: string;
+                /** @description 只数这种类型，不传则只数评论线程 */
+                type?: "discussion" | "qa" | "help" | "issue" | "note" | "commentary";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            status_counts?: {
+                                active?: number;
+                                close?: number;
+                            };
+                            creatable_types?: string[];
+                        };
+                    };
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    get_api_v3_discussions_discussion_: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 话题或回复的 uuid */
+                discussion: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            target_type?: string;
+                            target_id?: string;
+                            parent_id?: string | null;
+                            type?: string;
+                            severity?: string | null;
+                            status?: string;
+                            title?: string | null;
+                            content?: string | null;
+                            content_type?: string;
+                            /** @description 仅在部分查询口径下返回。 */
+                            html?: string;
+                            /** @description 仅在部分查询口径下返回。 */
+                            summary?: string;
+                            tpl_id?: string | null;
+                            pos_start?: number | null;
+                            pos_end?: number | null;
+                            quote_exact?: string | null;
+                            quote_prefix?: string | null;
+                            quote_suffix?: string | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            reply_count?: number;
+                            editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            co_editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            abilities?: {
+                                update?: boolean;
+                                delete?: boolean;
+                                close?: boolean;
+                                reply?: boolean;
+                            };
+                            created_at?: string;
+                            updated_at?: string;
+                            deleted_at?: string | null;
+                        };
+                    };
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    delete_api_v3_discussions_discussion_: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 话题或回复的 uuid */
+                discussion: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            target_type?: string;
+                            target_id?: string;
+                            parent_id?: string | null;
+                            type?: string;
+                            severity?: string | null;
+                            status?: string;
+                            title?: string | null;
+                            content?: string | null;
+                            content_type?: string;
+                            /** @description 仅在部分查询口径下返回。 */
+                            html?: string;
+                            /** @description 仅在部分查询口径下返回。 */
+                            summary?: string;
+                            tpl_id?: string | null;
+                            pos_start?: number | null;
+                            pos_end?: number | null;
+                            quote_exact?: string | null;
+                            quote_prefix?: string | null;
+                            quote_suffix?: string | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            reply_count?: number;
+                            editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            co_editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            abilities?: {
+                                update?: boolean;
+                                delete?: boolean;
+                                close?: boolean;
+                                reply?: boolean;
+                            };
+                            created_at?: string;
+                            updated_at?: string;
+                            deleted_at?: string | null;
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            /** @description 既不是作者，也不是挂靠对象的管理者 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    patch_api_v3_discussions_discussion_: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 话题或回复的 uuid */
+                discussion: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    /** @description 标题（只限话题） */
+                    title?: string;
+                    /** @description 正文（markdown） */
+                    content?: string;
+                    /**
+                     * @description 状态（只限话题）
+                     * @enum {string}
+                     */
+                    status?: "active" | "close";
+                    /**
+                     * @description 类型（只限话题；评论线程与批注不能互转）
+                     * @enum {string}
+                     */
+                    type?: "discussion" | "qa" | "help" | "issue" | "note" | "commentary";
+                    /**
+                     * @description 严重程度（只限话题），null 表示清空
+                     * @enum {string}
+                     */
+                    severity?: "error" | "warning" | "info" | "urgent" | "normal";
+                    /** @description 锚点起始偏移（只限批注） */
+                    pos_start?: number;
+                    /** @description 锚点结束偏移（只限批注） */
+                    pos_end?: number;
+                    /** @description 锚定的原文片段（只限批注） */
+                    quote_exact?: string;
+                    /** @description 锚定片段前的上下文（只限批注） */
+                    quote_prefix?: string;
+                    /** @description 锚定片段后的上下文（只限批注） */
+                    quote_suffix?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            target_type?: string;
+                            target_id?: string;
+                            parent_id?: string | null;
+                            type?: string;
+                            severity?: string | null;
+                            status?: string;
+                            title?: string | null;
+                            content?: string | null;
+                            content_type?: string;
+                            /** @description 仅在部分查询口径下返回。 */
+                            html?: string;
+                            /** @description 仅在部分查询口径下返回。 */
+                            summary?: string;
+                            tpl_id?: string | null;
+                            pos_start?: number | null;
+                            pos_end?: number | null;
+                            quote_exact?: string | null;
+                            quote_prefix?: string | null;
+                            quote_suffix?: string | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            reply_count?: number;
+                            editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            co_editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            abilities?: {
+                                update?: boolean;
+                                delete?: boolean;
+                                close?: boolean;
+                                reply?: boolean;
+                            };
+                            created_at?: string;
+                            updated_at?: string;
+                            deleted_at?: string | null;
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            /** @description 没有修改权限 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    get_api_v3_discussions_discussion_replies: {
+        parameters: {
+            query?: {
+                /** @description 每页数量，最大 200 */
+                per_page?: number;
+                /** @description 页码 */
+                page?: number;
+            };
+            header?: never;
+            path: {
+                /** @description 话题的 uuid */
+                discussion: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            target_type?: string;
+                            target_id?: string;
+                            parent_id?: string | null;
+                            type?: string;
+                            severity?: string | null;
+                            status?: string;
+                            title?: string | null;
+                            content?: string | null;
+                            content_type?: string;
+                            /** @description 仅在部分查询口径下返回。 */
+                            html?: string;
+                            /** @description 仅在部分查询口径下返回。 */
+                            summary?: string;
+                            tpl_id?: string | null;
+                            pos_start?: number | null;
+                            pos_end?: number | null;
+                            quote_exact?: string | null;
+                            quote_prefix?: string | null;
+                            quote_suffix?: string | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            reply_count?: number;
+                            editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            co_editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            abilities?: {
+                                update?: boolean;
+                                delete?: boolean;
+                                close?: boolean;
+                                reply?: boolean;
+                            };
+                            created_at?: string;
+                            updated_at?: string;
+                            deleted_at?: string | null;
+                        }[];
+                        meta?: components["schemas"]["PaginationMeta"];
+                    };
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    post_api_v3_discussions_discussion_replies: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 话题的 uuid */
+                discussion: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description 正文（markdown） */
+                    content: string;
+                    /**
+                     * @description 是否发通知
+                     * @default true
+                     */
+                    notify?: boolean;
+                };
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            target_type?: string;
+                            target_id?: string;
+                            parent_id?: string | null;
+                            type?: string;
+                            severity?: string | null;
+                            status?: string;
+                            title?: string | null;
+                            content?: string | null;
+                            content_type?: string;
+                            /** @description 仅在部分查询口径下返回。 */
+                            html?: string;
+                            /** @description 仅在部分查询口径下返回。 */
+                            summary?: string;
+                            tpl_id?: string | null;
+                            pos_start?: number | null;
+                            pos_end?: number | null;
+                            quote_exact?: string | null;
+                            quote_prefix?: string | null;
+                            quote_suffix?: string | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            reply_count?: number;
+                            editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            co_editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            abilities?: {
+                                update?: boolean;
+                                delete?: boolean;
+                                close?: boolean;
+                                reply?: boolean;
+                            };
+                            created_at?: string;
+                            updated_at?: string;
+                            deleted_at?: string | null;
+                        };
+                    };
+                };
+            };
+            /** @description 回复成功 */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            target_type?: string;
+                            target_id?: string;
+                            parent_id?: string | null;
+                            type?: string;
+                            severity?: string | null;
+                            status?: string;
+                            title?: string | null;
+                            content?: string | null;
+                            content_type?: string;
+                            /** @description 仅在部分查询口径下返回。 */
+                            html?: string;
+                            /** @description 仅在部分查询口径下返回。 */
+                            summary?: string;
+                            tpl_id?: string | null;
+                            pos_start?: number | null;
+                            pos_end?: number | null;
+                            quote_exact?: string | null;
+                            quote_prefix?: string | null;
+                            quote_suffix?: string | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            reply_count?: number;
+                            editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            co_editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            abilities?: {
+                                update?: boolean;
+                                delete?: boolean;
+                                close?: boolean;
+                                reply?: boolean;
+                            };
+                            created_at?: string;
+                            updated_at?: string;
+                            deleted_at?: string | null;
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            /** @description 当前用户不能回复这个话题 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description 话题已关闭 */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
         };
     };
     post_api_v3_email_certifications: {

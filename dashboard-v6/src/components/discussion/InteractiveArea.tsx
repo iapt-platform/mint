@@ -2,110 +2,81 @@ import { useEffect, useState } from "react";
 import { Tabs } from "antd";
 
 import Discussion from "./Discussion";
-import { get } from "../../request";
 import QaBox from "./QaBox";
-import type { TResType } from "../../api/discussion";
-
-interface IInteractive {
-  ok: boolean;
-  data: ITypeData;
-  message: string;
-}
-
-interface ITypeData {
-  qa: IPower;
-  help: IPower;
-  discussion: IPower;
-}
-
-interface IPower {
-  can_create: boolean;
-  can_reply: boolean;
-  count: number;
-}
+import {
+  asDiscussionTarget,
+  fetchTopicSummary,
+  type TDiscussionType,
+  type TResType,
+} from "../../api/discussion";
 
 interface IWidget {
   resId?: string;
   resType?: TResType;
 }
-const InteractiveAreaWidget = ({ resId, resType }: IWidget) => {
-  const [showQa, setShowQa] = useState(false);
 
-  const [showHelp, setShowHelp] = useState(false);
-  const [showDiscussion, setShowDiscussion] = useState(false);
+/** 文章底部的三个页签，按这个顺序排 */
+const TABS: { type: TDiscussionType; label: string }[] = [
+  { type: "qa", label: "问答" },
+  { type: "help", label: "求助" },
+  { type: "discussion", label: "讨论" },
+];
+
+/**
+ * 文章底部的互动区：问答 / 求助 / 讨论三个页签。
+ *
+ * 某个页签出现的条件：当前用户能在这里发起这种话题，或者已经有这种话题。
+ * 取代 v2 `GET /v2/interactive/{id}` 的 can_create / can_reply / count，改用每种类型
+ * 各一次 `GET /v3/discussions/summary`（creatable_types + status_counts）。
+ */
+const InteractiveAreaWidget = ({ resId, resType }: IWidget) => {
+  // 记下是哪个对象的结果，换文章时旧结果自然失效，不必在 effect 里先清状态
+  const [visible, setVisible] = useState<{
+    key: string;
+    types: TDiscussionType[];
+  }>();
+  const target = asDiscussionTarget(resType);
+  const key = `${target}/${resId}`;
 
   useEffect(() => {
-    get<IInteractive>(`/api/v2/interactive/${resId}?res_type=${resType}`).then(
-      (json) => {
-        if (json.ok) {
-          console.debug("interactive", json);
-          if (json.data.qa.can_create || json.data.qa.can_reply) {
-            setShowQa(true);
-          } else if (json.data.qa.count > 0) {
-            setShowQa(true);
-          } else {
-            setShowQa(false);
-          }
+    if (!resId || !target) {
+      return;
+    }
+    Promise.all(
+      TABS.map(({ type }) =>
+        fetchTopicSummary({ target_type: target, target_id: resId, type })
+      )
+    ).then((summaries) => {
+      const types = TABS.filter(({ type }, i) => {
+        const counts = summaries[i].status_counts;
+        const total = (counts?.active ?? 0) + (counts?.close ?? 0);
+        return summaries[i].creatable_types?.includes(type) || total > 0;
+      }).map(({ type }) => type);
+      setVisible({ key: `${target}/${resId}`, types });
+    });
+  }, [resId, target]);
 
-          if (json.data.help.can_create) {
-            setShowHelp(true);
-          } else if (json.data.help.can_reply) {
-            if (json.data.help.count > 0) {
-              setShowHelp(true);
-            }
-          } else {
-            setShowHelp(false);
-          }
+  const types = visible?.key === key ? visible.types : [];
+  if (types.length === 0) {
+    return <></>;
+  }
 
-          if (
-            json.data.discussion.can_create ||
-            json.data.discussion.can_reply ||
-            json.data.discussion.count > 0
-          ) {
-            setShowDiscussion(true);
-          } else {
-            setShowDiscussion(false);
-          }
-        }
-      }
-    );
-  }, [resId, resType]);
-
-  return showQa || showHelp || showDiscussion ? (
+  return (
     <Tabs
       size="small"
-      items={[
-        {
-          label: `问答`,
-          key: "qa",
-          children: <QaBox resId={resId} resType={resType} />,
-        },
-        {
-          label: `求助`,
-          key: "help",
-          children: <Discussion resId={resId} resType={resType} type="help" />,
-        },
-        {
-          label: `讨论`,
-          key: "discussion",
-          children: (
-            <Discussion resId={resId} resType={resType} type="discussion" />
-          ),
-        },
-      ].filter((value) => {
-        if (value.key === "qa") {
-          return showQa;
-        } else if (value.key === "help") {
-          return showHelp;
-        } else if (value.key === "discussion") {
-          return showDiscussion;
-        } else {
-          return false;
-        }
-      })}
+      items={TABS.filter(({ type }) => types.includes(type)).map(
+        ({ type, label }) => ({
+          label,
+          key: type,
+          children:
+            type === "qa" ? (
+              <QaBox resId={resId} resType={resType} />
+            ) : (
+              <Discussion resId={resId} resType={resType} type={type} />
+            ),
+        })
+      )}
     />
-  ) : (
-    <></>
   );
 };
 

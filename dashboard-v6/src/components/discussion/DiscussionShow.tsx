@@ -23,14 +23,17 @@ import type { MenuProps } from "antd";
 
 import TimeShow from "../general/TimeShow";
 import Marked from "../general/Marked";
-import { delete_, put } from "../../request";
-import type { IDeleteResponse } from "../../api/article";
 import { fullUrl } from "../../utils";
-import type { ICommentRequest, ICommentResponse } from "../../api/Comment";
 import { useState } from "react";
-import type { IComment, TDiscussionType } from "../../api/discussion";
-import { discussionCountUpgrade } from "./utils";
+import {
+  deleteDiscussion,
+  updateDiscussion,
+  type IComment,
+  type TDiscussionType,
+} from "../../api/discussion";
+import { refreshDiscussionBadge } from "./utils";
 import MdView from "../general/MdView";
+import { SeverityTag } from "./SeverityTag";
 
 const { Text } = Typography;
 
@@ -77,83 +80,47 @@ const DiscussionShowWidget = ({
       cancelText: intl.formatMessage({
         id: "buttons.no",
       }),
-      onOk() {
-        const url = `/api/v2/discussion/${id}`;
-        console.info("Discussion delete api request", url);
-        return delete_<IDeleteResponse>(url)
-          .then((json) => {
-            console.debug("api response", json);
-            if (json.ok) {
-              message.success("删除成功");
-              discussionCountUpgrade(resId);
-              if (typeof onDelete !== "undefined") {
-                onDelete(id);
-              }
-            } else {
-              message.error(json.message);
-            }
-          })
-          .catch((e) => console.log("Oops errors!", e));
+      onOk: async () => {
+        await deleteDiscussion(id);
+        message.success("删除成功");
+        refreshDiscussionBadge(data.resType, resId);
+        onDelete?.(id);
       },
     });
   };
 
-  const close = (value: boolean) => {
-    const url = `/api/v2/discussion/${data.id}`;
-    const newData: ICommentRequest = {
-      title: data.title,
-      content: data.content,
+  const close = async (value: boolean) => {
+    if (!data.id) {
+      return;
+    }
+    const updated = await updateDiscussion(data.id, {
       status: value ? "close" : "active",
-    };
-    console.info("api request", url, newData);
-    put<ICommentRequest, ICommentResponse>(url, newData).then((json) => {
-      console.log(json);
-      if (json.ok) {
-        setClosed(json.data.status);
-        discussionCountUpgrade(data.resId);
-        if (typeof onClose !== "undefined") {
-          onClose(value);
-        }
-      } else {
-        message.error(json.message);
-      }
     });
+    setClosed(updated.status);
+    refreshDiscussionBadge(data.resType, data.resId);
+    onClose?.(value);
   };
 
-  const convert = (newType: TDiscussionType) => {
-    const url = `/api/v2/discussion/${data.id}`;
-    const newData: ICommentRequest = {
-      title: data.title,
-      content: data.content,
-      status: data.status,
-      type: newType,
-    };
-    console.info("api response", url, newData);
-    put<ICommentRequest, ICommentResponse>(url, newData).then((json) => {
-      console.info("api response", json);
-      if (json.ok) {
-        notification.info({ message: "转换成功" });
-        if (typeof onConvert !== "undefined") {
-          onConvert(newType);
-        }
-      }
-    });
+  const convert = async (newType: TDiscussionType) => {
+    if (!data.id) {
+      return;
+    }
+    await updateDiscussion(data.id, { type: newType });
+    notification.info({ message: "转换成功" });
+    onConvert?.(newType);
   };
 
   const onClick: MenuProps["onClick"] = (e) => {
     console.log("click ", e);
     switch (e.key) {
       case "copy-link": {
-        let url = `/discussion/topic/`;
-        if (data.id) {
-          if (data.parent) {
-            url += `${data.parent}#${data.id}`;
-          } else {
-            url += data.id;
-          }
-        } else {
-          url += `${data.tplId}?tpl=true&resId=${data.resId}&resType=${data.resType}`;
+        if (!data.id) {
+          break;
         }
+        // 回复用 #锚点 定位，话题页据此滚动高亮
+        const url = data.parent
+          ? `/discussion/topic/${data.parent}#${data.id}`
+          : `/discussion/topic/${data.id}`;
 
         navigator.clipboard.writeText(fullUrl(url)).then(() => {
           message.success("链接地址已经拷贝到剪贴板");
@@ -187,6 +154,9 @@ const DiscussionShowWidget = ({
       case "convert_discussion":
         convert("discussion");
         break;
+      case "convert_issue":
+        convert("issue");
+        break;
       case "delete":
         if (data.id && data.resId) {
           showDeleteConfirm(data.id, data.resId, data.title ?? "");
@@ -196,7 +166,6 @@ const DiscussionShowWidget = ({
         break;
     }
   };
-  console.log("children", data.childrenCount);
   const items: MenuProps["items"] = [
     {
       key: "copy-link",
@@ -204,6 +173,7 @@ const DiscussionShowWidget = ({
         id: "buttons.copy.link",
       }),
       icon: <LinkOutlined />,
+      disabled: !data.id,
     },
     {
       key: "copy-tpl",
@@ -222,6 +192,7 @@ const DiscussionShowWidget = ({
         id: "buttons.edit",
       }),
       icon: <EditOutlined />,
+      disabled: !data.abilities.update,
     },
     {
       key: "close",
@@ -229,7 +200,7 @@ const DiscussionShowWidget = ({
         id: "buttons.close",
       }),
       icon: <CloseOutlined />,
-      disabled: closed === "close",
+      disabled: !data.abilities.close || closed === "close",
     },
     {
       key: "reopen",
@@ -237,7 +208,7 @@ const DiscussionShowWidget = ({
         id: "buttons.open",
       }),
       icon: <CheckOutlined />,
-      disabled: closed === "active",
+      disabled: !data.abilities.close || closed === "active",
     },
     {
       type: "divider",
@@ -248,7 +219,7 @@ const DiscussionShowWidget = ({
         id: "buttons.convert",
       }),
       icon: <SyncOutlined />,
-      disabled: data.parent ? true : false,
+      disabled: data.parent || !data.abilities.update ? true : false,
       children: [
         { key: "convert_qa", label: "qa", disabled: data.type === "qa" },
         { key: "convert_help", label: "help", disabled: data.type === "help" },
@@ -257,6 +228,7 @@ const DiscussionShowWidget = ({
           label: "discussion",
           disabled: data.type === "discussion",
         },
+        { key: "convert_issue", label: "issue", disabled: data.type === "issue" },
       ],
     },
     {
@@ -269,7 +241,8 @@ const DiscussionShowWidget = ({
       }),
       icon: <DeleteOutlined />,
       danger: true,
-      disabled: data.childrenCount && data.childrenCount > 0 ? true : false,
+      // 软删除：话题有回复也能删，删掉的话题留作墓碑，回复照常显示
+      disabled: !data.abilities.delete,
     },
   ];
 
@@ -291,12 +264,16 @@ const DiscussionShowWidget = ({
         ) : undefined}
         <Text type="secondary" style={{ fontSize: "80%" }}>
           <Space>
+            <SeverityTag severity={data.severity} />
             {!data.parent && closed === "close" ? (
               <Tag style={{ backgroundColor: "#8250df", color: "white" }}>
                 {"closed"}
               </Tag>
             ) : undefined}
             {data.user.nickName}
+            {data.coEditor ? (
+              <Text type="secondary">（与 {data.coEditor.nickName}）</Text>
+            ) : undefined}
             <TimeShow
               type="secondary"
               updatedAt={data.updatedAt}
@@ -338,6 +315,15 @@ const DiscussionShowWidget = ({
       </Space>
     );
   };
+  if (data.deleted) {
+    return (
+      <Card size="small" style={{ width: "100%" }}>
+        <Text type="secondary" italic>
+          （已删除）
+        </Text>
+      </Card>
+    );
+  }
   return (
     <Card
       size="small"
@@ -349,7 +335,7 @@ const DiscussionShowWidget = ({
         {data.html ? (
           <MdView html={data.html} />
         ) : (
-          <Marked text={data.content} />
+          <Marked text={data.content ?? undefined} />
         )}
       </div>
       {data.type === "qa" && data.parent ? (

@@ -1,11 +1,12 @@
-import { App } from "antd";
 import { useEffect, useState } from "react";
 
-import { get } from "../../request";
-import type { ICommentResponse } from "../../api/Comment";
 import DiscussionItem from "./DiscussionItem";
 
-import type { IComment, TDiscussionType } from "../../api/discussion";
+import {
+  fetchDiscussion,
+  type IComment,
+  type TDiscussionType,
+} from "../../api/discussion";
 
 interface IWidget {
   topicId?: string;
@@ -27,7 +28,6 @@ const DiscussionTopicInfoWidget = ({
   onClose,
   onConvert,
 }: IWidget) => {
-  const { message } = App.useApp();
   const [data, setData] = useState<IComment | undefined>(topic);
   useEffect(() => {
     setData(topic);
@@ -42,44 +42,15 @@ const DiscussionTopicInfoWidget = ({
   }, [childrenCount]);
 
   useEffect(() => {
-    if (typeof topicId === "undefined") {
+    // 调用方已经带着这条话题来了（如话题页），不再重复取
+    if (typeof topicId === "undefined" || topic?.id === topicId) {
       return;
     }
-    const url = `/api/v2/discussion/${topicId}`;
-    console.info("discussion api request", url);
-    get<ICommentResponse>(url)
-      .then((json) => {
-        console.debug("api response", json);
-        if (json.ok) {
-          const item = json.data;
-          const discussion: IComment = {
-            id: item.id,
-            resId: item.res_id,
-            resType: item.res_type,
-            type: item.type,
-            parent: item.parent,
-            user: item.editor,
-            title: item.title,
-            content: item.content,
-            html: item.html,
-            status: item.status,
-            childrenCount: item.children_count,
-            createdAt: item.created_at,
-            updatedAt: item.updated_at,
-          };
-          setData(discussion);
-          if (typeof onReady !== "undefined") {
-            console.log("discussion on ready");
-            onReady(discussion);
-          }
-        } else {
-          message.error(json.message);
-        }
-      })
-      .catch((e) => {
-        message.error(e.message);
-      });
-  }, [message, topicId]);
+    fetchDiscussion(topicId).then((discussion) => {
+      setData(discussion);
+      onReady?.(discussion);
+    });
+  }, [topicId]);
 
   return (
     <div>

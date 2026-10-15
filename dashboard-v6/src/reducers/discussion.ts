@@ -16,14 +16,8 @@ export interface IShowDiscussion {
   sent?: ISentence;
   withStudent?: boolean;
 }
-export interface ICount {
-  count: number;
-  resType?: TResType;
-  resId?: string;
-}
 interface IState {
   message?: IShowDiscussion;
-  count?: ICount;
   anchor?: IShowDiscussion;
 }
 
@@ -36,21 +30,16 @@ export const slice = createSlice({
     show: (state, action: PayloadAction<IShowDiscussion>) => {
       state.message = action.payload;
     },
-    countChange: (state, action: PayloadAction<ICount>) => {
-      state.count = action.payload;
-    },
     showAnchor: (state, action: PayloadAction<IShowDiscussion>) => {
       state.anchor = action.payload;
     },
   },
 });
 
-export const { show, countChange, showAnchor } = slice.actions;
+export const { show, showAnchor } = slice.actions;
 
 export const message = (state: RootState): IShowDiscussion | undefined =>
   state.discussion.message;
-export const count = (state: RootState): ICount | undefined =>
-  state.discussion.count;
 export const anchor = (state: RootState): IShowDiscussion | undefined =>
   state.discussion.anchor;
 export default slice.reducer;

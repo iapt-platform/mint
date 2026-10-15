@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 
 import DiscussionTopicInfo from "./DiscussionTopicInfo";
 import DiscussionTopicChildren from "./DiscussionTopicChildren";
-import type { IComment, TDiscussionType, TResType } from "../../api/discussion";
+import {
+  fetchDiscussion,
+  type IComment,
+  type TDiscussionType,
+  type TResType,
+} from "../../api/discussion";
 
 interface IWidget {
   resType?: TResType;
@@ -48,6 +53,12 @@ const DiscussionTopicWidget = ({
           onTopicReady?.(value);
         }}
         onDelete={onTopicDelete}
+        onClose={(value: IComment) => {
+          // 关闭 / 重新打开会改变能否回复（abilities.reply），重新取一次话题，回复框跟着变
+          if (value.id) {
+            fetchDiscussion(value.id).then(setCurrTopic);
+          }
+        }}
         onConvert={onConvert}
       />
       <DiscussionTopicChildren

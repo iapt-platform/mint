@@ -18,6 +18,7 @@ import ArticleNavigation from "./components/ArticleNavigation";
 import TocPath from "../tipitaka/TocPath";
 import { useArticle } from "./hooks/useArticle";
 import ArticleHeader from "./components/ArticleHeader";
+import InteractiveArea from "../discussion/InteractiveArea";
 
 interface IWidget {
   articleId?: string;
@@ -187,14 +188,13 @@ const ArticleReader = ({
             path={articleData?.path}
             onArticleChange={onArticleChange}
           />
-          {hideInteractive ? <></> : <></>}
+          {hideInteractive ? undefined : (
+            <InteractiveArea resType="article" resId={articleId} />
+          )}
         </>
       )}
     </div>
   );
-  /**
-   * <InteractiveArea resType={"article"} resId={articleId} />
-   */
 };
 
 export default ArticleReader;
