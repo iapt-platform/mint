@@ -1,16 +1,16 @@
 import { useParams } from "react-router";
 import { Divider, Result } from "antd";
 
-import Discussion from "../../components/discussion/Discussion";
-import DiscussionAnchor from "../../components/discussion/DiscussionAnchor";
-import { asDiscussionTarget, type TResType } from "../../api/discussion";
+import Discussion from "../../../components/discussion/Discussion";
+import DiscussionAnchor from "../../../components/discussion/DiscussionAnchor";
+import { asDiscussionTarget, type TResType } from "../../../api/discussion";
 
 /**
- * 某个对象上的全部讨论：`/discussion/show/:type/:id`。
+ * 某个对象上的全部讨论：`/workspace/discussion/show/:type/:id`。
  *
  * 上面是讨论挂靠的内容（句子 / 文章），下面是话题列表，点开在原地看话题与回复
  * （模板话题也在原地新建）。讨论抽屉右上角的「新窗口打开」链到这里。
- * 与话题页一样放在 workspace 之外、不要求登录，能看到什么由后端的可见性规则决定。
+ * 与话题页一样在 workspace 里（要登录），能看到什么由后端的可见性规则决定。
  */
 const Widget = () => {
   const { type, id } = useParams();

@@ -3,15 +3,15 @@ import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { Button, Card, Result, Space, Spin, Tag } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 
-import DiscussionTopic from "../../components/discussion/DiscussionTopic";
-import DiscussionAnchor from "../../components/discussion/DiscussionAnchor";
-import { fetchDiscussion, type IComment } from "../../api/discussion";
+import DiscussionTopic from "../../../components/discussion/DiscussionTopic";
+import DiscussionAnchor from "../../../components/discussion/DiscussionAnchor";
+import { fetchDiscussion, type IComment } from "../../../api/discussion";
 
 /**
- * 单个话题页：`/discussion/topic/:topicId`，回复用 `#<回复 id>` 定位。
+ * 单个话题页：`/workspace/discussion/topic/:topicId`，回复用 `#<回复 id>` 定位。
  *
- * 「复制链接」拷出来的就是这个地址。放在 workspace 之外、不要求登录：
- * qa / help 对匿名公开，能不能看由后端的可见性规则决定（看不到时是 404）。
+ * 「复制链接」拷出来的就是这个地址。在 workspace 里（要登录）；登录后能不能看
+ * 由后端的可见性规则决定（看不到时是 404）。
  */
 const Widget = () => {
   const { topicId } = useParams();
@@ -37,7 +37,7 @@ const Widget = () => {
   const topic = current?.topic;
 
   const back = (
-    <Button icon={<ArrowLeftOutlined />} onClick={() => navigate("/")}>
+    <Button icon={<ArrowLeftOutlined />} onClick={() => navigate("/workspace")}>
       首页
     </Button>
   );
@@ -57,7 +57,9 @@ const Widget = () => {
           title={
             <Space>
               <Tag>{topic.type}</Tag>
-              <Link to={`/discussion/show/${topic.resType}/${topic.resId}`}>
+              <Link
+                to={`/workspace/discussion/show/${topic.resType}/${topic.resId}`}
+              >
                 这里的全部讨论
               </Link>
             </Space>
@@ -68,7 +70,7 @@ const Widget = () => {
             topic={topic}
             resType={topic.resType}
             focus={hash ? hash.slice(1) : undefined}
-            onTopicDelete={() => navigate("/")}
+            onTopicDelete={() => navigate("/workspace")}
           />
         </Card>
       </>

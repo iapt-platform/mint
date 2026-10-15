@@ -119,8 +119,8 @@ const DiscussionShowWidget = ({
         }
         // 回复用 #锚点 定位，话题页据此滚动高亮
         const url = data.parent
-          ? `/discussion/topic/${data.parent}#${data.id}`
-          : `/discussion/topic/${data.id}`;
+          ? `/workspace/discussion/topic/${data.parent}#${data.id}`
+          : `/workspace/discussion/topic/${data.id}`;
 
         navigator.clipboard.writeText(fullUrl(url)).then(() => {
           message.success("链接地址已经拷贝到剪贴板");
