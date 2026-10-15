@@ -70,8 +70,14 @@ class GetApiV3Discussions200ResponseDataInner implements ModelInterface, ArrayAc
         'html' => 'string',
         'summary' => 'string',
         'tpl_id' => 'string',
+        'pos_start' => 'int',
+        'pos_end' => 'int',
+        'quote_exact' => 'string',
+        'quote_prefix' => 'string',
+        'quote_suffix' => 'string',
         'reply_count' => 'int',
         'editor' => '\WikipaliApi\Model\GetApiV3Discussions200ResponseDataInnerEditor',
+        'co_editor' => '\WikipaliApi\Model\GetApiV3Discussions200ResponseDataInnerEditor',
         'abilities' => '\WikipaliApi\Model\GetApiV3Discussions200ResponseDataInnerAbilities',
         'created_at' => 'string',
         'updated_at' => 'string',
@@ -99,8 +105,14 @@ class GetApiV3Discussions200ResponseDataInner implements ModelInterface, ArrayAc
         'html' => null,
         'summary' => null,
         'tpl_id' => null,
+        'pos_start' => null,
+        'pos_end' => null,
+        'quote_exact' => null,
+        'quote_prefix' => null,
+        'quote_suffix' => null,
         'reply_count' => null,
         'editor' => null,
+        'co_editor' => null,
         'abilities' => null,
         'created_at' => null,
         'updated_at' => null,
@@ -126,8 +138,14 @@ class GetApiV3Discussions200ResponseDataInner implements ModelInterface, ArrayAc
         'html' => false,
         'summary' => false,
         'tpl_id' => true,
+        'pos_start' => true,
+        'pos_end' => true,
+        'quote_exact' => true,
+        'quote_prefix' => true,
+        'quote_suffix' => true,
         'reply_count' => false,
         'editor' => true,
+        'co_editor' => true,
         'abilities' => false,
         'created_at' => false,
         'updated_at' => false,
@@ -233,8 +251,14 @@ class GetApiV3Discussions200ResponseDataInner implements ModelInterface, ArrayAc
         'html' => 'html',
         'summary' => 'summary',
         'tpl_id' => 'tpl_id',
+        'pos_start' => 'pos_start',
+        'pos_end' => 'pos_end',
+        'quote_exact' => 'quote_exact',
+        'quote_prefix' => 'quote_prefix',
+        'quote_suffix' => 'quote_suffix',
         'reply_count' => 'reply_count',
         'editor' => 'editor',
+        'co_editor' => 'co_editor',
         'abilities' => 'abilities',
         'created_at' => 'created_at',
         'updated_at' => 'updated_at',
@@ -260,8 +284,14 @@ class GetApiV3Discussions200ResponseDataInner implements ModelInterface, ArrayAc
         'html' => 'setHtml',
         'summary' => 'setSummary',
         'tpl_id' => 'setTplId',
+        'pos_start' => 'setPosStart',
+        'pos_end' => 'setPosEnd',
+        'quote_exact' => 'setQuoteExact',
+        'quote_prefix' => 'setQuotePrefix',
+        'quote_suffix' => 'setQuoteSuffix',
         'reply_count' => 'setReplyCount',
         'editor' => 'setEditor',
+        'co_editor' => 'setCoEditor',
         'abilities' => 'setAbilities',
         'created_at' => 'setCreatedAt',
         'updated_at' => 'setUpdatedAt',
@@ -287,8 +317,14 @@ class GetApiV3Discussions200ResponseDataInner implements ModelInterface, ArrayAc
         'html' => 'getHtml',
         'summary' => 'getSummary',
         'tpl_id' => 'getTplId',
+        'pos_start' => 'getPosStart',
+        'pos_end' => 'getPosEnd',
+        'quote_exact' => 'getQuoteExact',
+        'quote_prefix' => 'getQuotePrefix',
+        'quote_suffix' => 'getQuoteSuffix',
         'reply_count' => 'getReplyCount',
         'editor' => 'getEditor',
+        'co_editor' => 'getCoEditor',
         'abilities' => 'getAbilities',
         'created_at' => 'getCreatedAt',
         'updated_at' => 'getUpdatedAt',
@@ -365,8 +401,14 @@ class GetApiV3Discussions200ResponseDataInner implements ModelInterface, ArrayAc
         $this->setIfExists('html', $data ?? [], null);
         $this->setIfExists('summary', $data ?? [], null);
         $this->setIfExists('tpl_id', $data ?? [], null);
+        $this->setIfExists('pos_start', $data ?? [], null);
+        $this->setIfExists('pos_end', $data ?? [], null);
+        $this->setIfExists('quote_exact', $data ?? [], null);
+        $this->setIfExists('quote_prefix', $data ?? [], null);
+        $this->setIfExists('quote_suffix', $data ?? [], null);
         $this->setIfExists('reply_count', $data ?? [], null);
         $this->setIfExists('editor', $data ?? [], null);
+        $this->setIfExists('co_editor', $data ?? [], null);
         $this->setIfExists('abilities', $data ?? [], null);
         $this->setIfExists('created_at', $data ?? [], null);
         $this->setIfExists('updated_at', $data ?? [], null);
@@ -802,6 +844,176 @@ class GetApiV3Discussions200ResponseDataInner implements ModelInterface, ArrayAc
     }
 
     /**
+     * Gets pos_start
+     *
+     * @return int|null
+     */
+    public function getPosStart()
+    {
+        return $this->container['pos_start'];
+    }
+
+    /**
+     * Sets pos_start
+     *
+     * @param int|null $pos_start pos_start
+     *
+     * @return self
+     */
+    public function setPosStart($pos_start)
+    {
+        if (is_null($pos_start)) {
+            array_push($this->openAPINullablesSetToNull, 'pos_start');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('pos_start', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+        $this->container['pos_start'] = $pos_start;
+
+        return $this;
+    }
+
+    /**
+     * Gets pos_end
+     *
+     * @return int|null
+     */
+    public function getPosEnd()
+    {
+        return $this->container['pos_end'];
+    }
+
+    /**
+     * Sets pos_end
+     *
+     * @param int|null $pos_end pos_end
+     *
+     * @return self
+     */
+    public function setPosEnd($pos_end)
+    {
+        if (is_null($pos_end)) {
+            array_push($this->openAPINullablesSetToNull, 'pos_end');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('pos_end', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+        $this->container['pos_end'] = $pos_end;
+
+        return $this;
+    }
+
+    /**
+     * Gets quote_exact
+     *
+     * @return string|null
+     */
+    public function getQuoteExact()
+    {
+        return $this->container['quote_exact'];
+    }
+
+    /**
+     * Sets quote_exact
+     *
+     * @param string|null $quote_exact quote_exact
+     *
+     * @return self
+     */
+    public function setQuoteExact($quote_exact)
+    {
+        if (is_null($quote_exact)) {
+            array_push($this->openAPINullablesSetToNull, 'quote_exact');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('quote_exact', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+        $this->container['quote_exact'] = $quote_exact;
+
+        return $this;
+    }
+
+    /**
+     * Gets quote_prefix
+     *
+     * @return string|null
+     */
+    public function getQuotePrefix()
+    {
+        return $this->container['quote_prefix'];
+    }
+
+    /**
+     * Sets quote_prefix
+     *
+     * @param string|null $quote_prefix quote_prefix
+     *
+     * @return self
+     */
+    public function setQuotePrefix($quote_prefix)
+    {
+        if (is_null($quote_prefix)) {
+            array_push($this->openAPINullablesSetToNull, 'quote_prefix');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('quote_prefix', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+        $this->container['quote_prefix'] = $quote_prefix;
+
+        return $this;
+    }
+
+    /**
+     * Gets quote_suffix
+     *
+     * @return string|null
+     */
+    public function getQuoteSuffix()
+    {
+        return $this->container['quote_suffix'];
+    }
+
+    /**
+     * Sets quote_suffix
+     *
+     * @param string|null $quote_suffix quote_suffix
+     *
+     * @return self
+     */
+    public function setQuoteSuffix($quote_suffix)
+    {
+        if (is_null($quote_suffix)) {
+            array_push($this->openAPINullablesSetToNull, 'quote_suffix');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('quote_suffix', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+        $this->container['quote_suffix'] = $quote_suffix;
+
+        return $this;
+    }
+
+    /**
      * Gets reply_count
      *
      * @return int|null
@@ -858,6 +1070,40 @@ class GetApiV3Discussions200ResponseDataInner implements ModelInterface, ArrayAc
             }
         }
         $this->container['editor'] = $editor;
+
+        return $this;
+    }
+
+    /**
+     * Gets co_editor
+     *
+     * @return \WikipaliApi\Model\GetApiV3Discussions200ResponseDataInnerEditor|null
+     */
+    public function getCoEditor()
+    {
+        return $this->container['co_editor'];
+    }
+
+    /**
+     * Sets co_editor
+     *
+     * @param \WikipaliApi\Model\GetApiV3Discussions200ResponseDataInnerEditor|null $co_editor co_editor
+     *
+     * @return self
+     */
+    public function setCoEditor($co_editor)
+    {
+        if (is_null($co_editor)) {
+            array_push($this->openAPINullablesSetToNull, 'co_editor');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('co_editor', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+        $this->container['co_editor'] = $co_editor;
 
         return $this;
     }

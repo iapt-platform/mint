@@ -472,7 +472,7 @@ class DiscussionsApi
      * @param  string $target_type 挂靠对象的类型 (required)
      * @param  string $target_id 挂靠对象的 uuid (required)
      * @param  int|null $per_page 每页数量，最大 200 (optional, default to 15)
-     * @param  string|null $type 话题类型 (optional)
+     * @param  string|null $type 类型，不传则只列评论线程 (optional)
      * @param  string|null $status 话题状态，不传则两种都要 (optional)
      * @param  string|null $severity 严重程度，逗号分隔多选 (optional)
      * @param  string|null $sort 排序，前缀 - 表示倒序 (optional, default to '-created_at')
@@ -497,7 +497,7 @@ class DiscussionsApi
      * @param  string $target_type 挂靠对象的类型 (required)
      * @param  string $target_id 挂靠对象的 uuid (required)
      * @param  int|null $per_page 每页数量，最大 200 (optional, default to 15)
-     * @param  string|null $type 话题类型 (optional)
+     * @param  string|null $type 类型，不传则只列评论线程 (optional)
      * @param  string|null $status 话题状态，不传则两种都要 (optional)
      * @param  string|null $severity 严重程度，逗号分隔多选 (optional)
      * @param  string|null $sort 排序，前缀 - 表示倒序 (optional, default to '-created_at')
@@ -603,7 +603,7 @@ class DiscussionsApi
      * @param  string $target_type 挂靠对象的类型 (required)
      * @param  string $target_id 挂靠对象的 uuid (required)
      * @param  int|null $per_page 每页数量，最大 200 (optional, default to 15)
-     * @param  string|null $type 话题类型 (optional)
+     * @param  string|null $type 类型，不传则只列评论线程 (optional)
      * @param  string|null $status 话题状态，不传则两种都要 (optional)
      * @param  string|null $severity 严重程度，逗号分隔多选 (optional)
      * @param  string|null $sort 排序，前缀 - 表示倒序 (optional, default to '-created_at')
@@ -631,7 +631,7 @@ class DiscussionsApi
      * @param  string $target_type 挂靠对象的类型 (required)
      * @param  string $target_id 挂靠对象的 uuid (required)
      * @param  int|null $per_page 每页数量，最大 200 (optional, default to 15)
-     * @param  string|null $type 话题类型 (optional)
+     * @param  string|null $type 类型，不传则只列评论线程 (optional)
      * @param  string|null $status 话题状态，不传则两种都要 (optional)
      * @param  string|null $severity 严重程度，逗号分隔多选 (optional)
      * @param  string|null $sort 排序，前缀 - 表示倒序 (optional, default to '-created_at')
@@ -688,7 +688,7 @@ class DiscussionsApi
      * @param  string $target_type 挂靠对象的类型 (required)
      * @param  string $target_id 挂靠对象的 uuid (required)
      * @param  int|null $per_page 每页数量，最大 200 (optional, default to 15)
-     * @param  string|null $type 话题类型 (optional)
+     * @param  string|null $type 类型，不传则只列评论线程 (optional)
      * @param  string|null $status 话题状态，不传则两种都要 (optional)
      * @param  string|null $severity 严重程度，逗号分隔多选 (optional)
      * @param  string|null $sort 排序，前缀 - 表示倒序 (optional, default to '-created_at')
@@ -1483,7 +1483,7 @@ class DiscussionsApi
      *
      * @param  string $target_type 挂靠对象的类型 (required)
      * @param  string $target_id 挂靠对象的 uuid (required)
-     * @param  string|null $type 只数这种类型的话题 (optional)
+     * @param  string|null $type 只数这种类型，不传则只数评论线程 (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3DiscussionsSummary'] to see the possible values for this operation
      *
      * @throws \WikipaliApi\ApiException on non-2xx response or if the response body is not in the expected format
@@ -1503,7 +1503,7 @@ class DiscussionsApi
      *
      * @param  string $target_type 挂靠对象的类型 (required)
      * @param  string $target_id 挂靠对象的 uuid (required)
-     * @param  string|null $type 只数这种类型的话题 (optional)
+     * @param  string|null $type 只数这种类型，不传则只数评论线程 (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3DiscussionsSummary'] to see the possible values for this operation
      *
      * @throws \WikipaliApi\ApiException on non-2xx response or if the response body is not in the expected format
@@ -1604,7 +1604,7 @@ class DiscussionsApi
      *
      * @param  string $target_type 挂靠对象的类型 (required)
      * @param  string $target_id 挂靠对象的 uuid (required)
-     * @param  string|null $type 只数这种类型的话题 (optional)
+     * @param  string|null $type 只数这种类型，不传则只数评论线程 (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3DiscussionsSummary'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -1627,7 +1627,7 @@ class DiscussionsApi
      *
      * @param  string $target_type 挂靠对象的类型 (required)
      * @param  string $target_id 挂靠对象的 uuid (required)
-     * @param  string|null $type 只数这种类型的话题 (optional)
+     * @param  string|null $type 只数这种类型，不传则只数评论线程 (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3DiscussionsSummary'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -1679,7 +1679,7 @@ class DiscussionsApi
      *
      * @param  string $target_type 挂靠对象的类型 (required)
      * @param  string $target_id 挂靠对象的 uuid (required)
-     * @param  string|null $type 只数这种类型的话题 (optional)
+     * @param  string|null $type 只数这种类型，不传则只数评论线程 (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3DiscussionsSummary'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -2141,7 +2141,7 @@ class DiscussionsApi
     /**
      * Operation postApiV3Discussions
      *
-     * 发起话题
+     * 发起话题或新建批注
      *
      * @param  \WikipaliApi\Model\PostApiV3DiscussionsRequest $post_api_v3_discussions_request post_api_v3_discussions_request (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['postApiV3Discussions'] to see the possible values for this operation
@@ -2159,7 +2159,7 @@ class DiscussionsApi
     /**
      * Operation postApiV3DiscussionsWithHttpInfo
      *
-     * 发起话题
+     * 发起话题或新建批注
      *
      * @param  \WikipaliApi\Model\PostApiV3DiscussionsRequest $post_api_v3_discussions_request (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['postApiV3Discussions'] to see the possible values for this operation
@@ -2300,7 +2300,7 @@ class DiscussionsApi
     /**
      * Operation postApiV3DiscussionsAsync
      *
-     * 发起话题
+     * 发起话题或新建批注
      *
      * @param  \WikipaliApi\Model\PostApiV3DiscussionsRequest $post_api_v3_discussions_request (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['postApiV3Discussions'] to see the possible values for this operation
@@ -2321,7 +2321,7 @@ class DiscussionsApi
     /**
      * Operation postApiV3DiscussionsAsyncWithHttpInfo
      *
-     * 发起话题
+     * 发起话题或新建批注
      *
      * @param  \WikipaliApi\Model\PostApiV3DiscussionsRequest $post_api_v3_discussions_request (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['postApiV3Discussions'] to see the possible values for this operation

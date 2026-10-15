@@ -63,6 +63,11 @@ class PostApiV3DiscussionsRequest implements ModelInterface, ArrayAccess, \JsonS
         'title' => 'string',
         'content' => 'string',
         'severity' => 'string',
+        'pos_start' => 'int',
+        'pos_end' => 'int',
+        'quote_exact' => 'string',
+        'quote_prefix' => 'string',
+        'quote_suffix' => 'string',
         'tpl_id' => 'string',
         'notify' => 'bool'
     ];
@@ -81,6 +86,11 @@ class PostApiV3DiscussionsRequest implements ModelInterface, ArrayAccess, \JsonS
         'title' => null,
         'content' => null,
         'severity' => null,
+        'pos_start' => null,
+        'pos_end' => null,
+        'quote_exact' => null,
+        'quote_prefix' => null,
+        'quote_suffix' => null,
         'tpl_id' => null,
         'notify' => null
     ];
@@ -97,6 +107,11 @@ class PostApiV3DiscussionsRequest implements ModelInterface, ArrayAccess, \JsonS
         'title' => false,
         'content' => false,
         'severity' => false,
+        'pos_start' => false,
+        'pos_end' => false,
+        'quote_exact' => false,
+        'quote_prefix' => false,
+        'quote_suffix' => false,
         'tpl_id' => false,
         'notify' => false
     ];
@@ -193,6 +208,11 @@ class PostApiV3DiscussionsRequest implements ModelInterface, ArrayAccess, \JsonS
         'title' => 'title',
         'content' => 'content',
         'severity' => 'severity',
+        'pos_start' => 'pos_start',
+        'pos_end' => 'pos_end',
+        'quote_exact' => 'quote_exact',
+        'quote_prefix' => 'quote_prefix',
+        'quote_suffix' => 'quote_suffix',
         'tpl_id' => 'tpl_id',
         'notify' => 'notify'
     ];
@@ -209,6 +229,11 @@ class PostApiV3DiscussionsRequest implements ModelInterface, ArrayAccess, \JsonS
         'title' => 'setTitle',
         'content' => 'setContent',
         'severity' => 'setSeverity',
+        'pos_start' => 'setPosStart',
+        'pos_end' => 'setPosEnd',
+        'quote_exact' => 'setQuoteExact',
+        'quote_prefix' => 'setQuotePrefix',
+        'quote_suffix' => 'setQuoteSuffix',
         'tpl_id' => 'setTplId',
         'notify' => 'setNotify'
     ];
@@ -225,6 +250,11 @@ class PostApiV3DiscussionsRequest implements ModelInterface, ArrayAccess, \JsonS
         'title' => 'getTitle',
         'content' => 'getContent',
         'severity' => 'getSeverity',
+        'pos_start' => 'getPosStart',
+        'pos_end' => 'getPosEnd',
+        'quote_exact' => 'getQuoteExact',
+        'quote_prefix' => 'getQuotePrefix',
+        'quote_suffix' => 'getQuoteSuffix',
         'tpl_id' => 'getTplId',
         'notify' => 'getNotify'
     ];
@@ -279,6 +309,8 @@ class PostApiV3DiscussionsRequest implements ModelInterface, ArrayAccess, \JsonS
     public const TYPE_QA = 'qa';
     public const TYPE_HELP = 'help';
     public const TYPE_ISSUE = 'issue';
+    public const TYPE_NOTE = 'note';
+    public const TYPE_COMMENTARY = 'commentary';
     public const SEVERITY_ERROR = 'error';
     public const SEVERITY_WARNING = 'warning';
     public const SEVERITY_INFO = 'info';
@@ -313,6 +345,8 @@ class PostApiV3DiscussionsRequest implements ModelInterface, ArrayAccess, \JsonS
             self::TYPE_QA,
             self::TYPE_HELP,
             self::TYPE_ISSUE,
+            self::TYPE_NOTE,
+            self::TYPE_COMMENTARY,
         ];
     }
 
@@ -353,6 +387,11 @@ class PostApiV3DiscussionsRequest implements ModelInterface, ArrayAccess, \JsonS
         $this->setIfExists('title', $data ?? [], null);
         $this->setIfExists('content', $data ?? [], null);
         $this->setIfExists('severity', $data ?? [], null);
+        $this->setIfExists('pos_start', $data ?? [], null);
+        $this->setIfExists('pos_end', $data ?? [], null);
+        $this->setIfExists('quote_exact', $data ?? [], null);
+        $this->setIfExists('quote_prefix', $data ?? [], null);
+        $this->setIfExists('quote_suffix', $data ?? [], null);
         $this->setIfExists('tpl_id', $data ?? [], null);
         $this->setIfExists('notify', $data ?? [], true);
     }
@@ -408,9 +447,6 @@ class PostApiV3DiscussionsRequest implements ModelInterface, ArrayAccess, \JsonS
             );
         }
 
-        if ($this->container['title'] === null) {
-            $invalidProperties[] = "'title' can't be null";
-        }
         $allowedValues = $this->getSeverityAllowableValues();
         if (!is_null($this->container['severity']) && !in_array($this->container['severity'], $allowedValues, true)) {
             $invalidProperties[] = sprintf(
@@ -512,7 +548,7 @@ class PostApiV3DiscussionsRequest implements ModelInterface, ArrayAccess, \JsonS
     /**
      * Sets type
      *
-     * @param string|null $type 话题类型
+     * @param string|null $type 类型
      *
      * @return self
      */
@@ -539,7 +575,7 @@ class PostApiV3DiscussionsRequest implements ModelInterface, ArrayAccess, \JsonS
     /**
      * Gets title
      *
-     * @return string
+     * @return string|null
      */
     public function getTitle()
     {
@@ -549,7 +585,7 @@ class PostApiV3DiscussionsRequest implements ModelInterface, ArrayAccess, \JsonS
     /**
      * Sets title
      *
-     * @param string $title 标题，最长 256 字符
+     * @param string|null $title 标题，最长 256 字符；评论线程必填，批注可省
      *
      * @return self
      */
@@ -576,7 +612,7 @@ class PostApiV3DiscussionsRequest implements ModelInterface, ArrayAccess, \JsonS
     /**
      * Sets content
      *
-     * @param string|null $content 正文（markdown）
+     * @param string|null $content 正文（markdown）；批注必填
      *
      * @return self
      */
@@ -628,6 +664,141 @@ class PostApiV3DiscussionsRequest implements ModelInterface, ArrayAccess, \JsonS
     }
 
     /**
+     * Gets pos_start
+     *
+     * @return int|null
+     */
+    public function getPosStart()
+    {
+        return $this->container['pos_start'];
+    }
+
+    /**
+     * Sets pos_start
+     *
+     * @param int|null $pos_start 批注锚点在句子文本中的起始偏移（只限批注）
+     *
+     * @return self
+     */
+    public function setPosStart($pos_start)
+    {
+        if (is_null($pos_start)) {
+            throw new \InvalidArgumentException('non-nullable pos_start cannot be null');
+        }
+        $this->container['pos_start'] = $pos_start;
+
+        return $this;
+    }
+
+    /**
+     * Gets pos_end
+     *
+     * @return int|null
+     */
+    public function getPosEnd()
+    {
+        return $this->container['pos_end'];
+    }
+
+    /**
+     * Sets pos_end
+     *
+     * @param int|null $pos_end 批注锚点的结束偏移，批注插在这里（只限批注）
+     *
+     * @return self
+     */
+    public function setPosEnd($pos_end)
+    {
+        if (is_null($pos_end)) {
+            throw new \InvalidArgumentException('non-nullable pos_end cannot be null');
+        }
+        $this->container['pos_end'] = $pos_end;
+
+        return $this;
+    }
+
+    /**
+     * Gets quote_exact
+     *
+     * @return string|null
+     */
+    public function getQuoteExact()
+    {
+        return $this->container['quote_exact'];
+    }
+
+    /**
+     * Sets quote_exact
+     *
+     * @param string|null $quote_exact 锚定的原文片段（只限批注）
+     *
+     * @return self
+     */
+    public function setQuoteExact($quote_exact)
+    {
+        if (is_null($quote_exact)) {
+            throw new \InvalidArgumentException('non-nullable quote_exact cannot be null');
+        }
+        $this->container['quote_exact'] = $quote_exact;
+
+        return $this;
+    }
+
+    /**
+     * Gets quote_prefix
+     *
+     * @return string|null
+     */
+    public function getQuotePrefix()
+    {
+        return $this->container['quote_prefix'];
+    }
+
+    /**
+     * Sets quote_prefix
+     *
+     * @param string|null $quote_prefix 锚定片段前的上下文，用于重新定位（只限批注）
+     *
+     * @return self
+     */
+    public function setQuotePrefix($quote_prefix)
+    {
+        if (is_null($quote_prefix)) {
+            throw new \InvalidArgumentException('non-nullable quote_prefix cannot be null');
+        }
+        $this->container['quote_prefix'] = $quote_prefix;
+
+        return $this;
+    }
+
+    /**
+     * Gets quote_suffix
+     *
+     * @return string|null
+     */
+    public function getQuoteSuffix()
+    {
+        return $this->container['quote_suffix'];
+    }
+
+    /**
+     * Sets quote_suffix
+     *
+     * @param string|null $quote_suffix 锚定片段后的上下文，用于重新定位（只限批注）
+     *
+     * @return self
+     */
+    public function setQuoteSuffix($quote_suffix)
+    {
+        if (is_null($quote_suffix)) {
+            throw new \InvalidArgumentException('non-nullable quote_suffix cannot be null');
+        }
+        $this->container['quote_suffix'] = $quote_suffix;
+
+        return $this;
+    }
+
+    /**
      * Gets tpl_id
      *
      * @return string|null
@@ -667,7 +838,7 @@ class PostApiV3DiscussionsRequest implements ModelInterface, ArrayAccess, \JsonS
     /**
      * Sets notify
      *
-     * @param bool|null $notify 是否发通知
+     * @param bool|null $notify 是否发通知（批注不发）
      *
      * @return self
      */

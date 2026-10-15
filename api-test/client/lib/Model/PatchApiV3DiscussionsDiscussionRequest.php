@@ -61,7 +61,12 @@ class PatchApiV3DiscussionsDiscussionRequest implements ModelInterface, ArrayAcc
         'content' => 'string',
         'status' => 'string',
         'type' => 'string',
-        'severity' => 'string'
+        'severity' => 'string',
+        'pos_start' => 'int',
+        'pos_end' => 'int',
+        'quote_exact' => 'string',
+        'quote_prefix' => 'string',
+        'quote_suffix' => 'string'
     ];
 
     /**
@@ -76,7 +81,12 @@ class PatchApiV3DiscussionsDiscussionRequest implements ModelInterface, ArrayAcc
         'content' => null,
         'status' => null,
         'type' => null,
-        'severity' => null
+        'severity' => null,
+        'pos_start' => null,
+        'pos_end' => null,
+        'quote_exact' => null,
+        'quote_prefix' => null,
+        'quote_suffix' => null
     ];
 
     /**
@@ -89,7 +99,12 @@ class PatchApiV3DiscussionsDiscussionRequest implements ModelInterface, ArrayAcc
         'content' => false,
         'status' => false,
         'type' => false,
-        'severity' => false
+        'severity' => false,
+        'pos_start' => false,
+        'pos_end' => false,
+        'quote_exact' => false,
+        'quote_prefix' => false,
+        'quote_suffix' => false
     ];
 
     /**
@@ -182,7 +197,12 @@ class PatchApiV3DiscussionsDiscussionRequest implements ModelInterface, ArrayAcc
         'content' => 'content',
         'status' => 'status',
         'type' => 'type',
-        'severity' => 'severity'
+        'severity' => 'severity',
+        'pos_start' => 'pos_start',
+        'pos_end' => 'pos_end',
+        'quote_exact' => 'quote_exact',
+        'quote_prefix' => 'quote_prefix',
+        'quote_suffix' => 'quote_suffix'
     ];
 
     /**
@@ -195,7 +215,12 @@ class PatchApiV3DiscussionsDiscussionRequest implements ModelInterface, ArrayAcc
         'content' => 'setContent',
         'status' => 'setStatus',
         'type' => 'setType',
-        'severity' => 'setSeverity'
+        'severity' => 'setSeverity',
+        'pos_start' => 'setPosStart',
+        'pos_end' => 'setPosEnd',
+        'quote_exact' => 'setQuoteExact',
+        'quote_prefix' => 'setQuotePrefix',
+        'quote_suffix' => 'setQuoteSuffix'
     ];
 
     /**
@@ -208,7 +233,12 @@ class PatchApiV3DiscussionsDiscussionRequest implements ModelInterface, ArrayAcc
         'content' => 'getContent',
         'status' => 'getStatus',
         'type' => 'getType',
-        'severity' => 'getSeverity'
+        'severity' => 'getSeverity',
+        'pos_start' => 'getPosStart',
+        'pos_end' => 'getPosEnd',
+        'quote_exact' => 'getQuoteExact',
+        'quote_prefix' => 'getQuotePrefix',
+        'quote_suffix' => 'getQuoteSuffix'
     ];
 
     /**
@@ -258,6 +288,8 @@ class PatchApiV3DiscussionsDiscussionRequest implements ModelInterface, ArrayAcc
     public const TYPE_QA = 'qa';
     public const TYPE_HELP = 'help';
     public const TYPE_ISSUE = 'issue';
+    public const TYPE_NOTE = 'note';
+    public const TYPE_COMMENTARY = 'commentary';
     public const SEVERITY_ERROR = 'error';
     public const SEVERITY_WARNING = 'warning';
     public const SEVERITY_INFO = 'info';
@@ -289,6 +321,8 @@ class PatchApiV3DiscussionsDiscussionRequest implements ModelInterface, ArrayAcc
             self::TYPE_QA,
             self::TYPE_HELP,
             self::TYPE_ISSUE,
+            self::TYPE_NOTE,
+            self::TYPE_COMMENTARY,
         ];
     }
 
@@ -328,6 +362,11 @@ class PatchApiV3DiscussionsDiscussionRequest implements ModelInterface, ArrayAcc
         $this->setIfExists('status', $data ?? [], null);
         $this->setIfExists('type', $data ?? [], null);
         $this->setIfExists('severity', $data ?? [], null);
+        $this->setIfExists('pos_start', $data ?? [], null);
+        $this->setIfExists('pos_end', $data ?? [], null);
+        $this->setIfExists('quote_exact', $data ?? [], null);
+        $this->setIfExists('quote_prefix', $data ?? [], null);
+        $this->setIfExists('quote_suffix', $data ?? [], null);
     }
 
     /**
@@ -503,7 +542,7 @@ class PatchApiV3DiscussionsDiscussionRequest implements ModelInterface, ArrayAcc
     /**
      * Sets type
      *
-     * @param string|null $type 话题类型（只限话题）
+     * @param string|null $type 类型（只限话题；评论线程与批注不能互转）
      *
      * @return self
      */
@@ -560,6 +599,141 @@ class PatchApiV3DiscussionsDiscussionRequest implements ModelInterface, ArrayAcc
             );
         }
         $this->container['severity'] = $severity;
+
+        return $this;
+    }
+
+    /**
+     * Gets pos_start
+     *
+     * @return int|null
+     */
+    public function getPosStart()
+    {
+        return $this->container['pos_start'];
+    }
+
+    /**
+     * Sets pos_start
+     *
+     * @param int|null $pos_start 锚点起始偏移（只限批注）
+     *
+     * @return self
+     */
+    public function setPosStart($pos_start)
+    {
+        if (is_null($pos_start)) {
+            throw new \InvalidArgumentException('non-nullable pos_start cannot be null');
+        }
+        $this->container['pos_start'] = $pos_start;
+
+        return $this;
+    }
+
+    /**
+     * Gets pos_end
+     *
+     * @return int|null
+     */
+    public function getPosEnd()
+    {
+        return $this->container['pos_end'];
+    }
+
+    /**
+     * Sets pos_end
+     *
+     * @param int|null $pos_end 锚点结束偏移（只限批注）
+     *
+     * @return self
+     */
+    public function setPosEnd($pos_end)
+    {
+        if (is_null($pos_end)) {
+            throw new \InvalidArgumentException('non-nullable pos_end cannot be null');
+        }
+        $this->container['pos_end'] = $pos_end;
+
+        return $this;
+    }
+
+    /**
+     * Gets quote_exact
+     *
+     * @return string|null
+     */
+    public function getQuoteExact()
+    {
+        return $this->container['quote_exact'];
+    }
+
+    /**
+     * Sets quote_exact
+     *
+     * @param string|null $quote_exact 锚定的原文片段（只限批注）
+     *
+     * @return self
+     */
+    public function setQuoteExact($quote_exact)
+    {
+        if (is_null($quote_exact)) {
+            throw new \InvalidArgumentException('non-nullable quote_exact cannot be null');
+        }
+        $this->container['quote_exact'] = $quote_exact;
+
+        return $this;
+    }
+
+    /**
+     * Gets quote_prefix
+     *
+     * @return string|null
+     */
+    public function getQuotePrefix()
+    {
+        return $this->container['quote_prefix'];
+    }
+
+    /**
+     * Sets quote_prefix
+     *
+     * @param string|null $quote_prefix 锚定片段前的上下文（只限批注）
+     *
+     * @return self
+     */
+    public function setQuotePrefix($quote_prefix)
+    {
+        if (is_null($quote_prefix)) {
+            throw new \InvalidArgumentException('non-nullable quote_prefix cannot be null');
+        }
+        $this->container['quote_prefix'] = $quote_prefix;
+
+        return $this;
+    }
+
+    /**
+     * Gets quote_suffix
+     *
+     * @return string|null
+     */
+    public function getQuoteSuffix()
+    {
+        return $this->container['quote_suffix'];
+    }
+
+    /**
+     * Sets quote_suffix
+     *
+     * @param string|null $quote_suffix 锚定片段后的上下文（只限批注）
+     *
+     * @return self
+     */
+    public function setQuoteSuffix($quote_suffix)
+    {
+        if (is_null($quote_suffix)) {
+            throw new \InvalidArgumentException('non-nullable quote_suffix cannot be null');
+        }
+        $this->container['quote_suffix'] = $quote_suffix;
 
         return $this;
     }

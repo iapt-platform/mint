@@ -28,6 +28,11 @@ return [
     // discussions 写用例挂的句子：放在测试账号自己的 channel 里、由测试账号编辑，
     // 这样即便有通知也只发给自己（用例本身还会带 notify=false）。换环境时按需覆盖。
     'discussion_sentence' => 'ee5259be-5d1e-4408-a2a6-566a5773eef1',
+    // discussion_sentence 所在的 channel（agent 授权的范围）
+    'discussion_channel' => '1721b7fa-e471-46fd-b860-64b9e79d370e',
+
+    // agent 代写用例：归测试账号所有的 AI 模型 uid，按环境在 config.local.php 里配，没配则 SKIP
+    'agent_model' => null,
 
     // 一个已注册账号的邮箱（email-certifications 的「已注册」用例；只校验、不发信）。
     // 留空则该用例 SKIP。

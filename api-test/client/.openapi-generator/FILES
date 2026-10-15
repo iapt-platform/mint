@@ -4,6 +4,7 @@
 .travis.yml
 README.md
 composer.json
+docs/Api/AgentGrantsApi.md
 docs/Api/DiscussionsApi.md
 docs/Api/EmailCertificationsApi.md
 docs/Api/HeartbeatApi.md
@@ -54,6 +55,9 @@ docs/Model/GetApiV3TipitakaRelatedParagraphsAggregateBookName200ResponseDataInne
 docs/Model/PaginationMeta.md
 docs/Model/PatchApiV3DiscussionsDiscussionRequest.md
 docs/Model/PatchApiV3PasswordResetsTokenRequest.md
+docs/Model/PostApiV3AgentGrants200Response.md
+docs/Model/PostApiV3AgentGrants200ResponseData.md
+docs/Model/PostApiV3AgentGrantsRequest.md
 docs/Model/PostApiV3Discussions200Response.md
 docs/Model/PostApiV3DiscussionsDiscussionRepliesRequest.md
 docs/Model/PostApiV3DiscussionsRequest.md
@@ -73,6 +77,7 @@ docs/Model/PostApiV3Users200ResponseData.md
 docs/Model/PostApiV3UsersRequest.md
 docs/Model/ProblemDetails.md
 git_push.sh
+lib/Api/AgentGrantsApi.php
 lib/Api/DiscussionsApi.php
 lib/Api/EmailCertificationsApi.php
 lib/Api/HeartbeatApi.php
@@ -128,6 +133,9 @@ lib/Model/ModelInterface.php
 lib/Model/PaginationMeta.php
 lib/Model/PatchApiV3DiscussionsDiscussionRequest.php
 lib/Model/PatchApiV3PasswordResetsTokenRequest.php
+lib/Model/PostApiV3AgentGrants200Response.php
+lib/Model/PostApiV3AgentGrants200ResponseData.php
+lib/Model/PostApiV3AgentGrantsRequest.php
 lib/Model/PostApiV3Discussions200Response.php
 lib/Model/PostApiV3DiscussionsDiscussionRepliesRequest.php
 lib/Model/PostApiV3DiscussionsRequest.php
@@ -148,6 +156,7 @@ lib/Model/PostApiV3UsersRequest.php
 lib/Model/ProblemDetails.php
 lib/ObjectSerializer.php
 phpunit.xml.dist
+test/Api/AgentGrantsApiTest.php
 test/Api/DiscussionsApiTest.php
 test/Api/EmailCertificationsApiTest.php
 test/Api/HeartbeatApiTest.php
@@ -198,6 +207,9 @@ test/Model/GetApiV3TipitakaRelatedParagraphsAggregateBookName200ResponseTest.php
 test/Model/PaginationMetaTest.php
 test/Model/PatchApiV3DiscussionsDiscussionRequestTest.php
 test/Model/PatchApiV3PasswordResetsTokenRequestTest.php
+test/Model/PostApiV3AgentGrants200ResponseDataTest.php
+test/Model/PostApiV3AgentGrants200ResponseTest.php
+test/Model/PostApiV3AgentGrantsRequestTest.php
 test/Model/PostApiV3Discussions200ResponseTest.php
 test/Model/PostApiV3DiscussionsDiscussionRepliesRequestTest.php
 test/Model/PostApiV3DiscussionsRequestTest.php

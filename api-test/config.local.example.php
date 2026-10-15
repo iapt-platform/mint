@@ -22,6 +22,9 @@ return [
     'fixtures' => [
         // 讨论写用例挂的句子：必须在测试账号自己的 channel 里、由测试账号编辑过
         // 'discussion_sentence' => 'ee5259be-5d1e-4408-a2a6-566a5773eef1',
+        // 'discussion_channel' => '1721b7fa-e471-46fd-b860-64b9e79d370e',
+        // agent 代写用例：归测试账号所有的 AI 模型 uid；不给则 SKIP
+        // 'agent_model' => null,
         // email-certifications「已注册邮箱」用例；不给则 SKIP
         // 'registered_email' => 'someone@example.com',
     ],
