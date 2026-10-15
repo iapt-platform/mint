@@ -69,7 +69,7 @@ class DiscussionController extends Controller
      * 发起话题或新建批注
      *
      * discussion / issue 登录即可发；qa / help 只能发在文章上，且只有文章的编辑者能发。
-     * severity 的取值随 type：issue 为 error / warning / info，help 为 urgent / normal，
+     * severity 的取值随 type：issue 为 error / warning / suggestion，help 为 urgent / normal，
      * 其它类型不收。默认会通知对象的作者（站内信 + webhook），`notify=false` 关闭。
      *
      * 批注（note / commentary）只能加在句子上，且只有该句所在 channel 的编辑者能加；
@@ -84,7 +84,7 @@ class DiscussionController extends Controller
      * @bodyParam type string 类型。Enum: discussion,qa,help,issue,note,commentary Default: discussion
      * @bodyParam title string 标题，最长 256 字符；评论线程必填，批注可省
      * @bodyParam content string 正文（markdown）；批注必填
-     * @bodyParam severity string 严重程度。Enum: error,warning,info,urgent,normal
+     * @bodyParam severity string 严重程度。Enum: error,warning,suggestion,urgent,normal
      * @bodyParam pos_start integer 批注锚点在句子文本中的起始偏移（只限批注）
      * @bodyParam pos_end integer 批注锚点的结束偏移，批注插在这里（只限批注）
      * @bodyParam quote_exact string 锚定的原文片段（只限批注）
@@ -140,7 +140,7 @@ class DiscussionController extends Controller
      * @bodyParam content string 正文（markdown）
      * @bodyParam status string 状态（只限话题）。Enum: active,close
      * @bodyParam type string 类型（只限话题；评论线程与批注不能互转）。Enum: discussion,qa,help,issue,note,commentary
-     * @bodyParam severity string 严重程度（只限话题），null 表示清空。Enum: error,warning,info,urgent,normal
+     * @bodyParam severity string 严重程度（只限话题），null 表示清空。Enum: error,warning,suggestion,urgent,normal
      * @bodyParam pos_start integer 锚点起始偏移（只限批注）
      * @bodyParam pos_end integer 锚点结束偏移（只限批注）
      * @bodyParam quote_exact string 锚定的原文片段（只限批注）

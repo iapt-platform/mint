@@ -82,7 +82,7 @@ class Discussion extends Model
 
     /** 各类型允许的 severity 取值；不在表里的类型不允许设 severity */
     public const SEVERITIES = [
-        'issue' => ['error', 'warning', 'info'],
+        'issue' => ['error', 'warning', 'suggestion'],
         'help' => ['urgent', 'normal'],
     ];
 

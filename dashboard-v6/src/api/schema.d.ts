@@ -7737,7 +7737,7 @@ export interface paths {
         /**
          * 发起话题或新建批注
          * @description discussion / issue 登录即可发；qa / help 只能发在文章上，且只有文章的编辑者能发。
-         *     severity 的取值随 type：issue 为 error / warning / info，help 为 urgent / normal，
+         *     severity 的取值随 type：issue 为 error / warning / suggestion，help 为 urgent / normal，
          *     其它类型不收。默认会通知对象的作者（站内信 + webhook），`notify=false` 关闭。
          *     批注（note / commentary）只能加在句子上，且只有该句所在 channel 的编辑者能加；
          *     标题可省、正文必填，commentary 的正文必须是义注句子模板 `{{book-para-start-end}}`
@@ -34604,7 +34604,7 @@ export interface operations {
                      * @description 严重程度
                      * @enum {string}
                      */
-                    severity?: "error" | "warning" | "info" | "urgent" | "normal";
+                    severity?: "error" | "warning" | "suggestion" | "urgent" | "normal";
                     /** @description 批注锚点在句子文本中的起始偏移（只限批注） */
                     pos_start?: number;
                     /** @description 批注锚点的结束偏移，批注插在这里（只限批注） */
@@ -35034,7 +35034,7 @@ export interface operations {
                      * @description 严重程度（只限话题），null 表示清空
                      * @enum {string}
                      */
-                    severity?: "error" | "warning" | "info" | "urgent" | "normal";
+                    severity?: "error" | "warning" | "suggestion" | "urgent" | "normal";
                     /** @description 锚点起始偏移（只限批注） */
                     pos_start?: number;
                     /** @description 锚点结束偏移（只限批注） */

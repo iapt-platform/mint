@@ -312,7 +312,7 @@ patch:
               enum:
                 - error
                 - warning
-                - info
+                - suggestion
                 - urgent
                 - normal
             pos_start:

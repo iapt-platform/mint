@@ -71,7 +71,7 @@ export type TDiscussionStatus = NonNullable<TopicQuery["status"]>;
  * 规格里 severity 是几种类型的并集，按类型拆分只能写在这里。
  */
 export const SEVERITY_OPTIONS: Partial<Record<TDiscussionType, TSeverity[]>> = {
-  issue: ["error", "warning", "info"],
+  issue: ["error", "warning", "suggestion"],
   help: ["urgent", "normal"],
 };
 

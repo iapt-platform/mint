@@ -184,7 +184,7 @@ post:
   operationId: post_api_v3_discussions
   description: |-
     discussion / issue 登录即可发；qa / help 只能发在文章上，且只有文章的编辑者能发。
-    severity 的取值随 type：issue 为 error / warning / info，help 为 urgent / normal，
+    severity 的取值随 type：issue 为 error / warning / suggestion，help 为 urgent / normal，
     其它类型不收。默认会通知对象的作者（站内信 + webhook），`notify=false` 关闭。
     批注（note / commentary）只能加在句子上，且只有该句所在 channel 的编辑者能加；
     标题可省、正文必填，commentary 的正文必须是义注句子模板 `{{book-para-start-end}}`
@@ -236,7 +236,7 @@ post:
               enum:
                 - error
                 - warning
-                - info
+                - suggestion
                 - urgent
                 - normal
             pos_start:

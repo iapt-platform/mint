@@ -121,7 +121,7 @@ it('filters topics by type, status and severity', function () {
     $owner = makeStudio('owner');
     $target = makeTargetSentence($owner);
     makeDiscussion(['res_id' => $target, 'type' => 'issue', 'severity' => 'error']);
-    makeDiscussion(['res_id' => $target, 'type' => 'issue', 'severity' => 'info']);
+    makeDiscussion(['res_id' => $target, 'type' => 'issue', 'severity' => 'suggestion']);
     makeDiscussion(['res_id' => $target, 'type' => 'issue', 'severity' => 'warning', 'status' => 'close']);
     makeDiscussion(['res_id' => $target]);
 
