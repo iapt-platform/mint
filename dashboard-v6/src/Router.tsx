@@ -19,6 +19,7 @@ import driverRoutes from "./routes/driverRoutes";
 import dictRoutes from "./routes/dictRoutes";
 import courseRoutes from "./routes/courseRoutes";
 import nissayaRoutes from "./routes/nissayaRoutes";
+import discussionRoutes from "./routes/discussionRoutes";
 
 const RootLayout = lazy(() => import("./layouts/Root"));
 const AnonymousLayout = lazy(() => import("./layouts/anonymous"));
@@ -107,6 +108,7 @@ const router = createBrowserRouter(
             ...dictRoutes,
             ...courseRoutes,
             ...nissayaRoutes,
+            ...discussionRoutes,
           ],
         },
 

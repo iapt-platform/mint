@@ -8,6 +8,10 @@ get:
     data 是去空、去重的 SC 缩写，每条形如 {book_name}，分页由 Laravel paginator 提供。
 
     实现：`V3\TipitakaRelatedParagraphAggregateController@index`
+  security:
+    - {  }
+    -
+      bearerAuth: []
   parameters:
     -
       name: file

@@ -16,7 +16,7 @@ import { useAppSelector } from "../../hooks";
 import { click, clickedTerm } from "../../reducers/term-click";
 import store from "../../store";
 import "../article/article.css";
-import Discussion from "../discussion/DiscussionMock";
+import Discussion from "../discussion/Discussion";
 import { useIntl } from "react-intl";
 import User from "../auth/User";
 import MdView from "../general/MdView";

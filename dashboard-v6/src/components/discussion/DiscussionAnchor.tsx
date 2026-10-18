@@ -2,7 +2,6 @@ import { Skeleton } from "antd";
 import { useEffect, useState } from "react";
 import { get } from "../../request";
 import type { IArticleResponse } from "../../api/article";
-import type { ICommentAnchorResponse } from "../../api/Comment";
 
 import AnchorCard from "./AnchorCard";
 
@@ -20,31 +19,12 @@ export interface IAnchor {
 interface IWidget {
   resId?: string;
   resType?: TResType;
-  topicId?: string;
   onLoad?: Function;
 }
-const DiscussionAnchorWidget = ({
-  resId,
-  resType,
-  topicId,
-  onLoad,
-}: IWidget) => {
+const DiscussionAnchorWidget = ({ resId, resType, onLoad }: IWidget) => {
   const [title, setTitle] = useState<React.ReactNode>();
   const [content, setContent] = useState<string>();
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (typeof topicId === "string") {
-      const url = `/api/v2/discussion-anchor/${topicId}`;
-      console.info("api request", url);
-      get<ICommentAnchorResponse>(url).then((json) => {
-        console.debug("api response", json);
-        if (json.ok) {
-          setContent(json.data);
-        }
-      });
-    }
-  }, [topicId]);
 
   useEffect(() => {
     let url: string;

@@ -24,7 +24,7 @@ import { useRef, useState } from "react";
 import TagsList from "./TagList";
 import type { IDeleteResponse } from "../../api/article";
 import store from "../../store";
-import { tagsUpgrade } from "../../reducers/discussion-count";
+import { tagsUpgrade } from "../../reducers/tag-map";
 
 interface IWidget {
   studioName?: string;

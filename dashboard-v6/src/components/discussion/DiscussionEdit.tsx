@@ -1,12 +1,10 @@
 import { useIntl } from "react-intl";
-import { App, Button, Card, Col, Form, Row, Space } from "antd";
+import { Button, Card, Col, Form, Row, Space } from "antd";
 import { ProForm, ProFormText } from "@ant-design/pro-components";
 import { CloseOutlined } from "@ant-design/icons";
 
-import { put } from "../../request";
-import type { ICommentRequest, ICommentResponse } from "../../api/Comment";
 import MDEditor from "@uiw/react-md-editor";
-import type { IComment } from "../../api/discussion";
+import { updateDiscussion, type IComment } from "../../api/discussion";
 
 interface IWidget {
   data: IComment;
@@ -15,7 +13,6 @@ interface IWidget {
 }
 const DiscussionEditWidget = ({ data, onUpdated, onClose }: IWidget) => {
   const intl = useIntl();
-  const { message } = App.useApp();
 
   return (
     <Card
@@ -47,41 +44,17 @@ const DiscussionEditWidget = ({ data, onUpdated, onClose }: IWidget) => {
           },
         }}
         onFinish={async (values) => {
-          const url = `/api/v2/discussion/${data.id}`;
-          const newData: ICommentRequest = {
-            title: values.title,
-            content: values.content,
-          };
-          console.info("DiscussionEdit api request", url, newData);
-          put<ICommentRequest, ICommentResponse>(url, newData)
-            .then((json) => {
-              console.debug("DiscussionEdit api response", json);
-              if (json.ok) {
-                console.log(intl.formatMessage({ id: "flashes.success" }));
-                if (typeof onUpdated !== "undefined") {
-                  const newData: IComment = {
-                    id: json.data.id, //id未提供为新建
-                    resId: json.data.res_id,
-                    resType: json.data.res_type,
-                    user: json.data.editor,
-                    parent: json.data.parent,
-                    title: json.data.title,
-                    content: json.data.content,
-                    status: json.data.status,
-                    childrenCount: json.data.children_count,
-                    createdAt: json.data.created_at,
-                    updatedAt: json.data.updated_at,
-                    type: json.data.type,
-                  };
-                  onUpdated(newData);
-                }
-              } else {
-                message.error(json.message);
-              }
-            })
-            .catch((e) => {
-              message.error(e.message);
-            });
+          if (!data.id) {
+            return;
+          }
+          // 局部更新：回复没有标题，只发正文；话题发标题与正文，状态不动
+          const updated = await updateDiscussion(
+            data.id,
+            data.parent
+              ? { content: values.content ?? "" }
+              : { title: values.title ?? "", content: values.content ?? "" }
+          );
+          onUpdated?.(updated);
         }}
         params={{}}
         request={async () => {

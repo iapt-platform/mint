@@ -1,5 +1,6 @@
 import { test, expect, type Page, type Request } from '@playwright/test';
 import { collect } from '../lib/collect.js';
+import { USER, PASS, shotDir } from '../lib/env.js';
 
 /**
  * 匿名账号页面：/anonymous/sign-in、/anonymous/sign-up、/anonymous/sign-up/:token、
@@ -16,9 +17,9 @@ import { collect } from '../lib/collect.js';
  *   错误展示和**前端发出的请求体**，后端行为由 api-v13 的 Pest 测试覆盖
  *   （SignUpV3Test、PasswordResetV3Test）。
  *
- * 截图输出目录由 E2E_SHOT 指定，默认 documents/testlog/assets/users_latest。
+ * 截图输出目录由 E2E_SHOT 指定，默认 testlog/assets/users_latest。
  */
-const SHOT = process.env.E2E_SHOT ?? 'documents/testlog/assets/users_latest';
+const SHOT = shotDir('users');
 
 const shot = (page: Page, name: string) =>
   page.screenshot({ path: `${SHOT}/${name}.png`, fullPage: true });
@@ -310,8 +311,6 @@ test.describe('重置密码 /anonymous/reset-password/:token', () => {
   });
 });
 
-const USER = process.env.E2E_USER ?? 'test161';
-const PASS = process.env.E2E_PASS ?? '12345';
 
 /**
  * 打开登录页。不等 networkidle：登录过的页面上有轮询请求，网络可能一直不空闲，

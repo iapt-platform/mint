@@ -103,3 +103,19 @@ export async function tagLoader({ params }: LoaderFunctionArgs) {
 
   return res.data;
 }
+
+/**
+ * 页面上一批句子的标签：`POST /v2/discussion-count` 的请求与响应（只用到 tags）。
+ *
+ * FIXME: 这个 v2 端点同时返回讨论明细（discussions），讨论角标已改走 v3 batch-count，
+ * 这里只读 tags。标签迁 v3 时换成标签自己的批量端点，这两个类型随之删掉。
+ */
+export interface ISentenceTagsRequest {
+  /** 句子坐标 [book, paragraph, word_start, word_end] */
+  sentences: string[][];
+}
+export interface ISentenceTagsResponse {
+  ok: boolean;
+  message: string;
+  data: { tags: ITagMapData[] };
+}

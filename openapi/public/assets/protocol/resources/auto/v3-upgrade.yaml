@@ -8,6 +8,10 @@ get:
     目前只回报服务可用，尚未接入版本比对逻辑。
 
     实现：`V3\UpgradeController@index`
+  security:
+    - {  }
+    -
+      bearerAuth: []
   responses:
     200:
       description: 成功

@@ -1,13 +1,14 @@
 import { test, expect, type Page } from '@playwright/test';
 import { collect } from '../lib/collect.js';
+import { DESTRUCTIVE, shotDir } from '../lib/env.js';
 
 /**
  * /workspace/channel 及其子路由（:channelId、:channelId/setting）
  *
- * 截图输出目录由 E2E_SHOT 指定，默认写到 documents/testlog/assets/channel_latest，
- * 正式记录时传入带时间戳的目录，与 documents/testlog/channel_<时间戳>.md 对应。
+ * 截图输出目录由 E2E_SHOT 指定，默认写到 testlog/assets/channel_latest，
+ * 正式记录时传入带时间戳的目录，与 testlog/channel_<时间戳>.md 对应。
  */
-const SHOT = process.env.E2E_SHOT ?? 'documents/testlog/assets/channel_latest';
+const SHOT = shotDir('channel');
 const TAB = '.ant-pro-table-list-toolbar-inline-menu-item';
 
 const shot = (page: Page, name: string) =>
@@ -200,7 +201,7 @@ test.describe('频道设置 /workspace/channel/:channelId/setting', () => {
  *  E2E_DESTRUCTIVE=0 可跳过
  * ══════════════════════════════════════════════════════════ */
 test.describe('频道增删改（破坏性）', () => {
-  test.skip(process.env.E2E_DESTRUCTIVE === '0', '已通过 E2E_DESTRUCTIVE=0 跳过');
+  test.skip(!DESTRUCTIVE, '已通过 E2E_DESTRUCTIVE=0 跳过');
 
   test('新建 → 编辑保存 → 转让弹窗 → 删除 → 校验失效', async ({ page }) => {
     const log = collect(page);

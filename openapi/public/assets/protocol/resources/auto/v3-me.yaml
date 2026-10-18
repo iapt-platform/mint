@@ -9,6 +9,9 @@ get:
     不回传 token（v2 的 auth/current 会把请求里的 token 原样回显）。
 
     实现：`V3\MeController@show`
+  security:
+    -
+      bearerAuth: []
   responses:
     200:
       description: 成功

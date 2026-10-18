@@ -65,21 +65,9 @@ if ($v3Paths === []) {
     exit(2);
 }
 
-// 2) 修正鉴权语义：源 spec 用全局 security 把全部路径标成 bearerAuth，
-//    但 v3 实际只有 /v3/me 与 /v3/me/* 挂 auth.v3。这里逐 operation 写准，并清掉全局 security。
-//    注意 /v3/me 本身（不带斜杠）也要算进去，否则生成的客户端不带 token。
-foreach ($v3Paths as $path => &$item) {
-    foreach ($item as $method => &$op) {
-        if (!is_array($op) || strtolower($method) === 'parameters') {
-            continue;
-        }
-        $op['security'] = ($path === '/v3/me' || str_starts_with((string) $path, '/v3/me/'))
-            ? [['bearerAuth' => []]]
-            : [];
-    }
-    unset($op);
-}
-unset($item);
+// 2) 鉴权：每个 v3 operation 的 security 由生成器按路由中间件写好（auth.v3 → 必须，
+//    否则可选），这里只清掉全局 security，免得没写的 operation 继承成「必须」。
+unset($spec['security']);
 
 // 3) 递归收集引用的组件（含 security scheme）
 $refs = ['#/components/securitySchemes/bearerAuth' => true];

@@ -1,0 +1,102 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-agent-grants.yaml
+post:
+  summary: '签发 agent 写入授权'
+  tags:
+    - agent-grants
+  operationId: post_api_v3_agent_grants
+  description: |-
+    必须用人类的登录 token 调用（模型 token 403）；模型必须归当前用户所有，当前用户
+    必须能编辑该 channel。授权 7 天有效，只能由指定的模型使用；撤销该模型的 token
+    （token_version 自增）时一并失效。
+    模型写入时用自己的模型 token 登录，并带请求头 `X-Agent-Grant: <token>`；
+    写入的记录 editor 为授权人、co_editor 为模型，权限按授权人判断。
+
+    实现：`V3\AgentGrantController@store`
+  security:
+    -
+      bearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            ai_model:
+              type: string
+              description: '被授权的 AI 模型 uid'
+            target_type:
+              type: string
+              description: 授权范围的类型
+              enum:
+                - channel
+            target_id:
+              type: string
+              description: 'channel 的 uid'
+            book:
+              type: integer
+              description: '限定 book，0 或不传表示不限'
+              default: 0
+          required:
+            - ai_model
+            - target_type
+            - target_id
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  grantor:
+                    type: string
+                  ai_model:
+                    type: string
+                  target_type:
+                    type: string
+                  target_id:
+                    type: string
+                  book:
+                    type: integer
+                  expires_at:
+                    type: string
+    201:
+      description: 签发成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  grantor:
+                    type: string
+                  ai_model:
+                    type: string
+                  target_type:
+                    type: string
+                  target_id:
+                    type: string
+                  book:
+                    type: integer
+                  expires_at:
+                    type: string
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    403:
+      description: '用模型 token 调用、模型不归当前用户，或当前用户不能编辑该 channel'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

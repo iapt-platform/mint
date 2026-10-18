@@ -2,7 +2,7 @@ import { Badge, Popover, Tag } from "antd";
 import type { ITagMapData } from "../../api/tag";
 
 import { useAppSelector } from "../../hooks";
-import { tagList } from "../../reducers/discussion-count";
+import { tagList } from "../../reducers/tag-map";
 
 import TagSelectButton from "./TagSelectButton";
 import { numToHex } from "../../utils";

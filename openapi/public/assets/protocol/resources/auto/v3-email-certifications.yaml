@@ -9,6 +9,10 @@ post:
     邮箱已注册时返回 422。按 IP 与邮箱限流，超出返回 429。
 
     实现：`V3\EmailCertificationController@store`
+  security:
+    - {  }
+    -
+      bearerAuth: []
   requestBody:
     required: true
     content:

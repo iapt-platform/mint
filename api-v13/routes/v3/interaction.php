@@ -7,10 +7,14 @@
 |
 | 由 routes/api.php 的 v3 组 require 进来，前缀已在那边加好。
 |
-| 将来 discussion、notification、tag 也落在这个文件。
+| 将来 notification、tag 也落在这个文件。
 |
 */
 
+use App\Http\Controllers\V3\DiscussionBatchCountController;
+use App\Http\Controllers\V3\DiscussionController;
+use App\Http\Controllers\V3\DiscussionReplyController;
+use App\Http\Controllers\V3\DiscussionSummaryController;
 use App\Http\Controllers\V3\MeReactionController;
 use App\Http\Controllers\V3\ReactionController;
 use App\Http\Controllers\V3\ReactionTallyController;
@@ -30,3 +34,28 @@ Route::apiResource('reactions', ReactionController::class)->only(['index']);
 Route::prefix('me')->as('me.')->middleware('auth.v3')->group(function () {
     Route::apiResource('reactions', MeReactionController::class)->only(['index', 'store', 'destroy']);
 });
+
+// discussions（评论线程：话题 + 一层回复）。批注（note / commentary）同表但不归这里管。
+
+// summary 要注册在 apiResource 之前，否则 {discussion} 会把它当成 uuid 吃掉
+Route::get('discussions/summary', DiscussionSummaryController::class);
+// 一批对象（句子 / 逐词）的讨论角标。POST：一页几百个 uid 放不进查询串
+Route::post('discussions/batch-count', DiscussionBatchCountController::class);
+
+// 读公开（可选登录），写要登录。show 与回复列表要能读到墓碑（软删了但还挂着回复的话题）。
+// 只注册 PATCH，不注册 PUT：v3 的更新只做局部更新（v3-resource skill 硬规范第 10 条）
+Route::apiResource('discussions', DiscussionController::class)
+    ->except(['update'])
+    ->middlewareFor(['store', 'destroy'], 'auth.v3')
+    ->withTrashed(['show'])
+    ->whereUuid('discussion');
+Route::patch('discussions/{discussion}', [DiscussionController::class, 'update'])
+    ->middleware('auth.v3')
+    ->whereUuid('discussion');
+
+Route::get('discussions/{discussion}/replies', [DiscussionReplyController::class, 'index'])
+    ->withTrashed()
+    ->whereUuid('discussion');
+Route::post('discussions/{discussion}/replies', [DiscussionReplyController::class, 'store'])
+    ->middleware('auth.v3')
+    ->whereUuid('discussion');

@@ -2,7 +2,7 @@
 delete:
   summary: '删除我自己的 reaction'
   tags:
-    - me
+    - reactions
   operationId: delete_api_v3_me_reactions_reaction_
   description: |-
     只能删自己那条（user_id 与当前用户不符返回 403）。
@@ -10,6 +10,9 @@ delete:
     （见 v3-resource skill 硬规范第 2 条）。
 
     实现：`V3\MeReactionController@destroy`
+  security:
+    -
+      bearerAuth: []
   parameters:
     -
       name: reaction

@@ -3,3 +3,6 @@
 /client/composer.lock
 /spec/openapi.json
 /spec/openapi-v3.json
+
+# 本机配置（账号密码），模板见 config.local.example.php
+/config.local.php

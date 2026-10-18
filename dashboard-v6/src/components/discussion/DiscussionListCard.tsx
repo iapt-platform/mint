@@ -1,66 +1,65 @@
 import { useEffect, useRef, useState } from "react";
-import { Button, Space, Typography } from "antd";
+import { Button, Space, Tag, Typography } from "antd";
 import { LinkOutlined } from "@ant-design/icons";
 
 import { get } from "../../request";
-import type { ICommentListResponse } from "../../api/Comment";
 
-import type { IAnswerCount } from "./DiscussionDrawer";
 import { type ActionType, ProList } from "@ant-design/pro-components";
 import DiscussionCreate from "./DiscussionCreate";
-import User from "../auth/User";
+import DiscussionAuthors from "./DiscussionAuthors";
 import type { IArticleListResponse } from "../../api/article";
 import { useAppSelector } from "../../hooks";
 import { currentUser as _currentUser } from "../../reducers/current-user";
 import { CommentOutlinedIcon, TemplateOutlinedIcon } from "../../assets/icon";
 
-import { courseInfo } from "../../reducers/current-course";
-import { courseUser } from "../../reducers/course-user";
 import TimeShow from "../general/TimeShow";
-import type { IComment, TDiscussionType, TResType } from "../../api/discussion";
+import {
+  asDiscussionTarget,
+  fetchTopicSummary,
+  fetchTopics,
+  NO_ABILITIES,
+  THREAD_TYPES,
+  type IAnswerCount,
+  type IComment,
+  type TDiscussionStatus,
+  type TDiscussionType,
+  type TResType,
+} from "../../api/discussion";
 import type { ISentenceResponse } from "../../api/sentence";
 import StatusBadge from "../general/StatusBadge";
+import { SeverityTag } from "./SeverityTag";
 
-const { Paragraph } = Typography;
+const { Paragraph, Text } = Typography;
 
 interface IWidget {
   resId?: string;
   resType?: TResType;
-  topicId?: string;
-  userId?: string;
   changedAnswerCount?: IAnswerCount;
+  /** 只列这种类型的话题；不传则列出全部类型 */
   type?: TDiscussionType;
   pageSize?: number;
-  showStudent?: boolean; //在课程中是否显示学生discussions
   onSelect?: Function;
   onItemCountChange?: Function;
-  onReply?: Function;
   onReady?: Function;
 }
 const DiscussionListCardWidget = ({
   resId,
   resType,
-  topicId,
-  userId,
-  showStudent = false,
   onSelect,
   changedAnswerCount,
-  type = "discussion",
+  type,
   pageSize = 10,
   onItemCountChange,
   onReady,
 }: IWidget) => {
   const ref = useRef<ActionType | null>(null);
-  const [activeKey, setActiveKey] = useState<React.Key | undefined>("active");
+  const [activeKey, setActiveKey] = useState<TDiscussionStatus>("active");
   const [activeNumber, setActiveNumber] = useState<number>(0);
   const [closeNumber, setCloseNumber] = useState<number>(0);
-  const [count, setCount] = useState<number>(0);
-  const [canCreate, setCanCreate] = useState(false);
-
-  const course = useAppSelector(courseInfo);
-  const myCourse = useAppSelector(courseUser);
+  const [creatableTypes, setCreatableTypes] = useState<TDiscussionType[]>([]);
 
   const user = useAppSelector(_currentUser);
+  const target = asDiscussionTarget(resType);
 
   useEffect(() => {
     ref.current?.reload();
@@ -71,11 +70,7 @@ const DiscussionListCardWidget = ({
     ref.current?.reload();
   }, [changedAnswerCount]);
 
-  if (
-    typeof resId === "undefined" &&
-    typeof topicId === "undefined" &&
-    typeof userId === "undefined"
-  ) {
+  if (typeof resId === "undefined" || typeof target === "undefined") {
     return (
       <Typography.Paragraph>
         该资源尚未创建，不能发表讨论。
@@ -85,14 +80,17 @@ const DiscussionListCardWidget = ({
   return (
     <>
       <ProList<IComment>
-        rowKey="id"
+        rowKey={(row) => row.id ?? `tpl-${row.tplId}`}
         actionRef={ref}
         metas={{
           avatar: {
             render(_dom, entity, _index, _action, _schema) {
               return (
                 <>
-                  <User {...entity.user} showName={false} />
+                  <DiscussionAuthors
+                    user={entity.user}
+                    coEditor={entity.coEditor}
+                  />
                 </>
               );
             },
@@ -103,21 +101,31 @@ const DiscussionListCardWidget = ({
                 <>
                   <div>
                     {entity.resId !== resId ? <LinkOutlined /> : <></>}
-                    <Button
-                      key={index}
-                      size="small"
-                      type="link"
-                      icon={
-                        entity.newTpl ? <TemplateOutlinedIcon /> : undefined
-                      }
-                      onClick={(event) => {
-                        if (typeof onSelect !== "undefined") {
-                          onSelect(event, entity);
+                    {entity.deleted ? (
+                      <Text type="secondary" italic>
+                        （已删除）
+                      </Text>
+                    ) : (
+                      <Button
+                        key={index}
+                        size="small"
+                        type="link"
+                        icon={
+                          entity.newTpl ? <TemplateOutlinedIcon /> : undefined
                         }
-                      }}
-                    >
-                      {entity.title}
-                    </Button>
+                        onClick={(event) => {
+                          if (typeof onSelect !== "undefined") {
+                            onSelect(event, entity);
+                          }
+                        }}
+                      >
+                        {entity.title}
+                      </Button>
+                    )}
+                    {entity.type !== "discussion" ? (
+                      <Tag>{entity.type}</Tag>
+                    ) : undefined}
+                    <SeverityTag severity={entity.severity} />
                   </div>
                   <div>
                     <TimeShow
@@ -135,7 +143,7 @@ const DiscussionListCardWidget = ({
             dataIndex: "content",
             search: false,
             render(_dom, entity, index, _action, _schema) {
-              const content = entity.summary ?? entity.content;
+              const content = entity.summary ?? entity.content ?? undefined;
               return (
                 <div key={index}>
                   <Paragraph
@@ -143,9 +151,6 @@ const DiscussionListCardWidget = ({
                     ellipsis={{
                       rows: 2,
                       expandable: true,
-                      onEllipsis: (ellipsis) => {
-                        console.log("Ellipsis changed:", ellipsis);
-                      },
                     }}
                     title={content}
                   >
@@ -158,7 +163,11 @@ const DiscussionListCardWidget = ({
           actions: {
             render: (_text, row, index, _action) => [
               row.childrenCount ? (
-                <Space key={index}>
+                <Space
+                  key={index}
+                  style={{ cursor: "pointer" }}
+                  onClick={(event) => onSelect?.(event, row)}
+                >
                   <CommentOutlinedIcon key={"icon"} />
                   <span key={"count"}>{row.childrenCount}</span>
                 </Space>
@@ -169,89 +178,55 @@ const DiscussionListCardWidget = ({
           },
         }}
         request={async (params = {}, _sorter, _filter) => {
-          let url: string = `/api/v2/discussion?type=${type}&res_type=${resType}&`;
-          if (typeof topicId !== "undefined") {
-            url += `view=question-by-topic&id=${topicId}`;
-          } else if (typeof resId !== "undefined") {
-            url += `view=question&id=${resId}`;
-          } else if (typeof userId !== "undefined") {
-            url += `view=topic-by-user`;
-          } else {
-            return {
-              total: 0,
-              succcess: false,
-            };
-          }
-          const offset =
-            ((params.current ? params.current : 1) - 1) *
-            (params.pageSize ? params.pageSize : pageSize);
-          url += `&limit=${params.pageSize}&offset=${offset}`;
-          url += params.keyword ? "&search=" + params.keyword : "";
-          url += activeKey ? "&status=" + activeKey : "";
-
-          if (myCourse && course) {
-            if (myCourse.role !== "student") {
-              url += `&course=${course.courseId}`;
-            }
-          }
-          if (showStudent) {
-            url += `&show_student=true`;
-          }
-          console.info("DiscussionListCard api request", url);
-          const res = await get<ICommentListResponse>(url);
-          console.info("DiscussionListCard api response", res);
-          setCount(res.data.active);
-          setCanCreate(res.data.can_create);
-          const items: IComment[] = res.data.rows.map((item, _id) => {
-            return {
-              id: item.id,
-              resId: item.res_id,
-              resType: item.res_type,
-              type: item.type,
-              user: item.editor,
-              title: item.title,
-              parent: item.parent,
-              tplId: item.tpl_id,
-              content: item.content,
-              summary: item.summary,
-              status: item.status,
-              childrenCount: item.children_count,
-              createdAt: item.created_at,
-              updatedAt: item.updated_at,
-            };
-          });
+          const [res, summary] = await Promise.all([
+            fetchTopics({
+              target_type: target,
+              target_id: resId,
+              type,
+              status: activeKey,
+              page: params.current ?? 1,
+              per_page: params.pageSize ?? pageSize,
+            }),
+            fetchTopicSummary({
+              target_type: target,
+              target_id: resId,
+              type,
+            }),
+          ]);
+          // summary 也会列出批注类型（note / commentary），讨论面板只新建评论线程
+          setCreatableTypes(
+            THREAD_TYPES.filter((value) =>
+              summary.creatable_types?.includes(value)
+            )
+          );
+          setActiveNumber(summary.status_counts?.active ?? 0);
+          setCloseNumber(summary.status_counts?.close ?? 0);
 
           let topicTpl: IComment[] = [];
           if (
             activeKey !== "close" &&
+            target === "sentence" &&
             user?.roles?.includes("basic") === false
           ) {
             //获取channel模版
-            let studioName: string | undefined;
-            switch (resType) {
-              case "sentence": {
-                const url = `/api/v2/sentence/${resId}`;
-                console.info("api request", url);
-                const sentInfo = await get<ISentenceResponse>(url);
-                console.info("api response", sentInfo);
-                studioName = sentInfo.data.studio.realName;
-                break;
-              }
-            }
+            const url = `/api/v2/sentence/${resId}`;
+            console.info("api request", url);
+            const sentInfo = await get<ISentenceResponse>(url);
+            const studioName = sentInfo.data.studio.realName;
             const urlTpl = `/api/v2/article?view=template&studio_name=${studioName}&subtitle=_template_discussion_topic_&content=true`;
             const resTpl = await get<IArticleListResponse>(urlTpl);
             if (resTpl.ok) {
-              console.log("resTpl.data.rows", resTpl.data.rows);
               topicTpl = resTpl.data.rows
                 .filter(
                   (value) =>
-                    items.findIndex((old) => old.tplId === value.uid) === -1
+                    res.items.findIndex((old) => old.tplId === value.uid) ===
+                    -1
                 )
                 .map((item) => {
                   return {
                     tplId: item.uid,
                     resId: resId,
-                    resType: resType,
+                    resType: target,
                     type: "discussion",
                     user: item.editor
                       ? item.editor
@@ -263,6 +238,7 @@ const DiscussionListCardWidget = ({
                     summary: item.summary ? item.summary : item._summary,
                     status: "active",
                     childrenCount: 0,
+                    abilities: NO_ABILITIES,
                     newTpl: true,
                     createdAt: item.created_at,
                     updatedAt: item.updated_at,
@@ -271,15 +247,13 @@ const DiscussionListCardWidget = ({
             }
           }
 
-          setActiveNumber(res.data.active);
-          setCloseNumber(res.data.close);
           if (typeof onReady !== "undefined") {
             onReady();
           }
           return {
-            total: res.data.count,
-            succcess: true,
-            data: [...topicTpl, ...items],
+            total: res.total,
+            success: true,
+            data: [...topicTpl, ...res.items],
           };
         }}
         bordered
@@ -322,22 +296,22 @@ const DiscussionListCardWidget = ({
               },
             ],
             onChange(key) {
-              setActiveKey(key);
+              setActiveKey(key as TDiscussionStatus);
               ref.current?.reload();
             },
           },
         }}
       />
 
-      {canCreate && resId && resType ? (
+      {creatableTypes.length > 0 ? (
         <DiscussionCreate
-          contentType="markdown"
           resId={resId}
-          resType={resType}
+          resType={target}
           type={type}
+          creatableTypes={creatableTypes}
           onCreated={() => {
             if (typeof onItemCountChange !== "undefined") {
-              onItemCountChange(count + 1);
+              onItemCountChange(activeNumber + 1);
             }
             ref.current?.reload();
           }}

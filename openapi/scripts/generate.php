@@ -354,6 +354,42 @@ function normalizeType(string $type): string
     };
 }
 
+/**
+ * 把点号写法的数组元素字段（`targets.*.id`、`ids.*`）折进父字段的 items。
+ *
+ * Laravel 的校验规则和文档注释都用这种写法；不折的话它们会变成名字里带点的顶层字段，
+ * 前端类型与生成的客户端都对不上。只处理一层（`a.*` / `a.*.b`），更深的嵌套原样留着。
+ *
+ * @param  array<string, array>  $props
+ * @param  list<string>  $required
+ * @return array{0: array<string, array>, 1: list<string>}
+ */
+function nestDotted(array $props, array $required): array
+{
+    foreach (array_keys($props) as $key) {
+        if (! preg_match('/^([^.]+)\.\*(?:\.([^.*]+))?$/', $key, $m)) {
+            continue;
+        }
+        [$parent, $child] = [$m[1], $m[2] ?? null];
+        $schema = $props[$key];
+        unset($props[$key]);
+        $props[$parent] = ($props[$parent] ?? []) + ['type' => 'array'];
+        $props[$parent]['type'] = 'array';
+        if ($child === null) {
+            $props[$parent]['items'] = $schema;
+        } else {
+            $props[$parent]['items'] ??= ['type' => 'object', 'properties' => []];
+            $props[$parent]['items']['properties'][$child] = $schema;
+            if (in_array($key, $required, true)) {
+                $props[$parent]['items']['required'][] = $child;
+            }
+        }
+        $required = array_values(array_filter($required, fn ($name) => $name !== $key));
+    }
+
+    return [$props, $required];
+}
+
 /** 验证规则数组 → [字段 => ['required'=>bool,'type'=>string,'enum'=>[]]] */
 function rulesFromArray(Node\Expr\Array_ $array): array
 {
@@ -688,6 +724,15 @@ function buildOperation(array $route, string $httpMethod): array
     if (! empty($info['tags']['deprecated'])) {
         $op['deprecated'] = true;
     }
+    // v3 的鉴权按路由中间件逐个写准（v2 沿用全局 security，不动）：
+    // 挂了 auth.v3 → 必须带 token；没挂 → 匿名可用，带了 token 就按登录用户处理
+    // （讨论列表的可见性、tally 的「我点过没有」），所以是「可选」。生成的客户端据此
+    // 决定发不发 Authorization——同一路径读公开、写要登录（middlewareFor）也能分清。
+    if (str_starts_with($route['uri'], 'api/v3/')) {
+        $op['security'] = in_array('auth.v3', $route['middleware'] ?? [], true)
+            ? [['bearerAuth' => []]]
+            : [[], ['bearerAuth' => []]];
+    }
     $documented = $info['tags']['params'] ?? [];
 
     $params = [];
@@ -822,6 +867,7 @@ function buildOperation(array $route, string $httpMethod): array
                 $required[] = $name;
             }
         }
+        [$props, $required] = nestDotted($props, $required);
         if ($props) {
             $body = ['type' => 'object', 'properties' => $props];
             if ($required) {
@@ -950,9 +996,16 @@ function defaultSummary(string $method, string $uri): string
     };
 }
 
+/**
+ * 取路径第一段当 tag。openapi-generator 按第一个 tag 分 Api 类，
+ * 所以 tag 必须是资源名：`me/` 只是「当前用户」这个主体，要剥掉，
+ * 否则 /v3/me/reactions、/v3/me/discussions 会全挤进一个 MeApi。
+ * 单独的 /v3/me（当前用户档案）剥完为空，仍归 me。
+ */
 function tagOf(string $uri): string
 {
     $path = preg_replace('#^api/(v2|v3|ops)/#', '', $uri);
+    $path = preg_replace('#^me/(?=.)#', '', $path);
     $first = explode('/', $path)[0];
 
     return $first === '' ? 'misc' : $first;
@@ -1033,7 +1086,8 @@ foreach ($paths as $path => $ops) {
     file_put_contents(
         $autoDir . '/' . $name,
         "# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/{$name}\n" .
-            Yaml::dump($ops, 12, 2, Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK)
+            // 同 main.yaml：security requirement 的值必须是数组，空数组会被 dump 成 {  }
+            str_replace('bearerAuth: {  }', 'bearerAuth: []', Yaml::dump($ops, 12, 2, Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK))
     );
     $refs[$path] = ['$ref' => "./resources/auto/{$name}"];
 }

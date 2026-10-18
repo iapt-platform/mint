@@ -10,6 +10,10 @@ post:
     按 IP 与账号限流，超出返回 429。
 
     实现：`V3\SessionController@store`
+  security:
+    - {  }
+    -
+      bearerAuth: []
   requestBody:
     required: true
     content:

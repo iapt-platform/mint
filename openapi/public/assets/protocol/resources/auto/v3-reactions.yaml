@@ -8,6 +8,10 @@ get:
     按 target 聚合的公共列表，不要求登录。分页由 Laravel paginator 提供。
 
     实现：`V3\ReactionController@index`
+  security:
+    - {  }
+    -
+      bearerAuth: []
   parameters:
     -
       name: per_page

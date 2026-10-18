@@ -9,12 +9,12 @@
 
 ### 0. 环境要求
 
-| 依赖 | 用途 | 版本 |
-| --- | --- | --- |
-| PHP | 跑测试脚本 | 8.1+（需 `ext-curl` / `ext-json` / `ext-mbstring`） |
-| Composer | 装 Guzzle 依赖 | 2.x |
-| Java | 仅「重新生成客户端」时用（openapi-generator 是 jar） | 17+ |
-| Node / npx | 仅「重新生成客户端」时用（redocly bundle） | 18+ |
+| 依赖       | 用途                                                 | 版本                                                |
+| ---------- | ---------------------------------------------------- | --------------------------------------------------- |
+| PHP        | 跑测试脚本                                           | 8.1+（需 `ext-curl` / `ext-json` / `ext-mbstring`） |
+| Composer   | 装 Guzzle 依赖                                       | 2.x                                                 |
+| Java       | 仅「重新生成客户端」时用（openapi-generator 是 jar） | 17+                                                 |
+| Node / npx | 仅「重新生成客户端」时用（redocly bundle）           | 18+                                                 |
 
 > 只跑测试、不重新生成客户端的话，Java / Node 不是必须的。
 
@@ -28,10 +28,21 @@ composer install --no-dev
 cd ../..
 ```
 
-### 2. 运行测试
+### 2. 生成本机配置（只需一次）
 
 ```bash
 cd api-test
+cp config.local.example.php config.local.php   # 填上测试账号的密码（已 gitignore）
+```
+
+`config.local.php` 放账号、默认服务器、换环境时要覆盖的种子数据（`fixtures`）。
+优先级：命令行参数 > 环境变量 `API_TEST_*` > `config.local.php` > `config.php`。
+
+### 3. 运行测试
+
+```bash
+cd api-test
+php run.php                                                  # 用 config.local.php 的账号，跑全量
 php run.php --username=<username> --password=<password>            # 调 /v3/sessions 换 token，跑全量
 php run.php --username=<username> --password=<password>  --server=staging
 php run.php --token=<bearer>                                # 或直接给 token
@@ -57,14 +68,14 @@ php run.php --username=alice --password=secret                 # 调 /v3/session
 
 ### 可用 `--server` 一览
 
-| alias | URL | 说明 |
-| --- | --- | --- |
-| `local` | `http://127.0.0.1:8000/api` | 本地开发（默认） |
-| `staging` | `https://staging.wikipali.org/api` | 测试 |
-| `next` | `https://next.wikipali.org/api` | 生产预览 |
-| `prod` | `https://www.wikipali.org/api` | 生产 |
-| `next-cn` | `https://next.wikipali.cc/api` | 生产预览（中国） |
-| `prod-cn` | `https://www.wikipali.cc/api` | 生产（中国） |
+| alias     | URL                                | 说明             |
+| --------- | ---------------------------------- | ---------------- |
+| `local`   | `http://127.0.0.1:8000/api`        | 本地开发（默认） |
+| `staging` | `https://staging.wikipali.org/api` | 测试             |
+| `next`    | `https://next.wikipali.org/api`    | 生产预览         |
+| `prod`    | `https://www.wikipali.org/api`     | 生产             |
+| `next-cn` | `https://next.wikipali.cc/api`     | 生产预览（中国） |
+| `prod-cn` | `https://www.wikipali.cc/api`      | 生产（中国）     |
 
 > 也可以 `--server=<完整 base URL>` 直连任意服务器（含 /api 前缀）。
 
@@ -97,6 +108,7 @@ php run.php --username=alice --password=secret                 # 调 /v3/session
 api-test/
 ├── run.php               # 入口 + 运行器
 ├── config.php            # 服务器 alias 与 token
+├── config.local.example.php  # 本机配置模板 → 复制成 config.local.php（gitignore）
 ├── fixtures.php          # 种子数据（channel/target_id/book 等，按环境可能要改）
 ├── src/bootstrap.php     # 断言/注册 helper（test/request/assert_*）
 ├── cases/*.php           # 用例，按领域分文件
@@ -141,12 +153,12 @@ bash api-test/tools/regen.sh
 
 `regen.sh` 内部四步，都对应 spec 的某一部分：
 
-| 步骤 | 做什么 | 产物 |
-| --- | --- | --- |
-| bundle | redocly 把 `main.yaml` 及所有 `$ref` 合并成单文件 | `spec/openapi.json` |
-| filter | `filter-v3.php` 切出 `/v3/*` + 修数组 items + 修 3 个漂移端点 schema | `spec/openapi-v3.json` |
-| generate | openapi-generator 生成 PHP(Guzzle) 客户端 | `client/`（会先 `rm -rf` 重来） |
-| install | composer 装 Guzzle | `client/vendor/` |
+| 步骤     | 做什么                                                               | 产物                            |
+| -------- | -------------------------------------------------------------------- | ------------------------------- |
+| bundle   | redocly 把 `main.yaml` 及所有 `$ref` 合并成单文件                    | `spec/openapi.json`             |
+| filter   | `filter-v3.php` 切出 `/v3/*` + 修数组 items + 修 3 个漂移端点 schema | `spec/openapi-v3.json`          |
+| generate | openapi-generator 生成 PHP(Guzzle) 客户端                            | `client/`（会先 `rm -rf` 重来） |
+| install  | composer 装 Guzzle                                                   | `client/vendor/`                |
 
 > ⚠️ `client/` 是纯生成物，**不要手改**——`regen.sh` 会整个删掉重生成，手改会丢。
 
@@ -162,8 +174,8 @@ bash api-test/tools/regen.sh
 ### 4. 跑全量验证
 
 ```bash
-php run.php --username=test161 --password=12345          # 默认 local
-php run.php --username=test161 --password=12345 --server=staging
+php run.php --username=<username> --password=<password>
+php run.php --username=<username> --password=<password> --server=staging
 ```
 
 - 如果新 spec 又冒出「spec 与实现不一致」导致客户端反序列化报错（如之前的
@@ -173,11 +185,11 @@ php run.php --username=test161 --password=12345 --server=staging
 
 ## 已知的 spec ↔ 实现漂移（记录在案，不是测试脚本的 bug）
 
-| 端点 | spec 说 | 实际 | 处理 |
-| --- | --- | --- | --- |
-| `GET/POST /v3/search` | 200 `{data:数组, meta}` + 非法 `search_mode` 422 | 200 `{success, data:{took,hits}}`；`search_mode` 不校验 | `filter-v3.php` 把 200 schema 修为 `{success,data:对象}`；用例只断言状态码 + `data` 键 |
-| `GET /v3/search-suggest` | 200 `{data:数组, meta}`；空 q 422 | 200 `{success, data:{query,suggestions}}`；空 q 400 `{success:false,error}` | 同上修 schema；空 q 用例按实际 400 断言 |
-| `GET /v3/upgrade` | 200 `{data:数组, meta}` | 200 `{data:{status:"ok"}}` | 修 schema 为 `{data:对象}` |
+| 端点                     | spec 说                                          | 实际                                                                        | 处理                                                                                   |
+| ------------------------ | ------------------------------------------------ | --------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `GET/POST /v3/search`    | 200 `{data:数组, meta}` + 非法 `search_mode` 422 | 200 `{success, data:{took,hits}}`；`search_mode` 不校验                     | `filter-v3.php` 把 200 schema 修为 `{success,data:对象}`；用例只断言状态码 + `data` 键 |
+| `GET /v3/search-suggest` | 200 `{data:数组, meta}`；空 q 422                | 200 `{success, data:{query,suggestions}}`；空 q 400 `{success:false,error}` | 同上修 schema；空 q 用例按实际 400 断言                                                |
+| `GET /v3/upgrade`        | 200 `{data:数组, meta}`                          | 200 `{data:{status:"ok"}}`                                                  | 修 schema 为 `{data:对象}`                                                             |
 
 根因是这三个控制器还没迁到 v3 的 Resource 信封（`{data}` 原生形状、错误体 RFC 9457
 Problem Details、成败只看状态码）。正确的长期修法在 api-v13 侧，这里只让测试客户端能用、
@@ -196,6 +208,13 @@ Problem Details、成败只看状态码）。正确的长期修法在 api-v13 �
 - **种子数据按环境不同**：`fixtures.php` 里的 channel/target_id/doc_id 取自本地开发库，
   换环境后可能需要更新。跨环境跑时，数据不存在通常只是返回空集（仍 200），不会假红，
   但 `search/{id}` 的 200 用例依赖真实 doc id。
+- **discussions 的写用例（`cases/07_discussions.php`）挂在 `discussion_sentence` 上**：测试账号自己
+  channel 里、自己编辑的句子，带 `notify=false` 不发通知。v3 的删除是**软删**，所以每跑一遍会在
+  `discussions` 表里留下两行带 `deleted_at` 的记录（对外已不可见）。换环境时用
+  `config.local.php` 的 `fixtures.discussion_sentence` 指定该环境里测试账号自己的句子。
+- **鉴权由 spec 决定**：生成器按路由中间件给每个 v3 operation 写 `security`——挂 `auth.v3` 的必须带
+  token，其余是可选（带了按登录用户处理）。所以同一路径「读公开、写要登录」也能分清，
+  `filter-v3.php` 不再猜。
 - **写操作用垃圾数据 + 测完即删**：`/v3/me/reactions` 的增删查用例用固定垃圾
   `target_id`（uuid 格式），DELETE 会清理；若中途失败留下残留，下次跑时幂等逻辑会
   兜住（POST 返回 200 命中已有），最后由测试账号定期清理。

@@ -16,6 +16,10 @@ get:
     RFC 9457 Problem Details 而非正常结构。
 
     实现：`V3\HeartbeatController@show`
+  security:
+    - {  }
+    -
+      bearerAuth: []
   responses:
     200:
       description: 成功

@@ -1,4 +1,10 @@
 import { defineConfig, devices } from '@playwright/test';
+import { existsSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+
+/* 本机配置：.env（模板 .env.example）。已在环境里的同名变量优先，不会被覆盖 */
+const envFile = fileURLToPath(new URL('.env', import.meta.url));
+if (existsSync(envFile)) process.loadEnvFile(envFile);
 
 /**
  * dashboard-v6 端到端测试配置
@@ -20,7 +26,7 @@ export default defineConfig({
   reporter: [['list'], ['html', { outputFolder: 'playwright-report', open: 'never' }]],
 
   use: {
-    baseURL: process.env.E2E_BASE ?? 'http://127.0.0.1:4000/pcd-v2026/',
+    baseURL: process.env.E2E_BASE || 'http://127.0.0.1:4000/pcd-v2026/',
     viewport: { width: 1600, height: 1000 },
     trace: 'retain-on-failure',
     video: 'retain-on-failure',

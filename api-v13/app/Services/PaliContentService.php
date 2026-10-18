@@ -756,6 +756,8 @@ class PaliContentService
         $notes = Discussion::where('res_type', 'sentence')
             ->where('res_id', $row->uid)
             ->whereIn('type', Discussion::INJECTED_TYPES)
+            // 只注入批注本身；批注下的回复（v3 起允许回复，类型跟随批注）不进阅读页
+            ->whereNull('parent')
             ->get();
 
         if ($notes->isEmpty()) {

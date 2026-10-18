@@ -11,7 +11,7 @@ interface IWidget {
   onMore?: () => void;
 }
 
-function findKeywordInTitle(title?: string): string | undefined {
+function findKeywordInTitle(title?: string | null): string | undefined {
   if (!title) return undefined;
   for (const keyword of StatusButtons) {
     if (title.includes(keyword)) return keyword;
@@ -26,26 +26,26 @@ const TaskLog = ({ taskId, onMore }: IWidget) => {
     <>
       <Timeline>
         {loading && <Skeleton paragraph={{ rows: 1 }} active avatar />}
-        {logData?.rows.map((item, id) => {
+        {logData?.items.map((item, id) => {
           const status = findKeywordInTitle(item.title);
           return (
             <Timeline.Item
               key={id}
               color={TaskStatusColor(status as TTaskStatus)}
-              icon={<User {...item.editor} showName={false} />}
+              icon={<User {...item.user} showName={false} />}
             >
               <div>
                 <TimeShow
                   showLabel={false}
                   showIcon={false}
-                  createdAt={item.created_at}
+                  createdAt={item.createdAt}
                 />
               </div>
               <div>{item.title}</div>
             </Timeline.Item>
           );
         })}
-        {logData && logData.count > 5 && (
+        {logData && logData.total > 5 && (
           <Timeline.Item>
             <Button type="link" onClick={onMore}>
               更多

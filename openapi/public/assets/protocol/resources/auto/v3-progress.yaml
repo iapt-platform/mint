@@ -10,6 +10,10 @@ get:
     那不是业务路径开关而是噪音，已去掉（硬规范第 1 条）。
 
     实现：`V3\ProgressController@index`
+  security:
+    - {  }
+    -
+      bearerAuth: []
   parameters:
     -
       name: channels

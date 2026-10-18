@@ -139,7 +139,7 @@ v3 端点可以自由改：v4 那两处 v3 引用（`ChatInput.tsx:127`、`agent
 ## 一次只迁一个资源
 
 不要大爆炸，不要一次迁多个资源。v2 与 v3 并存，逐个资源走完整条链，
-每次的 diff 要小到人能 review 完。**没走完全部 7 步就不算迁完。**
+每次的 diff 要小到人能 review 完。**没走完全部 9 步就不算迁完。**
 
 ## v3 硬规范
 
@@ -840,7 +840,7 @@ Route::prefix('v3')->as('v3.')->group(function () {
 index 用 `spatie/laravel-query-builder` 把 scope 暴露成 `filter[]`，
 scope 和 filter 的组装写在 Service 里（硬规范第 5 条），控制器只负责调它。
 
-## 迁移七步
+## 迁移九步
 
 ### 0. 先盘点，列给用户确认
 
@@ -853,6 +853,10 @@ cd api-v13 && php artisan tinker --execute 'print_r(\Illuminate\Support\Facades\
 产出三份清单：这个资源在 v2 有哪些端点（含 view 值）、前端哪些文件在调、
 表有哪些列及其**真实类型**。列给用户确认后再动手。
 
+
+**盘点时必问一条：这个模块要不要支持 agent 协作**（AI 模型代用户写入，见根目录
+CLAUDE.md「agent 协作」）。要的话，权限规则不能只认「人类 + 对象管理者」，否则模型
+token 写不进来；回答写进盘点清单再动手。
 ### 1. FormRequest 定入参（有入参才需要）
 
 **有入参就必须用 FormRequest，禁止 inline `validate()`；零入参的端点不要建
@@ -1090,6 +1094,36 @@ get:
 
 同时在 v3 控制器的文档注释里写明它取代了哪个 v2 端点，让两边都能追溯。
 
+### 8. 更新 api-test（只测 v3）
+
+`api-test/` 是对真实服务器跑的 `/api/v3` 契约冒烟，客户端由 openapi-generator 生成。
+**每迁一个资源，都要给它在 `api-test/cases/` 加用例**，不测 v2：
+
+```bash
+bash api-test/tools/regen.sh                                   # 重生客户端（规格变了就要跑）
+php api-test/run.php --username=test161 --password=12345 --filter=<资源>
+```
+
+- 一个资源一个 `cases/NN_<资源>.php`，调用走生成的 `<Tag>Api` 类（tag 规则见生成器 `tagOf()`）
+- 至少覆盖：公开读 200、缺必填 422、无 token 写 401、带 token 的「建 → 改 → 删」完整一轮
+- 写操作**会在所有服务器上真实执行**，只用自建的临时数据并测完即删
+- 与 Pest 的分工：Pest 覆盖权限矩阵与边界；api-test 验证**部署出来的服务器**与规格一致
+
+### 9. 更新 dashboard-test（只测 v6）
+
+`dashboard-test/` 是 dashboard-v6 的 Playwright 端到端测试。**前端切过去的页面都要有 spec**，
+不测 v4：
+
+```bash
+cd dashboard-test && npx playwright test <资源>
+```
+
+- 一个路由 / 功能一个 `src/tests/<资源>.spec.ts`，`collect.ts` 采集 console / HTTP 错误
+- 覆盖用户真实操作路径：打开、新建、编辑、删除，并断言**页面上**看到的结果
+- 建的数据命名 `e2e-tmp-<timestamp>`，测完清理；`E2E_DESTRUCTIVE=0` 可跳过
+- 迁移让某个页面「能链接到但没有路由」的（如复制链接），**在 v6 补上那个页面**再测
+- 正式跑一次就在 `dashboard-test/testlog/` 写测试日志（gitignore，只留本机）
+
 ## 验收：CI 三道闸
 
 ```bash
@@ -1117,5 +1151,5 @@ cd dashboard-v6 && npm run build                                  # 前端类型
 ## 收尾报告
 
 用一句话说清：迁了哪个资源、v2 的哪几个端点/view 映射成了 v3 的哪几个端点、
-补了几条契约测试、三道闸的结果。**改了名的话，提醒用户往 CLAUDE.md 的
+补了几条 Pest 测试、api-test 与 dashboard-test 各加了什么、三道闸的结果。**改了名的话，提醒用户往 CLAUDE.md 的
 「v2 → v3 对照表」加一行。**

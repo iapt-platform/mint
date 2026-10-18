@@ -3,26 +3,25 @@ import { ArrowLeftOutlined } from "@ant-design/icons";
 
 import DiscussionTopic from "./DiscussionTopic";
 import DiscussionListCard from "./DiscussionListCard";
+import { refreshDiscussionBadge } from "./utils";
 
-import { countChange } from "../../reducers/discussion";
 import { Button, Space, Typography } from "antd";
-import store from "../../store";
-import type { IComment, TDiscussionType, TResType } from "../../api/discussion";
+import type {
+  IAnswerCount,
+  IComment,
+  TDiscussionType,
+  TResType,
+} from "../../api/discussion";
 
 const { Text } = Typography;
-
-export interface IAnswerCount {
-  id: string;
-  count: number;
-}
 
 interface IWidget {
   resId?: string;
   resType?: TResType;
   showTopicId?: string;
   focus?: string;
+  /** 只列这种类型的话题；不传则列出全部类型 */
   type?: TDiscussionType;
-  showStudent?: boolean;
   onTopicReady?: (value: IComment) => void;
 }
 
@@ -30,9 +29,8 @@ const Discussion = ({
   resId,
   resType,
   showTopicId,
-  showStudent = false,
   focus,
-  type = "discussion",
+  type,
   onTopicReady,
 }: IWidget) => {
   // 用户手动点击触发的状态
@@ -95,7 +93,7 @@ const Discussion = ({
               }
             }}
             onTopicReady={(value: IComment) => {
-              setTopicTitle(value.title);
+              setTopicTitle(value.title ?? undefined);
               if (typeof onTopicReady !== "undefined") {
                 onTopicReady(value);
               }
@@ -109,16 +107,15 @@ const Discussion = ({
           resId={resId}
           resType={resType}
           type={type}
-          showStudent={showStudent}
           onSelect={(
             _e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
             comment: IComment
           ) => showChildrenDrawer(comment)}
-          onReply={(comment: IComment) => showChildrenDrawer(comment)}
           onReady={() => {}}
           changedAnswerCount={answerCount}
-          onItemCountChange={(count: number) => {
-            store.dispatch(countChange({ count, resId, resType }));
+          onItemCountChange={() => {
+            // 话题数变了（新建 / 删除），角标按服务端口径重取
+            refreshDiscussionBadge(resType, resId);
           }}
         />
       )}

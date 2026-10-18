@@ -1,0 +1,71 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-discussions-summary.yaml
+get:
+  summary: 话题概况
+  tags:
+    - discussions
+  operationId: get_api_v3_discussions_summary
+  description: |-
+    各状态的话题数（只数没删除的、当前用户看得见的），以及当前用户能在这个对象上
+    发起哪些类型的话题（未登录为空数组）。
+
+    实现：`V3\DiscussionSummaryController@__invoke`
+  security:
+    - {  }
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: target_type
+      in: query
+      schema:
+        type: string
+        enum:
+          - sentence
+          - wbw
+          - article
+          - term
+          - task
+      description: 挂靠对象的类型
+      required: true
+    -
+      name: target_id
+      in: query
+      schema:
+        type: string
+      description: '挂靠对象的 uuid'
+      required: true
+    -
+      name: type
+      in: query
+      schema:
+        type: string
+        enum:
+          - discussion
+          - qa
+          - help
+          - issue
+          - note
+          - commentary
+      description: 只数这种类型，不传则只数评论线程
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  status_counts:
+                    type: object
+                    properties:
+                      active: { type: integer }
+                      close: { type: integer }
+                  creatable_types:
+                    type: array
+                    items:
+                      type: string
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

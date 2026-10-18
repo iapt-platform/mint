@@ -1,0 +1,471 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-discussions.yaml
+get:
+  summary: 列出某个对象上的话题
+  tags:
+    - discussions
+  operationId: get_api_v3_discussions
+  description: |-
+    只列话题（不含回复），删除了但还有回复的话题以墓碑出现（deleted_at 有值、内容为空）。
+    未登录看不到协作类话题（discussion / issue）；basic 角色在自己无权管理的对象上只看得到
+    自己发起的协作类话题。各状态的数量与「能发起哪些类型」见 `GET /v3/discussions/summary`。
+    不传 type 时只列评论线程（discussion / qa / help / issue），批注要显式 type=note / commentary。
+
+    实现：`V3\DiscussionController@index`
+  security:
+    - {  }
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: per_page
+      in: query
+      schema:
+        type: integer
+        default: 15
+      description: '每页数量，最大 200'
+    -
+      name: target_type
+      in: query
+      schema:
+        type: string
+        enum:
+          - sentence
+          - wbw
+          - article
+          - term
+          - task
+      description: 挂靠对象的类型
+      required: true
+    -
+      name: target_id
+      in: query
+      schema:
+        type: string
+      description: '挂靠对象的 uuid'
+      required: true
+    -
+      name: type
+      in: query
+      schema:
+        type: string
+        enum:
+          - discussion
+          - qa
+          - help
+          - issue
+          - note
+          - commentary
+      description: 类型，不传则只列评论线程
+    -
+      name: status
+      in: query
+      schema:
+        type: string
+        enum:
+          - active
+          - close
+      description: 话题状态，不传则两种都要
+    -
+      name: severity
+      in: query
+      schema:
+        type: string
+      description: 严重程度，逗号分隔多选
+      example: 'error,warning'
+    -
+      name: sort
+      in: query
+      schema:
+        type: string
+        enum:
+          - created_at
+          - '-created_at'
+          - updated_at
+          - '-updated_at'
+        default: '-created_at'
+      description: '排序，前缀 - 表示倒序'
+    -
+      name: page
+      in: query
+      schema:
+        type: integer
+        default: 1
+      description: 页码
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    target_type:
+                      type: string
+                    target_id:
+                      type: string
+                    parent_id:
+                      type: string
+                      nullable: true
+                    type:
+                      type: string
+                    severity:
+                      type: string
+                      nullable: true
+                    status:
+                      type: string
+                    title:
+                      type: string
+                      nullable: true
+                    content:
+                      type: string
+                      nullable: true
+                    content_type:
+                      type: string
+                    html:
+                      type: string
+                      description: 仅在部分查询口径下返回。
+                    summary:
+                      type: string
+                      description: 仅在部分查询口径下返回。
+                    tpl_id:
+                      type: string
+                      nullable: true
+                    pos_start:
+                      type: integer
+                      nullable: true
+                    pos_end:
+                      type: integer
+                      nullable: true
+                    quote_exact:
+                      type: string
+                      nullable: true
+                    quote_prefix:
+                      type: string
+                      nullable: true
+                    quote_suffix:
+                      type: string
+                      nullable: true
+                    reply_count:
+                      type: integer
+                      description: 仅在部分查询口径下返回。
+                    editor:
+                      type: object
+                      properties: { id: { type: string }, nickName: { type: string }, userName: { type: string }, realName: { type: string }, sn: { type: integer }, avatar: { type: string }, roles: { type: array, items: { type: string } } }
+                      nullable: true
+                    co_editor:
+                      type: object
+                      properties: { id: { type: string }, nickName: { type: string }, userName: { type: string }, realName: { type: string }, sn: { type: integer }, avatar: { type: string }, roles: { type: array, items: { type: string } } }
+                      nullable: true
+                    abilities:
+                      type: object
+                      properties: { update: { type: boolean }, delete: { type: boolean }, close: { type: boolean }, reply: { type: boolean } }
+                    created_at:
+                      type: string
+                    updated_at:
+                      type: string
+                    deleted_at:
+                      type: string
+                      nullable: true
+              meta:
+                $ref: '../../main.yaml#/components/schemas/PaginationMeta'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'
+post:
+  summary: 发起话题或新建批注
+  tags:
+    - discussions
+  operationId: post_api_v3_discussions
+  description: |-
+    discussion / issue 登录即可发；qa / help 只能发在文章上，且只有文章的编辑者能发。
+    severity 的取值随 type：issue 为 error / warning / suggestion，help 为 urgent / normal，
+    其它类型不收。默认会通知对象的作者（站内信 + webhook），`notify=false` 关闭。
+    批注（note / commentary）只能加在句子上，且只有该句所在 channel 的编辑者能加；
+    标题可省、正文必填，commentary 的正文必须是义注句子模板 `{{book-para-start-end}}`
+    （可多句并列）；可带锚点 pos_* / quote_*（评论线程传了 422）；不发通知。
+
+    实现：`V3\DiscussionController@store`
+  security:
+    -
+      bearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            target_type:
+              type: string
+              description: 挂靠对象的类型
+              enum:
+                - sentence
+                - wbw
+                - article
+                - term
+                - task
+            target_id:
+              type: string
+              description: '挂靠对象的 uuid'
+            type:
+              type: string
+              description: 类型
+              enum:
+                - discussion
+                - qa
+                - help
+                - issue
+                - note
+                - commentary
+              default: discussion
+            title:
+              type: string
+              description: '标题，最长 256 字符；评论线程必填，批注可省'
+            content:
+              type: string
+              description: 正文（markdown）；批注必填
+            severity:
+              type: string
+              description: 严重程度
+              enum:
+                - error
+                - warning
+                - suggestion
+                - urgent
+                - normal
+            pos_start:
+              type: integer
+              description: 批注锚点在句子文本中的起始偏移（只限批注）
+            pos_end:
+              type: integer
+              description: 批注锚点的结束偏移，批注插在这里（只限批注）
+            quote_exact:
+              type: string
+              description: 锚定的原文片段（只限批注）
+            quote_prefix:
+              type: string
+              description: 锚定片段前的上下文，用于重新定位（只限批注）
+            quote_suffix:
+              type: string
+              description: 锚定片段后的上下文，用于重新定位（只限批注）
+            tpl_id:
+              type: string
+              description: '话题模板（文章）的 uuid'
+            notify:
+              type: boolean
+              description: 是否发通知（批注不发）
+              default: true
+          required:
+            - target_type
+            - target_id
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  target_type:
+                    type: string
+                  target_id:
+                    type: string
+                  parent_id:
+                    type: string
+                    nullable: true
+                  type:
+                    type: string
+                  severity:
+                    type: string
+                    nullable: true
+                  status:
+                    type: string
+                  title:
+                    type: string
+                    nullable: true
+                  content:
+                    type: string
+                    nullable: true
+                  content_type:
+                    type: string
+                  html:
+                    type: string
+                    description: 仅在部分查询口径下返回。
+                  summary:
+                    type: string
+                    description: 仅在部分查询口径下返回。
+                  tpl_id:
+                    type: string
+                    nullable: true
+                  pos_start:
+                    type: integer
+                    nullable: true
+                  pos_end:
+                    type: integer
+                    nullable: true
+                  quote_exact:
+                    type: string
+                    nullable: true
+                  quote_prefix:
+                    type: string
+                    nullable: true
+                  quote_suffix:
+                    type: string
+                    nullable: true
+                  reply_count:
+                    type: integer
+                    description: 仅在部分查询口径下返回。
+                  editor:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string }
+                      roles: { type: array, items: { type: string } }
+                    nullable: true
+                  co_editor:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string }
+                      roles: { type: array, items: { type: string } }
+                    nullable: true
+                  abilities:
+                    type: object
+                    properties:
+                      update: { type: boolean }
+                      delete: { type: boolean }
+                      close: { type: boolean }
+                      reply: { type: boolean }
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  deleted_at:
+                    type: string
+                    nullable: true
+    201:
+      description: 创建成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  target_type:
+                    type: string
+                  target_id:
+                    type: string
+                  parent_id:
+                    type: string
+                    nullable: true
+                  type:
+                    type: string
+                  severity:
+                    type: string
+                    nullable: true
+                  status:
+                    type: string
+                  title:
+                    type: string
+                    nullable: true
+                  content:
+                    type: string
+                    nullable: true
+                  content_type:
+                    type: string
+                  html:
+                    type: string
+                    description: 仅在部分查询口径下返回。
+                  summary:
+                    type: string
+                    description: 仅在部分查询口径下返回。
+                  tpl_id:
+                    type: string
+                    nullable: true
+                  pos_start:
+                    type: integer
+                    nullable: true
+                  pos_end:
+                    type: integer
+                    nullable: true
+                  quote_exact:
+                    type: string
+                    nullable: true
+                  quote_prefix:
+                    type: string
+                    nullable: true
+                  quote_suffix:
+                    type: string
+                    nullable: true
+                  reply_count:
+                    type: integer
+                    description: 仅在部分查询口径下返回。
+                  editor:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string }
+                      roles: { type: array, items: { type: string } }
+                    nullable: true
+                  co_editor:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string }
+                      roles: { type: array, items: { type: string } }
+                    nullable: true
+                  abilities:
+                    type: object
+                    properties:
+                      update: { type: boolean }
+                      delete: { type: boolean }
+                      close: { type: boolean }
+                      reply: { type: boolean }
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  deleted_at:
+                    type: string
+                    nullable: true
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    403:
+      description: 当前用户不能在这个对象上发起这种类型的话题
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

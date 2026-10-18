@@ -16,14 +16,15 @@
 cd dashboard-test
 npm install
 npx playwright install chromium
+cp .env.example .env        # 生成本机配置，填上测试账号的密码（.env 已 gitignore）
 ```
 
 依赖只有两个，且都在 `devDependencies`：
 
-| 包                | 用途                     |
-| ----------------- | ------------------------ |
-| `@playwright/test`| 测试运行器 + 浏览器驱动  |
-| `@types/node`     | TypeScript 类型          |
+| 包                 | 用途                    |
+| ------------------ | ----------------------- |
+| `@playwright/test` | 测试运行器 + 浏览器驱动 |
+| `@types/node`      | TypeScript 类型         |
 
 ## 前置：启动 dev server
 
@@ -40,6 +41,7 @@ cd ../dashboard-v6 && npm run dev            # http://127.0.0.1:4000/pcd-v2026/
 npm test                    # 跑全部
 npm run test:channel        # 只跑 channel 路由
 npm run test:users          # 只跑匿名账号页面（登录 / 注册 / 找回密码 / 重置密码）
+npm run test:discussion     # 只跑讨论：话题页、对象的全部讨论页（/workspace/discussion/*）、文章底部问答区、讨论角标
 npm run test:ui             # UI Mode，可视化单步调试
 npm run test:headed         # 显示浏览器窗口
 npm run report              # 打开上次的 HTML 报告
@@ -49,18 +51,25 @@ npm run codegen             # 录制操作生成选择器
 正式记录一次测试时，把截图输出到带时间戳的目录：
 
 ```bash
-E2E_SHOT=documents/testlog/assets/channel_20260907_034904 npm run test:channel
+E2E_SHOT=testlog/assets/channel_20260907_034904 npm run test:channel
 ```
 
-### 环境变量
+### 配置
 
-| 变量               | 默认值                              | 说明                         |
-| ------------------ | ----------------------------------- | ---------------------------- |
-| `E2E_BASE`         | `http://127.0.0.1:4000/pcd-v2026/`  | 被测站点根地址               |
-| `E2E_USER`         | `test161`                           | 测试账号                     |
-| `E2E_PASS`         | `12345`                             | 密码                         |
-| `E2E_SHOT`         | `documents/testlog/assets/channel_latest` | 截图输出目录           |
-| `E2E_DESTRUCTIVE`  | 未设置（执行）                      | 设为 `0` 跳过增删改用例      |
+写在 `.env`（模板 `.env.example`），由 `playwright.config.ts` 用 Node 自带的
+`process.loadEnvFile` 加载；shell 里已设置的同名环境变量优先。spec 里一律从
+`src/lib/env.ts` 取值，不直接读 `process.env`，也不写死账号密码——缺 `E2E_USER` /
+`E2E_PASS` 会直接报错提示。
+
+| 变量                      | 默认值                                    | 说明                                            |
+| ------------------------- | ----------------------------------------- | ----------------------------------------------- |
+| `E2E_BASE`                | `http://127.0.0.1:4000/pcd-v2026/`        | 被测站点根地址                                  |
+| `E2E_USER`                | （必填）                                  | 测试账号                                        |
+| `E2E_PASS`                | （必填）                                  | 密码                                            |
+| `E2E_SHOT`                | `testlog/assets/<路由>_latest`            | 截图输出目录                                    |
+| `E2E_DESTRUCTIVE`         | 未设置（执行）                            | 设为 `0` 跳过增删改用例                         |
+| `E2E_DISCUSSION_SENTENCE` | `ee5259be-…`（本地开发库）                | 讨论用例挂的句子：须在测试账号自己的 channel 里 |
+| `E2E_ARTICLE`             | `f24cfd88-…`（本地开发库）                | 测试账号自己的文章：文章底部问答区、讨论角标请求 |
 
 ---
 
@@ -71,19 +80,22 @@ E2E_SHOT=documents/testlog/assets/channel_20260907_034904 npm run test:channel
 ```
 dashboard-test/
 ├── playwright.config.ts       配置：baseURL、串行执行、trace/video、setup 依赖
+├── .env.example               本机配置模板 → 复制成 .env（gitignore）
 ├── src/
 │   ├── tests/
 │   │   ├── auth.setup.ts      登录一次，存 storageState
 │   │   ├── channel.spec.ts    /workspace/channel 及子路由
+│   │   ├── discussion.spec.ts 讨论话题页、/discussion/show、文章底部问答区、讨论角标（数据经 v3 API 建删）
 │   │   └── users.spec.ts      /anonymous 下的登录、注册、邀请注册、找回密码、重置密码
 │   └── lib/
-│       └── collect.ts         console / pageerror / HTTP 错误采集与噪音过滤
+│       ├── collect.ts         console / pageerror / HTTP 错误采集与噪音过滤
+│       └── env.ts             配置的唯一出口（账号、地址、种子数据）
 ├── documents/
-│   ├── development/
-│   │   └── testing-strategy.md   方案取舍与约定
-│   └── testlog/
-│       ├── channel_<时间戳>.md    每次测试的结论与待办
-│       └── assets/<路由>_<时间戳>/ 该次测试的截图
+│   └── development/
+│       └── testing-strategy.md   方案取舍与约定
+├── testlog/                   测试日志与截图（gitignore，只在本机）
+│   ├── <路由>_<时间戳>.md      每次测试的结论与待办
+│   └── assets/<路由>_<时间戳>/ 该次测试的截图
 ├── playwright/.auth/          登录态缓存（gitignore）
 ├── playwright-report/         HTML 报告（gitignore）
 └── test-results/              失败用例的 trace / video（gitignore）
@@ -116,7 +128,8 @@ dashboard-test/
 - BUG-1 Webhooks 页签不应跳到已废弃的 `/studio/...`
 - BUG-4 不存在的频道不应出现 `Unexpected Application Error`
 
-所以 `npm test` 现在是 **11 通过 / 2 失败**（channel 4/2、users 7/0），两个失败即上述待修项。
+所以 `npm test` 现在是 **22 通过 / 2 失败**（含 setup；channel 3/2、users 7/0、discussion 11/0），
+两个失败即上述待修项。
 
 修复后的缺陷断言保留作回归保护：`src/tests/users.spec.ts` 的「回归」组里有
 BUG-5（中文界面下 v3 错误文案应为中文，2026-10-08 修复）。
@@ -144,14 +157,15 @@ setup 与 `users.spec.ts` 都用 `E2E_USER` 登录，api-test 也用同一个账
 
 ### 测试日志
 
-每次正式测试在 `documents/testlog/` 下写一个
+每次正式测试在 `testlog/`（已 gitignore，不进版本库）下写一个
 `<路由名>_<YYYYMMDD_HHMMSS>.md`，截图放同名 assets 目录并在 md 中内嵌引用。
 
 固定结构：概览表 → 结论 → 一、通过的功能（含截图）→ 二、待修复
 （每条一个 `- [ ]` 代办，含日志片段、截图、定位到文件行号的原因、修复方向）→
 三、未覆盖 / 待确认。
 
-已有记录：
+本机已有记录：
 
-- [`documents/testlog/channel_20260907_034904.md`](./documents/testlog/channel_20260907_034904.md)
-- [`documents/testlog/users_20261008_072502.md`](./documents/testlog/users_20261008_072502.md)
+- [`testlog/channel_20260907_034904.md`](./testlog/channel_20260907_034904.md)
+- [`testlog/users_20261008_072502.md`](./testlog/users_20261008_072502.md)
+- [`testlog/discussion_20261015_023438.md`](./testlog/discussion_20261015_023438.md)

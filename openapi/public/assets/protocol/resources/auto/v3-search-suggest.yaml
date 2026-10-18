@@ -9,6 +9,10 @@ get:
     q 为空时返回 400。
 
     实现：`V3\SearchSuggestController@index`
+  security:
+    - {  }
+    -
+      bearerAuth: []
   parameters:
     -
       name: q

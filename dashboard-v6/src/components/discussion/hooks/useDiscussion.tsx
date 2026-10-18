@@ -1,30 +1,32 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
+
 import {
-  fetchCommentList,
-  type ICommentListResponse,
-  type IFetchCommentListParams,
-} from "../../../api/Comment";
+  fetchTopics,
+  type IComment,
+  type TDiscussionStatus,
+} from "../../../api/discussion";
+
+interface IUseTaskLogParams {
+  perPage?: number;
+  status?: TDiscussionStatus;
+}
 
 interface IUseTaskLogReturn {
-  data: ICommentListResponse["data"] | null;
+  data: { items: IComment[]; total: number } | null;
   loading: boolean;
   refresh: () => void;
 }
 
+/**
+ * 任务上的讨论（含 v2 TaskStatusController 写进来的状态变更日志），最新的在前。
+ */
 export const useDiscussion = (
   taskId?: string,
-  params: IFetchCommentListParams = {}
+  { perPage = 5, status = "active" }: IUseTaskLogParams = {}
 ): IUseTaskLogReturn => {
-  const [data, setData] = useState<ICommentListResponse["data"] | null>(null);
+  const [data, setData] = useState<IUseTaskLogReturn["data"]>(null);
   const [loading, setLoading] = useState(false);
   const [tick, setTick] = useState(0);
-
-  const paramsKey = JSON.stringify(params);
-  const paramsRef = useRef<IFetchCommentListParams>(params);
-  useEffect(() => {
-    paramsRef.current = params;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paramsKey]);
 
   const refresh = useCallback(() => setTick((t) => t + 1), []);
 
@@ -32,28 +34,25 @@ export const useDiscussion = (
     if (!taskId) return;
 
     let active = true;
-
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const res = await fetchCommentList(taskId, paramsRef.current);
-        if (!active) return;
-        if (res.ok) {
-          setData(res.data);
-        }
-      } catch (e) {
-        console.error("tasklog fetch", e);
-      } finally {
+    setLoading(true);
+    fetchTopics({
+      target_type: "task",
+      target_id: taskId,
+      type: "discussion",
+      status,
+      per_page: perPage,
+    })
+      .then((res) => {
+        if (active) setData(res);
+      })
+      .finally(() => {
         if (active) setLoading(false);
-      }
-    };
-
-    fetchData();
+      });
 
     return () => {
       active = false;
     };
-  }, [taskId, paramsKey, tick]);
+  }, [taskId, perPage, status, tick]);
 
   return { data, loading, refresh };
 };

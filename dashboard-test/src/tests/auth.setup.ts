@@ -1,6 +1,7 @@
 import { test as setup, expect } from "@playwright/test";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { USER, PASS } from "../lib/env.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export const AUTH_FILE = path.join(
@@ -8,8 +9,6 @@ export const AUTH_FILE = path.join(
   "../../playwright/.auth/user.json",
 );
 
-const USER = process.env.E2E_USER ?? "test161";
-const PASS = process.env.E2E_PASS ?? "11111";
 
 setup("登录并保存会话", async ({ page }) => {
   await page.goto("anonymous/sign-in");

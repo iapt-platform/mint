@@ -7,10 +7,6 @@ import { useIntl } from "react-intl";
 import Discussion from "./Discussion";
 import type { TResType } from "../../api/discussion";
 
-export interface IAnswerCount {
-  id: string;
-  count: number;
-}
 interface IWidget {
   trigger?: JSX.Element;
   open?: boolean;
@@ -51,12 +47,15 @@ const DiscussionDrawerWidget = ({
         destroyOnHidden
         extra={
           <Space>
-            <Link to={`/discussion/show/${resType}/${resId}`} target="_blank">
+            <Link
+              to={`/workspace/discussion/show/${resType}/${resId}`}
+              target="_blank"
+            >
               {intl.formatMessage(
                 {
                   id: "buttons.open.in.new.tab",
                 },
-                { item: "" }
+                { item: "" },
               )}
             </Link>
             {drawerWidth === drawerMinWidth ? (
@@ -89,7 +88,7 @@ const DiscussionDrawerWidget = ({
         open={openDrawer}
         maskClosable={false}
       >
-        <Discussion resId={resId} resType={resType} showStudent={false} />
+        <Discussion resId={resId} resType={resType} />
       </Drawer>
     </>
   );
