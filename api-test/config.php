@@ -35,7 +35,7 @@ return [
     // alias => 完整 base URL（含 /api 前缀）
     'servers' => [
         'local'   => 'http://127.0.0.1:8000/api',
-        'staging' => 'https://staging.wikipali.org/api',
+        'staging' => 'https://staging.wikipali.cc/api',
         'next'    => 'https://next.wikipali.org/api',
         'prod'    => 'https://www.wikipali.org/api',
         'next-cn' => 'https://next.wikipali.cc/api',
