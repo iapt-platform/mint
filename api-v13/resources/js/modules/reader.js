@@ -1,10 +1,34 @@
 // resources/js/modules/reader.js
 
 export function initReader() {
+    applyAnnotationMode();
+    numberAnnotations();
     injectCommentaryMarkers();
     injectEvaluateMarkers();
     initTocToggle();
     initHashScroll();
+    initAnnotationMode();
+}
+
+// 读取阅读偏好 cookie（与 read.blade.php 内联脚本的 setCookie 对应）。注意：该 cookie
+// 由前端 document.cookie 明文写入，不经过 Laravel 加密，只能在客户端读。
+function readCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) {
+        return decodeURIComponent(parts.pop().split(';').shift());
+    }
+    return null;
+}
+
+// 把「注释」呈现模式（行内 / 段后）从 cookie 应用到正文根节点。
+function applyAnnotationMode() {
+    const article = document.querySelector('article.reader-body');
+    if (!article) {
+        return;
+    }
+    article.dataset.annotationMode =
+        readCookie('annotation_mode') === 'footnote' ? 'footnote' : 'inline';
 }
 
 // 处理 URL hash（#354 / #94-354 / #para-354）：滚动到对应段落并加高亮底色
@@ -54,6 +78,85 @@ function initTocToggle() {
                 tree.classList.toggle('toc-expanded');
             }
         });
+    });
+}
+
+// 注释编号：按「段」分组，给正文角标 .sidenote-number 与段后 .anno-footnote 分别
+// 编号 [1][2]…，二者一一对应（参照 wikipali-mobile 的 numberPara）。段后脚注的编号
+// <span class="anno-fn-num"> 由 JS 动态补进 label。
+function numberAnnotations() {
+    document
+        .querySelectorAll('article.reader-body div[data-para]')
+        .forEach((para) => {
+            para.querySelectorAll('.sidenote-number').forEach((marker, i) => {
+                marker.dataset.idx = String(i + 1);
+            });
+
+            para.querySelectorAll('.anno-footnote').forEach((fn, i) => {
+                fn.dataset.idx = String(i + 1);
+                const label = fn.querySelector('.anno-fn-label');
+                if (label && !label.querySelector('.anno-fn-num')) {
+                    const num = document.createElement('span');
+                    num.className = 'anno-fn-num';
+                    num.textContent = `[${i + 1}]`;
+                    num.dataset.idx = String(i + 1);
+                    label.insertBefore(num, label.firstChild);
+                }
+            });
+        });
+}
+
+// 段后模式下的互跳：点正文角标 [N] → 滚到对应脚注；点脚注编号 [N] → 滚回正文角标。
+// 行内模式不挂此监听，保留 label 的原生 checkbox 展开行为。
+function initAnnotationMode() {
+    const article = document.querySelector('article.reader-body');
+    if (!article || article.dataset.annotationMode !== 'footnote') {
+        return;
+    }
+
+    const flashAnno = (el) => {
+        if (!el) {
+            return;
+        }
+        el.classList.add('anno-highlight');
+        setTimeout(() => el.classList.remove('anno-highlight'), 2200);
+    };
+
+    article.addEventListener('click', (e) => {
+        const marker = e.target.closest('.sidenote-number');
+        if (marker) {
+            const para = marker.closest('div[data-para]');
+            const fn =
+                para &&
+                para.querySelector(
+                    `.anno-footnote[data-idx="${marker.dataset.idx}"]`
+                );
+            if (fn) {
+                e.preventDefault();
+                fn.scrollIntoView({ block: 'center', behavior: 'smooth' });
+                flashAnno(fn);
+            }
+            return;
+        }
+
+        const fnNum = e.target.closest('.anno-fn-num');
+        if (fnNum) {
+            const fn = fnNum.closest('.anno-footnote');
+            const para = fn && fn.closest('div[data-para]');
+            const marker =
+                para &&
+                para.querySelector(
+                    `.sidenote-number[data-idx="${fnNum.dataset.idx}"]`
+                );
+            if (marker) {
+                e.preventDefault();
+                marker.scrollIntoView({
+                    block: 'center',
+                    behavior: 'smooth',
+                });
+                flashAnno(marker);
+            }
+        }
     });
 }
 

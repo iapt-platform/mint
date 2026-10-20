@@ -348,6 +348,13 @@
                     </select>
                 </div>
                 @endisset
+                <div class="mb-4">
+                    <label class="form-label">{{ __('library.annotation_mode') }}</label>
+                    <select class="form-select" id="annotationMode">
+                        <option value="inline">{{ __('library.annotation_inline') }}</option>
+                        <option value="footnote">{{ __('library.annotation_footnote') }}</option>
+                    </select>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-link" data-bs-dismiss="modal">{{ __('library.cancel') }}</button>
@@ -427,6 +434,7 @@
         document.getElementById('uiLanguage').value = getCookie('ui_language') || 'auto';
         document.getElementById('paliScript').value = getCookie('pali_script') || 'auto';
         document.getElementById('commentary').value = getCookie('commentary') || 'none';
+        document.getElementById('annotationMode').value = getCookie('annotation_mode') || 'inline';
         toggleOriginDisplay(showOrigin);
     });
 
@@ -436,6 +444,7 @@
         setCookie('ui_language', document.getElementById('uiLanguage').value);
         setCookie('pali_script', document.getElementById('paliScript').value);
         setCookie('commentary', document.getElementById('commentary').value);
+        setCookie('annotation_mode', document.getElementById('annotationMode').value);
         // 修改 URL 的 comm 参数
         const commValue = document.getElementById('commentary').value;
         const url = new URL(window.location.href);

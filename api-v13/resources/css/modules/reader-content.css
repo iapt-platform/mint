@@ -155,11 +155,8 @@ article.reader-body label.sidenote-number {
     }
 }
 
-/* sidenote 编号上标 */
-article.reader-body .sidenote-number {
-    counter-increment: sidenote-counter;
-}
-
+/* sidenote 编号上标：编号由 JS 按「段」分组写入 data-idx（见 reader.js 的
+   numberAnnotations），与段后脚注的 [N] 一一对应，可互跳。 */
 article.reader-body .sidenote-number::after,
 article.reader-body .sidenote::before {
     position: relative;
@@ -167,7 +164,7 @@ article.reader-body .sidenote::before {
 }
 
 article.reader-body .sidenote-number::after {
-    content: '[' counter(sidenote-counter) ']';
+    content: '[' attr(data-idx) ']';
     font-size: 0.75rem;
     top: -0.5rem;
     left: 0.1rem;
@@ -175,7 +172,7 @@ article.reader-body .sidenote-number::after {
 }
 
 article.reader-body .sidenote::before {
-    content: counter(sidenote-counter) ' ';
+    content: attr(data-idx) ' ';
     font-size: 0.75rem;
     top: -0.5rem;
 }
@@ -229,6 +226,90 @@ article.reader-body .commentary-toggle:checked + .commentary-note {
 
 .dark-mode article.reader-body .commentary-toggle:checked + .commentary-note {
     background-color: rgba(139, 109, 56, 0.15);
+}
+
+/* ══════════════════════════════════════════
+   三·五、注释呈现模式（行内 / 段后）
+   「段后」时正文保留角标 [N]，注释以脚注列表缀在段后；「行内」沿用 sidenote 边注。
+   DOM 结构与 wikipali-mobile 的 ReaderLayerPane 保持一致。
+   ══════════════════════════════════════════ */
+
+/* 段后脚注列表：默认（行内模式）隐藏，段后模式由 [data-annotation-mode] 打开 */
+article.reader-body .anno-footnotes {
+    display: none;
+    margin: 0.5rem 0 1rem;
+}
+
+article.reader-body .anno-footnote {
+    margin: 0.4rem 0;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--tblr-secondary);
+    border: 1px solid var(--tblr-border-color);
+    border-radius: 6px;
+    padding: 6px 10px;
+}
+
+article.reader-body .anno-fn-toggle {
+    display: none;
+}
+
+article.reader-body .anno-fn-label {
+    display: flex;
+    align-items: flex-start;
+    cursor: pointer;
+}
+
+article.reader-body .anno-fn-num {
+    color: var(--tblr-primary);
+    flex: none;
+    margin-right: 0.45em;
+    cursor: pointer;
+}
+
+/* 脚注正文默认收起为一行，点击展开 */
+article.reader-body .anno-fn-body {
+    flex: 1;
+    min-width: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+article.reader-body .anno-fn-toggle:checked + .anno-fn-label .anno-fn-body {
+    -webkit-line-clamp: unset;
+    display: block;
+    overflow: visible;
+}
+
+/* 义注跳转 cite：收起时隐藏，展开才显示 */
+article.reader-body .anno-footnote .anno-jump {
+    display: none;
+    margin-left: 0.4em;
+    font-style: normal;
+    color: var(--tblr-primary);
+}
+
+article.reader-body .anno-fn-toggle:checked ~ .anno-jump {
+    display: inline;
+}
+
+/* 互跳高亮 */
+article.reader-body .anno-highlight {
+    background: rgba(32, 107, 196, 0.16);
+    border-radius: 3px;
+    transition: background 0.5s;
+}
+
+/* 段后模式：显示段后脚注列表，隐藏 sidenote（角标保留） */
+article.reader-body[data-annotation-mode="footnote"] .anno-footnotes {
+    display: block;
+}
+
+article.reader-body[data-annotation-mode="footnote"] .sidenote {
+    display: none !important;
 }
 
 /* ══════════════════════════════════════════
