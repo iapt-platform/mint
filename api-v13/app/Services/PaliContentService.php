@@ -680,12 +680,16 @@ class PaliContentService
             return $result;
         }
 
+        $pClass = PaliText::where('book', $book)
+            ->where('paragraph', $para)
+            ->value('class');
+
         if ($format === 'html') {
             // html 格式加段落外壳；段后追加段落脚注列表（本段义注/复注条目）
             $content = implode('', $cached['display']);
             $inner = $level > 0 ? "<h{$level}>{$content}</h{$level}>" : "<div class='para-block'>{$content}</div>";
             $footnoteList = $this->renderFootnoteList($cached['notes'] ?? []);
-            $result['display'] = "<div id='para-{$para}' class='{$cached['area']}' data-para='{$para}'>{$inner}{$footnoteList}</div>";
+            $result['display'] = "<div id='para-{$para}' class='{$cached['area']} {$pClass}' data-para='{$para}'>{$inner}{$footnoteList}</div>";
         } else {
             // 其他格式一行一句
             $result['display'] = implode("\n", $cached['display']);
@@ -939,7 +943,7 @@ class PaliContentService
             $result['sentences'][] = ['sid' => $sid, 'html' => $html];
             if ($format === 'html') {
                 $class = $isOrigin ? 'sentence origin' : 'sentence';
-                $result['display'][] = "<div class='{$class}' data-sid='{$sid}'>{$html}</div>";
+                $result['display'][] = "<div class='{$class}' lang='{$channel->lang}' data-sid='{$sid}'>{$html}</div>";
             } else {
                 $result['display'][] = $html;
             }
