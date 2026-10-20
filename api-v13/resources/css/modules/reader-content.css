@@ -355,3 +355,75 @@ article.reader-body .evaluate-warning {
 article.reader-body .evaluate-suggestion {
     background-color: #c4f8c6;
 }
+
+/* ══════════════════════════════════════════
+   六、偈颂（Gatha / Verse）排版
+   原文与译文共用的五类 class：hangnum / gatha1 / gatha2 / gatha3 / gathalast。
+   每首偈 = 一个 hangnum（偈颂号，可选）+ gatha1（首行）+ 若干中间行 + gathalast（末行）。
+   要求：偈颂之间的间隔 > 偈颂内部行之间的间隔；与散文混排时偈颂缩进、收紧行距以区分。
+   ══════════════════════════════════════════ */
+
+/* 偈颂号（hangnum）：悬挂在左侧页边，右对齐，字号缩小，与首行基线对齐。
+   原文的号是纯文本「 1.」，部分译文的号被 markdown 渲染成 <ol start="2"><li></li></ol>，
+   两种都归一化成同一个小号数字。 */
+article.reader-body .hangnum {
+    float: left;
+    clear: left;
+    width: 2rem;
+    margin-right: 0.5rem;
+    text-align: right;
+    font-size: 0.8125rem;
+    line-height: 1.75;
+    color: var(--tblr-secondary);
+    user-select: none;
+}
+article.reader-body .hangnum .para-block {
+    margin-bottom: 0;
+}
+article.reader-body .hangnum ol {
+    list-style: decimal;
+    list-style-position: inside;
+    padding: 0;
+    margin: 0;
+}
+article.reader-body .hangnum li {
+    margin: 0;
+    line-height: inherit;
+    list-style-type: decimal;
+    list-style-position: inside;
+}
+
+/* 偈颂行：整体缩进，让出偈颂号的空间 */
+article.reader-body .gatha1,
+article.reader-body .gatha2,
+article.reader-body .gatha3,
+article.reader-body .gathalast {
+    margin-left: 2.5rem;
+}
+
+/* 偈颂内部行距收紧；折行时悬挂缩进，续行比首行再缩进 1.25em */
+article.reader-body .gatha1 .para-block,
+article.reader-body .gatha2 .para-block,
+article.reader-body .gatha3 .para-block,
+article.reader-body .gathalast .para-block {
+    margin-bottom: 0.3em;
+    padding-left: 1.25em;
+    text-indent: -1.25em;
+}
+
+/* 偈颂末行：与下一偈（或散文）之间留更大间隔 */
+article.reader-body .gathalast .para-block {
+    margin-bottom: 1.75em;
+}
+
+/* ══════════════════════════════════════════
+   七、居中文本（centered）
+   开头致敬语（Namo tassa…）与经末结语（… niṭṭhitaṃ / ……竟）。
+   ══════════════════════════════════════════ */
+
+article.reader-body .centered {
+    text-align: center;
+}
+article.reader-body .centered .para-block {
+    margin-bottom: 1.5em;
+}
