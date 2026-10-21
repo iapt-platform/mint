@@ -2,18 +2,21 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use Illuminate\Support\Str;
-
 use App\Models\DhammaTerm;
 use App\Models\UserDict;
-use App\Services\OpenSearchService;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class ExportPaliSynonyms extends Command
 {
     /**
      * The name and signature of the console command.
-     * php artisan export:pali.synonyms --output= [--test]
+     * php artisan export:pali.synonyms --output=pali-synonyms.txt [--test]
+     *
+     * 只负责导出，文件写到 local disk（storage/app/private）。
+     * 由 ops 脚本把文件分发到 OpenSearch 节点后，
+     * 再用 export:pali.synonyms.set-path 切换索引的同义词文件。
      *
      * @var string
      */
@@ -55,9 +58,20 @@ class ExportPaliSynonyms extends Command
         $dictId[] = DictApi::getSysDict('system_regular');
         $dictId[] = DictApi::getSysDict('robot_compound');
 */
-        $filename =  $this->option('output');
-        $BASE_PATH = '/mnt/nfs/pali/';
-        $fp = fopen($BASE_PATH . $filename, 'w') or exit('Unable to open file!');
+        $filename = $this->option('output');
+        if (preg_match(self::FILENAME_PATTERN, $filename) !== 1) {
+            $this->error('--output must be a plain file name matching '.self::FILENAME_PATTERN);
+
+            return 1;
+        }
+        $outputPath = Storage::disk('local')->path($filename);
+        File::ensureDirectoryExists(dirname($outputPath));
+        $fp = fopen($outputPath, 'w');
+        if ($fp === false) {
+            $this->error("Unable to open file [{$outputPath}]");
+
+            return 1;
+        }
 
         $parents = UserDict::select('parent')
             ->whereNotNull('parent')
@@ -83,7 +97,7 @@ class ExportPaliSynonyms extends Command
             foreach ($teams as $term) {
                 $wordsList[$term->meaning] = 1;
             }
-            $this->info("[{$parent->parent}] " . count($words) . ' team=' . count($teams));
+            $this->info("[{$parent->parent}] ".count($words).' team='.count($teams));
             // 合并 $parent->parent, $words->word, $team->meaning 为一个字符串数组
             $combinedArray = [];
             $combinedArray[] = $parent->parent;
@@ -116,17 +130,15 @@ class ExportPaliSynonyms extends Command
         fclose($fp);
 
         $this->info("过滤掉非法 term {$droppedTerms} 个，整行丢弃 {$droppedLines} 行。");
-
-        //update opensearch
-        $this->info('update opensearch synonyms');
-        $result = app(OpenSearchService::class)->updatePaliSynonymsPath($filename);
-        $this->info(json_encode($result, JSON_PRETTY_PRINT));
-
-        $this->info('done');
-
+        $this->info("done: {$outputPath}");
 
         return 0;
     }
+
+    /**
+     * 输出文件名，只允许纯文件名，不能带路径
+     */
+    public const FILENAME_PATTERN = '/^[A-Za-z0-9][A-Za-z0-9._-]*$/';
 
     /**
      * 词典源码标记，这类 term 不是真正的词条
@@ -188,9 +200,9 @@ class ExportPaliSynonyms extends Command
         $filename = $pathInfo['filename'] ?? '';
 
         // 如果目录不是根目录，则添加目录分隔符
-        $dirname = rtrim($dirname, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+        $dirname = rtrim($dirname, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
 
         // 构建新路径
-        return $dirname . $filename . '.json';
+        return $dirname.$filename.'.json';
     }
 }
