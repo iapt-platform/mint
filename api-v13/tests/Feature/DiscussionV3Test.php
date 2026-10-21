@@ -550,7 +550,7 @@ it('still hides records that are neither threads nor annotations', function () {
     $this->getJson("/api/v3/discussions/{$log->id}")->assertNotFound();
 });
 
-/* ------------------------------------------------------------------ 术语讨论与锚点 */
+/* ------------------------------------------------------------------ 外挂术语与锚点 */
 
 it('lets only the sentence manager create a glossary topic, with the headword as title and an anchor', function () {
     $owner = makeStudio('owner');
