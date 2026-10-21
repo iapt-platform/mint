@@ -259,7 +259,8 @@ patch:
   description: |-
     只改传了的字段。title / status / type / severity 只对话题有效，回复传了 422。
     作者或对象的管理者（句子、逐词所在 channel 的编辑者，文章的编辑者）可改；
-    改 type 时回复跟着改，新类型不收原来的 severity 时 severity 清空。
+    改 type 时回复跟着改，新类型不收原来的 severity / 锚点时随之清空；
+    改成 glossary 须挂在句子上、且是该句的管理者。
     批注：没有 status，type 只能在 note / commentary 之间改（不能与评论线程互转），
     正文不能清空，可改锚点。
     改了内容（标题、正文、锚点）时 co_editor 跟着这次写入走：人亲自改则清空，AI 代改则换成该模型；
@@ -304,6 +305,7 @@ patch:
                 - qa
                 - help
                 - issue
+                - glossary
                 - note
                 - commentary
             severity:
@@ -317,19 +319,19 @@ patch:
                 - normal
             pos_start:
               type: integer
-              description: 锚点起始偏移（只限批注）
+              description: '锚点起始偏移（只限 note / commentary / issue / glossary）'
             pos_end:
               type: integer
-              description: 锚点结束偏移（只限批注）
+              description: '锚点结束偏移（只限 note / commentary / issue / glossary）'
             quote_exact:
               type: string
-              description: 锚定的原文片段（只限批注）
+              description: '锚定的原文片段（只限 note / commentary / issue / glossary）'
             quote_prefix:
               type: string
-              description: 锚定片段前的上下文（只限批注）
+              description: '锚定片段前的上下文（只限 note / commentary / issue / glossary）'
             quote_suffix:
               type: string
-              description: 锚定片段后的上下文（只限批注）
+              description: '锚定片段后的上下文（只限 note / commentary / issue / glossary）'
   responses:
     200:
       description: 成功
