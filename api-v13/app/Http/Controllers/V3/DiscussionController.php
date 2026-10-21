@@ -41,8 +41,8 @@ class DiscussionController extends Controller
      * 列出某个对象上的话题
      *
      * 只列话题（不含回复），删除了但还有回复的话题以墓碑出现（deleted_at 有值、内容为空）。
-     * 未登录看不到协作类话题（discussion / issue）；basic 角色在自己无权管理的对象上只看得到
-     * 自己发起的协作类话题。各状态的数量与「能发起哪些类型」见 `GET /v3/discussions/summary`。
+     * 未登录看不到不公开的话题（discussion）；basic 角色在自己无权管理的对象上只看得到
+     * 自己发起的不公开话题。各状态的数量与「能发起哪些类型」见 `GET /v3/discussions/summary`。
      * 不传 type 时只列评论线程（discussion / qa / help / issue），批注要显式 type=note / commentary。
      *
      * @unauthenticated

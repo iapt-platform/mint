@@ -48,8 +48,9 @@ use Illuminate\Validation\ValidationException;
  *
  * 可见性沿用 v2 `view=question` 的口径，但这里对列表、单条、回复一视同仁（v2 只在
  * 列表上做了这个判断）：
- * - 未登录看不到协作类话题（discussion / issue）；
- * - basic 角色在自己无权管理的对象上，只能看到自己发起的协作类话题。
+ * - 未登录看不到不公开的话题（discussion）；
+ * - basic 角色在自己无权管理的对象上，只能看到自己发起的不公开话题。
+ * issue 2026-10-21 起公开：它会注入阅读页（高亮 + 点击看内容），阅读页是公开且共享缓存的。
  *
  * TODO: 以下两项需要加列，2026-10-15 用户决定暂缓：
  * - qa 的「已回答」现在用 status=close 表示；社区通行做法是把某条回复标为答案
@@ -59,8 +60,11 @@ use Illuminate\Validation\ValidationException;
  */
 class DiscussionService
 {
-    /** 未登录用户看不到、basic 角色只能看自己的这几类话题 */
+    /** 登录即可发起的话题类型 */
     private const COLLABORATION_TYPES = ['discussion', 'issue'];
+
+    /** 不公开的话题类型：未登录用户看不到，basic 角色在无权管理的对象上只能看自己的 */
+    private const PRIVATE_TYPES = ['discussion'];
 
     /** 批注的锚点字段：定位到句子里的哪一段 */
     private const ANCHOR_FIELDS = ['pos_start', 'pos_end', 'quote_exact', 'quote_prefix', 'quote_suffix'];
@@ -169,10 +173,10 @@ class DiscussionService
                 }
             });
         if ($viewerUid === null) {
-            $query->whereNotIn('type', self::COLLABORATION_TYPES);
+            $query->whereNotIn('type', self::PRIVATE_TYPES);
         } elseif ($this->isBasic($viewerUid)) {
             $managed = $this->managedTargets($viewerUid, $idsByType->all());
-            $query->where(fn ($q) => $q->whereNotIn('type', self::COLLABORATION_TYPES)
+            $query->where(fn ($q) => $q->whereNotIn('type', self::PRIVATE_TYPES)
                 ->orWhere('editor_uid', $viewerUid)
                 ->orWhereIn('res_id', $managed));
         }
@@ -580,12 +584,12 @@ class DiscussionService
     private function applyVisibility(Builder $query, ?string $viewerUid, string $targetType, string $targetId): void
     {
         if ($viewerUid === null) {
-            $query->whereNotIn('type', self::COLLABORATION_TYPES);
+            $query->whereNotIn('type', self::PRIVATE_TYPES);
 
             return;
         }
         if ($this->isBasic($viewerUid) && ! $this->canManageTarget($viewerUid, $targetType, $targetId)) {
-            $query->where(fn ($q) => $q->whereNotIn('type', self::COLLABORATION_TYPES)
+            $query->where(fn ($q) => $q->whereNotIn('type', self::PRIVATE_TYPES)
                 ->orWhere('editor_uid', $viewerUid));
         }
     }
@@ -595,7 +599,7 @@ class DiscussionService
      */
     private function assertVisible(Discussion $topic, ?string $viewerUid): void
     {
-        if (! in_array($topic->type, self::COLLABORATION_TYPES, true)) {
+        if (! in_array($topic->type, self::PRIVATE_TYPES, true)) {
             return;
         }
         if ($viewerUid === null) {
