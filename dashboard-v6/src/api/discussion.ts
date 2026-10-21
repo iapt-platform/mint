@@ -60,6 +60,7 @@ export const THREAD_TYPES: readonly TDiscussionType[] = [
   "qa",
   "help",
   "issue",
+  "glossary",
 ];
 /** 严重程度（几种话题类型的并集，按类型拆分见 SEVERITY_OPTIONS） */
 export type TSeverity = NonNullable<TopicBody["severity"]>;

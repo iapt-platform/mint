@@ -7726,8 +7726,8 @@ export interface paths {
         /**
          * 列出某个对象上的话题
          * @description 只列话题（不含回复），删除了但还有回复的话题以墓碑出现（deleted_at 有值、内容为空）。
-         *     未登录看不到协作类话题（discussion / issue）；basic 角色在自己无权管理的对象上只看得到
-         *     自己发起的协作类话题。各状态的数量与「能发起哪些类型」见 `GET /v3/discussions/summary`。
+         *     未登录看不到不公开的话题（discussion）；basic 角色在自己无权管理的对象上只看得到
+         *     自己发起的不公开话题。各状态的数量与「能发起哪些类型」见 `GET /v3/discussions/summary`。
          *     不传 type 时只列评论线程（discussion / qa / help / issue），批注要显式 type=note / commentary。
          *
          *     实现：`V3\DiscussionController@index`
@@ -7741,7 +7741,10 @@ export interface paths {
          *     其它类型不收。默认会通知对象的作者（站内信 + webhook），`notify=false` 关闭。
          *     批注（note / commentary）只能加在句子上，且只有该句所在 channel 的编辑者能加；
          *     标题可省、正文必填，commentary 的正文必须是义注句子模板 `{{book-para-start-end}}`
-         *     （可多句并列）；可带锚点 pos_* / quote_*（评论线程传了 422）；不发通知。
+         *     （可多句并列）；可带锚点 pos_* / quote_*；不发通知。
+         *     glossary（术语讨论）是评论线程，title 必填、填术语词头；与批注一样只能挂在句子上、
+         *     只有该句所在 channel 的编辑者能发，对所有人公开可见。
+         *     锚点只有 note / commentary / issue / glossary 收，其它类型传了 422。
          *
          *     实现：`V3\DiscussionController@store`
          */
@@ -7765,8 +7768,8 @@ export interface paths {
          * 批量取讨论角标
          * @description 每个对象返回未关闭的评论线程数（total）与其中当前用户发起的数目（mine，未登录为 0），
          *     按请求顺序、一个不少（没有讨论的为 0）。只数评论线程（discussion / qa / help / issue），
-         *     批注与已删除的不算；可见性与列表相同：未登录不数协作类话题，basic 角色在无权管理的
-         *     对象上只数自己发起的协作类话题。最多 500 个对象。
+         *     批注与已删除的不算；可见性与列表相同：未登录不数不公开的话题（discussion），basic 角色在
+         *     无权管理的对象上只数自己发起的不公开话题。最多 500 个对象。
          *     与 v2 的区别：入参是对象 uid 而不是句子坐标；只给计数不给明细；v2 不分类型、不管可见性。
          *
          *     实现：`V3\DiscussionBatchCountController@__invoke`
@@ -7833,7 +7836,8 @@ export interface paths {
          * 修改话题或回复（局部更新）
          * @description 只改传了的字段。title / status / type / severity 只对话题有效，回复传了 422。
          *     作者或对象的管理者（句子、逐词所在 channel 的编辑者，文章的编辑者）可改；
-         *     改 type 时回复跟着改，新类型不收原来的 severity 时 severity 清空。
+         *     改 type 时回复跟着改，新类型不收原来的 severity 时 severity 清空（锚点保留，改回可带锚点的类型时恢复）；
+         *     改成 glossary 须挂在句子上、且是该句的管理者。
          *     批注：没有 status，type 只能在 note / commentary 之间改（不能与评论线程互转），
          *     正文不能清空，可改锚点。
          *     改了内容（标题、正文、锚点）时 co_editor 跟着这次写入走：人亲自改则清空，AI 代改则换成该模型；
@@ -34489,7 +34493,7 @@ export interface operations {
                 /** @description 挂靠对象的 uuid */
                 target_id: string;
                 /** @description 类型，不传则只列评论线程 */
-                type?: "discussion" | "qa" | "help" | "issue" | "note" | "commentary";
+                type?: "discussion" | "qa" | "help" | "issue" | "glossary" | "note" | "commentary";
                 /** @description 话题状态，不传则两种都要 */
                 status?: "active" | "close";
                 /**
@@ -34595,8 +34599,8 @@ export interface operations {
                      * @default discussion
                      * @enum {string}
                      */
-                    type?: "discussion" | "qa" | "help" | "issue" | "note" | "commentary";
-                    /** @description 标题，最长 256 字符；评论线程必填，批注可省 */
+                    type?: "discussion" | "qa" | "help" | "issue" | "glossary" | "note" | "commentary";
+                    /** @description 标题，最长 256 字符；评论线程必填（glossary 填术语词头），批注可省 */
                     title?: string;
                     /** @description 正文（markdown）；批注必填 */
                     content?: string;
@@ -34605,15 +34609,15 @@ export interface operations {
                      * @enum {string}
                      */
                     severity?: "error" | "warning" | "suggestion" | "urgent" | "normal";
-                    /** @description 批注锚点在句子文本中的起始偏移（只限批注） */
+                    /** @description 锚点在句子文本中的起始偏移（只限 note / commentary / issue / glossary） */
                     pos_start?: number;
-                    /** @description 批注锚点的结束偏移，批注插在这里（只限批注） */
+                    /** @description 锚点的结束偏移，批注插在这里（只限 note / commentary / issue / glossary） */
                     pos_end?: number;
-                    /** @description 锚定的原文片段（只限批注） */
+                    /** @description 锚定的原文片段（只限 note / commentary / issue / glossary） */
                     quote_exact?: string;
-                    /** @description 锚定片段前的上下文，用于重新定位（只限批注） */
+                    /** @description 锚定片段前的上下文，用于重新定位（只限 note / commentary / issue / glossary） */
                     quote_prefix?: string;
-                    /** @description 锚定片段后的上下文，用于重新定位（只限批注） */
+                    /** @description 锚定片段后的上下文，用于重新定位（只限 note / commentary / issue / glossary） */
                     quote_suffix?: string;
                     /** @description 话题模板（文章）的 uuid */
                     tpl_id?: string;
@@ -34813,7 +34817,7 @@ export interface operations {
                 /** @description 挂靠对象的 uuid */
                 target_id: string;
                 /** @description 只数这种类型，不传则只数评论线程 */
-                type?: "discussion" | "qa" | "help" | "issue" | "note" | "commentary";
+                type?: "discussion" | "qa" | "help" | "issue" | "glossary" | "note" | "commentary";
             };
             header?: never;
             path?: never;
@@ -35029,21 +35033,21 @@ export interface operations {
                      * @description 类型（只限话题；评论线程与批注不能互转）
                      * @enum {string}
                      */
-                    type?: "discussion" | "qa" | "help" | "issue" | "note" | "commentary";
+                    type?: "discussion" | "qa" | "help" | "issue" | "glossary" | "note" | "commentary";
                     /**
                      * @description 严重程度（只限话题），null 表示清空
                      * @enum {string}
                      */
                     severity?: "error" | "warning" | "suggestion" | "urgent" | "normal";
-                    /** @description 锚点起始偏移（只限批注） */
+                    /** @description 锚点起始偏移（只限 note / commentary / issue / glossary） */
                     pos_start?: number;
-                    /** @description 锚点结束偏移（只限批注） */
+                    /** @description 锚点结束偏移（只限 note / commentary / issue / glossary） */
                     pos_end?: number;
-                    /** @description 锚定的原文片段（只限批注） */
+                    /** @description 锚定的原文片段（只限 note / commentary / issue / glossary） */
                     quote_exact?: string;
-                    /** @description 锚定片段前的上下文（只限批注） */
+                    /** @description 锚定片段前的上下文（只限 note / commentary / issue / glossary） */
                     quote_prefix?: string;
-                    /** @description 锚定片段后的上下文（只限批注） */
+                    /** @description 锚定片段后的上下文（只限 note / commentary / issue / glossary） */
                     quote_suffix?: string;
                 };
             };

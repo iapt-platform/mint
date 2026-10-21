@@ -157,6 +157,9 @@ const DiscussionShowWidget = ({
       case "convert_issue":
         convert("issue");
         break;
+      case "convert_glossary":
+        convert("glossary");
+        break;
       case "delete":
         if (data.id && data.resId) {
           showDeleteConfirm(data.id, data.resId, data.title ?? "");
@@ -229,6 +232,11 @@ const DiscussionShowWidget = ({
           disabled: data.type === "discussion",
         },
         { key: "convert_issue", label: "issue", disabled: data.type === "issue" },
+        {
+          key: "convert_glossary",
+          label: "glossary",
+          disabled: data.type === "glossary",
+        },
       ],
     },
     {
