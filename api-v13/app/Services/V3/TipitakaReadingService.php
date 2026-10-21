@@ -57,14 +57,14 @@ class TipitakaReadingService
             : min($pageSize, self::MAX_PARAGRAPHS_PER_PAGE);
 
         $candidates = (clone $scope)
-            ->when($filters['after'] ?? null, fn(Builder $q, string $after) => $this->applyCursor($q, $after))
+            ->when($filters['after'] ?? null, fn (Builder $q, string $after) => $this->applyCursor($q, $after))
             ->distinct()
             ->select(['book_id', 'paragraph'])
             ->orderBy('book_id')
             ->orderBy('paragraph')
             ->limit($want + 1)
             ->get()
-            ->map(fn($row) => ['book' => (int) $row->book_id, 'para' => (int) $row->paragraph])
+            ->map(fn ($row) => ['book' => (int) $row->book_id, 'para' => (int) $row->paragraph])
             ->all();
 
         $hasMoreBeyondWant = count($candidates) > $want;
@@ -143,11 +143,13 @@ class TipitakaReadingService
     }
 
     /**
-     * 章节起始段落号 → 段落闭区间，长度取 pali_texts 那一行的 chapter_len。
+     * 章节起始段落号 → 段落闭区间，长度取 pali_texts 那一行的 chapter_len。章节不存在 404。
+     *
+     * 公开给按章节取别的东西的 v3 端点共用（`tipitaka-discussions`），口径一致。
      *
      * @return array{int, int}
      */
-    private function chapterRange(int $book, int $chapter): array
+    public function chapterRange(int $book, int $chapter): array
     {
         $head = PaliText::where('book', $book)->where('paragraph', $chapter)->first();
         if (! $head) {
@@ -240,7 +242,7 @@ class TipitakaReadingService
             return [];
         }
 
-        $countIn = fn(Builder $q): int => (int) (
+        $countIn = fn (Builder $q): int => (int) (
             $q->selectRaw('count(distinct (book_id, paragraph)) as aggregate')->first()?->aggregate ?? 0
         );
 

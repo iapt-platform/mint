@@ -43,7 +43,8 @@ class DiscussionController extends Controller
      * 只列话题（不含回复），删除了但还有回复的话题以墓碑出现（deleted_at 有值、内容为空）。
      * 未登录看不到不公开的话题（discussion）；basic 角色在自己无权管理的对象上只看得到
      * 自己发起的不公开话题。各状态的数量与「能发起哪些类型」见 `GET /v3/discussions/summary`。
-     * 不传 type 时只列评论线程（discussion / qa / help / issue），批注要显式 type=note / commentary。
+     * 不传 type 时只列评论线程（discussion / qa / help / issue / glossary），批注要显式 type=note / commentary。
+     * 要一段经文（一章、一段段落区间）里的全部话题，用 `GET /v3/tipitaka-discussions/{channel}`。
      *
      * @unauthenticated
      *

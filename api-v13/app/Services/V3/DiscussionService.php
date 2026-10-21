@@ -84,6 +84,7 @@ class DiscussionService
     public function __construct(
         private readonly UserService $users,
         private readonly AgentGrantService $grants,
+        private readonly TipitakaReadingService $reading,
     ) {}
 
     /**
@@ -108,6 +109,86 @@ class DiscussionService
         $query->orderBy(ltrim($sort, '-'), str_starts_with($sort, '-') ? 'desc' : 'asc');
 
         $page = $query->paginate($perPage);
+        $this->decorate($page->getCollection(), $viewerUid);
+
+        return $page;
+    }
+
+    /**
+     * 某个 channel 的一段经文（整个 channel / 一本书 / 一章 / 一段段落区间）里，挂在句子上的话题。
+     *
+     * 与 {@see self::listTopics()} 同一套口径（类型过滤、墓碑、可见性），区别只在范围：那边是
+     * 一个对象，这边是一批句子，所以每条多带所在句子的坐标（`sentence_*` 属性），按经文顺序
+     * （书、段、句起始词）排列，同一句里按时间。
+     *
+     * `discussions.res_id` 是 uuid、`sentences.uid` 是 varchar，pgsql 不会隐式转换，所以关联时
+     * 把 res_id 转成文本；不转 sentences 那边，免得遇到不是 uuid 格式的旧句子 uid 整条查询报错。
+     *
+     * @param  array{book?: int, chapter?: int, para?: int, to?: int, type?: string, status?: string, severity?: string}  $filters
+     * @return LengthAwarePaginator<int, Discussion>
+     */
+    public function listInChannel(string $channel, array $filters, ?string $viewerUid, int $perPage): LengthAwarePaginator
+    {
+        $this->resetCache();
+        $query = Discussion::withTrashed()
+            ->select('discussions.*')
+            ->addSelect([
+                's.book_id as sentence_book',
+                's.paragraph as sentence_paragraph',
+                's.word_start as sentence_word_start',
+                's.word_end as sentence_word_end',
+            ])
+            // 用 join 不用 belongsTo + whereHas：要按句子的 channel / 范围过滤、按经文顺序排序，
+            // 关联做不到排序；而且 whereHas 拼出的 `sentences.uid = discussions.res_id` 没处插
+            // ::text，pgsql 直接报 varchar = uuid。坐标顺带从这里取，不必再预加载一次
+            ->join('sentences as s', fn ($join) => $join->on(DB::raw('discussions.res_id::text'), '=', 's.uid'))
+            ->where('discussions.res_type', 'sentence')
+            ->where('s.channel_uid', $channel)
+            ->whereNull('s.deleted_at')
+            ->whereNull('discussions.parent')
+            // 删了的话题只有还挂着回复时才留下（墓碑），同 topicQuery()
+            ->where(fn ($q) => $q->whereNull('discussions.deleted_at')
+                ->orWhereExists(fn ($sub) => $sub->select(DB::raw(1))
+                    ->from('discussions as r')
+                    ->whereColumn('r.parent', 'discussions.id')
+                    ->whereNull('r.deleted_at')))
+            ->when($filters['status'] ?? null, fn ($q, $value) => $q->where('discussions.status', $value))
+            ->when($filters['severity'] ?? null, fn ($q, $value) => $q->whereIn('discussions.severity', explode(',', $value)))
+            ->with(self::relations())
+            ->withCount('replies as reply_count');
+
+        $types = isset($filters['type']) ? explode(',', $filters['type']) : Discussion::THREAD_TYPES;
+        $query->whereIn('discussions.type', $types);
+
+        if (isset($filters['book'])) {
+            $book = (int) $filters['book'];
+            $query->where('s.book_id', $book);
+            if (isset($filters['chapter'])) {
+                $query->whereBetween('s.paragraph', $this->reading->chapterRange($book, (int) $filters['chapter']));
+            } elseif (isset($filters['para'])) {
+                $from = (int) $filters['para'];
+                $to = (int) ($filters['to'] ?? $from);
+                if ($to < $from) {
+                    throw ValidationException::withMessages(['to' => __('site.invalid_parameter')]);
+                }
+                $query->whereBetween('s.paragraph', [$from, $to]);
+            }
+        }
+
+        // 可见性同 applyVisibility()：一个 channel 里的句子管理者是同一批人，按 channel 判一次
+        if ($viewerUid === null) {
+            $query->whereNotIn('discussions.type', self::PRIVATE_TYPES);
+        } elseif ($this->isBasic($viewerUid) && ! in_array($channel, $this->editableChannels($viewerUid), true)) {
+            $query->where(fn ($q) => $q->whereNotIn('discussions.type', self::PRIVATE_TYPES)
+                ->orWhere('discussions.editor_uid', $viewerUid));
+        }
+
+        $page = $query
+            ->orderBy('s.book_id')
+            ->orderBy('s.paragraph')
+            ->orderBy('s.word_start')
+            ->orderBy('discussions.created_at')
+            ->paginate($perPage);
         $this->decorate($page->getCollection(), $viewerUid);
 
         return $page;

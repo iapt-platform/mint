@@ -22,6 +22,9 @@ use Illuminate\Http\Request;
  * **本类不查库。** 编辑者从预加载的 `user` / `aiModel` / `coEditor` 关系上取；权限与正文渲染
  * 由 {@see DiscussionService} 算好挂在模型的 `abilities` / `rendered` 属性上。
  *
+ * `sentence` 只在按经文范围列出时有（`GET /v3/tipitaka-discussions/{channel}`）：所在句子的坐标，
+ * 由查询顺带取出（`sentence_*` 属性），本类不另查。
+ *
  * 字段名改了两处（v2 → v3）：res_type / res_id → target_type / target_id，
  * parent → parent_id；children_count → reply_count（只有话题有）。
  *
@@ -53,6 +56,7 @@ class DiscussionResource extends BaseResource
      *     quote_prefix: string|null,
      *     quote_suffix: string|null,
      *     reply_count?: int,
+     *     sentence?: array{book: int, paragraph: int, word_start: int, word_end: int},
      *     editor: array{id: string, nickName: string, userName: string, realName: string, sn: int, avatar: string|null, roles: array|null}|null,
      *     co_editor: array{id: string, nickName: string, userName: string, realName: string, sn: int, avatar: string|null, roles: array|null}|null,
      *     abilities: array{update: bool, delete: bool, close: bool, reply: bool},
@@ -85,6 +89,12 @@ class DiscussionResource extends BaseResource
             'quote_prefix' => $tombstone ? null : $this->quote_prefix,
             'quote_suffix' => $tombstone ? null : $this->quote_suffix,
             'reply_count' => $this->when($this->parent === null, fn () => (int) $this->reply_count),
+            'sentence' => $this->when(isset($this->sentence_book), fn () => [
+                'book' => (int) $this->sentence_book,
+                'paragraph' => (int) $this->sentence_paragraph,
+                'word_start' => (int) $this->sentence_word_start,
+                'word_end' => (int) $this->sentence_word_end,
+            ]),
             'editor' => $this->actor($this->user, $this->aiModel),
             // AI 代写时的模型；人类自己写的、存量数据都为 null
             'co_editor' => $this->coEditor ? $this->actor(null, $this->coEditor) : null,
