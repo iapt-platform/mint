@@ -1,10 +1,13 @@
 // resources/js/modules/reader.js
 
+import { initIssueMarkers } from './issue-popover.js';
+
 export function initReader() {
     applyAnnotationMode();
     numberAnnotations();
     injectCommentaryMarkers();
     injectEvaluateMarkers();
+    initIssueMarkers();
     initTocToggle();
     initHashScroll();
     initAnnotationMode();

@@ -18,6 +18,31 @@
 {{-- 术语抽屉 --}}
 <x-wiki.term-drawer />
 
+{{-- issue 抽屉（手机端）：点击正文里的 issue 高亮 / 句尾图标时由 reader.js 填充；
+     桌面端用 popover，文案同样取自 data-i18n --}}
+<div class="offcanvas offcanvas-bottom"
+    tabindex="-1"
+    id="annoIssueDrawer"
+    aria-labelledby="annoIssueDrawerLabel"
+    data-i18n="{{ json_encode([
+        'title' => __('library.issue_title'),
+        'loading' => __('library.issue_loading'),
+        'failed' => __('library.issue_load_failed'),
+        'notFound' => __('library.issue_not_found'),
+        'replies' => __('library.issue_replies'),
+        'severity' => [
+            'error' => __('library.issue_severity_error'),
+            'warning' => __('library.issue_severity_warning'),
+            'suggestion' => __('library.issue_severity_suggestion'),
+        ],
+    ], JSON_UNESCAPED_UNICODE) }}">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="annoIssueDrawerLabel">{{ __('library.issue_title') }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body anno-issue-list"></div>
+</div>
+
 {{-- Navbar --}}
 <header class="navbar navbar-expand-md navbar-light d-print-none">
     <div class="container-xl">

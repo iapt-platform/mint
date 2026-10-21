@@ -427,3 +427,76 @@ article.reader-body .centered {
 article.reader-body .centered .para-block {
     margin-bottom: 1.5em;
 }
+
+/* ══════════════════════════════════════════
+   八、issue 标注
+   PaliContentService::injectAnnotationNotes 注入：有位置的 issue 是 span.anno-issue（高亮原文），
+   没有位置的是句尾的 span.anno-issue-mark（三角叹号图标）。颜色按 severity：
+   error 红、warning 橙、suggestion 蓝，没有 severity 的灰。点击由 reader.js 弹出内容。
+   与 .evaluate-*（整块底色）区分：这里用波浪下划线 + 淡底色。
+   ══════════════════════════════════════════ */
+
+article.reader-body .anno-issue-error      { --anno-issue-color: var(--tblr-danger); }
+article.reader-body .anno-issue-warning    { --anno-issue-color: var(--tblr-warning); }
+article.reader-body .anno-issue-suggestion { --anno-issue-color: var(--tblr-info); }
+article.reader-body .anno-issue-none       { --anno-issue-color: var(--tblr-secondary); }
+
+article.reader-body span.anno-issue {
+    cursor: pointer;
+    text-decoration: underline wavy var(--anno-issue-color);
+    text-decoration-skip-ink: none;
+    text-underline-offset: 0.25em;
+    background-color: color-mix(in srgb, var(--anno-issue-color) 12%, transparent);
+    border-radius: 2px;
+}
+article.reader-body span.anno-issue:hover,
+article.reader-body span.anno-issue.is-active {
+    background-color: color-mix(in srgb, var(--anno-issue-color) 26%, transparent);
+}
+
+article.reader-body span.anno-issue-mark {
+    cursor: pointer;
+    margin-left: 0.15em;
+    color: var(--anno-issue-color);
+    font-size: 0.95em;
+    vertical-align: -0.05em;
+}
+article.reader-body span.anno-issue-mark:hover,
+article.reader-body span.anno-issue-mark.is-active {
+    filter: brightness(0.85);
+}
+
+/* 弹出层：桌面 popover 与手机抽屉共用的条目样式 */
+.anno-issue-list {
+    max-height: 60vh;
+    overflow-y: auto;
+}
+.anno-issue-item + .anno-issue-item {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--tblr-border-color);
+}
+.anno-issue-item-head {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 600;
+}
+.anno-issue-item-head .ti {
+    color: var(--anno-issue-color, var(--tblr-secondary));
+}
+.anno-issue-item-body {
+    margin-top: 0.25rem;
+    white-space: pre-line;
+}
+.anno-issue-item-meta {
+    margin-top: 0.25rem;
+    font-size: 0.8125rem;
+    color: var(--tblr-secondary);
+}
+.anno-issue-popover {
+    --bs-popover-max-width: 22rem;
+}
+.anno-issue-item.anno-issue-error      { --anno-issue-color: var(--tblr-danger); }
+.anno-issue-item.anno-issue-warning    { --anno-issue-color: var(--tblr-warning); }
+.anno-issue-item.anno-issue-suggestion { --anno-issue-color: var(--tblr-info); }
