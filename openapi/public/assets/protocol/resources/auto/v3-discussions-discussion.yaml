@@ -259,7 +259,7 @@ patch:
   description: |-
     只改传了的字段。title / status / type / severity 只对话题有效，回复传了 422。
     作者或对象的管理者（句子、逐词所在 channel 的编辑者，文章的编辑者）可改；
-    改 type 时回复跟着改，新类型不收原来的 severity / 锚点时随之清空；
+    改 type 时回复跟着改，新类型不收原来的 severity 时 severity 清空（锚点保留，改回可带锚点的类型时恢复）；
     改成 glossary 须挂在句子上、且是该句的管理者。
     批注：没有 status，type 只能在 note / commentary 之间改（不能与评论线程互转），
     正文不能清空，可改锚点。
