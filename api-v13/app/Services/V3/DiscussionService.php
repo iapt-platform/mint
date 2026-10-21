@@ -39,6 +39,9 @@ use Illuminate\Validation\ValidationException;
  * - 其他用户可以回复；没有开关状态，不能与评论线程互转；新建批注不发通知；
  * - 列表与统计不带 type 时只算评论线程，要批注须显式 type=note / commentary。
  *
+ * glossary 是评论线程（有回复和开关），但像批注一样只能挂在句子上、只有该句的管理者能发起，
+ * 对所有人公开可见。锚点除批注外，issue 与 glossary 也收（{@see Discussion::ANCHORED_TYPES}）。
+ *
  * 写入方（`$actor`）由 {@see AgentGrantService::actor()} 给出：人类直接写，或 AI 模型凭人类
  * 授权代写。代写时 editor 是授权人、co_editor 是模型，权限一律按 editor 判，
  * 而且只能写授权覆盖的 channel / book 里的东西。
@@ -333,7 +336,9 @@ class DiscussionService
     /**
      * 局部更新。title / status / type / severity 只对话题有效。
      *
-     * 改 type 时回复跟着改；新类型不收原来的 severity 时，severity 清空。
+     * 改 type 时回复跟着改；新类型不收原来的 severity 时，severity 清空。锚点不清：
+     * 留着不显示也不影响校验，改回可带锚点的类型时位置自动恢复。
+     * 改成 glossary 须挂在句子上、且当前用户是该句的管理者（同新建）。
      * 批注：锚点可改，没有 status，type 只能在 note / commentary 之间改，
      * 正文不能清空，commentary 的正文必须是义注句子模板（按改后的 type 与正文判）。
      *
@@ -366,6 +371,9 @@ class DiscussionService
         }
 
         $type = $data['type'] ?? $discussion->type;
+        if ($type === Discussion::TYPE_GLOSSARY && $discussion->type !== Discussion::TYPE_GLOSSARY) {
+            $this->assertCanBecomeGlossary($discussion, $userUid);
+        }
         if (array_key_exists('severity', $data)) {
             if ($data['severity'] !== null && ! in_array($data['severity'], Discussion::SEVERITIES[$type] ?? [], true)) {
                 throw ValidationException::withMessages(['severity' => __('messages.discussion_severity_not_allowed')]);
@@ -509,11 +517,12 @@ class DiscussionService
             && in_array($data['type'], Discussion::INJECTED_TYPES, true) !== $isAnnotation) {
             $errors['type'] = __('messages.discussion_type_group');
         }
-        if (! $isAnnotation) {
+        if (! in_array($data['type'] ?? $discussion->type, Discussion::ANCHORED_TYPES, true)) {
             foreach (array_intersect(self::ANCHOR_FIELDS, array_keys($data)) as $field) {
                 $errors[$field] = __('messages.discussion_anchor_thread');
             }
-        } else {
+        }
+        if ($isAnnotation) {
             if (array_key_exists('status', $data)) {
                 $errors['status'] = __('messages.discussion_annotation_no_status');
             }
@@ -527,6 +536,19 @@ class DiscussionService
         }
         if ($errors !== []) {
             throw ValidationException::withMessages($errors);
+        }
+    }
+
+    /**
+     * 话题改成 glossary：与新建同口径，只能挂在句子上、只有该句的管理者能改。
+     */
+    private function assertCanBecomeGlossary(Discussion $discussion, string $userUid): void
+    {
+        if ($discussion->res_type !== 'sentence') {
+            throw ValidationException::withMessages(['type' => __('messages.discussion_glossary_target')]);
+        }
+        if (! $this->canManageTarget($userUid, $discussion->res_type, $discussion->res_id)) {
+            abort(403, __('messages.discussion_forbidden'));
         }
     }
 
@@ -600,8 +622,8 @@ class DiscussionService
      * 当前用户能在这个对象上发起哪些类型的话题。
      *
      * 协作类（discussion / issue）登录即可；qa / help 沿用 v2 `can_create` 的口径：
-     * 只能发在文章上，而且只有文章的编辑者能发；批注（note / commentary）只能加在句子上，
-     * 而且只有该句的管理者能加（v2 登录即可，v3 收紧）。
+     * 只能发在文章上，而且只有文章的编辑者能发；批注（note / commentary）与 glossary 只能加在
+     * 句子上，而且只有该句的管理者能加（v2 登录即可，v3 收紧）。
      *
      * @return list<string>
      */
@@ -616,7 +638,7 @@ class DiscussionService
         }
         // 批注注入阅读页、所有读者可见，只有该句的管理者能加
         if ($targetType === 'sentence' && $this->canManageTarget($userUid, $targetType, $targetId)) {
-            array_push($types, Discussion::TYPE_NOTE, Discussion::TYPE_COMMENTARY);
+            array_push($types, Discussion::TYPE_GLOSSARY, Discussion::TYPE_NOTE, Discussion::TYPE_COMMENTARY);
         }
 
         return $types;

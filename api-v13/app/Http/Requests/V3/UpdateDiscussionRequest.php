@@ -11,7 +11,7 @@ use Illuminate\Validation\Rule;
  *
  * title / status / type / severity 只对话题有效，回复传了 422——这一条与
  * severity 是否匹配最终 type，都要看库里那条记录，在 Service 里判。
- * 批注相关的规则（锚点只有批注收、commentary 正文格式、不能与评论线程互转、没有 status）
+ * 批注相关的规则（锚点只有可锚定的类型收、commentary 正文格式、不能与评论线程互转、没有 status）
  * 同样取决于那条记录的类型，也在 Service 里判。
  */
 class UpdateDiscussionRequest extends FormRequest

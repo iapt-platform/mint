@@ -49,7 +49,7 @@ class DiscussionController extends Controller
      *
      * @queryParam target_type string required 挂靠对象的类型。Enum: sentence,wbw,article,term,task
      * @queryParam target_id string required 挂靠对象的 uuid
-     * @queryParam type string 类型，不传则只列评论线程。Enum: discussion,qa,help,issue,note,commentary
+     * @queryParam type string 类型，不传则只列评论线程。Enum: discussion,qa,help,issue,glossary,note,commentary
      * @queryParam status string 话题状态，不传则两种都要。Enum: active,close
      * @queryParam severity string 严重程度，逗号分隔多选。Example: error,warning
      * @queryParam sort string 排序，前缀 - 表示倒序。Enum: created_at,-created_at,updated_at,-updated_at Default: -created_at
@@ -74,22 +74,26 @@ class DiscussionController extends Controller
      *
      * 批注（note / commentary）只能加在句子上，且只有该句所在 channel 的编辑者能加；
      * 标题可省、正文必填，commentary 的正文必须是义注句子模板 `{{book-para-start-end}}`
-     * （可多句并列）；可带锚点 pos_* / quote_*（评论线程传了 422）；不发通知。
+     * （可多句并列）；可带锚点 pos_* / quote_*；不发通知。
+     *
+     * glossary（术语讨论）是评论线程，title 必填、填术语词头；与批注一样只能挂在句子上、
+     * 只有该句所在 channel 的编辑者能发，对所有人公开可见。
+     * 锚点只有 note / commentary / issue / glossary 收，其它类型传了 422。
      *
      * @responseStatus 201 创建成功
      * @responseStatus 403 当前用户不能在这个对象上发起这种类型的话题
      *
      * @bodyParam target_type string required 挂靠对象的类型。Enum: sentence,wbw,article,term,task
      * @bodyParam target_id string required 挂靠对象的 uuid
-     * @bodyParam type string 类型。Enum: discussion,qa,help,issue,note,commentary Default: discussion
-     * @bodyParam title string 标题，最长 256 字符；评论线程必填，批注可省
+     * @bodyParam type string 类型。Enum: discussion,qa,help,issue,glossary,note,commentary Default: discussion
+     * @bodyParam title string 标题，最长 256 字符；评论线程必填（glossary 填术语词头），批注可省
      * @bodyParam content string 正文（markdown）；批注必填
      * @bodyParam severity string 严重程度。Enum: error,warning,suggestion,urgent,normal
-     * @bodyParam pos_start integer 批注锚点在句子文本中的起始偏移（只限批注）
-     * @bodyParam pos_end integer 批注锚点的结束偏移，批注插在这里（只限批注）
-     * @bodyParam quote_exact string 锚定的原文片段（只限批注）
-     * @bodyParam quote_prefix string 锚定片段前的上下文，用于重新定位（只限批注）
-     * @bodyParam quote_suffix string 锚定片段后的上下文，用于重新定位（只限批注）
+     * @bodyParam pos_start integer 锚点在句子文本中的起始偏移（只限 note / commentary / issue / glossary）
+     * @bodyParam pos_end integer 锚点的结束偏移，批注插在这里（只限 note / commentary / issue / glossary）
+     * @bodyParam quote_exact string 锚定的原文片段（只限 note / commentary / issue / glossary）
+     * @bodyParam quote_prefix string 锚定片段前的上下文，用于重新定位（只限 note / commentary / issue / glossary）
+     * @bodyParam quote_suffix string 锚定片段后的上下文，用于重新定位（只限 note / commentary / issue / glossary）
      * @bodyParam tpl_id string 话题模板（文章）的 uuid
      * @bodyParam notify boolean 是否发通知（批注不发）。Default: true
      */
@@ -126,7 +130,8 @@ class DiscussionController extends Controller
      *
      * 只改传了的字段。title / status / type / severity 只对话题有效，回复传了 422。
      * 作者或对象的管理者（句子、逐词所在 channel 的编辑者，文章的编辑者）可改；
-     * 改 type 时回复跟着改，新类型不收原来的 severity 时 severity 清空。
+     * 改 type 时回复跟着改，新类型不收原来的 severity 时 severity 清空（锚点保留，改回可带锚点的类型时恢复）；
+     * 改成 glossary 须挂在句子上、且是该句的管理者。
      * 批注：没有 status，type 只能在 note / commentary 之间改（不能与评论线程互转），
      * 正文不能清空，可改锚点。
      * 改了内容（标题、正文、锚点）时 co_editor 跟着这次写入走：人亲自改则清空，AI 代改则换成该模型；
@@ -139,13 +144,13 @@ class DiscussionController extends Controller
      * @bodyParam title string 标题（只限话题）
      * @bodyParam content string 正文（markdown）
      * @bodyParam status string 状态（只限话题）。Enum: active,close
-     * @bodyParam type string 类型（只限话题；评论线程与批注不能互转）。Enum: discussion,qa,help,issue,note,commentary
+     * @bodyParam type string 类型（只限话题；评论线程与批注不能互转）。Enum: discussion,qa,help,issue,glossary,note,commentary
      * @bodyParam severity string 严重程度（只限话题），null 表示清空。Enum: error,warning,suggestion,urgent,normal
-     * @bodyParam pos_start integer 锚点起始偏移（只限批注）
-     * @bodyParam pos_end integer 锚点结束偏移（只限批注）
-     * @bodyParam quote_exact string 锚定的原文片段（只限批注）
-     * @bodyParam quote_prefix string 锚定片段前的上下文（只限批注）
-     * @bodyParam quote_suffix string 锚定片段后的上下文（只限批注）
+     * @bodyParam pos_start integer 锚点起始偏移（只限 note / commentary / issue / glossary）
+     * @bodyParam pos_end integer 锚点结束偏移（只限 note / commentary / issue / glossary）
+     * @bodyParam quote_exact string 锚定的原文片段（只限 note / commentary / issue / glossary）
+     * @bodyParam quote_prefix string 锚定片段前的上下文（只限 note / commentary / issue / glossary）
+     * @bodyParam quote_suffix string 锚定片段后的上下文（只限 note / commentary / issue / glossary）
      */
     public function update(UpdateDiscussionRequest $request, Discussion $discussion)
     {

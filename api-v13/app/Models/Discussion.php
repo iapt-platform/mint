@@ -71,14 +71,23 @@ class Discussion extends Model
     /** 会被注入阅读页的批注类型 */
     public const INJECTED_TYPES = [self::TYPE_COMMENTARY, self::TYPE_NOTE];
 
+    /** 术语讨论：针对句子里某个词的译法提问或建议，带锚点、只能挂在句子上 */
+    public const TYPE_GLOSSARY = 'glossary';
+
     /** 评论线程：话题 + 一层回复，有开关状态 */
-    public const THREAD_TYPES = ['discussion', 'qa', 'help', 'issue'];
+    public const THREAD_TYPES = ['discussion', 'qa', 'help', 'issue', self::TYPE_GLOSSARY];
+
+    /** 可以带锚点（pos_* / quote_*）、定位到句子文本某一段的类型：批注 + issue / glossary */
+    public const ANCHORED_TYPES = [self::TYPE_COMMENTARY, self::TYPE_NOTE, 'issue', self::TYPE_GLOSSARY];
+
+    /** 只能挂在句子上的类型：批注 + glossary */
+    public const SENTENCE_ONLY_TYPES = [self::TYPE_COMMENTARY, self::TYPE_NOTE, self::TYPE_GLOSSARY];
 
     /**
      * `/v3/discussions` 管的全部类型：评论线程（{@see self::THREAD_TYPES}）+ 批注
      * （{@see self::INJECTED_TYPES}）。批注锚定在句子的某个位置、注入阅读页，没有回复和开关。
      */
-    public const COMMENT_TYPES = ['discussion', 'qa', 'help', 'issue', 'note', 'commentary'];
+    public const COMMENT_TYPES = ['discussion', 'qa', 'help', 'issue', 'glossary', 'note', 'commentary'];
 
     /** 各类型允许的 severity 取值；不在表里的类型不允许设 severity */
     public const SEVERITIES = [

@@ -10,8 +10,8 @@ use Illuminate\Http\Request;
 /**
  * 一条评论：话题（parent_id 为 null）或回复；或一条批注（note / commentary）。
  *
- * 批注带锚点（pos_start / pos_end / quote_*），指明它挂在句子文本的哪一段；
- * 评论线程的这几个字段恒为 null。
+ * 批注与 issue / glossary 可带锚点（pos_start / pos_end / quote_*），指明它挂在句子文本的
+ * 哪一段；其它评论线程的这几个字段为 null。glossary 的 title 是术语词头。
  *
  * 删除了但还挂着回复的话题以「墓碑」出现：deleted_at 有值，title / content 为 null，
  * 回复照常可读（与 Google Drive 的 comments.deleted、GitHub 的 deletedAt 同一做法）。
