@@ -76,6 +76,7 @@ class GetApiV3Discussions200ResponseDataInner implements ModelInterface, ArrayAc
         'quote_prefix' => 'string',
         'quote_suffix' => 'string',
         'reply_count' => 'int',
+        'sentence' => '\WikipaliApi\Model\GetApiV3Discussions200ResponseDataInnerSentence',
         'editor' => '\WikipaliApi\Model\GetApiV3Discussions200ResponseDataInnerEditor',
         'co_editor' => '\WikipaliApi\Model\GetApiV3Discussions200ResponseDataInnerEditor',
         'abilities' => '\WikipaliApi\Model\GetApiV3Discussions200ResponseDataInnerAbilities',
@@ -111,6 +112,7 @@ class GetApiV3Discussions200ResponseDataInner implements ModelInterface, ArrayAc
         'quote_prefix' => null,
         'quote_suffix' => null,
         'reply_count' => null,
+        'sentence' => null,
         'editor' => null,
         'co_editor' => null,
         'abilities' => null,
@@ -144,6 +146,7 @@ class GetApiV3Discussions200ResponseDataInner implements ModelInterface, ArrayAc
         'quote_prefix' => true,
         'quote_suffix' => true,
         'reply_count' => false,
+        'sentence' => false,
         'editor' => true,
         'co_editor' => true,
         'abilities' => false,
@@ -257,6 +260,7 @@ class GetApiV3Discussions200ResponseDataInner implements ModelInterface, ArrayAc
         'quote_prefix' => 'quote_prefix',
         'quote_suffix' => 'quote_suffix',
         'reply_count' => 'reply_count',
+        'sentence' => 'sentence',
         'editor' => 'editor',
         'co_editor' => 'co_editor',
         'abilities' => 'abilities',
@@ -290,6 +294,7 @@ class GetApiV3Discussions200ResponseDataInner implements ModelInterface, ArrayAc
         'quote_prefix' => 'setQuotePrefix',
         'quote_suffix' => 'setQuoteSuffix',
         'reply_count' => 'setReplyCount',
+        'sentence' => 'setSentence',
         'editor' => 'setEditor',
         'co_editor' => 'setCoEditor',
         'abilities' => 'setAbilities',
@@ -323,6 +328,7 @@ class GetApiV3Discussions200ResponseDataInner implements ModelInterface, ArrayAc
         'quote_prefix' => 'getQuotePrefix',
         'quote_suffix' => 'getQuoteSuffix',
         'reply_count' => 'getReplyCount',
+        'sentence' => 'getSentence',
         'editor' => 'getEditor',
         'co_editor' => 'getCoEditor',
         'abilities' => 'getAbilities',
@@ -407,6 +413,7 @@ class GetApiV3Discussions200ResponseDataInner implements ModelInterface, ArrayAc
         $this->setIfExists('quote_prefix', $data ?? [], null);
         $this->setIfExists('quote_suffix', $data ?? [], null);
         $this->setIfExists('reply_count', $data ?? [], null);
+        $this->setIfExists('sentence', $data ?? [], null);
         $this->setIfExists('editor', $data ?? [], null);
         $this->setIfExists('co_editor', $data ?? [], null);
         $this->setIfExists('abilities', $data ?? [], null);
@@ -1036,6 +1043,33 @@ class GetApiV3Discussions200ResponseDataInner implements ModelInterface, ArrayAc
             throw new \InvalidArgumentException('non-nullable reply_count cannot be null');
         }
         $this->container['reply_count'] = $reply_count;
+
+        return $this;
+    }
+
+    /**
+     * Gets sentence
+     *
+     * @return \WikipaliApi\Model\GetApiV3Discussions200ResponseDataInnerSentence|null
+     */
+    public function getSentence()
+    {
+        return $this->container['sentence'];
+    }
+
+    /**
+     * Sets sentence
+     *
+     * @param \WikipaliApi\Model\GetApiV3Discussions200ResponseDataInnerSentence|null $sentence sentence
+     *
+     * @return self
+     */
+    public function setSentence($sentence)
+    {
+        if (is_null($sentence)) {
+            throw new \InvalidArgumentException('non-nullable sentence cannot be null');
+        }
+        $this->container['sentence'] = $sentence;
 
         return $this;
     }
