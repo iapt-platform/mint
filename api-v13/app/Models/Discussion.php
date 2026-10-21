@@ -68,7 +68,7 @@ class Discussion extends Model
     /** 普通边注：content 就是注解正文，没有出处 */
     public const TYPE_NOTE = 'note';
 
-    /** 会被注入阅读页的批注类型 */
+    /** 批注类型：作为边注注入阅读页，没有回复以外的线程属性（开关、severity） */
     public const INJECTED_TYPES = [self::TYPE_COMMENTARY, self::TYPE_NOTE];
 
     /** 术语讨论：针对句子里某个词的译法提问或建议，带锚点、只能挂在句子上 */
@@ -79,6 +79,12 @@ class Discussion extends Model
 
     /** 可以带锚点（pos_* / quote_*）、定位到句子文本某一段的类型：批注 + issue / glossary */
     public const ANCHORED_TYPES = [self::TYPE_COMMENTARY, self::TYPE_NOTE, 'issue', self::TYPE_GLOSSARY];
+
+    /**
+     * 会被注入阅读页的全部类型（{@see PaliContentService::injectAnnotationNotes()}）：
+     * 批注插边注，glossary 换成术语，issue 高亮。issue / glossary 只注入未关闭的。
+     */
+    public const READING_TYPES = [self::TYPE_COMMENTARY, self::TYPE_NOTE, 'issue', self::TYPE_GLOSSARY];
 
     /** 只能挂在句子上的类型：批注 + glossary */
     public const SENTENCE_ONLY_TYPES = [self::TYPE_COMMENTARY, self::TYPE_NOTE, self::TYPE_GLOSSARY];
@@ -154,15 +160,15 @@ class Discussion extends Model
     }
 
     /**
-     * 这两类批注会被注入到所挂句子的阅读页里（PaliContentService::
-     * injectAnnotationNotes），阅读页按 (book, para, channel) 缓存，所以增改删它们
-     * 都要清掉那一段的缓存。改之前是、改之后不是（或反过来）的也要清。
+     * 这几类会被注入到所挂句子的阅读页里（{@see self::READING_TYPES}），阅读页按
+     * (book, para, channel) 缓存，所以增改删它们（含关闭 / 重开）都要清掉那一段的缓存。
+     * 改之前是、改之后不是（或反过来）的也要清。
      */
     protected static function booted(): void
     {
         $forget = function (Discussion $discussion) {
-            $wasInjected = in_array($discussion->getOriginal('type'), self::INJECTED_TYPES, true);
-            if (! in_array($discussion->type, self::INJECTED_TYPES, true) && ! $wasInjected) {
+            $wasInjected = in_array($discussion->getOriginal('type'), self::READING_TYPES, true);
+            if (! in_array($discussion->type, self::READING_TYPES, true) && ! $wasInjected) {
                 return;
             }
             if ($discussion->res_type !== 'sentence' || empty($discussion->res_id)) {
