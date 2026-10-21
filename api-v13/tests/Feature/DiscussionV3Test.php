@@ -602,7 +602,7 @@ it('accepts an anchor on issue topics', function () {
         ->assertOk()->assertJsonPath('data.pos_end', 7);
 });
 
-it('clears the anchor when a topic becomes a type without anchors, and guards conversion to glossary', function () {
+it('keeps the anchor across type changes, and guards conversion to glossary', function () {
     $owner = makeStudio('owner');
     $author = makeStudio('author');
     $target = makeTargetSentence($owner);
@@ -617,11 +617,15 @@ it('clears the anchor when a topic becomes a type without anchors, and guards co
 
     $this->patchJson("/api/v3/discussions/{$issue->id}", ['type' => 'glossary'], authHeader($owner))
         ->assertOk()->assertJsonPath('data.type', 'glossary')->assertJsonPath('data.pos_end', 3);
+    // 改成不收锚点的类型：锚点留着（不显示、不影响校验），改回来位置还在
     $this->patchJson("/api/v3/discussions/{$issue->id}", ['type' => 'discussion'], authHeader($owner))
         ->assertOk()
-        ->assertJsonPath('data.pos_start', null)
-        ->assertJsonPath('data.pos_end', null)
-        ->assertJsonPath('data.co_editor', null);
+        ->assertJsonPath('data.pos_end', 3);
+    $this->patchJson("/api/v3/discussions/{$issue->id}", ['content' => '改正文'], authHeader($owner))->assertOk();
+    $this->patchJson("/api/v3/discussions/{$issue->id}", ['type' => 'issue'], authHeader($owner))
+        ->assertOk()
+        ->assertJsonPath('data.pos_start', 1)
+        ->assertJsonPath('data.pos_end', 3);
 });
 
 /* ------------------------------------------------------------------ 删除 */
