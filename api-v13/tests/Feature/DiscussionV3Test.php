@@ -73,19 +73,20 @@ it('lists only topics of the target, with reply counts and abilities', function 
         ->and($json['meta']['total'])->toBe(1);
 });
 
-it('hides collaboration topics from anonymous viewers', function () {
+it('hides private topics from anonymous viewers, but not issues', function () {
     $target = makeTargetSentence(makeStudio('owner'));
     makeDiscussion(['res_id' => $target, 'type' => 'discussion']);
-    makeDiscussion(['res_id' => $target, 'type' => 'issue', 'severity' => 'error']);
+    $issue = makeDiscussion(['res_id' => $target, 'type' => 'issue', 'severity' => 'error']);
     makeDiscussion(['res_id' => $target, 'type' => 'qa']);
 
-    $data = $this->getJson("/api/v3/discussions?target_type=sentence&target_id={$target}")
+    $data = $this->getJson("/api/v3/discussions?target_type=sentence&target_id={$target}&sort=created_at")
         ->assertOk()
         ->json('data');
 
-    expect($data)->toHaveCount(1)
-        ->and($data[0]['type'])->toBe('qa')
+    // issue 会注入公开的阅读页，所以对匿名也可见
+    expect(array_column($data, 'type'))->toEqualCanonicalizing(['issue', 'qa'])
         ->and($data[0]['abilities']['reply'])->toBeFalse();
+    $this->getJson("/api/v3/discussions/{$issue->id}")->assertOk();
 });
 
 it('shows a basic user only their own collaboration topics on targets they cannot manage', function () {
@@ -204,7 +205,7 @@ it('summarises status counts and creatable types', function () {
     $this->getJson("/api/v3/discussions/summary?target_type=sentence&target_id={$target}", authHeader($owner))
         ->assertOk()
         ->assertJsonPath('data.status_counts', ['active' => 1, 'close' => 2])
-        ->assertJsonPath('data.creatable_types', ['discussion', 'issue', 'note', 'commentary']);   // 句子的管理者能加批注
+        ->assertJsonPath('data.creatable_types', ['discussion', 'issue', 'glossary', 'note', 'commentary']);   // 句子的管理者能加批注
 
     $this->getJson("/api/v3/discussions/summary?target_type=sentence&target_id={$target}")
         ->assertOk()
@@ -408,9 +409,11 @@ it('applies list visibility to batch counts', function () {
     makeDiscussion(['res_id' => $target, 'type' => 'issue', 'editor_uid' => $basic]);
     $body = ['targets' => [['type' => 'sentence', 'id' => $target]]];
 
-    $this->postJson('/api/v3/discussions/batch-count', $body)->assertJsonPath('data.0.total', 1);                       // 匿名：只数 qa
-    $this->postJson('/api/v3/discussions/batch-count', $body, authHeader($basic))->assertJsonPath('data.0.total', 2);  // basic：qa + 自己的 issue
-    $this->postJson('/api/v3/discussions/batch-count', $body, authHeader($owner))->assertJsonPath('data.0.total', 3);  // 管理者：全部
+    makeDiscussion(['res_id' => $target, 'type' => 'discussion', 'editor_uid' => $basic]);
+
+    $this->postJson('/api/v3/discussions/batch-count', $body)->assertJsonPath('data.0.total', 2);                       // 匿名：qa + issue（公开）
+    $this->postJson('/api/v3/discussions/batch-count', $body, authHeader($basic))->assertJsonPath('data.0.total', 3);  // basic：再加自己的 discussion
+    $this->postJson('/api/v3/discussions/batch-count', $body, authHeader($owner))->assertJsonPath('data.0.total', 4);  // 管理者：全部
 });
 
 it('rejects an invalid batch count request', function () {
@@ -475,7 +478,7 @@ it('lets only the sentence manager create annotations, without notifying', funct
         'content' => '{{135-404-50-54}} {{135-404-55-65}}', 'pos_start' => 0, 'pos_end' => 4, 'quote_exact' => 'sent'];
 
     $this->getJson("/api/v3/discussions/summary?target_type=sentence&target_id={$target}", authHeader($owner))
-        ->assertJsonPath('data.creatable_types', ['discussion', 'issue', 'note', 'commentary']);
+        ->assertJsonPath('data.creatable_types', ['discussion', 'issue', 'glossary', 'note', 'commentary']);
     $this->getJson("/api/v3/discussions/summary?target_type=sentence&target_id={$target}", authHeader($stranger))
         ->assertJsonPath('data.creatable_types', ['discussion', 'issue']);
 
@@ -545,6 +548,80 @@ it('still hides records that are neither threads nor annotations', function () {
     $log = makeDiscussion(['res_type' => 'task', 'type' => 'task-status']);
 
     $this->getJson("/api/v3/discussions/{$log->id}")->assertNotFound();
+});
+
+/* ------------------------------------------------------------------ 术语讨论与锚点 */
+
+it('lets only the sentence manager create a glossary topic, with the headword as title and an anchor', function () {
+    $owner = makeStudio('owner');
+    $target = makeTargetSentence($owner);
+    $payload = ['target_type' => 'sentence', 'target_id' => $target, 'type' => 'glossary', 'title' => 'dukkha',
+        'content' => '这里译作「苦」不妥', 'pos_start' => 0, 'pos_end' => 6, 'quote_exact' => 'dukkha', 'notify' => false];
+
+    $this->postJson('/api/v3/discussions', $payload, authHeader(makeStudio('stranger')))->assertForbidden();
+
+    $id = $this->postJson('/api/v3/discussions', $payload, authHeader($owner))
+        ->assertCreated()
+        ->assertJsonPath('data.type', 'glossary')
+        ->assertJsonPath('data.title', 'dukkha')
+        ->assertJsonPath('data.status', 'active')
+        ->assertJsonPath('data.pos_end', 6)
+        ->assertJsonPath('data.quote_exact', 'dukkha')
+        ->json('data.id');
+
+    // 公开可见，算作评论线程（不带 type 的列表与角标都数它）
+    $this->getJson("/api/v3/discussions/{$id}")->assertOk();
+    $this->getJson("/api/v3/discussions?target_type=sentence&target_id={$target}")
+        ->assertJsonCount(1, 'data')->assertJsonPath('data.0.id', $id);
+    $this->postJson('/api/v3/discussions/batch-count', ['targets' => [['type' => 'sentence', 'id' => $target]]])
+        ->assertJsonPath('data.0.total', 1);
+});
+
+it('validates glossary input', function () {
+    $owner = makeStudio('owner');
+    $target = makeTargetSentence($owner);
+    $post = fn (array $data) => $this->postJson('/api/v3/discussions',
+        ['target_type' => 'sentence', 'target_id' => $target, 'type' => 'glossary', 'notify' => false, ...$data], authHeader($owner));
+
+    $post(['content' => 'x'])->assertStatus(422)->assertJsonValidationErrors('title');
+    $post(['title' => 'dukkha', 'target_type' => 'article'])->assertStatus(422)->assertJsonValidationErrors('target_type');
+    $post(['title' => 'dukkha', 'severity' => 'error'])->assertStatus(422)->assertJsonValidationErrors('severity');
+});
+
+it('accepts an anchor on issue topics', function () {
+    $target = makeTargetSentence(makeStudio('owner'));
+    $author = makeStudio('author');
+
+    $id = $this->postJson('/api/v3/discussions', ['target_type' => 'sentence', 'target_id' => $target, 'type' => 'issue',
+        'title' => '漏译', 'pos_start' => 2, 'pos_end' => 5, 'quote_exact' => 'nte', 'notify' => false], authHeader($author))
+        ->assertCreated()
+        ->assertJsonPath('data.pos_start', 2)
+        ->json('data.id');
+
+    $this->patchJson("/api/v3/discussions/{$id}", ['pos_end' => 7], authHeader($author))
+        ->assertOk()->assertJsonPath('data.pos_end', 7);
+});
+
+it('clears the anchor when a topic becomes a type without anchors, and guards conversion to glossary', function () {
+    $owner = makeStudio('owner');
+    $author = makeStudio('author');
+    $target = makeTargetSentence($owner);
+    $issue = makeDiscussion(['res_id' => $target, 'type' => 'issue', 'editor_uid' => $author, 'pos_start' => 1, 'pos_end' => 3]);
+    $onWbw = makeDiscussion(['res_type' => 'wbw', 'editor_uid' => $owner]);
+
+    $this->patchJson("/api/v3/discussions/{$issue->id}", ['type' => 'glossary'], authHeader($author))->assertForbidden();
+    $this->patchJson("/api/v3/discussions/{$onWbw->id}", ['type' => 'glossary'], authHeader($owner))
+        ->assertStatus(422)->assertJsonValidationErrors('type');
+    $this->patchJson("/api/v3/discussions/{$issue->id}", ['type' => 'discussion', 'pos_end' => 4], authHeader($author))
+        ->assertStatus(422)->assertJsonValidationErrors('pos_end');
+
+    $this->patchJson("/api/v3/discussions/{$issue->id}", ['type' => 'glossary'], authHeader($owner))
+        ->assertOk()->assertJsonPath('data.type', 'glossary')->assertJsonPath('data.pos_end', 3);
+    $this->patchJson("/api/v3/discussions/{$issue->id}", ['type' => 'discussion'], authHeader($owner))
+        ->assertOk()
+        ->assertJsonPath('data.pos_start', null)
+        ->assertJsonPath('data.pos_end', null)
+        ->assertJsonPath('data.co_editor', null);
 });
 
 /* ------------------------------------------------------------------ 删除 */
