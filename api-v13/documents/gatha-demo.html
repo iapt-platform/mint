@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>偈颂（Gatha）排版 Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  /* ══════════════════════════════════════════
+     本文件是「偈颂 class 支持」的视觉 Demo。
+     只展示排版效果，不包含真实代码改动。
+     DOM 结构刻意与生产一致：
+       <div class='original gatha1'><div class='para-block'>
+         <div class='sentence origin'><span>…</span></div></div></div>
+     ══════════════════════════════════════════ */
+
+  :root {
+    --bg: #f7f4ef;
+    --card: #fffdf9;
+    --ink: #1a1208;
+    --ink-soft: #4a3f2f;
+    --ink-muted: #8a7a68;
+    --border: #e8ddd0;
+    --accent: #c8860a;
+    --brand-pale: #fdf8f0;
+  }
+
+  .dark-mode {
+    --bg: #14110c;
+    --card: #1c1813;
+    --ink: #e8ddd0;
+    --ink-soft: #c4b49c;
+    --ink-muted: #93846f;
+    --border: #3a3328;
+    --accent: #e0a83a;
+    --brand-pale: #211c14;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 32px 16px 64px;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    transition: background .2s, color .2s;
+  }
+
+  .page {
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  header.demo-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  header.demo-head h1 {
+    font-size: 1.5rem;
+    margin: 0 0 6px;
+    line-height: 1.3;
+  }
+  header.demo-head p {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: .875rem;
+    line-height: 1.6;
+    max-width: 560px;
+  }
+  .theme-btn {
+    flex: none;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--ink);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: .8125rem;
+  }
+
+  .legend {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--brand-pale);
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    font-size: .875rem;
+    line-height: 1.7;
+    color: var(--ink-soft);
+  }
+  .legend code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: .8125rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 6px;
+    color: var(--accent);
+  }
+  .legend ul { margin: 8px 0 0; padding-left: 18px; }
+  .legend li { margin: 3px 0; }
+
+  .demo-section {
+    margin-bottom: 40px;
+  }
+  .demo-section > h2 {
+    font-size: .875rem;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--ink-muted);
+    margin: 0 0 4px;
+  }
+  .demo-section > p.section-note {
+    margin: 0 0 14px;
+    font-size: .8125rem;
+    color: var(--ink-muted);
+    line-height: 1.6;
+  }
+
+  /* ── 模拟阅读器卡片 ── */
+  .reader-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px 40px;
+  }
+  @media (max-width: 640px) {
+    .reader-card { padding: 24px 20px; }
+  }
+
+  /* ══════════════════════════════════════════
+     ↓↓↓ 下面是核心方案：偈颂排版 CSS（对应将来写入 reader-content.css）
+     ══════════════════════════════════════════ */
+
+  /* 阅读器正文作用域 */
+  article.reader-body {
+    font-family: 'Noto Serif', Georgia, serif;
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: var(--ink);
+  }
+
+  /* 段落默认间距（现有行为：每个 para-block 下方 1em） */
+  article.reader-body .para-block { margin-bottom: 1em; }
+
+  /* 散文段落 */
+  article.reader-body div.prose .para-block { margin-bottom: 1em; }
+
+  /* ── 偈颂号（hangnum）：悬挂在左侧页边，右对齐，与首行齐平 ── */
+  article.reader-body .hangnum {
+    float: left;
+    clear: left;
+    width: 2rem;               /* 号码列宽 */
+    margin-right: .5rem;       /* 号码与偈文间距 */
+    text-align: right;
+    font-size: .8125rem;
+    line-height: 1.75;         /* 与正文行高一致，保证基线对齐 */
+    color: var(--ink-muted);
+    user-select: none;
+  }
+  article.reader-body .hangnum .para-block { margin-bottom: 0; }
+
+  /* 部分译文的偈颂号被 markdown 渲染成 <ol start="2"><li></li></ol>，归一化成同一个小号数字 */
+  article.reader-body .hangnum ol {
+    list-style: decimal;
+    list-style-position: inside;
+    padding: 0;
+    margin: 0;
+  }
+  article.reader-body .hangnum li {
+    margin: 0;
+    line-height: inherit;
+    list-style-type: decimal;
+    list-style-position: inside;
+  }
+
+  /* ── 偈颂行：整体缩进，与散文区分 ── */
+  article.reader-body .gatha1,
+  article.reader-body .gatha2,
+  article.reader-body .gatha3,
+  article.reader-body .gathalast {
+    margin-left: 2.5rem;       /* 让出偈颂号的空间 */
+  }
+
+  /* ── 偈颂内部行距收紧；折行时悬挂缩进（续行比首行再缩进 1.25em） ── */
+  article.reader-body .gatha1 .para-block,
+  article.reader-body .gatha2 .para-block,
+  article.reader-body .gatha3 .para-block,
+  article.reader-body .gathalast .para-block {
+    margin-bottom: .3em;       /* 行间小间距 */
+    padding-left: 1.25em;
+    text-indent: -1.25em;
+  }
+
+  /* ── 偈颂末行：与下一偈（或散文）之间留更大间隔 ── */
+  article.reader-body .gathalast .para-block {
+    margin-bottom: 1.75em;     /* 偈颂之间的间隔 > 行间间隔 */
+  }
+
+  /* ── 居中文本（centered）：开头致敬语 / 经末「……竟」 ── */
+  article.reader-body .centered {
+    text-align: center;
+  }
+  article.reader-body .centered .para-block {
+    margin-bottom: 1.5em;
+  }
+
+  /* ── 原文（origin）颜色：与现有 reader-content.css 一致 ── */
+  article.reader-body .origin { color: darkred; }
+  .dark-mode article.reader-body .origin { color: #ff9b9b; }
+
+  article.reader-body div.sentence { display: inline; }
+
+  /* 段落外壳只是承载层，本身不加 margin */
+  article.reader-body [class*='gatha'],
+  article.reader-body .hangnum { margin-top: 0; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="demo-head">
+    <div>
+      <h1>偈颂（Gatha）排版 Demo</h1>
+      <p>为阅读页增加 <code>hangnum / gatha1 / gatha2 / gatha3 / gathalast</code> 五个 class 的排版支持。
+      核心诉求：<strong>偈颂之间的间隔 &gt; 偈颂内部行之间的间隔</strong>，且偈颂与散文混排时有明显区分。</p>
+    </div>
+    <button class="theme-btn" id="themeBtn">切换深色</button>
+  </header>
+
+  <div class="legend">
+    本 Demo 的排版规则：
+    <ul>
+      <li><code>hangnum</code>（偈颂号）悬挂在左侧页边，右对齐，字号缩小，与首行基线对齐。</li>
+      <li><code>gatha1/2/3/last</code>（偈颂行）整体缩进 <code>2.5rem</code>，行间只留 <code>0.3em</code> 的小间距。</li>
+      <li><code>gathalast</code>（末行）下方留 <code>1.75em</code> 的大间距，把相邻两首偈颂隔开。</li>
+      <li>偈颂折行时悬挂缩进 <code>1.25em</code>，续行比首行更靠右，不会误看成新的一行。</li>
+      <li>散文（<code>prose</code>）顶格、行距正常；偈颂缩进 + 收紧行距，混排时一眼可分。</li>
+      <li><code>centered</code>（居中文本）水平居中，用于开头致敬语与经末「……竟」。</li>
+    </ul>
+  </div>
+
+  <!-- ════════════ A. 巴利原文偈颂（带偈颂号） ════════════ -->
+  <section class="demo-section">
+    <h2>A · 巴利原文偈颂（带偈颂号 hangnum）</h2>
+    <p class="section-note">数据取自《宝经》（Ratanasutta，book 154）原文。每首前有 <code>hangnum</code>，行数 2～4 行不等。</p>
+    <div class="reader-card">
+      <article class="reader-body">
+
+        <div class='original hangnum'><div class='para-block'><div class='sentence origin'><span>1.</span></div></div></div>
+        <div class='original gatha1'><div class='para-block'><div class='sentence origin'><span>Yānīdha bhūtāni samāgatāni, bhummāni vā yāni va antalikkhe;</span></div></div></div>
+        <div class='original gathalast'><div class='para-block'><div class='sentence origin'><span>Sabbeva bhūtā sumanā bhavantu, athopi sakkacca suṇantu bhāsitaṃ.</span></div></div></div>
+
+        <div class='original hangnum'><div class='para-block'><div class='sentence origin'><span>2.</span></div></div></div>
+        <div class='original gatha1'><div class='para-block'><div class='sentence origin'><span>Tasmā hi bhūtā nisāmetha sabbe, mettaṃ karotha mānusiyā pajāya;</span></div></div></div>
+        <div class='original gathalast'><div class='para-block'><div class='sentence origin'><span>Divā ca ratto ca haranti ye baliṃ, tasmā hi ne rakkhatha appamattā.</span></div></div></div>
+
+        <div class='original hangnum'><div class='para-block'><div class='sentence origin'><span>3.</span></div></div></div>
+        <div class='original gatha1'><div class='para-block'><div class='sentence origin'><span>Yaṃ kiñci vittaṃ idha vā huraṃ vā, saggesu vā yaṃ ratanaṃ paṇītaṃ;</span></div></div></div>
+        <div class='original gatha2'><div class='para-block'><div class='sentence origin'><span>Na no samaṃ atthi tathāgatena, idampi buddhe ratanaṃ paṇītaṃ;</span></div></div></div>
+        <div class='original gathalast'><div class='para-block'><div class='sentence origin'><span>Etena saccena suvatthi hotu.</span></div></div></div>
+
+        <div class='original hangnum'><div class='para-block'><div class='sentence origin'><span>4.</span></div></div></div>
+        <div class='original gatha1'><div class='para-block'><div class='sentence origin'><span>Khayaṃ virāgaṃ amataṃ paṇītaṃ, yadajjhagā sakyamunī samāhito;</span></div></div></div>
+        <div class='original gathalast'><div class='para-block'><div class='sentence origin'><span>Na tena dhammena samatthi kiñci, idampi dhamme ratanaṃ paṇītaṃ.</span></div></div></div>
+
+      </article>
+    </div>
+  </section>
+
+  <!-- ════════════ B. 中文译文偈颂（无偈颂号） ════════════ -->
+  <section class="demo-section">
+    <h2>B · 中文译文偈颂（无偈颂号）</h2>
+    <p class="section-note">译文频道没有 <code>hangnum</code> 句子（偈颂号不译），只有 <code>gatha1/2/last</code>，同样缩进 + 收紧行距 + 大间距分组。</p>
+    <div class="reader-card">
+      <article class="reader-body">
+
+        <div class='translation gatha1'><div class='para-block'><div class='sentence'><span>凡会集此诸鬼神，无论地居或空居，</span></div></div></div>
+        <div class='translation gathalast'><div class='para-block'><div class='sentence'><span>愿一切鬼神欢喜，请恭敬聆听所说。</span></div></div></div>
+
+        <div class='translation gatha1'><div class='para-block'><div class='sentence'><span>故一切鬼神倾听：散播慈爱给人类，</span></div></div></div>
+        <div class='translation gathalast'><div class='para-block'><div class='sentence'><span>日夜持来献供者，故应保护莫放逸。</span></div></div></div>
+
+        <div class='translation gatha1'><div class='para-block'><div class='sentence'><span>所有此、他世财富，或于天界殊胜宝，</span></div></div></div>
+        <div class='translation gatha2'><div class='para-block'><div class='sentence'><span>无有等同如来者。此乃佛之殊胜宝，</span></div></div></div>
+        <div class='translation gathalast'><div class='para-block'><div class='sentence'><span>以此实语愿安乐！</span></div></div></div>
+
+      </article>
+    </div>
+  </section>
+
+  <!-- ════════════ C. 散文与偈颂混排 ════════════ -->
+  <section class="demo-section">
+    <h2>C · 散文与偈颂混排</h2>
+    <p class="section-note">散文顶格、行距正常；偈颂缩进、收紧行距。两者混排时，偈颂的缩进让它从散文中凸显出来。</p>
+    <div class="reader-card">
+      <article class="reader-body">
+
+        <div class='translation prose'><div class='para-block'><div class='sentence'><span>如是我闻：一时，世尊住舍卫城祇树给孤独园。尔时，世尊以是因缘，召集比丘众，而说此偈颂——</span></div></div></div>
+
+        <div class='translation gatha1'><div class='para-block'><div class='sentence'><span>凡会集此诸鬼神，无论地居或空居，</span></div></div></div>
+        <div class='translation gathalast'><div class='para-block'><div class='sentence'><span>愿一切鬼神欢喜，请恭敬聆听所说。</span></div></div></div>
+
+        <div class='translation prose'><div class='para-block'><div class='sentence'><span>世尊说此偈已，复告诸比丘：此偈乃为护持众生、令得安乐而说。诸比丘闻佛所说，欢喜奉行。</span></div></div></div>
+
+        <div class='translation centered'><div class='para-block'><div class='sentence'><span>吉祥经已完成。</span></div></div></div>
+
+      </article>
+    </div>
+  </section>
+
+  <!-- ════════════ D. 变体：不同行数的偈颂 ════════════ -->
+  <section class="demo-section">
+    <h2>D · 变体：不同行数的偈颂</h2>
+    <p class="section-note">取自用户提供的 CSV 样例（1377 / 1378）。展示 4 行（含 gatha3）与 2 行两种形态。</p>
+    <div class="reader-card">
+      <article class="reader-body">
+
+        <div class='original hangnum'><div class='para-block'><div class='sentence origin'><span>1377.</span></div></div></div>
+        <div class='original gatha1'><div class='para-block'><div class='sentence origin'><span>Aho sādhu aho suṭṭhu,</span></div></div></div>
+        <div class='original gatha2'><div class='para-block'><div class='sentence origin'><span>Modanti vata pāṇino;</span></div></div></div>
+        <div class='original gatha3'><div class='para-block'><div class='sentence origin'><span>Aho suladdhaṃ sattānaṃ,</span></div></div></div>
+        <div class='original gathalast'><div class='para-block'><div class='sentence origin'><span>Samiddhimabhipatthitaṃ.</span></div></div></div>
+
+        <div class='original hangnum'><div class='para-block'><div class='sentence origin'><span>1378.</span></div></div></div>
+        <div class='original gatha1'><div class='para-block'><div class='sentence origin'><span>Pasannamukhavaṇṇā ca, paripuṇṇamanorathā;</span></div></div></div>
+        <div class='original gathalast'><div class='para-block'><div class='sentence origin'><span>Pītipāmojjabahulā, ciraṃ jīvantunāmayā.</span></div></div></div>
+
+      </article>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  document.getElementById('themeBtn').addEventListener('click', function () {
+    document.body.classList.toggle('dark-mode');
+    this.textContent = document.body.classList.contains('dark-mode') ? '切换浅色' : '切换深色';
+  });
+</script>
+</body>
+</html>

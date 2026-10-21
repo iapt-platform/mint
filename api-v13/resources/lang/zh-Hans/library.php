@@ -131,6 +131,9 @@ return [
     'script_myanmar' => '缅文',
     'script_thai' => '泰文',
     'commentary_version' => '注疏版本',
+    'annotation_mode' => '注释',
+    'annotation_inline' => '行内',
+    'annotation_footnote' => '段后',
     'none' => '不显示',
     'cancel' => '取消',
     'confirm' => '确定',
@@ -165,4 +168,14 @@ return [
     'course_no_history' => '暂无历史课程',
     'course_history_title' => '历史课程',
     'course_history_subtitle' => '已结束的公开课程，回顾往期研读',
+
+    // reader: issue 标注（reader.js 弹出层）
+    'issue_title' => '问题',
+    'issue_loading' => '加载中…',
+    'issue_load_failed' => '加载失败',
+    'issue_not_found' => '这条问题已不存在',
+    'issue_replies' => ':count 条回复',
+    'issue_severity_error' => '错误',
+    'issue_severity_warning' => '警告',
+    'issue_severity_suggestion' => '建议',
 ];

@@ -68,17 +68,35 @@ class Discussion extends Model
     /** 普通边注：content 就是注解正文，没有出处 */
     public const TYPE_NOTE = 'note';
 
-    /** 会被注入阅读页的批注类型 */
+    /** 批注类型：作为边注注入阅读页，没有回复以外的线程属性（开关、severity） */
     public const INJECTED_TYPES = [self::TYPE_COMMENTARY, self::TYPE_NOTE];
 
+    /**
+     * 外挂术语：不改译文原文，给锚点处的一段译文挂上术语（title 是术语词头），阅读页把那段
+     * 原文渲染成 `[[title#原文]]`。带锚点、只能挂在句子上。与术语表（dhamma terms）是两回事。
+     */
+    public const TYPE_GLOSSARY = 'glossary';
+
     /** 评论线程：话题 + 一层回复，有开关状态 */
-    public const THREAD_TYPES = ['discussion', 'qa', 'help', 'issue'];
+    public const THREAD_TYPES = ['discussion', 'qa', 'help', 'issue', self::TYPE_GLOSSARY];
+
+    /** 可以带锚点（pos_* / quote_*）、定位到句子文本某一段的类型：批注 + issue / glossary */
+    public const ANCHORED_TYPES = [self::TYPE_COMMENTARY, self::TYPE_NOTE, 'issue', self::TYPE_GLOSSARY];
+
+    /**
+     * 会被注入阅读页的全部类型（{@see PaliContentService::injectAnnotationNotes()}）：
+     * 批注插边注，glossary 换成术语，issue 高亮。issue / glossary 只注入未关闭的。
+     */
+    public const READING_TYPES = [self::TYPE_COMMENTARY, self::TYPE_NOTE, 'issue', self::TYPE_GLOSSARY];
+
+    /** 只能挂在句子上的类型：批注 + glossary */
+    public const SENTENCE_ONLY_TYPES = [self::TYPE_COMMENTARY, self::TYPE_NOTE, self::TYPE_GLOSSARY];
 
     /**
      * `/v3/discussions` 管的全部类型：评论线程（{@see self::THREAD_TYPES}）+ 批注
      * （{@see self::INJECTED_TYPES}）。批注锚定在句子的某个位置、注入阅读页，没有回复和开关。
      */
-    public const COMMENT_TYPES = ['discussion', 'qa', 'help', 'issue', 'note', 'commentary'];
+    public const COMMENT_TYPES = ['discussion', 'qa', 'help', 'issue', 'glossary', 'note', 'commentary'];
 
     /** 各类型允许的 severity 取值；不在表里的类型不允许设 severity */
     public const SEVERITIES = [
@@ -145,15 +163,15 @@ class Discussion extends Model
     }
 
     /**
-     * 这两类批注会被注入到所挂句子的阅读页里（PaliContentService::
-     * injectAnnotationNotes），阅读页按 (book, para, channel) 缓存，所以增改删它们
-     * 都要清掉那一段的缓存。改之前是、改之后不是（或反过来）的也要清。
+     * 这几类会被注入到所挂句子的阅读页里（{@see self::READING_TYPES}），阅读页按
+     * (book, para, channel) 缓存，所以增改删它们（含关闭 / 重开）都要清掉那一段的缓存。
+     * 改之前是、改之后不是（或反过来）的也要清。
      */
     protected static function booted(): void
     {
         $forget = function (Discussion $discussion) {
-            $wasInjected = in_array($discussion->getOriginal('type'), self::INJECTED_TYPES, true);
-            if (! in_array($discussion->type, self::INJECTED_TYPES, true) && ! $wasInjected) {
+            $wasInjected = in_array($discussion->getOriginal('type'), self::READING_TYPES, true);
+            if (! in_array($discussion->type, self::READING_TYPES, true) && ! $wasInjected) {
                 return;
             }
             if ($discussion->res_type !== 'sentence' || empty($discussion->res_id)) {

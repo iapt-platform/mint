@@ -44,6 +44,7 @@ get:
           - qa
           - help
           - issue
+          - glossary
           - note
           - commentary
       description: 只数这种类型，不传则只数评论线程

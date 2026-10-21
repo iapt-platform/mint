@@ -16,6 +16,7 @@ docs/Api/ReactionsApi.md
 docs/Api/SearchApi.md
 docs/Api/SearchSuggestApi.md
 docs/Api/SessionsApi.md
+docs/Api/TipitakaDiscussionsApi.md
 docs/Api/TipitakaReadingApi.md
 docs/Api/TipitakaRelatedParagraphsApi.md
 docs/Api/UpgradeApi.md
@@ -24,6 +25,7 @@ docs/Model/GetApiV3Discussions200Response.md
 docs/Model/GetApiV3Discussions200ResponseDataInner.md
 docs/Model/GetApiV3Discussions200ResponseDataInnerAbilities.md
 docs/Model/GetApiV3Discussions200ResponseDataInnerEditor.md
+docs/Model/GetApiV3Discussions200ResponseDataInnerSentence.md
 docs/Model/GetApiV3DiscussionsSummary200Response.md
 docs/Model/GetApiV3DiscussionsSummary200ResponseData.md
 docs/Model/GetApiV3DiscussionsSummary200ResponseDataStatusCounts.md
@@ -93,6 +95,7 @@ lib/Api/ReactionsApi.php
 lib/Api/SearchApi.php
 lib/Api/SearchSuggestApi.php
 lib/Api/SessionsApi.php
+lib/Api/TipitakaDiscussionsApi.php
 lib/Api/TipitakaReadingApi.php
 lib/Api/TipitakaRelatedParagraphsApi.php
 lib/Api/UpgradeApi.php
@@ -105,6 +108,7 @@ lib/Model/GetApiV3Discussions200Response.php
 lib/Model/GetApiV3Discussions200ResponseDataInner.php
 lib/Model/GetApiV3Discussions200ResponseDataInnerAbilities.php
 lib/Model/GetApiV3Discussions200ResponseDataInnerEditor.php
+lib/Model/GetApiV3Discussions200ResponseDataInnerSentence.php
 lib/Model/GetApiV3DiscussionsSummary200Response.php
 lib/Model/GetApiV3DiscussionsSummary200ResponseData.php
 lib/Model/GetApiV3DiscussionsSummary200ResponseDataStatusCounts.php
@@ -176,12 +180,14 @@ test/Api/ReactionsApiTest.php
 test/Api/SearchApiTest.php
 test/Api/SearchSuggestApiTest.php
 test/Api/SessionsApiTest.php
+test/Api/TipitakaDiscussionsApiTest.php
 test/Api/TipitakaReadingApiTest.php
 test/Api/TipitakaRelatedParagraphsApiTest.php
 test/Api/UpgradeApiTest.php
 test/Api/UsersApiTest.php
 test/Model/GetApiV3Discussions200ResponseDataInnerAbilitiesTest.php
 test/Model/GetApiV3Discussions200ResponseDataInnerEditorTest.php
+test/Model/GetApiV3Discussions200ResponseDataInnerSentenceTest.php
 test/Model/GetApiV3Discussions200ResponseDataInnerTest.php
 test/Model/GetApiV3Discussions200ResponseTest.php
 test/Model/GetApiV3DiscussionsSummary200ResponseDataStatusCountsTest.php

@@ -6,9 +6,10 @@ get:
   operationId: get_api_v3_discussions
   description: |-
     只列话题（不含回复），删除了但还有回复的话题以墓碑出现（deleted_at 有值、内容为空）。
-    未登录看不到协作类话题（discussion / issue）；basic 角色在自己无权管理的对象上只看得到
-    自己发起的协作类话题。各状态的数量与「能发起哪些类型」见 `GET /v3/discussions/summary`。
-    不传 type 时只列评论线程（discussion / qa / help / issue），批注要显式 type=note / commentary。
+    未登录看不到不公开的话题（discussion）；basic 角色在自己无权管理的对象上只看得到
+    自己发起的不公开话题。各状态的数量与「能发起哪些类型」见 `GET /v3/discussions/summary`。
+    不传 type 时只列评论线程（discussion / qa / help / issue / glossary），批注要显式 type=note / commentary。
+    要一段经文（一章、一段段落区间）里的全部话题，用 `GET /v3/tipitaka-discussions/{channel}`。
 
     实现：`V3\DiscussionController@index`
   security:
@@ -53,6 +54,7 @@ get:
           - qa
           - help
           - issue
+          - glossary
           - note
           - commentary
       description: 类型，不传则只列评论线程
@@ -155,6 +157,10 @@ get:
                     reply_count:
                       type: integer
                       description: 仅在部分查询口径下返回。
+                    sentence:
+                      type: object
+                      properties: { book: { type: integer }, paragraph: { type: integer }, word_start: { type: integer }, word_end: { type: integer } }
+                      description: 仅在部分查询口径下返回。
                     editor:
                       type: object
                       properties: { id: { type: string }, nickName: { type: string }, userName: { type: string }, realName: { type: string }, sn: { type: integer }, avatar: { type: string }, roles: { type: array, items: { type: string } } }
@@ -188,7 +194,10 @@ post:
     其它类型不收。默认会通知对象的作者（站内信 + webhook），`notify=false` 关闭。
     批注（note / commentary）只能加在句子上，且只有该句所在 channel 的编辑者能加；
     标题可省、正文必填，commentary 的正文必须是义注句子模板 `{{book-para-start-end}}`
-    （可多句并列）；可带锚点 pos_* / quote_*（评论线程传了 422）；不发通知。
+    （可多句并列）；可带锚点 pos_* / quote_*；不发通知。
+    glossary（外挂术语：不改译文，给锚点处的译文挂上术语）是评论线程，title 必填、填术语词头；
+    与批注一样只能挂在句子上、只有该句所在 channel 的编辑者能发，对所有人公开可见。
+    锚点只有 note / commentary / issue / glossary 收，其它类型传了 422。
 
     实现：`V3\DiscussionController@store`
   security:
@@ -221,12 +230,13 @@ post:
                 - qa
                 - help
                 - issue
+                - glossary
                 - note
                 - commentary
               default: discussion
             title:
               type: string
-              description: '标题，最长 256 字符；评论线程必填，批注可省'
+              description: '标题，最长 256 字符；评论线程必填（glossary 填术语词头），批注可省'
             content:
               type: string
               description: 正文（markdown）；批注必填
@@ -241,19 +251,19 @@ post:
                 - normal
             pos_start:
               type: integer
-              description: 批注锚点在句子文本中的起始偏移（只限批注）
+              description: '锚点在句子文本中的起始偏移（只限 note / commentary / issue / glossary）'
             pos_end:
               type: integer
-              description: 批注锚点的结束偏移，批注插在这里（只限批注）
+              description: '锚点的结束偏移，批注插在这里（只限 note / commentary / issue / glossary）'
             quote_exact:
               type: string
-              description: 锚定的原文片段（只限批注）
+              description: '锚定的原文片段（只限 note / commentary / issue / glossary）'
             quote_prefix:
               type: string
-              description: 锚定片段前的上下文，用于重新定位（只限批注）
+              description: '锚定片段前的上下文，用于重新定位（只限 note / commentary / issue / glossary）'
             quote_suffix:
               type: string
-              description: 锚定片段后的上下文，用于重新定位（只限批注）
+              description: '锚定片段后的上下文，用于重新定位（只限 note / commentary / issue / glossary）'
             tpl_id:
               type: string
               description: '话题模板（文章）的 uuid'
@@ -325,6 +335,14 @@ post:
                     nullable: true
                   reply_count:
                     type: integer
+                    description: 仅在部分查询口径下返回。
+                  sentence:
+                    type: object
+                    properties:
+                      book: { type: integer }
+                      paragraph: { type: integer }
+                      word_start: { type: integer }
+                      word_end: { type: integer }
                     description: 仅在部分查询口径下返回。
                   editor:
                     type: object
@@ -422,6 +440,14 @@ post:
                     nullable: true
                   reply_count:
                     type: integer
+                    description: 仅在部分查询口径下返回。
+                  sentence:
+                    type: object
+                    properties:
+                      book: { type: integer }
+                      paragraph: { type: integer }
+                      word_start: { type: integer }
+                      word_end: { type: integer }
                     description: 仅在部分查询口径下返回。
                   editor:
                     type: object

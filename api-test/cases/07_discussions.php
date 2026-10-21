@@ -222,3 +222,50 @@ test('discussions 一轮：建话题 → 回复 → 关闭后回复 409 → 重�
     $gone = raw('GET', "/v3/discussions/{$id}", null, null, $token);
     assert_status(404, $gone, '删后再查');
 });
+
+/* ---- 术语讨论（glossary）与锚点 ---- */
+
+test('glossary 一轮：带锚点建 → 公开可读 → 不收锚点的类型传锚点 422 → 改成 discussion 锚点保留 → 删', function () {
+    $token = required_token();
+    $stamp = 'api-test-glossary-' . date('Ymd-His');
+
+    $create = raw('POST', '/v3/discussions', null, [
+        'target_type' => 'sentence', 'target_id' => discussion_target(), 'type' => 'glossary',
+        'title' => 'dukkha', 'content' => $stamp, 'pos_start' => 0, 'pos_end' => 3, 'quote_exact' => 'abc',
+        'notify' => false,
+    ], $token);
+    assert_status(201, $create, '建 glossary');
+    $id = $create['body']['data']['id'] ?? null;
+    if (! $id) {
+        fail('建 glossary：应返回 id');
+    }
+
+    try {
+        assert_eq('dukkha', $create['body']['data']['title'] ?? null, 'glossary title 是词头');
+        assert_eq(3, $create['body']['data']['pos_end'] ?? null, 'glossary pos_end');
+
+        // 公开可见：匿名也读得到
+        assert_status(200, raw('GET', "/v3/discussions/{$id}"), '匿名读 glossary');
+
+        // glossary 缺 title / 挂在句子以外 → 422
+        $noTitle = raw('POST', '/v3/discussions', null, [
+            'target_type' => 'sentence', 'target_id' => discussion_target(), 'type' => 'glossary', 'notify' => false,
+        ], $token);
+        assert_field_error('title', $noTitle, 'glossary 缺 title');
+
+        // discussion 不收锚点
+        $anchored = raw('POST', '/v3/discussions', null, [
+            'target_type' => 'sentence', 'target_id' => discussion_target(), 'type' => 'discussion',
+            'title' => $stamp, 'pos_start' => 1, 'notify' => false,
+        ], $token);
+        assert_field_error('pos_start', $anchored, 'discussion 带锚点');
+
+        // 改成 discussion：锚点保留（不显示，改回可带锚点的类型时恢复）
+        $converted = raw('PATCH', "/v3/discussions/{$id}", null, ['type' => 'discussion'], $token);
+        assert_status(200, $converted, 'glossary → discussion');
+        assert_eq(3, $converted['body']['data']['pos_end'] ?? null, '改类型后 pos_end');
+    } finally {
+        $del = raw('DELETE', "/v3/discussions/{$id}", null, null, $token);
+    }
+    assert_status(200, $del, '删 glossary');
+});

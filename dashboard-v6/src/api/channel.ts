@@ -145,6 +145,14 @@ export async function channelLoader({ params }: LoaderFunctionArgs) {
   return res.data;
 }
 
+/** 按 uid 取一个 channel；取不到返回 undefined（只用来显示名字之类，不弹错） */
+export const fetchChannel = async (
+  channelId: string
+): Promise<IApiResponseChannel["data"] | undefined> => {
+  const res = await get<IApiResponseChannel>(`/api/v2/channel/${channelId}`);
+  return res.ok ? res.data : undefined;
+};
+
 // ─── 获取章节内所有句子 ID ───────────────────────────────────────────────────
 
 /**

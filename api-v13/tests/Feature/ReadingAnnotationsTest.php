@@ -95,3 +95,74 @@ it('drops the paragraph cache when either kind of annotation changes', function 
     expect(RedisCache::has($key))->toBeFalse();
     expect($this->getJson($url)->json('data.0.display'))->toContain('译者按。');
 });
+
+/* ------------------------------------------------------------------ glossary 与 issue */
+
+function makeAnchored(string $resId, string $type, array $attrs): Discussion
+{
+    $discussion = new Discussion;
+    $discussion->forceFill(array_merge([
+        'res_id' => $resId,
+        'res_type' => 'sentence',
+        'type' => $type,
+        'title' => 't',
+        'content' => 'body',
+        'content_type' => 'markdown',
+        'editor_uid' => makeStudio('anno-'.Str::random(6)),
+    ], $attrs))->save();
+
+    return $discussion;
+}
+
+function readFirstParagraph(string $channel): string
+{
+    return test()->getJson("/api/v3/tipitaka-reading/{$channel}?book=9101&para=1")->assertOk()->json('data.0.display');
+}
+
+it('replaces a glossary anchor with a term reference', function () {
+    [$channel, $sentence] = makeAnnotatedSentence();   // 'first sentence'
+    makeAnchored($sentence->uid, 'glossary', ['title' => 'paṭhama', 'pos_start' => 0, 'pos_end' => 5, 'quote_exact' => 'first']);
+
+    expect(readFirstParagraph($channel))
+        ->toContain("data-term='paṭhama'")
+        ->toContain('>first</span> sentence');
+});
+
+it('highlights issues, merging overlaps, and marks issues without a position at the sentence end', function () {
+    [$channel, $sentence] = makeAnnotatedSentence();
+    $a = makeAnchored($sentence->uid, 'issue', ['severity' => 'suggestion', 'pos_start' => 0, 'pos_end' => 8, 'quote_exact' => 'first se']);
+    $b = makeAnchored($sentence->uid, 'issue', ['severity' => 'error', 'pos_start' => 6, 'pos_end' => 14, 'quote_exact' => 'sentence']);
+    $c = makeAnchored($sentence->uid, 'issue', ['severity' => 'warning']);
+
+    expect(readFirstParagraph($channel))
+        ->toContain('<span class="anno-issue anno-issue-error" data-discussion-ids="'.$a->id.','.$b->id.'" data-severity="error">first sentence</span>')
+        ->toContain('<span class="anno-issue-mark anno-issue-warning" data-discussion-ids="'.$c->id.'"');
+});
+
+it('relocates an issue by its quote when the position is stale', function () {
+    [$channel, $sentence] = makeAnnotatedSentence();
+    makeAnchored($sentence->uid, 'issue', ['severity' => 'error', 'pos_start' => 0, 'pos_end' => 3, 'quote_exact' => 'sentence']);
+
+    expect(readFirstParagraph($channel))->toContain('data-severity="error">sentence</span>');
+});
+
+it('does not inject closed issues or glossaries, and drops the cache when one is closed', function () {
+    [$channel, $sentence] = makeAnnotatedSentence();
+    makeAnchored($sentence->uid, 'glossary', ['title' => 'x', 'pos_start' => 0, 'pos_end' => 5, 'quote_exact' => 'first', 'status' => 'close']);
+    $issue = makeAnchored($sentence->uid, 'issue', ['severity' => 'error', 'pos_start' => 6, 'pos_end' => 14]);
+
+    expect(readFirstParagraph($channel))->toContain('anno-issue')->not->toContain('term-ref');
+
+    $issue->forceFill(['status' => 'close'])->save();   // 关闭会清缓存
+    expect(readFirstParagraph($channel))->not->toContain('anno-issue');
+});
+
+it('leaves issue markup out of plain text output but keeps the glossary term', function () {
+    [$channel, $sentence] = makeAnnotatedSentence();
+    makeAnchored($sentence->uid, 'issue', ['severity' => 'error']);
+    makeAnchored($sentence->uid, 'glossary', ['title' => 'paṭhama', 'pos_start' => 0, 'pos_end' => 5]);
+
+    $text = app(PaliContentService::class)->readParagraph(9101, 1, $channel, 'text')['display'];
+
+    expect($text)->toBe('first sentence');
+});

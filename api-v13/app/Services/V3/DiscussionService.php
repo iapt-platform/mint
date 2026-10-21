@@ -39,14 +39,18 @@ use Illuminate\Validation\ValidationException;
  * - 其他用户可以回复；没有开关状态，不能与评论线程互转；新建批注不发通知；
  * - 列表与统计不带 type 时只算评论线程，要批注须显式 type=note / commentary。
  *
+ * glossary（外挂术语）是评论线程（有回复和开关），但像批注一样只能挂在句子上、只有该句的管理者能发起，
+ * 对所有人公开可见。锚点除批注外，issue 与 glossary 也收（{@see Discussion::ANCHORED_TYPES}）。
+ *
  * 写入方（`$actor`）由 {@see AgentGrantService::actor()} 给出：人类直接写，或 AI 模型凭人类
  * 授权代写。代写时 editor 是授权人、co_editor 是模型，权限一律按 editor 判，
  * 而且只能写授权覆盖的 channel / book 里的东西。
  *
  * 可见性沿用 v2 `view=question` 的口径，但这里对列表、单条、回复一视同仁（v2 只在
  * 列表上做了这个判断）：
- * - 未登录看不到协作类话题（discussion / issue）；
- * - basic 角色在自己无权管理的对象上，只能看到自己发起的协作类话题。
+ * - 未登录看不到不公开的话题（discussion）；
+ * - basic 角色在自己无权管理的对象上，只能看到自己发起的不公开话题。
+ * issue 2026-10-21 起公开：它会注入阅读页（高亮 + 点击看内容），阅读页是公开且共享缓存的。
  *
  * TODO: 以下两项需要加列，2026-10-15 用户决定暂缓：
  * - qa 的「已回答」现在用 status=close 表示；社区通行做法是把某条回复标为答案
@@ -56,8 +60,11 @@ use Illuminate\Validation\ValidationException;
  */
 class DiscussionService
 {
-    /** 未登录用户看不到、basic 角色只能看自己的这几类话题 */
+    /** 登录即可发起的话题类型 */
     private const COLLABORATION_TYPES = ['discussion', 'issue'];
+
+    /** 不公开的话题类型：未登录用户看不到，basic 角色在无权管理的对象上只能看自己的 */
+    private const PRIVATE_TYPES = ['discussion'];
 
     /** 批注的锚点字段：定位到句子里的哪一段 */
     private const ANCHOR_FIELDS = ['pos_start', 'pos_end', 'quote_exact', 'quote_prefix', 'quote_suffix'];
@@ -77,6 +84,7 @@ class DiscussionService
     public function __construct(
         private readonly UserService $users,
         private readonly AgentGrantService $grants,
+        private readonly TipitakaReadingService $reading,
     ) {}
 
     /**
@@ -101,6 +109,86 @@ class DiscussionService
         $query->orderBy(ltrim($sort, '-'), str_starts_with($sort, '-') ? 'desc' : 'asc');
 
         $page = $query->paginate($perPage);
+        $this->decorate($page->getCollection(), $viewerUid);
+
+        return $page;
+    }
+
+    /**
+     * 某个 channel 的一段经文（整个 channel / 一本书 / 一章 / 一段段落区间）里，挂在句子上的话题。
+     *
+     * 与 {@see self::listTopics()} 同一套口径（类型过滤、墓碑、可见性），区别只在范围：那边是
+     * 一个对象，这边是一批句子，所以每条多带所在句子的坐标（`sentence_*` 属性），按经文顺序
+     * （书、段、句起始词）排列，同一句里按时间。
+     *
+     * `discussions.res_id` 是 uuid、`sentences.uid` 是 varchar，pgsql 不会隐式转换，所以关联时
+     * 把 res_id 转成文本；不转 sentences 那边，免得遇到不是 uuid 格式的旧句子 uid 整条查询报错。
+     *
+     * @param  array{book?: int, chapter?: int, para?: int, to?: int, type?: string, status?: string, severity?: string}  $filters
+     * @return LengthAwarePaginator<int, Discussion>
+     */
+    public function listInChannel(string $channel, array $filters, ?string $viewerUid, int $perPage): LengthAwarePaginator
+    {
+        $this->resetCache();
+        $query = Discussion::withTrashed()
+            ->select('discussions.*')
+            ->addSelect([
+                's.book_id as sentence_book',
+                's.paragraph as sentence_paragraph',
+                's.word_start as sentence_word_start',
+                's.word_end as sentence_word_end',
+            ])
+            // 用 join 不用 belongsTo + whereHas：要按句子的 channel / 范围过滤、按经文顺序排序，
+            // 关联做不到排序；而且 whereHas 拼出的 `sentences.uid = discussions.res_id` 没处插
+            // ::text，pgsql 直接报 varchar = uuid。坐标顺带从这里取，不必再预加载一次
+            ->join('sentences as s', fn ($join) => $join->on(DB::raw('discussions.res_id::text'), '=', 's.uid'))
+            ->where('discussions.res_type', 'sentence')
+            ->where('s.channel_uid', $channel)
+            ->whereNull('s.deleted_at')
+            ->whereNull('discussions.parent')
+            // 删了的话题只有还挂着回复时才留下（墓碑），同 topicQuery()
+            ->where(fn ($q) => $q->whereNull('discussions.deleted_at')
+                ->orWhereExists(fn ($sub) => $sub->select(DB::raw(1))
+                    ->from('discussions as r')
+                    ->whereColumn('r.parent', 'discussions.id')
+                    ->whereNull('r.deleted_at')))
+            ->when($filters['status'] ?? null, fn ($q, $value) => $q->where('discussions.status', $value))
+            ->when($filters['severity'] ?? null, fn ($q, $value) => $q->whereIn('discussions.severity', explode(',', $value)))
+            ->with(self::relations())
+            ->withCount('replies as reply_count');
+
+        $types = isset($filters['type']) ? explode(',', $filters['type']) : Discussion::THREAD_TYPES;
+        $query->whereIn('discussions.type', $types);
+
+        if (isset($filters['book'])) {
+            $book = (int) $filters['book'];
+            $query->where('s.book_id', $book);
+            if (isset($filters['chapter'])) {
+                $query->whereBetween('s.paragraph', $this->reading->chapterRange($book, (int) $filters['chapter']));
+            } elseif (isset($filters['para'])) {
+                $from = (int) $filters['para'];
+                $to = (int) ($filters['to'] ?? $from);
+                if ($to < $from) {
+                    throw ValidationException::withMessages(['to' => __('site.invalid_parameter')]);
+                }
+                $query->whereBetween('s.paragraph', [$from, $to]);
+            }
+        }
+
+        // 可见性同 applyVisibility()：一个 channel 里的句子管理者是同一批人，按 channel 判一次
+        if ($viewerUid === null) {
+            $query->whereNotIn('discussions.type', self::PRIVATE_TYPES);
+        } elseif ($this->isBasic($viewerUid) && ! in_array($channel, $this->editableChannels($viewerUid), true)) {
+            $query->where(fn ($q) => $q->whereNotIn('discussions.type', self::PRIVATE_TYPES)
+                ->orWhere('discussions.editor_uid', $viewerUid));
+        }
+
+        $page = $query
+            ->orderBy('s.book_id')
+            ->orderBy('s.paragraph')
+            ->orderBy('s.word_start')
+            ->orderBy('discussions.created_at')
+            ->paginate($perPage);
         $this->decorate($page->getCollection(), $viewerUid);
 
         return $page;
@@ -166,10 +254,10 @@ class DiscussionService
                 }
             });
         if ($viewerUid === null) {
-            $query->whereNotIn('type', self::COLLABORATION_TYPES);
+            $query->whereNotIn('type', self::PRIVATE_TYPES);
         } elseif ($this->isBasic($viewerUid)) {
             $managed = $this->managedTargets($viewerUid, $idsByType->all());
-            $query->where(fn ($q) => $q->whereNotIn('type', self::COLLABORATION_TYPES)
+            $query->where(fn ($q) => $q->whereNotIn('type', self::PRIVATE_TYPES)
                 ->orWhere('editor_uid', $viewerUid)
                 ->orWhereIn('res_id', $managed));
         }
@@ -333,7 +421,9 @@ class DiscussionService
     /**
      * 局部更新。title / status / type / severity 只对话题有效。
      *
-     * 改 type 时回复跟着改；新类型不收原来的 severity 时，severity 清空。
+     * 改 type 时回复跟着改；新类型不收原来的 severity 时，severity 清空。锚点不清：
+     * 留着不显示也不影响校验，改回可带锚点的类型时位置自动恢复。
+     * 改成 glossary 须挂在句子上、且当前用户是该句的管理者（同新建）。
      * 批注：锚点可改，没有 status，type 只能在 note / commentary 之间改，
      * 正文不能清空，commentary 的正文必须是义注句子模板（按改后的 type 与正文判）。
      *
@@ -366,6 +456,9 @@ class DiscussionService
         }
 
         $type = $data['type'] ?? $discussion->type;
+        if ($type === Discussion::TYPE_GLOSSARY && $discussion->type !== Discussion::TYPE_GLOSSARY) {
+            $this->assertCanBecomeGlossary($discussion, $userUid);
+        }
         if (array_key_exists('severity', $data)) {
             if ($data['severity'] !== null && ! in_array($data['severity'], Discussion::SEVERITIES[$type] ?? [], true)) {
                 throw ValidationException::withMessages(['severity' => __('messages.discussion_severity_not_allowed')]);
@@ -509,11 +602,12 @@ class DiscussionService
             && in_array($data['type'], Discussion::INJECTED_TYPES, true) !== $isAnnotation) {
             $errors['type'] = __('messages.discussion_type_group');
         }
-        if (! $isAnnotation) {
+        if (! in_array($data['type'] ?? $discussion->type, Discussion::ANCHORED_TYPES, true)) {
             foreach (array_intersect(self::ANCHOR_FIELDS, array_keys($data)) as $field) {
                 $errors[$field] = __('messages.discussion_anchor_thread');
             }
-        } else {
+        }
+        if ($isAnnotation) {
             if (array_key_exists('status', $data)) {
                 $errors['status'] = __('messages.discussion_annotation_no_status');
             }
@@ -527,6 +621,19 @@ class DiscussionService
         }
         if ($errors !== []) {
             throw ValidationException::withMessages($errors);
+        }
+    }
+
+    /**
+     * 话题改成 glossary：与新建同口径，只能挂在句子上、只有该句的管理者能改。
+     */
+    private function assertCanBecomeGlossary(Discussion $discussion, string $userUid): void
+    {
+        if ($discussion->res_type !== 'sentence') {
+            throw ValidationException::withMessages(['type' => __('messages.discussion_glossary_target')]);
+        }
+        if (! $this->canManageTarget($userUid, $discussion->res_type, $discussion->res_id)) {
+            abort(403, __('messages.discussion_forbidden'));
         }
     }
 
@@ -558,12 +665,12 @@ class DiscussionService
     private function applyVisibility(Builder $query, ?string $viewerUid, string $targetType, string $targetId): void
     {
         if ($viewerUid === null) {
-            $query->whereNotIn('type', self::COLLABORATION_TYPES);
+            $query->whereNotIn('type', self::PRIVATE_TYPES);
 
             return;
         }
         if ($this->isBasic($viewerUid) && ! $this->canManageTarget($viewerUid, $targetType, $targetId)) {
-            $query->where(fn ($q) => $q->whereNotIn('type', self::COLLABORATION_TYPES)
+            $query->where(fn ($q) => $q->whereNotIn('type', self::PRIVATE_TYPES)
                 ->orWhere('editor_uid', $viewerUid));
         }
     }
@@ -573,7 +680,7 @@ class DiscussionService
      */
     private function assertVisible(Discussion $topic, ?string $viewerUid): void
     {
-        if (! in_array($topic->type, self::COLLABORATION_TYPES, true)) {
+        if (! in_array($topic->type, self::PRIVATE_TYPES, true)) {
             return;
         }
         if ($viewerUid === null) {
@@ -600,8 +707,8 @@ class DiscussionService
      * 当前用户能在这个对象上发起哪些类型的话题。
      *
      * 协作类（discussion / issue）登录即可；qa / help 沿用 v2 `can_create` 的口径：
-     * 只能发在文章上，而且只有文章的编辑者能发；批注（note / commentary）只能加在句子上，
-     * 而且只有该句的管理者能加（v2 登录即可，v3 收紧）。
+     * 只能发在文章上，而且只有文章的编辑者能发；批注（note / commentary）与 glossary 只能加在
+     * 句子上，而且只有该句的管理者能加（v2 登录即可，v3 收紧）。
      *
      * @return list<string>
      */
@@ -616,7 +723,7 @@ class DiscussionService
         }
         // 批注注入阅读页、所有读者可见，只有该句的管理者能加
         if ($targetType === 'sentence' && $this->canManageTarget($userUid, $targetType, $targetId)) {
-            array_push($types, Discussion::TYPE_NOTE, Discussion::TYPE_COMMENTARY);
+            array_push($types, Discussion::TYPE_GLOSSARY, Discussion::TYPE_NOTE, Discussion::TYPE_COMMENTARY);
         }
 
         return $types;

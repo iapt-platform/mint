@@ -7726,9 +7726,10 @@ export interface paths {
         /**
          * 列出某个对象上的话题
          * @description 只列话题（不含回复），删除了但还有回复的话题以墓碑出现（deleted_at 有值、内容为空）。
-         *     未登录看不到协作类话题（discussion / issue）；basic 角色在自己无权管理的对象上只看得到
-         *     自己发起的协作类话题。各状态的数量与「能发起哪些类型」见 `GET /v3/discussions/summary`。
-         *     不传 type 时只列评论线程（discussion / qa / help / issue），批注要显式 type=note / commentary。
+         *     未登录看不到不公开的话题（discussion）；basic 角色在自己无权管理的对象上只看得到
+         *     自己发起的不公开话题。各状态的数量与「能发起哪些类型」见 `GET /v3/discussions/summary`。
+         *     不传 type 时只列评论线程（discussion / qa / help / issue / glossary），批注要显式 type=note / commentary。
+         *     要一段经文（一章、一段段落区间）里的全部话题，用 `GET /v3/tipitaka-discussions/{channel}`。
          *
          *     实现：`V3\DiscussionController@index`
          */
@@ -7741,7 +7742,10 @@ export interface paths {
          *     其它类型不收。默认会通知对象的作者（站内信 + webhook），`notify=false` 关闭。
          *     批注（note / commentary）只能加在句子上，且只有该句所在 channel 的编辑者能加；
          *     标题可省、正文必填，commentary 的正文必须是义注句子模板 `{{book-para-start-end}}`
-         *     （可多句并列）；可带锚点 pos_* / quote_*（评论线程传了 422）；不发通知。
+         *     （可多句并列）；可带锚点 pos_* / quote_*；不发通知。
+         *     glossary（外挂术语：不改译文，给锚点处的译文挂上术语）是评论线程，title 必填、填术语词头；
+         *     与批注一样只能挂在句子上、只有该句所在 channel 的编辑者能发，对所有人公开可见。
+         *     锚点只有 note / commentary / issue / glossary 收，其它类型传了 422。
          *
          *     实现：`V3\DiscussionController@store`
          */
@@ -7765,8 +7769,8 @@ export interface paths {
          * 批量取讨论角标
          * @description 每个对象返回未关闭的评论线程数（total）与其中当前用户发起的数目（mine，未登录为 0），
          *     按请求顺序、一个不少（没有讨论的为 0）。只数评论线程（discussion / qa / help / issue），
-         *     批注与已删除的不算；可见性与列表相同：未登录不数协作类话题，basic 角色在无权管理的
-         *     对象上只数自己发起的协作类话题。最多 500 个对象。
+         *     批注与已删除的不算；可见性与列表相同：未登录不数不公开的话题（discussion），basic 角色在
+         *     无权管理的对象上只数自己发起的不公开话题。最多 500 个对象。
          *     与 v2 的区别：入参是对象 uid 而不是句子坐标；只给计数不给明细；v2 不分类型、不管可见性。
          *
          *     实现：`V3\DiscussionBatchCountController@__invoke`
@@ -7833,7 +7837,8 @@ export interface paths {
          * 修改话题或回复（局部更新）
          * @description 只改传了的字段。title / status / type / severity 只对话题有效，回复传了 422。
          *     作者或对象的管理者（句子、逐词所在 channel 的编辑者，文章的编辑者）可改；
-         *     改 type 时回复跟着改，新类型不收原来的 severity 时 severity 清空。
+         *     改 type 时回复跟着改，新类型不收原来的 severity 时 severity 清空（锚点保留，改回可带锚点的类型时恢复）；
+         *     改成 glossary 须挂在句子上、且是该句的管理者。
          *     批注：没有 status，type 只能在 note / commentary 之间改（不能与评论线程互转），
          *     正文不能清空，可改锚点。
          *     改了内容（标题、正文、锚点）时 co_editor 跟着这次写入走：人亲自改则清空，AI 代改则换成该模型；
@@ -8266,6 +8271,33 @@ export interface paths {
          *     实现：`V3\SessionController@store`
          */
         post: operations["post_api_v3_sessions"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/tipitaka-discussions/{channel}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 列出一段经文里的话题
+         * @description 只列挂在该 channel 句子上的话题（不含回复），按经文顺序（书、段、句）排列，同一句里按时间；
+         *     每条带 `sentence`（所在句子的坐标）。删除了但还有回复的话题以墓碑出现。
+         *     不传 type 时只列评论线程（discussion / qa / help / issue / glossary），批注要显式
+         *     type=note / commentary。可见性同 `GET /v3/discussions`：未登录看不到 discussion；
+         *     basic 角色在自己不能编辑的 channel 上只看得到自己发起的 discussion。
+         *     channel 不存在或范围内没有讨论都返回空列表；chapter 不存在 404。
+         *
+         *     实现：`V3\TipitakaDiscussionController@__invoke`
+         */
+        get: operations["get_api_v3_tipitaka_discussions_channel_"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -34489,7 +34521,7 @@ export interface operations {
                 /** @description 挂靠对象的 uuid */
                 target_id: string;
                 /** @description 类型，不传则只列评论线程 */
-                type?: "discussion" | "qa" | "help" | "issue" | "note" | "commentary";
+                type?: "discussion" | "qa" | "help" | "issue" | "glossary" | "note" | "commentary";
                 /** @description 话题状态，不传则两种都要 */
                 status?: "active" | "close";
                 /**
@@ -34538,6 +34570,13 @@ export interface operations {
                             quote_suffix?: string | null;
                             /** @description 仅在部分查询口径下返回。 */
                             reply_count?: number;
+                            /** @description 仅在部分查询口径下返回。 */
+                            sentence?: {
+                                book?: number;
+                                paragraph?: number;
+                                word_start?: number;
+                                word_end?: number;
+                            };
                             editor?: {
                                 id?: string;
                                 nickName?: string;
@@ -34595,8 +34634,8 @@ export interface operations {
                      * @default discussion
                      * @enum {string}
                      */
-                    type?: "discussion" | "qa" | "help" | "issue" | "note" | "commentary";
-                    /** @description 标题，最长 256 字符；评论线程必填，批注可省 */
+                    type?: "discussion" | "qa" | "help" | "issue" | "glossary" | "note" | "commentary";
+                    /** @description 标题，最长 256 字符；评论线程必填（glossary 填术语词头），批注可省 */
                     title?: string;
                     /** @description 正文（markdown）；批注必填 */
                     content?: string;
@@ -34605,15 +34644,15 @@ export interface operations {
                      * @enum {string}
                      */
                     severity?: "error" | "warning" | "suggestion" | "urgent" | "normal";
-                    /** @description 批注锚点在句子文本中的起始偏移（只限批注） */
+                    /** @description 锚点在句子文本中的起始偏移（只限 note / commentary / issue / glossary） */
                     pos_start?: number;
-                    /** @description 批注锚点的结束偏移，批注插在这里（只限批注） */
+                    /** @description 锚点的结束偏移，批注插在这里（只限 note / commentary / issue / glossary） */
                     pos_end?: number;
-                    /** @description 锚定的原文片段（只限批注） */
+                    /** @description 锚定的原文片段（只限 note / commentary / issue / glossary） */
                     quote_exact?: string;
-                    /** @description 锚定片段前的上下文，用于重新定位（只限批注） */
+                    /** @description 锚定片段前的上下文，用于重新定位（只限 note / commentary / issue / glossary） */
                     quote_prefix?: string;
-                    /** @description 锚定片段后的上下文，用于重新定位（只限批注） */
+                    /** @description 锚定片段后的上下文，用于重新定位（只限 note / commentary / issue / glossary） */
                     quote_suffix?: string;
                     /** @description 话题模板（文章）的 uuid */
                     tpl_id?: string;
@@ -34656,6 +34695,13 @@ export interface operations {
                             quote_suffix?: string | null;
                             /** @description 仅在部分查询口径下返回。 */
                             reply_count?: number;
+                            /** @description 仅在部分查询口径下返回。 */
+                            sentence?: {
+                                book?: number;
+                                paragraph?: number;
+                                word_start?: number;
+                                word_end?: number;
+                            };
                             editor?: {
                                 id?: string;
                                 nickName?: string;
@@ -34717,6 +34763,13 @@ export interface operations {
                             quote_suffix?: string | null;
                             /** @description 仅在部分查询口径下返回。 */
                             reply_count?: number;
+                            /** @description 仅在部分查询口径下返回。 */
+                            sentence?: {
+                                book?: number;
+                                paragraph?: number;
+                                word_start?: number;
+                                word_end?: number;
+                            };
                             editor?: {
                                 id?: string;
                                 nickName?: string;
@@ -34813,7 +34866,7 @@ export interface operations {
                 /** @description 挂靠对象的 uuid */
                 target_id: string;
                 /** @description 只数这种类型，不传则只数评论线程 */
-                type?: "discussion" | "qa" | "help" | "issue" | "note" | "commentary";
+                type?: "discussion" | "qa" | "help" | "issue" | "glossary" | "note" | "commentary";
             };
             header?: never;
             path?: never;
@@ -34883,6 +34936,13 @@ export interface operations {
                             quote_suffix?: string | null;
                             /** @description 仅在部分查询口径下返回。 */
                             reply_count?: number;
+                            /** @description 仅在部分查询口径下返回。 */
+                            sentence?: {
+                                book?: number;
+                                paragraph?: number;
+                                word_start?: number;
+                                word_end?: number;
+                            };
                             editor?: {
                                 id?: string;
                                 nickName?: string;
@@ -34959,6 +35019,13 @@ export interface operations {
                             quote_suffix?: string | null;
                             /** @description 仅在部分查询口径下返回。 */
                             reply_count?: number;
+                            /** @description 仅在部分查询口径下返回。 */
+                            sentence?: {
+                                book?: number;
+                                paragraph?: number;
+                                word_start?: number;
+                                word_end?: number;
+                            };
                             editor?: {
                                 id?: string;
                                 nickName?: string;
@@ -35029,21 +35096,21 @@ export interface operations {
                      * @description 类型（只限话题；评论线程与批注不能互转）
                      * @enum {string}
                      */
-                    type?: "discussion" | "qa" | "help" | "issue" | "note" | "commentary";
+                    type?: "discussion" | "qa" | "help" | "issue" | "glossary" | "note" | "commentary";
                     /**
                      * @description 严重程度（只限话题），null 表示清空
                      * @enum {string}
                      */
                     severity?: "error" | "warning" | "suggestion" | "urgent" | "normal";
-                    /** @description 锚点起始偏移（只限批注） */
+                    /** @description 锚点起始偏移（只限 note / commentary / issue / glossary） */
                     pos_start?: number;
-                    /** @description 锚点结束偏移（只限批注） */
+                    /** @description 锚点结束偏移（只限 note / commentary / issue / glossary） */
                     pos_end?: number;
-                    /** @description 锚定的原文片段（只限批注） */
+                    /** @description 锚定的原文片段（只限 note / commentary / issue / glossary） */
                     quote_exact?: string;
-                    /** @description 锚定片段前的上下文（只限批注） */
+                    /** @description 锚定片段前的上下文（只限 note / commentary / issue / glossary） */
                     quote_prefix?: string;
-                    /** @description 锚定片段后的上下文（只限批注） */
+                    /** @description 锚定片段后的上下文（只限 note / commentary / issue / glossary） */
                     quote_suffix?: string;
                 };
             };
@@ -35079,6 +35146,13 @@ export interface operations {
                             quote_suffix?: string | null;
                             /** @description 仅在部分查询口径下返回。 */
                             reply_count?: number;
+                            /** @description 仅在部分查询口径下返回。 */
+                            sentence?: {
+                                book?: number;
+                                paragraph?: number;
+                                word_start?: number;
+                                word_end?: number;
+                            };
                             editor?: {
                                 id?: string;
                                 nickName?: string;
@@ -35170,6 +35244,13 @@ export interface operations {
                             quote_suffix?: string | null;
                             /** @description 仅在部分查询口径下返回。 */
                             reply_count?: number;
+                            /** @description 仅在部分查询口径下返回。 */
+                            sentence?: {
+                                book?: number;
+                                paragraph?: number;
+                                word_start?: number;
+                                word_end?: number;
+                            };
                             editor?: {
                                 id?: string;
                                 nickName?: string;
@@ -35259,6 +35340,13 @@ export interface operations {
                             quote_suffix?: string | null;
                             /** @description 仅在部分查询口径下返回。 */
                             reply_count?: number;
+                            /** @description 仅在部分查询口径下返回。 */
+                            sentence?: {
+                                book?: number;
+                                paragraph?: number;
+                                word_start?: number;
+                                word_end?: number;
+                            };
                             editor?: {
                                 id?: string;
                                 nickName?: string;
@@ -35320,6 +35408,13 @@ export interface operations {
                             quote_suffix?: string | null;
                             /** @description 仅在部分查询口径下返回。 */
                             reply_count?: number;
+                            /** @description 仅在部分查询口径下返回。 */
+                            sentence?: {
+                                book?: number;
+                                paragraph?: number;
+                                word_start?: number;
+                                word_end?: number;
+                            };
                             editor?: {
                                 id?: string;
                                 nickName?: string;
@@ -36307,6 +36402,136 @@ export interface operations {
                     "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
             };
+        };
+    };
+    get_api_v3_tipitaka_discussions_channel_: {
+        parameters: {
+            query?: {
+                /** @description 每页数量，最大 200 */
+                per_page?: number;
+                /**
+                 * @description 书号；与 chapter / para / to 一起用时必填，不传则是整个 channel
+                 * @example 169
+                 */
+                book?: number;
+                /**
+                 * @description 章节起始段落号，服务端按章节长度展开成段落区间；不能与 para / to 同用
+                 * @example 893
+                 */
+                chapter?: number;
+                /**
+                 * @description 起始段落号
+                 * @example 895
+                 */
+                para?: number;
+                /**
+                 * @description 结束段落号（含），缺省同 para
+                 * @example 896
+                 */
+                to?: number;
+                /**
+                 * @description 类型，逗号分隔多选；不传则只列评论线程
+                 * @example issue,glossary
+                 */
+                type?: string;
+                /** @description 话题状态，不传则两种都要 */
+                status?: "active" | "close";
+                /**
+                 * @description 严重程度，逗号分隔多选
+                 * @example error,warning
+                 */
+                severity?: string;
+                /** @description 页码 */
+                page?: number;
+            };
+            header?: never;
+            path: {
+                /** @description 句子所在 channel 的 uuid */
+                channel: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            target_type?: string;
+                            target_id?: string;
+                            parent_id?: string | null;
+                            type?: string;
+                            severity?: string | null;
+                            status?: string;
+                            title?: string | null;
+                            content?: string | null;
+                            content_type?: string;
+                            /** @description 仅在部分查询口径下返回。 */
+                            html?: string;
+                            /** @description 仅在部分查询口径下返回。 */
+                            summary?: string;
+                            tpl_id?: string | null;
+                            pos_start?: number | null;
+                            pos_end?: number | null;
+                            quote_exact?: string | null;
+                            quote_prefix?: string | null;
+                            quote_suffix?: string | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            reply_count?: number;
+                            /** @description 仅在部分查询口径下返回。 */
+                            sentence?: {
+                                book?: number;
+                                paragraph?: number;
+                                word_start?: number;
+                                word_end?: number;
+                            };
+                            editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            co_editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            abilities?: {
+                                update?: boolean;
+                                delete?: boolean;
+                                close?: boolean;
+                                reply?: boolean;
+                            };
+                            created_at?: string;
+                            updated_at?: string;
+                            deleted_at?: string | null;
+                        }[];
+                        meta?: components["schemas"]["PaginationMeta"];
+                    };
+                };
+            };
+            /** @description chapter 不是本书存在的段落 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
         };
     };
     get_api_v3_tipitaka_reading_channel_: {

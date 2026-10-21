@@ -131,6 +131,9 @@ return [
     'script_myanmar' => 'Myanmar',
     'script_thai' => 'Thai',
     'commentary_version' => 'Commentary Version',
+    'annotation_mode' => 'Annotations',
+    'annotation_inline' => 'Inline',
+    'annotation_footnote' => 'After paragraph',
     'none' => 'None',
     'cancel' => 'Cancel',
     'confirm' => 'OK',
@@ -162,4 +165,14 @@ return [
     'course_no_history' => 'No past courses',
     'course_history_title' => 'Past Courses',
     'course_history_subtitle' => 'Completed public courses — revisit past study groups',
+
+    // reader: issue 标注（reader.js 弹出层）
+    'issue_title' => 'Issues',
+    'issue_loading' => 'Loading…',
+    'issue_load_failed' => 'Failed to load',
+    'issue_not_found' => 'This issue no longer exists',
+    'issue_replies' => ':count replies',
+    'issue_severity_error' => 'Error',
+    'issue_severity_warning' => 'Warning',
+    'issue_severity_suggestion' => 'Suggestion',
 ];

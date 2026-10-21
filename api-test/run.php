@@ -43,25 +43,46 @@ $servers = $config['servers'];
 $serverArg = is_string($opts['server'] ?? null) ? $opts['server'] : null;
 $envBase = getenv('API_TEST_BASE') ?: null;
 
+// 除了 base_url，还要记下对应的 alias（$serverKey），好去 config.local.php 的
+// servers[alias] 里选账号 / token / 种子数据。完整 URL 会反查 alias。
+$serverKey = null;
 if ($envBase !== null) {
     $config['base_url'] = rtrim($envBase, '/');
+    $serverKey = array_search($config['base_url'], $servers, true) ?: null;
 } elseif ($serverArg !== null && isset($servers[$serverArg])) {
     $config['base_url'] = $servers[$serverArg];
+    $serverKey = $serverArg;
 } elseif ($serverArg !== null && preg_match('#^https?://#', $serverArg)) {
     $config['base_url'] = rtrim($serverArg, '/');
+    $serverKey = array_search($config['base_url'], $servers, true) ?: null;
 } elseif (isset($servers[$config['default_server']])) {
     $config['base_url'] = $servers[$config['default_server']];
+    $serverKey = $config['default_server'];
 } else {
     // config.local.php 的 default_server 也可以直接写完整 base URL
     $config['base_url'] = rtrim($config['default_server'], '/');
+    $serverKey = array_search($config['base_url'], $servers, true) ?: null;
 }
 
-// token 覆盖
+// 按实际 server 选 config.local.php 的 per-server 块（账号 / token / 种子数据跟着 server 走）
+$localServers = $config['local_servers'] ?? null;
+if (is_array($localServers) && $serverKey !== null && isset($localServers[$serverKey])) {
+    $block = $localServers[$serverKey];
+    $config['token'] = $block['token'] ?? $config['token'];
+    $config['username'] = $block['username'] ?? $config['username'];
+    $config['password'] = $block['password'] ?? $config['password'];
+    $config['fixtures'] = $block['fixtures'] ?? $config['fixtures'];
+}
+
+// 环境变量覆盖（高于 config.local.php，低于命令行）
+$config['token'] = getenv('API_TEST_TOKEN') ?: $config['token'];
+$config['username'] = getenv('API_TEST_USERNAME') ?: $config['username'];
+$config['password'] = getenv('API_TEST_PASSWORD') ?: $config['password'];
+
+// 命令行覆盖（最高优先级）
 if (is_string($opts['token'] ?? null) && $opts['token'] !== '') {
     $config['token'] = $opts['token'];
 }
-
-// username/password 覆盖
 if (is_string($opts['username'] ?? null) && $opts['username'] !== '') {
     $config['username'] = $opts['username'];
 }

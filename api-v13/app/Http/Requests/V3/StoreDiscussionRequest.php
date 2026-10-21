@@ -13,7 +13,8 @@ use Illuminate\Validation\Rule;
  * severity 的取值随 type 而定，见 {@see Discussion::SEVERITIES}；不收 severity 的类型传了就 422。
  *
  * 批注（note / commentary）与评论线程的规则不同：只能挂在句子上、标题可省、正文必填，
- * commentary 的正文必须是义注句子模板；锚点（pos_* / quote_*）只有批注收。
+ * commentary 的正文必须是义注句子模板。glossary 也只能挂在句子上。
+ * 锚点（pos_* / quote_*）只有 {@see Discussion::ANCHORED_TYPES} 收。
  */
 class StoreDiscussionRequest extends FormRequest
 {
@@ -32,11 +33,14 @@ class StoreDiscussionRequest extends FormRequest
         $type = $this->input('type', 'discussion');
         $severities = Discussion::SEVERITIES[$type] ?? [];
         $isAnnotation = in_array($type, Discussion::INJECTED_TYPES, true);
-        // 锚点只有批注收：评论线程传了 422，免得静默丢掉
-        $anchor = fn (array $rules) => $isAnnotation ? ['sometimes', 'nullable', ...$rules] : ['prohibited'];
+        $sentenceOnly = in_array($type, Discussion::SENTENCE_ONLY_TYPES, true);
+        // 不收锚点的类型传了 422，免得静默丢掉
+        $anchor = fn (array $rules) => in_array($type, Discussion::ANCHORED_TYPES, true)
+            ? ['sometimes', 'nullable', ...$rules]
+            : ['prohibited'];
 
         return [
-            'target_type' => ['required', 'string', Rule::in($isAnnotation ? ['sentence'] : Discussion::TARGET_TYPES)],
+            'target_type' => ['required', 'string', Rule::in($sentenceOnly ? ['sentence'] : Discussion::TARGET_TYPES)],
             'target_id' => ['required', 'uuid'],
             'type' => ['sometimes', 'string', Rule::in(Discussion::COMMENT_TYPES)],
             'title' => $isAnnotation
@@ -71,6 +75,8 @@ class StoreDiscussionRequest extends FormRequest
         ];
         if (in_array($this->input('type'), Discussion::INJECTED_TYPES, true)) {
             $messages['target_type.in'] = __('messages.discussion_annotation_target');
+        } elseif ($this->input('type') === Discussion::TYPE_GLOSSARY) {
+            $messages['target_type.in'] = __('messages.discussion_glossary_target');
         }
         foreach (self::ANCHOR_FIELDS as $field) {
             $messages["{$field}.prohibited"] = __('messages.discussion_anchor_thread');

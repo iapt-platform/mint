@@ -18,6 +18,7 @@
 |
 */
 
+use App\Http\Controllers\V3\TipitakaDiscussionController;
 use App\Http\Controllers\V3\TipitakaReadingController;
 use App\Http\Controllers\V3\TipitakaRelatedParagraphAggregateController;
 use App\Http\Controllers\V3\TipitakaRelatedParagraphController;
@@ -26,6 +27,11 @@ use Illuminate\Support\Facades\Route;
 // 只有 channel 必填，所以路径上只有它一个变量；book / chapter / para 全是 filter。
 // 不带任何查询串 = 取这个 channel 的全部译文，下载场景要的就是这个。
 Route::get('tipitaka-reading/{channel}', TipitakaReadingController::class)
+    ->whereUuid('channel');
+
+// 一段经文里的讨论：同样只有 channel 必填；book / chapter / para / to 与 type 等都是 filter。
+// 与 /v3/discussions（按单个对象查）必填参数不同，是另一个契约。
+Route::get('tipitaka-discussions/{channel}', TipitakaDiscussionController::class)
     ->whereUuid('channel');
 
 // 段落关联关系：查询（原 v2 related-paragraph）+ 聚合（book_name 列表 / 某 book_name 的 cs_para）。

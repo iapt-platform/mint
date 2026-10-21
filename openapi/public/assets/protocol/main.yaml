@@ -7,7 +7,7 @@ info:
 
     由 `php openapi/scripts/generate.php` 依据 api-v13 的路由与控制器源码生成。
     响应统一封装为 `{ok, message, data}`；`ok=false` 时 `message` 为错误信息。
-  version: 2026.10.15
+  version: 2026.10.21
 servers:
   -
     url: /api
@@ -725,6 +725,8 @@ paths:
     $ref: ./resources/auto/v3-search-search.yaml
   /v3/sessions:
     $ref: ./resources/auto/v3-sessions.yaml
+  '/v3/tipitaka-discussions/{channel}':
+    $ref: ./resources/auto/v3-tipitaka-discussions-channel.yaml
   '/v3/tipitaka-reading/{channel}':
     $ref: ./resources/auto/v3-tipitaka-reading-channel.yaml
   /v3/tipitaka-related-paragraphs:
