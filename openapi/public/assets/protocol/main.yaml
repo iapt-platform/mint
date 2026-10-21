@@ -725,6 +725,8 @@ paths:
     $ref: ./resources/auto/v3-search-search.yaml
   /v3/sessions:
     $ref: ./resources/auto/v3-sessions.yaml
+  '/v3/tipitaka-discussions/{channel}':
+    $ref: ./resources/auto/v3-tipitaka-discussions-channel.yaml
   '/v3/tipitaka-reading/{channel}':
     $ref: ./resources/auto/v3-tipitaka-reading-channel.yaml
   /v3/tipitaka-related-paragraphs:

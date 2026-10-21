@@ -83,6 +83,14 @@ get:
                   reply_count:
                     type: integer
                     description: 仅在部分查询口径下返回。
+                  sentence:
+                    type: object
+                    properties:
+                      book: { type: integer }
+                      paragraph: { type: integer }
+                      word_start: { type: integer }
+                      word_end: { type: integer }
+                    description: 仅在部分查询口径下返回。
                   editor:
                     type: object
                     properties:
@@ -204,6 +212,14 @@ delete:
                     nullable: true
                   reply_count:
                     type: integer
+                    description: 仅在部分查询口径下返回。
+                  sentence:
+                    type: object
+                    properties:
+                      book: { type: integer }
+                      paragraph: { type: integer }
+                      word_start: { type: integer }
+                      word_end: { type: integer }
                     description: 仅在部分查询口径下返回。
                   editor:
                     type: object
@@ -393,6 +409,14 @@ patch:
                     nullable: true
                   reply_count:
                     type: integer
+                    description: 仅在部分查询口径下返回。
+                  sentence:
+                    type: object
+                    properties:
+                      book: { type: integer }
+                      paragraph: { type: integer }
+                      word_start: { type: integer }
+                      word_end: { type: integer }
                     description: 仅在部分查询口径下返回。
                   editor:
                     type: object
