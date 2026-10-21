@@ -190,8 +190,8 @@ post:
     批注（note / commentary）只能加在句子上，且只有该句所在 channel 的编辑者能加；
     标题可省、正文必填，commentary 的正文必须是义注句子模板 `{{book-para-start-end}}`
     （可多句并列）；可带锚点 pos_* / quote_*；不发通知。
-    glossary（术语讨论）是评论线程，title 必填、填术语词头；与批注一样只能挂在句子上、
-    只有该句所在 channel 的编辑者能发，对所有人公开可见。
+    glossary（外挂术语：不改译文，给锚点处的译文挂上术语）是评论线程，title 必填、填术语词头；
+    与批注一样只能挂在句子上、只有该句所在 channel 的编辑者能发，对所有人公开可见。
     锚点只有 note / commentary / issue / glossary 收，其它类型传了 422。
 
     实现：`V3\DiscussionController@store`
