@@ -39,7 +39,7 @@ use Illuminate\Validation\ValidationException;
  * - 其他用户可以回复；没有开关状态，不能与评论线程互转；新建批注不发通知；
  * - 列表与统计不带 type 时只算评论线程，要批注须显式 type=note / commentary。
  *
- * glossary 是评论线程（有回复和开关），但像批注一样只能挂在句子上、只有该句的管理者能发起，
+ * glossary（外挂术语）是评论线程（有回复和开关），但像批注一样只能挂在句子上、只有该句的管理者能发起，
  * 对所有人公开可见。锚点除批注外，issue 与 glossary 也收（{@see Discussion::ANCHORED_TYPES}）。
  *
  * 写入方（`$actor`）由 {@see AgentGrantService::actor()} 给出：人类直接写，或 AI 模型凭人类

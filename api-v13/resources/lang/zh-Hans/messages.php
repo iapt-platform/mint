@@ -28,7 +28,7 @@ return [
     'discussion_type_group' => '评论线程与批注之间不能互相转换。',
     'discussion_commentary_format' => '义注的内容必须是句子模板，如 {{book-para-start-end}}。',
     'discussion_anchor_thread' => '这种类型的讨论不能锚定到文本位置。',
-    'discussion_glossary_target' => '术语讨论只能挂在句子上。',
+    'discussion_glossary_target' => '外挂术语只能挂在句子上。',
     'agent_grant_by_model' => '只有人类能给 AI 模型授权写入。',
     'agent_grant_model_not_found' => 'AI 模型不存在。',
     'agent_grant_not_owner' => '这个 AI 模型不属于你。',

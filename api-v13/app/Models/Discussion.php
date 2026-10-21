@@ -71,7 +71,10 @@ class Discussion extends Model
     /** 批注类型：作为边注注入阅读页，没有回复以外的线程属性（开关、severity） */
     public const INJECTED_TYPES = [self::TYPE_COMMENTARY, self::TYPE_NOTE];
 
-    /** 术语讨论：针对句子里某个词的译法提问或建议，带锚点、只能挂在句子上 */
+    /**
+     * 外挂术语：不改译文原文，给锚点处的一段译文挂上术语（title 是术语词头），阅读页把那段
+     * 原文渲染成 `[[title#原文]]`。带锚点、只能挂在句子上。与术语表（dhamma terms）是两回事。
+     */
     public const TYPE_GLOSSARY = 'glossary';
 
     /** 评论线程：话题 + 一层回复，有开关状态 */

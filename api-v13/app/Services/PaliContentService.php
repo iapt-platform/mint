@@ -749,7 +749,7 @@ class PaliContentService
      * - `commentary`（注释书对应）：content 是义注 / 复注的句子模板 `{{book-para-start-end}}`，
      *   渲染成这几句的译文，作为 {{note}} 边注插在锚点末尾，并追加 <cite> 跳转出处；
      * - `note`（普通边注）：content 就是注解正文（markdown），同样插成 {{note}}，没有出处；
-     * - `glossary`（术语讨论）：锚点处的原文换成 `[[title#原文]]`，渲染成术语（title 是词头）；
+     * - `glossary`（外挂术语）：锚点处的原文换成 `[[title#原文]]`，渲染成术语（title 是词头）；
      * - `issue`：锚点处的原文包一层高亮 span，带 discussion id，阅读器点击看内容；
      *   没有位置的合成一个三角叹号图标放在句尾。只在 html 格式输出。
      * issue / glossary 只注入未关闭的；批注没有开关状态。
