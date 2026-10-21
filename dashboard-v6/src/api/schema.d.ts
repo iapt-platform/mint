@@ -7728,7 +7728,8 @@ export interface paths {
          * @description 只列话题（不含回复），删除了但还有回复的话题以墓碑出现（deleted_at 有值、内容为空）。
          *     未登录看不到不公开的话题（discussion）；basic 角色在自己无权管理的对象上只看得到
          *     自己发起的不公开话题。各状态的数量与「能发起哪些类型」见 `GET /v3/discussions/summary`。
-         *     不传 type 时只列评论线程（discussion / qa / help / issue），批注要显式 type=note / commentary。
+         *     不传 type 时只列评论线程（discussion / qa / help / issue / glossary），批注要显式 type=note / commentary。
+         *     要一段经文（一章、一段段落区间）里的全部话题，用 `GET /v3/tipitaka-discussions/{channel}`。
          *
          *     实现：`V3\DiscussionController@index`
          */
@@ -8270,6 +8271,33 @@ export interface paths {
          *     实现：`V3\SessionController@store`
          */
         post: operations["post_api_v3_sessions"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/tipitaka-discussions/{channel}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 列出一段经文里的话题
+         * @description 只列挂在该 channel 句子上的话题（不含回复），按经文顺序（书、段、句）排列，同一句里按时间；
+         *     每条带 `sentence`（所在句子的坐标）。删除了但还有回复的话题以墓碑出现。
+         *     不传 type 时只列评论线程（discussion / qa / help / issue / glossary），批注要显式
+         *     type=note / commentary。可见性同 `GET /v3/discussions`：未登录看不到 discussion；
+         *     basic 角色在自己不能编辑的 channel 上只看得到自己发起的 discussion。
+         *     channel 不存在或范围内没有讨论都返回空列表；chapter 不存在 404。
+         *
+         *     实现：`V3\TipitakaDiscussionController@__invoke`
+         */
+        get: operations["get_api_v3_tipitaka_discussions_channel_"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -34542,6 +34570,13 @@ export interface operations {
                             quote_suffix?: string | null;
                             /** @description 仅在部分查询口径下返回。 */
                             reply_count?: number;
+                            /** @description 仅在部分查询口径下返回。 */
+                            sentence?: {
+                                book?: number;
+                                paragraph?: number;
+                                word_start?: number;
+                                word_end?: number;
+                            };
                             editor?: {
                                 id?: string;
                                 nickName?: string;
@@ -34660,6 +34695,13 @@ export interface operations {
                             quote_suffix?: string | null;
                             /** @description 仅在部分查询口径下返回。 */
                             reply_count?: number;
+                            /** @description 仅在部分查询口径下返回。 */
+                            sentence?: {
+                                book?: number;
+                                paragraph?: number;
+                                word_start?: number;
+                                word_end?: number;
+                            };
                             editor?: {
                                 id?: string;
                                 nickName?: string;
@@ -34721,6 +34763,13 @@ export interface operations {
                             quote_suffix?: string | null;
                             /** @description 仅在部分查询口径下返回。 */
                             reply_count?: number;
+                            /** @description 仅在部分查询口径下返回。 */
+                            sentence?: {
+                                book?: number;
+                                paragraph?: number;
+                                word_start?: number;
+                                word_end?: number;
+                            };
                             editor?: {
                                 id?: string;
                                 nickName?: string;
@@ -34887,6 +34936,13 @@ export interface operations {
                             quote_suffix?: string | null;
                             /** @description 仅在部分查询口径下返回。 */
                             reply_count?: number;
+                            /** @description 仅在部分查询口径下返回。 */
+                            sentence?: {
+                                book?: number;
+                                paragraph?: number;
+                                word_start?: number;
+                                word_end?: number;
+                            };
                             editor?: {
                                 id?: string;
                                 nickName?: string;
@@ -34963,6 +35019,13 @@ export interface operations {
                             quote_suffix?: string | null;
                             /** @description 仅在部分查询口径下返回。 */
                             reply_count?: number;
+                            /** @description 仅在部分查询口径下返回。 */
+                            sentence?: {
+                                book?: number;
+                                paragraph?: number;
+                                word_start?: number;
+                                word_end?: number;
+                            };
                             editor?: {
                                 id?: string;
                                 nickName?: string;
@@ -35083,6 +35146,13 @@ export interface operations {
                             quote_suffix?: string | null;
                             /** @description 仅在部分查询口径下返回。 */
                             reply_count?: number;
+                            /** @description 仅在部分查询口径下返回。 */
+                            sentence?: {
+                                book?: number;
+                                paragraph?: number;
+                                word_start?: number;
+                                word_end?: number;
+                            };
                             editor?: {
                                 id?: string;
                                 nickName?: string;
@@ -35174,6 +35244,13 @@ export interface operations {
                             quote_suffix?: string | null;
                             /** @description 仅在部分查询口径下返回。 */
                             reply_count?: number;
+                            /** @description 仅在部分查询口径下返回。 */
+                            sentence?: {
+                                book?: number;
+                                paragraph?: number;
+                                word_start?: number;
+                                word_end?: number;
+                            };
                             editor?: {
                                 id?: string;
                                 nickName?: string;
@@ -35263,6 +35340,13 @@ export interface operations {
                             quote_suffix?: string | null;
                             /** @description 仅在部分查询口径下返回。 */
                             reply_count?: number;
+                            /** @description 仅在部分查询口径下返回。 */
+                            sentence?: {
+                                book?: number;
+                                paragraph?: number;
+                                word_start?: number;
+                                word_end?: number;
+                            };
                             editor?: {
                                 id?: string;
                                 nickName?: string;
@@ -35324,6 +35408,13 @@ export interface operations {
                             quote_suffix?: string | null;
                             /** @description 仅在部分查询口径下返回。 */
                             reply_count?: number;
+                            /** @description 仅在部分查询口径下返回。 */
+                            sentence?: {
+                                book?: number;
+                                paragraph?: number;
+                                word_start?: number;
+                                word_end?: number;
+                            };
                             editor?: {
                                 id?: string;
                                 nickName?: string;
@@ -36311,6 +36402,136 @@ export interface operations {
                     "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
             };
+        };
+    };
+    get_api_v3_tipitaka_discussions_channel_: {
+        parameters: {
+            query?: {
+                /** @description 每页数量，最大 200 */
+                per_page?: number;
+                /**
+                 * @description 书号；与 chapter / para / to 一起用时必填，不传则是整个 channel
+                 * @example 169
+                 */
+                book?: number;
+                /**
+                 * @description 章节起始段落号，服务端按章节长度展开成段落区间；不能与 para / to 同用
+                 * @example 893
+                 */
+                chapter?: number;
+                /**
+                 * @description 起始段落号
+                 * @example 895
+                 */
+                para?: number;
+                /**
+                 * @description 结束段落号（含），缺省同 para
+                 * @example 896
+                 */
+                to?: number;
+                /**
+                 * @description 类型，逗号分隔多选；不传则只列评论线程
+                 * @example issue,glossary
+                 */
+                type?: string;
+                /** @description 话题状态，不传则两种都要 */
+                status?: "active" | "close";
+                /**
+                 * @description 严重程度，逗号分隔多选
+                 * @example error,warning
+                 */
+                severity?: string;
+                /** @description 页码 */
+                page?: number;
+            };
+            header?: never;
+            path: {
+                /** @description 句子所在 channel 的 uuid */
+                channel: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            target_type?: string;
+                            target_id?: string;
+                            parent_id?: string | null;
+                            type?: string;
+                            severity?: string | null;
+                            status?: string;
+                            title?: string | null;
+                            content?: string | null;
+                            content_type?: string;
+                            /** @description 仅在部分查询口径下返回。 */
+                            html?: string;
+                            /** @description 仅在部分查询口径下返回。 */
+                            summary?: string;
+                            tpl_id?: string | null;
+                            pos_start?: number | null;
+                            pos_end?: number | null;
+                            quote_exact?: string | null;
+                            quote_prefix?: string | null;
+                            quote_suffix?: string | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            reply_count?: number;
+                            /** @description 仅在部分查询口径下返回。 */
+                            sentence?: {
+                                book?: number;
+                                paragraph?: number;
+                                word_start?: number;
+                                word_end?: number;
+                            };
+                            editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            co_editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            abilities?: {
+                                update?: boolean;
+                                delete?: boolean;
+                                close?: boolean;
+                                reply?: boolean;
+                            };
+                            created_at?: string;
+                            updated_at?: string;
+                            deleted_at?: string | null;
+                        }[];
+                        meta?: components["schemas"]["PaginationMeta"];
+                    };
+                };
+            };
+            /** @description chapter 不是本书存在的段落 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
         };
     };
     get_api_v3_tipitaka_reading_channel_: {

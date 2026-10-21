@@ -4,6 +4,7 @@ import MdOrigin from "../../sentence/components/MdOrigin";
 import MdTranslation from "../../sentence/components/MdTranslation";
 import type { IWidgetSentEditInner } from "../../sentence/SentEdit";
 import CommentaryPad from "./CommentaryPad";
+import { SENT_HIGHLIGHT_BG, useSentHighlight } from "./useSentHighlight";
 
 interface IWidget {
   data?: IWidgetSentEditInner[];
@@ -12,6 +13,8 @@ const ParagraphReadSent = ({ data }: IWidget) => {
   const direction = useSetting("setting.layout.direction");
   const layoutCommentary = useSetting("setting.layout.commentary");
   console.debug("direction", direction);
+
+  const { rootRef, isHighlighted } = useSentHighlight();
 
   const channels: string[] = [];
   data?.forEach((value) => {
@@ -23,7 +26,7 @@ const ParagraphReadSent = ({ data }: IWidget) => {
   });
 
   return (
-    <div>
+    <div ref={rootRef}>
       {data?.map((item) => {
         return (
           <Flex vertical={layoutCommentary === "column"}>
@@ -45,8 +48,17 @@ const ParagraphReadSent = ({ data }: IWidget) => {
               >
                 {item.translation?.map((tran, id) => {
                   return (
-                    <div>
-                      <MdTranslation text={tran.html} key={id} />
+                    <div
+                      key={id}
+                      data-sent-uid={tran.id}
+                      style={{
+                        transition: "background-color 0.3s",
+                        backgroundColor: isHighlighted(tran.id)
+                          ? SENT_HIGHLIGHT_BG
+                          : undefined,
+                      }}
+                    >
+                      <MdTranslation text={tran.html} />
                     </div>
                   );
                 })}

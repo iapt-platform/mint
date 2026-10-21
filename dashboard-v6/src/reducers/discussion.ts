@@ -19,6 +19,8 @@ export interface IShowDiscussion {
 interface IState {
   message?: IShowDiscussion;
   anchor?: IShowDiscussion;
+  /** 讨论面板「本章」列表选中的那一句（句子 id），正文持续高亮它 */
+  highlight?: string;
 }
 
 const initialState: IState = {};
@@ -33,13 +35,18 @@ export const slice = createSlice({
     showAnchor: (state, action: PayloadAction<IShowDiscussion>) => {
       state.anchor = action.payload;
     },
+    setHighlight: (state, action: PayloadAction<string | undefined>) => {
+      state.highlight = action.payload;
+    },
   },
 });
 
-export const { show, showAnchor } = slice.actions;
+export const { show, showAnchor, setHighlight } = slice.actions;
 
 export const message = (state: RootState): IShowDiscussion | undefined =>
   state.discussion.message;
 export const anchor = (state: RootState): IShowDiscussion | undefined =>
   state.discussion.anchor;
+export const highlight = (state: RootState): string | undefined =>
+  state.discussion.highlight;
 export default slice.reducer;

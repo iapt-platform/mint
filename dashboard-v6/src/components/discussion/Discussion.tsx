@@ -23,6 +23,8 @@ interface IWidget {
   /** 只列这种类型的话题；不传则列出全部类型 */
   type?: TDiscussionType;
   onTopicReady?: (value: IComment) => void;
+  /** 从话题详情点返回：由外部给的 showTopicId 打开的话题，要外部清掉它才回得到列表 */
+  onBack?: () => void;
 }
 
 const Discussion = ({
@@ -32,6 +34,7 @@ const Discussion = ({
   focus,
   type,
   onTopicReady,
+  onBack,
 }: IWidget) => {
   // 用户手动点击触发的状态
   const [manualTopicId, setManualTopicId] = useState<string>();
@@ -75,7 +78,10 @@ const Discussion = ({
             <Button
               shape="circle"
               icon={<ArrowLeftOutlined />}
-              onClick={() => setManualOpen(false)}
+              onClick={() => {
+                setManualOpen(false);
+                onBack?.();
+              }}
             />
             <Text strong style={{ fontSize: 16 }}>
               {topic ? topic.title : topicTitle}

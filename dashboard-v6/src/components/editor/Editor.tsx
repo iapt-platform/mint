@@ -142,7 +142,13 @@ export default function Editor({
       key: "discussion",
       icon: <CommentOutlined />,
       label: "讨论",
-      content: <DiscussionBox />,
+      content: (
+        <DiscussionBox
+          articleId={articleId}
+          articleType={articleType}
+          channelId={channelId}
+        />
+      ),
     },
     {
       key: "suggestion",

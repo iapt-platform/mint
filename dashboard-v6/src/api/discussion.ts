@@ -22,6 +22,10 @@ export type TResType =
   | "task";
 
 type TopicQuery = paths["/v3/discussions"]["get"]["parameters"]["query"];
+/** 按经文范围列话题的过滤条件（channel 在路径上，单独传） */
+export type TTextTopicQuery = NonNullable<
+  paths["/v3/tipitaka-discussions/{channel}"]["get"]["parameters"]["query"]
+>;
 type SummaryQuery =
   paths["/v3/discussions/summary"]["get"]["parameters"]["query"];
 type TopicBody = NonNullable<
@@ -133,6 +137,13 @@ export interface IComment {
   /** 删除了但还挂着回复的话题（墓碑）：内容为空，回复照常显示 */
   deleted?: boolean;
   newTpl?: boolean;
+  /** 所在句子的坐标：只有按经文范围列出时有（`/v3/tipitaka-discussions`） */
+  sentence?: {
+    book: number;
+    paragraph: number;
+    wordStart: number;
+    wordEnd: number;
+  };
   createdAt?: string;
   updatedAt?: string;
 }
@@ -164,6 +175,14 @@ export const toIComment = (value: DiscussionData): IComment => ({
   childrenCount: value.reply_count,
   abilities: { ...NO_ABILITIES, ...value.abilities },
   deleted: !!value.deleted_at,
+  sentence: value.sentence
+    ? {
+        book: value.sentence.book ?? 0,
+        paragraph: value.sentence.paragraph ?? 0,
+        wordStart: value.sentence.word_start ?? 0,
+        wordEnd: value.sentence.word_end ?? 0,
+      }
+    : undefined,
   createdAt: value.created_at,
   updatedAt: value.updated_at,
 });
@@ -181,6 +200,25 @@ export const fetchTopics = async (
   query: TopicQuery
 ): Promise<{ items: IComment[]; total: number }> => {
   const body = unwrap(await api.GET("/v3/discussions", { params: { query } }));
+  return {
+    items: (body.data ?? []).map(toIComment),
+    total: body.meta?.total ?? 0,
+  };
+};
+
+/**
+ * 一段经文（整章 / 段落区间 / 整本书）里挂在句子上的话题，按经文顺序，每条带 sentence 坐标。
+ * channel 必填：同一段在不同译文里是不同的句子。
+ */
+export const fetchTextTopics = async (
+  channel: string,
+  query: TTextTopicQuery
+): Promise<{ items: IComment[]; total: number }> => {
+  const body = unwrap(
+    await api.GET("/v3/tipitaka-discussions/{channel}", {
+      params: { path: { channel }, query },
+    })
+  );
   return {
     items: (body.data ?? []).map(toIComment),
     total: body.meta?.total ?? 0,

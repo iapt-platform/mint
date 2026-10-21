@@ -15,7 +15,7 @@ import { accept, doneSent, done, sentence } from "../../reducers/accept-pr";
 import SentWbwEdit from "./SentWbwEdit";
 import { getEnding } from "../../reducers/nissaya-ending-vocabulary";
 
-import { anchor, message } from "../../reducers/discussion";
+import { anchor, highlight, message } from "../../reducers/discussion";
 import TextDiff from "../general/TextDiff";
 
 import type { IDeleteResponse } from "../../api/article";
@@ -88,6 +88,7 @@ const SentCellWidget = ({
   const [prOpen, setPrOpen] = useState(false);
   const discussionMessage = useAppSelector(message);
   const anchorInfo = useAppSelector(anchor);
+  const highlightId = useAppSelector(highlight);
   const [copyOpen, setCopyOpen] = useState<boolean>(false);
 
   // sentData 由 useMemo 派生：优先级 overrideSentData > value > initValue
@@ -100,15 +101,16 @@ const SentCellWidget = ({
 
   const bgColor = useMemo(() => {
     if (
-      discussionMessage &&
-      discussionMessage.resId &&
-      discussionMessage.resId === initValue?.id
+      (discussionMessage &&
+        discussionMessage.resId &&
+        discussionMessage.resId === initValue?.id) ||
+      (highlightId && highlightId === initValue?.id)
     ) {
       return "#1890ff33";
     } else {
       return undefined;
     }
-  }, [discussionMessage, initValue?.id]);
+  }, [discussionMessage, highlightId, initValue?.id]);
 
   useEffect(() => {
     if (anchorInfo && anchorInfo?.resId === initValue?.id) {
