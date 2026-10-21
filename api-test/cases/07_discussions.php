@@ -225,7 +225,7 @@ test('discussions 一轮：建话题 → 回复 → 关闭后回复 409 → 重�
 
 /* ---- 术语讨论（glossary）与锚点 ---- */
 
-test('glossary 一轮：带锚点建 → 公开可读 → 不收锚点的类型传锚点 422 → 改成 discussion 锚点清空 → 删', function () {
+test('glossary 一轮：带锚点建 → 公开可读 → 不收锚点的类型传锚点 422 → 改成 discussion 锚点保留 → 删', function () {
     $token = required_token();
     $stamp = 'api-test-glossary-' . date('Ymd-His');
 
@@ -260,11 +260,10 @@ test('glossary 一轮：带锚点建 → 公开可读 → 不收锚点的类型�
         ], $token);
         assert_field_error('pos_start', $anchored, 'discussion 带锚点');
 
-        // 改成 discussion：锚点清空
+        // 改成 discussion：锚点保留（不显示，改回可带锚点的类型时恢复）
         $converted = raw('PATCH', "/v3/discussions/{$id}", null, ['type' => 'discussion'], $token);
         assert_status(200, $converted, 'glossary → discussion');
-        assert_has_key('pos_end', $converted['body']['data'] ?? null, '改类型后');
-        assert_eq(null, $converted['body']['data']['pos_end'], '改类型后 pos_end');
+        assert_eq(3, $converted['body']['data']['pos_end'] ?? null, '改类型后 pos_end');
     } finally {
         $del = raw('DELETE', "/v3/discussions/{$id}", null, null, $token);
     }
