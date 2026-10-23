@@ -30,6 +30,8 @@ export type RecentItem = {
   time: string;
   type: ArticleType;
   emoji: string;
+  /** 记录时 URL 的查询参数（JSON 字符串），跳转时还原成 ?channel=... */
+  param: string | null;
 };
 
 // 静态配置写在前端
@@ -97,5 +99,6 @@ export async function fetchRecentItems(userId: string): Promise<RecentItem[]> {
     time: item.updated_at,
     type: item.type,
     emoji: "📜",
+    param: item.param,
   }));
 }

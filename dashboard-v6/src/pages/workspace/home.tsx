@@ -10,6 +10,7 @@ import type { ModuleItem, RecentItem } from "../../api/workspace";
 import { useAppSelector } from "../../hooks";
 import { currentUser } from "../../reducers/current-user";
 import { useNavigate } from "react-router";
+import type { ArticleMode } from "../../api/article";
 
 export default function WorkspaceHome() {
   const [modules, setModules] = useState<ModuleItem[]>([]);
@@ -39,9 +40,12 @@ export default function WorkspaceHome() {
         <SectionPanel title="最近访问">
           <RecentList
             items={recentItems}
-            onClick={(type, id) => {
+            onClick={(item) => {
+              const { type, id } = item;
               if (type === "chapter" || type === "para" || type === "cs-para") {
-                navigate(`/workspace/tipitaka/${type}/${id}`);
+                navigate(
+                  `/workspace/tipitaka/${type}/${id}${recentSearch(item.param)}`,
+                );
               }
             }}
           />
@@ -49,6 +53,33 @@ export default function WorkspaceHome() {
       </div>
     </div>
   );
+}
+
+const ARTICLE_MODES: ArticleMode[] = ["read", "edit", "wbw", "auto"];
+
+/**
+ * 把 recent.param（记录时的查询参数 JSON）还原成 `?channel=...&mode=...`。
+ * 只还原 channel 与 mode：book/para 已在路径里；v4 写入的 mode=reading 不是
+ * v6 的取值，丢掉走默认。
+ */
+function recentSearch(param: string | null): string {
+  if (!param) return "";
+  let obj: Record<string, unknown>;
+  try {
+    obj = JSON.parse(param);
+  } catch {
+    return "";
+  }
+  if (!obj || typeof obj !== "object") return "";
+  const query = new URLSearchParams();
+  if (typeof obj.channel === "string" && obj.channel) {
+    query.set("channel", obj.channel);
+  }
+  if (ARTICLE_MODES.includes(obj.mode as ArticleMode)) {
+    query.set("mode", obj.mode as string);
+  }
+  const q = query.toString();
+  return q ? `?${q}` : "";
 }
 
 const styles: Record<string, CSSProperties> = {
