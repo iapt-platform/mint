@@ -205,7 +205,7 @@ it('summarises status counts and creatable types', function () {
     $this->getJson("/api/v3/discussions/summary?target_type=sentence&target_id={$target}", authHeader($owner))
         ->assertOk()
         ->assertJsonPath('data.status_counts', ['active' => 1, 'close' => 2])
-        ->assertJsonPath('data.creatable_types', ['discussion', 'issue', 'glossary', 'note', 'commentary']);   // 句子的管理者能加批注
+        ->assertJsonPath('data.creatable_types', ['discussion', 'issue', 'glossary', 'note', 'commentary', 'assessment']);   // 句子的管理者能加批注
 
     $this->getJson("/api/v3/discussions/summary?target_type=sentence&target_id={$target}")
         ->assertOk()
@@ -478,7 +478,7 @@ it('lets only the sentence manager create annotations, without notifying', funct
         'content' => '{{135-404-50-54}} {{135-404-55-65}}', 'pos_start' => 0, 'pos_end' => 4, 'quote_exact' => 'sent'];
 
     $this->getJson("/api/v3/discussions/summary?target_type=sentence&target_id={$target}", authHeader($owner))
-        ->assertJsonPath('data.creatable_types', ['discussion', 'issue', 'glossary', 'note', 'commentary']);
+        ->assertJsonPath('data.creatable_types', ['discussion', 'issue', 'glossary', 'note', 'commentary', 'assessment']);
     $this->getJson("/api/v3/discussions/summary?target_type=sentence&target_id={$target}", authHeader($stranger))
         ->assertJsonPath('data.creatable_types', ['discussion', 'issue']);
 
@@ -548,6 +548,106 @@ it('still hides records that are neither threads nor annotations', function () {
     $log = makeDiscussion(['res_type' => 'task', 'type' => 'task-status']);
 
     $this->getJson("/api/v3/discussions/{$log->id}")->assertNotFound();
+});
+
+/* ------------------------------------------------------------------ 译文评估 */
+
+it('lets only the sentence manager assess a sentence, publicly and without notifying', function () {
+    $owner = makeStudio('owner');
+    $target = makeTargetSentence($owner);
+    $payload = ['target_type' => 'sentence', 'target_id' => $target, 'type' => 'assessment',
+        'severity' => 'mqm', 'score' => 87.5, 'content' => '术语一致，语序略生硬'];
+
+    $this->postJson('/api/v3/discussions', $payload)->assertUnauthorized();
+    $this->postJson('/api/v3/discussions', $payload, authHeader(makeStudio('stranger')))->assertForbidden();
+
+    Log::spy();
+    $id = $this->postJson('/api/v3/discussions', $payload, authHeader($owner))   // 没传 notify：评估本来就不发
+        ->assertCreated()
+        ->assertJsonPath('data.type', 'assessment')
+        ->assertJsonPath('data.severity', 'mqm')
+        ->assertJsonPath('data.score', 87.5)
+        ->assertJsonPath('data.title', null)
+        ->assertJsonPath('data.content', '术语一致，语序略生硬')
+        ->assertJsonPath('data.abilities', ['update' => true, 'delete' => true, 'close' => false, 'reply' => true])
+        ->json('data.id');
+    Log::shouldNotHaveReceived('debug', fn (string $message) => $message === 'mq publish');
+
+    // 公开：匿名看得到；不带 type 的列表不列评估
+    $this->getJson("/api/v3/discussions/{$id}")->assertOk()->assertJsonPath('data.score', 87.5);
+    $base = "/api/v3/discussions?target_type=sentence&target_id={$target}";
+    $this->getJson($base)->assertJsonCount(0, 'data');
+    $this->getJson("{$base}&type=assessment")->assertJsonCount(1, 'data');
+});
+
+it('overwrites the existing assessment of a sentence instead of adding another', function () {
+    $owner = makeStudio('owner');
+    $target = makeTargetSentence($owner);
+    $post = fn (array $data) => $this->postJson('/api/v3/discussions', [
+        'target_type' => 'sentence', 'target_id' => $target, 'type' => 'assessment', ...$data,
+    ], authHeader($owner));
+
+    $first = $post(['severity' => 'likert', 'score' => 40, 'title' => '初评', 'content' => '漏译'])
+        ->assertCreated()->json('data');
+    $this->postJson("/api/v3/discussions/{$first['id']}/replies", ['content' => '同意', 'notify' => false], authHeader(makeStudio('reader')))
+        ->assertCreated();
+
+    // 重新评估：同一条被覆盖（没传的标题、理由清空），回复保留，返回 200
+    $second = $post(['severity' => 'mqm', 'score' => 92])
+        ->assertOk()
+        ->assertJsonPath('data.id', $first['id'])
+        ->assertJsonPath('data.severity', 'mqm')
+        ->assertJsonPath('data.score', 92)
+        ->assertJsonPath('data.title', null)
+        ->assertJsonPath('data.content', null)
+        ->assertJsonPath('data.reply_count', 1)
+        ->json('data');
+
+    expect($second['created_at'])->toBe($first['created_at'])
+        ->and(Discussion::where('res_id', $target)->whereNull('parent')->where('type', 'assessment')->count())->toBe(1);
+});
+
+it('validates assessment input', function () {
+    $owner = makeStudio('owner');
+    $target = makeTargetSentence($owner);
+    $post = fn (array $data) => $this->postJson('/api/v3/discussions',
+        ['target_type' => 'sentence', 'target_id' => $target, 'type' => 'assessment', 'severity' => 'mqm', 'score' => 80, ...$data],
+        authHeader($owner));
+
+    $post(['score' => null])->assertStatus(422)->assertJsonValidationErrors('score');
+    $post(['score' => 101])->assertStatus(422)->assertJsonValidationErrors('score');
+    $post(['score' => -1])->assertStatus(422)->assertJsonValidationErrors('score');
+    $post(['severity' => null])->assertStatus(422)->assertJsonValidationErrors('severity');
+    $post(['severity' => 'has space'])->assertStatus(422)->assertJsonValidationErrors('severity');
+    $post(['severity' => str_repeat('a', 17)])->assertStatus(422)->assertJsonValidationErrors('severity');
+    $post(['target_type' => 'article'])->assertStatus(422)->assertJsonValidationErrors('target_type');
+    $post(['pos_start' => 0, 'pos_end' => 2])->assertStatus(422)->assertJsonValidationErrors(['pos_start', 'pos_end']);
+    // 其它类型不收分数
+    $this->postJson('/api/v3/discussions', ['target_type' => 'sentence', 'target_id' => $target, 'type' => 'issue',
+        'title' => 't', 'score' => 50, 'notify' => false], authHeader($owner))
+        ->assertStatus(422)->assertJsonValidationErrors('score');
+});
+
+it('updates an assessment score and method, and keeps it apart from other types', function () {
+    $owner = makeStudio('owner');
+    $target = makeTargetSentence($owner);
+    $assessment = makeDiscussion(['res_id' => $target, 'type' => 'assessment', 'title' => null,
+        'severity' => 'mqm', 'score' => 50]);
+    $topic = makeDiscussion(['res_id' => $target, 'type' => 'issue']);
+    $patch = fn (Discussion $d, array $data) => $this->patchJson("/api/v3/discussions/{$d->id}", $data, authHeader($owner));
+
+    $patch($assessment, ['score' => 120])->assertStatus(422)->assertJsonValidationErrors('score');
+    $patch($assessment, ['severity' => null])->assertStatus(422)->assertJsonValidationErrors('severity');
+    $patch($assessment, ['status' => 'close'])->assertStatus(422)->assertJsonValidationErrors('status');
+    $patch($assessment, ['type' => 'note'])->assertStatus(422)->assertJsonValidationErrors('type');
+    $patch($topic, ['type' => 'assessment'])->assertStatus(422)->assertJsonValidationErrors('type');
+    $patch($topic, ['score' => 10])->assertStatus(422)->assertJsonValidationErrors('score');
+
+    $patch($assessment, ['score' => 66.25, 'severity' => 'llm-judge', 'content' => '复核'])
+        ->assertOk()
+        ->assertJsonPath('data.score', 66.25)
+        ->assertJsonPath('data.severity', 'llm-judge')
+        ->assertJsonPath('data.content', '复核');
 });
 
 /* ------------------------------------------------------------------ 外挂术语与锚点 */

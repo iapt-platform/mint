@@ -166,3 +166,54 @@ it('leaves issue markup out of plain text output but keeps the glossary term', f
 
     expect($text)->toBe('first sentence');
 });
+
+/* ------------------------------------------------------------------ 评估 */
+
+it('marks an assessed sentence with a check coloured by score, after any issue mark', function (float $score, string $level) {
+    [$channel, $sentence] = makeAnnotatedSentence();
+    makeAnchored($sentence->uid, 'issue', ['severity' => 'warning']);
+    $assessment = makeAnchored($sentence->uid, 'assessment', ['title' => null, 'severity' => 'mqm', 'score' => $score]);
+
+    $display = readFirstParagraph($channel);
+
+    expect($display)
+        ->toContain('<span class="anno-assessment-mark anno-assessment-'.$level.'" data-discussion-ids="'.$assessment->id.'"')
+        ->toContain('data-level="'.$level.'"')
+        ->toContain('<i class="ti ti-circle-check"></i>')
+        ->and(mb_strpos($display, 'anno-issue-mark'))->toBeLessThan(mb_strpos($display, 'anno-assessment-mark'));
+})->with([
+    'high' => [80.0, 'high'],
+    'medium' => [79.99, 'medium'],
+    'low' => [12.5, 'low'],
+]);
+
+it('drops the cache when an assessment is rescored, and leaves it out of plain text', function () {
+    [$channel, $sentence] = makeAnnotatedSentence();
+    $assessment = makeAnchored($sentence->uid, 'assessment', ['title' => null, 'severity' => 'mqm', 'score' => 30]);
+
+    expect(readFirstParagraph($channel))->toContain('data-score="30"');
+
+    $assessment->forceFill(['score' => 95.5])->save();
+    expect(readFirstParagraph($channel))->toContain('data-score="95.5"')->toContain('anno-assessment-high');
+
+    $text = app(PaliContentService::class)->readParagraph(9101, 1, $channel, 'text')['display'];
+    expect($text)->toBe('first sentence');
+});
+
+it('marks unassessed sentences grey only in a paragraph that has an assessed sentence', function () {
+    [$channel, $sentence] = makeAnnotatedSentence();   // 9101-1，第一句
+    makeSentence($channel, 9101, 1, 2, 'second sentence');
+    makeSentence($channel, 9101, 2, 1, 'other paragraph');
+    makeAnchored($sentence->uid, 'assessment', ['title' => null, 'severity' => 'mqm', 'score' => 90]);
+
+    $display = readFirstParagraph($channel);
+    expect(substr_count($display, 'anno-assessment-high'))->toBe(1)
+        ->and(substr_count($display, 'anno-assessment-none'))->toBe(1)
+        ->and($display)->toContain('second sentence<span class="anno-assessment-mark anno-assessment-none"');
+
+    $other = $this->getJson("/api/v3/tipitaka-reading/{$channel}?book=9101&para=2")->assertOk()->json('data.0.display');
+    expect($other)->not->toContain('anno-assessment');
+
+    $text = app(PaliContentService::class)->readParagraph(9101, 1, $channel, 'text')['display'];
+    expect($text)->not->toContain('anno-assessment');
+});
