@@ -47,7 +47,7 @@ get:
                     type: string
                     nullable: true
                   score:
-                    type: number
+                    type: integer
                     nullable: true
                   status:
                     type: string
@@ -180,7 +180,7 @@ delete:
                     type: string
                     nullable: true
                   score:
-                    type: number
+                    type: integer
                     nullable: true
                   status:
                     type: string
@@ -337,9 +337,9 @@ patch:
               description: '严重程度（只限话题），null 表示清空；assessment 为评估方法，不能清空'
               example: warning
             score:
-              type: number
-              description: '评估分数 0–100（只限 assessment）'
-              example: 85.0
+              type: integer
+              description: '评估分数，0–100 的整数（只限 assessment）'
+              example: 85
             pos_start:
               type: integer
               description: '锚点起始偏移（只限 note / commentary / issue / glossary）'
@@ -381,7 +381,7 @@ patch:
                     type: string
                     nullable: true
                   score:
-                    type: number
+                    type: integer
                     nullable: true
                   status:
                     type: string

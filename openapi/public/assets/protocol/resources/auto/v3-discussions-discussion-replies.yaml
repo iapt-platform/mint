@@ -62,7 +62,7 @@ get:
                       type: string
                       nullable: true
                     score:
-                      type: number
+                      type: integer
                       nullable: true
                     status:
                       type: string
@@ -191,7 +191,7 @@ post:
                     type: string
                     nullable: true
                   score:
-                    type: number
+                    type: integer
                     nullable: true
                   status:
                     type: string
@@ -299,7 +299,7 @@ post:
                     type: string
                     nullable: true
                   score:
-                    type: number
+                    type: integer
                     nullable: true
                   status:
                     type: string

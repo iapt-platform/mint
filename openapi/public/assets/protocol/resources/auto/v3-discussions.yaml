@@ -123,7 +123,7 @@ get:
                       type: string
                       nullable: true
                     score:
-                      type: number
+                      type: integer
                       nullable: true
                     status:
                       type: string
@@ -201,7 +201,7 @@ post:
     标题可省、正文必填，commentary 的正文必须是义注句子模板 `{{book-para-start-end}}`
     （可多句并列）；可带锚点 pos_* / quote_*；不发通知。
     assessment（译文评估：用某种方法给这句译文打分）只能加在句子上，且只有该句所在 channel 的编辑者能加
-    （AI 凭授权代写）；score（0–100）必填，severity 必填、填评估方法（1–16 位字母数字 . _ -），
+    （AI 凭授权代写）；score（0–100 的整数）必填，severity 必填、填评估方法（1–16 位字母数字 . _ -），
     标题可省，理由写 content；不收锚点、不发通知。**一句只留一条**：已有评估时就地覆盖
     （分数、方法、理由、署名都换成这次的，回复保留），返回 200；没有才新建，返回 201。
     glossary（外挂术语：不改译文，给锚点处的译文挂上术语）是评论线程，title 必填、填术语词头；
@@ -255,9 +255,9 @@ post:
               description: '严重程度：issue 为 error / warning / suggestion，help 为 urgent / normal；assessment 必填，填评估方法（1–16 位字母数字 . _ -）'
               example: error
             score:
-              type: number
-              description: '评估分数 0–100（只限且必填于 assessment）'
-              example: 85.0
+              type: integer
+              description: '评估分数，0–100 的整数（只限且必填于 assessment）'
+              example: 85
             pos_start:
               type: integer
               description: '锚点在句子文本中的起始偏移（只限 note / commentary / issue / glossary）'
@@ -309,7 +309,7 @@ post:
                     type: string
                     nullable: true
                   score:
-                    type: number
+                    type: integer
                     nullable: true
                   status:
                     type: string
@@ -417,7 +417,7 @@ post:
                     type: string
                     nullable: true
                   score:
-                    type: number
+                    type: integer
                     nullable: true
                   status:
                     type: string
