@@ -36,12 +36,14 @@ class Discussion extends Model
         'id' => 'string',
         'pos_start' => 'integer',
         'pos_end' => 'integer',
+        'score' => 'integer',
     ];
 
     // 批量填充
     protected $fillable = [
         'res_id',
         'res_type',
+        'score',
         'type',
         'tpl_id',
         'title',
@@ -77,6 +79,20 @@ class Discussion extends Model
      */
     public const TYPE_GLOSSARY = 'glossary';
 
+    /**
+     * 译文评估：用某种方法给一句译文打分。score 是归一到 0–100 的整数分数，severity 存评估方法
+     * （{@see self::ASSESSMENT_METHOD_PATTERN}），content 写理由，title 可省。
+     * 只能挂在句子上、只有该句的管理者能建（AI 凭授权代写）；一句只留一条，重新评估覆盖旧的。
+     * 没有开关状态、不能与其它类型互转、不带锚点；注入阅读页，在句尾显示按分数着色的对勾。
+     */
+    public const TYPE_ASSESSMENT = 'assessment';
+
+    /** 评估方法（存在 severity 列，varchar(16)）：字母数字开头，可含 . _ - */
+    public const ASSESSMENT_METHOD_PATTERN = '/^[A-Za-z0-9][A-Za-z0-9._-]{0,15}$/';
+
+    /** 没有开关状态的类型：批注 + 评估 */
+    public const STATELESS_TYPES = [self::TYPE_COMMENTARY, self::TYPE_NOTE, self::TYPE_ASSESSMENT];
+
     /** 评论线程：话题 + 一层回复，有开关状态 */
     public const THREAD_TYPES = ['discussion', 'qa', 'help', 'issue', self::TYPE_GLOSSARY];
 
@@ -85,20 +101,24 @@ class Discussion extends Model
 
     /**
      * 会被注入阅读页的全部类型（{@see PaliContentService::injectAnnotationNotes()}）：
-     * 批注插边注，glossary 换成术语，issue 高亮。issue / glossary 只注入未关闭的。
+     * 批注插边注，glossary 换成术语，issue 高亮，assessment 句尾对勾。issue / glossary 只注入未关闭的。
      */
-    public const READING_TYPES = [self::TYPE_COMMENTARY, self::TYPE_NOTE, 'issue', self::TYPE_GLOSSARY];
+    public const READING_TYPES = [self::TYPE_COMMENTARY, self::TYPE_NOTE, 'issue', self::TYPE_GLOSSARY, self::TYPE_ASSESSMENT];
 
-    /** 只能挂在句子上的类型：批注 + glossary */
-    public const SENTENCE_ONLY_TYPES = [self::TYPE_COMMENTARY, self::TYPE_NOTE, self::TYPE_GLOSSARY];
+    /** 只能挂在句子上的类型：批注 + glossary + assessment */
+    public const SENTENCE_ONLY_TYPES = [self::TYPE_COMMENTARY, self::TYPE_NOTE, self::TYPE_GLOSSARY, self::TYPE_ASSESSMENT];
 
     /**
      * `/v3/discussions` 管的全部类型：评论线程（{@see self::THREAD_TYPES}）+ 批注
-     * （{@see self::INJECTED_TYPES}）。批注锚定在句子的某个位置、注入阅读页，没有回复和开关。
+     * （{@see self::INJECTED_TYPES}）+ 评估（{@see self::TYPE_ASSESSMENT}）。
+     * 批注与评估都注入阅读页，可以回复，没有开关。
      */
-    public const COMMENT_TYPES = ['discussion', 'qa', 'help', 'issue', 'glossary', 'note', 'commentary'];
+    public const COMMENT_TYPES = ['discussion', 'qa', 'help', 'issue', 'glossary', 'note', 'commentary', 'assessment'];
 
-    /** 各类型允许的 severity 取值；不在表里的类型不允许设 severity */
+    /**
+     * 各类型允许的 severity 取值；不在表里的类型不允许设 severity。
+     * assessment 例外：severity 存评估方法，按 {@see self::ASSESSMENT_METHOD_PATTERN} 校验，必填。
+     */
     public const SEVERITIES = [
         'issue' => ['error', 'warning', 'suggestion'],
         'help' => ['urgent', 'normal'],

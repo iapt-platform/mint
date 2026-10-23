@@ -46,6 +46,9 @@ get:
                   severity:
                     type: string
                     nullable: true
+                  score:
+                    type: integer
+                    nullable: true
                   status:
                     type: string
                   title:
@@ -176,6 +179,9 @@ delete:
                   severity:
                     type: string
                     nullable: true
+                  score:
+                    type: integer
+                    nullable: true
                   status:
                     type: string
                   title:
@@ -281,6 +287,7 @@ patch:
     正文不能清空，可改锚点。
     改了内容（标题、正文、锚点）时 co_editor 跟着这次写入走：人亲自改则清空，AI 代改则换成该模型；
     只改 status / type / severity 不动 co_editor。
+    评估：可改 score、severity（评估方法，不能清空）、标题、正文；没有 status，不能与其它类型互转。
 
     实现：`V3\DiscussionController@update`
   security:
@@ -324,15 +331,15 @@ patch:
                 - glossary
                 - note
                 - commentary
+                - assessment
             severity:
               type: string
-              description: '严重程度（只限话题），null 表示清空'
-              enum:
-                - error
-                - warning
-                - suggestion
-                - urgent
-                - normal
+              description: '严重程度（只限话题），null 表示清空；assessment 为评估方法，不能清空'
+              example: warning
+            score:
+              type: integer
+              description: '评估分数，0–100 的整数（只限 assessment）'
+              example: 85
             pos_start:
               type: integer
               description: '锚点起始偏移（只限 note / commentary / issue / glossary）'
@@ -372,6 +379,9 @@ patch:
                     type: string
                   severity:
                     type: string
+                    nullable: true
+                  score:
+                    type: integer
                     nullable: true
                   status:
                     type: string

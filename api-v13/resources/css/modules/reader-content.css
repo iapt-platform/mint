@@ -500,3 +500,41 @@ article.reader-body span.anno-issue-mark.is-active {
 .anno-issue-item.anno-issue-error      { --anno-issue-color: var(--tblr-danger); }
 .anno-issue-item.anno-issue-warning    { --anno-issue-color: var(--tblr-warning); }
 .anno-issue-item.anno-issue-suggestion { --anno-issue-color: var(--tblr-info); }
+
+/* ══════════════════════════════════════════
+   九、译文评估标注
+   PaliContentService::injectAnnotationNotes 注入：句尾的 span.anno-assessment-mark（对勾图标），
+   颜色按分数档位（AnnotationLayout::assessmentLevel）：high（≥80）绿、medium（≥60）橙、low 红；
+   同段有句子评估过时，没评估的句子是灰色对勾（anno-assessment-none，不能点）。
+   点击由 issue-popover.js 弹出分数、方法与理由，弹层条目复用 .anno-issue-item。
+   ══════════════════════════════════════════ */
+
+.anno-assessment-high   { --anno-assessment-color: var(--tblr-success); }
+.anno-assessment-medium { --anno-assessment-color: var(--tblr-warning); }
+.anno-assessment-low    { --anno-assessment-color: var(--tblr-danger); }
+/* 同段有句子评估过时，没评估的句子补的灰色对勾：只标句子边界，不能点 */
+.anno-assessment-none   { --anno-assessment-color: var(--tblr-gray-400, #adb5bd); }
+
+article.reader-body span.anno-assessment-mark {
+    cursor: pointer;
+    margin-left: 0.15em;
+    color: var(--anno-assessment-color);
+    font-size: 0.95em;
+    vertical-align: -0.05em;
+}
+article.reader-body span.anno-assessment-mark:hover,
+article.reader-body span.anno-assessment-mark.is-active {
+    filter: brightness(0.85);
+}
+article.reader-body span.anno-assessment-mark.anno-assessment-none {
+    cursor: default;
+    filter: none;
+}
+
+.anno-assessment-item .anno-issue-item-head .ti {
+    color: var(--anno-assessment-color);
+}
+.anno-assessment-score {
+    color: var(--anno-assessment-color);
+    font-variant-numeric: tabular-nums;
+}

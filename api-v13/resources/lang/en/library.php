@@ -175,4 +175,8 @@ return [
     'issue_severity_error' => 'Error',
     'issue_severity_warning' => 'Warning',
     'issue_severity_suggestion' => 'Suggestion',
+
+    // reader: 译文评估标注（reader.js 弹出层）
+    'assessment_title' => 'Assessment',
+    'assessment_method' => 'Method: :method',
 ];

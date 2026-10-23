@@ -269,3 +269,56 @@ test('glossary 一轮：带锚点建 → 公开可读 → 不收锚点的类型�
     }
     assert_status(200, $del, '删 glossary');
 });
+
+/* ---- 译文评估（assessment） ---- */
+
+/*
+ * 评估一句只留一条，再 POST 就覆盖，所以这里不删：测试句上始终至多一条评估，跑多少次都不会累积，
+ * 留着还能在阅读页上看到句尾的对勾（本地开发库的测试数据要保留，见 mint 的 memory）。
+ */
+test('assessment 一轮：建或覆盖 → 再评估覆盖同一条 → 公开可读 → 分数 / 方法校验 422 → PATCH 改分', function () {
+    $token = required_token();
+    $stamp = 'api-test-assessment-' . date('Ymd-His');
+    $post = fn (array $body) => raw('POST', '/v3/discussions', null, [
+        'target_type' => 'sentence', 'target_id' => discussion_target(), 'type' => 'assessment', ...$body,
+    ], $token);
+
+    // 第一次：句上没有评估就 201，已有就 200 覆盖
+    $first = $post(['score' => 55, 'severity' => 'api-test', 'content' => $stamp]);
+    if (! in_array($first['status'], [200, 201], true)) {
+        assert_status(201, $first, '建 assessment');
+    }
+    $id = $first['body']['data']['id'] ?? null;
+    if (! $id) {
+        fail('建 assessment：应返回 id');
+    }
+    assert_eq(55, $first['body']['data']['score'] ?? null, 'assessment score');
+    assert_eq('api-test', $first['body']['data']['severity'] ?? null, 'assessment 方法存在 severity');
+
+    // 再评估：覆盖同一条，200，id 不变
+    $again = $post(['score' => 82, 'severity' => 'api-test', 'title' => '复评', 'content' => $stamp]);
+    assert_status(200, $again, '再评估');
+    assert_eq($id, $again['body']['data']['id'] ?? null, '再评估覆盖同一条');
+    assert_eq(82, $again['body']['data']['score'] ?? null, '覆盖后的 score');
+
+    // 公开：匿名也读得到；不带 type 的列表不列评估
+    assert_status(200, raw('GET', "/v3/discussions/{$id}"), '匿名读 assessment');
+    $listed = raw('GET', '/v3/discussions', ['target_type' => 'sentence', 'target_id' => discussion_target(), 'type' => 'assessment']);
+    assert_eq([$id], array_column($listed['body']['data'] ?? [], 'id'), 'type=assessment 列出这一条');
+
+    // 校验：缺分数、超范围、带小数、方法格式不对、其它类型带分数
+    assert_field_error('score', $post(['severity' => 'api-test']), 'assessment 缺 score');
+    assert_field_error('score', $post(['score' => 101, 'severity' => 'api-test']), 'assessment score 超范围');
+    assert_field_error('score', $post(['score' => 80.5, 'severity' => 'api-test']), 'assessment score 只收整数');
+    assert_field_error('severity', $post(['score' => 50, 'severity' => 'bad method']), 'assessment 方法格式');
+    assert_field_error('score', raw('POST', '/v3/discussions', null, [
+        'target_type' => 'sentence', 'target_id' => discussion_target(), 'type' => 'issue',
+        'title' => $stamp, 'score' => 50, 'notify' => false,
+    ], $token), 'issue 带 score');
+
+    // PATCH 改分；评估没有开关
+    $patched = raw('PATCH', "/v3/discussions/{$id}", null, ['score' => 91], $token);
+    assert_status(200, $patched, 'PATCH assessment score');
+    assert_eq(91, $patched['body']['data']['score'] ?? null, 'PATCH 后的 score');
+    assert_field_error('status', raw('PATCH', "/v3/discussions/{$id}", null, ['status' => 'close'], $token), 'assessment 不能关闭');
+});

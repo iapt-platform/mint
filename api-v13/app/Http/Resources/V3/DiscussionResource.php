@@ -8,7 +8,8 @@ use App\Services\V3\DiscussionService;
 use Illuminate\Http\Request;
 
 /**
- * 一条评论：话题（parent_id 为 null）或回复；或一条批注（note / commentary）。
+ * 一条评论：话题（parent_id 为 null）或回复；或一条批注（note / commentary）；或一条译文评估
+ * （assessment：score 是 0–100 的分数，severity 是评估方法，content 是理由）。
  *
  * 批注与 issue / glossary 可带锚点（pos_start / pos_end / quote_*），指明它挂在句子文本的
  * 哪一段；其它评论线程的这几个字段为 null。glossary 的 title 是术语词头。
@@ -43,6 +44,7 @@ class DiscussionResource extends BaseResource
      *     parent_id: string|null,
      *     type: string,
      *     severity: string|null,
+     *     score: int|null,
      *     status: string,
      *     title: string|null,
      *     content: string|null,
@@ -76,6 +78,7 @@ class DiscussionResource extends BaseResource
             'parent_id' => $this->parent,
             'type' => $this->type,
             'severity' => $this->severity,
+            'score' => $this->score,
             'status' => $this->status,
             'title' => $tombstone ? null : $this->title,
             'content' => $tombstone ? null : $this->content,

@@ -42,6 +42,10 @@ use Illuminate\Validation\ValidationException;
  * glossary（外挂术语）是评论线程（有回复和开关），但像批注一样只能挂在句子上、只有该句的管理者能发起，
  * 对所有人公开可见。锚点除批注外，issue 与 glossary 也收（{@see Discussion::ANCHORED_TYPES}）。
  *
+ * assessment（译文评估）像批注一样：只挂句子、只有该句的管理者能建（AI 凭授权代写）、公开、
+ * 可回复、没有开关、不发通知、列表不带 type 时不列。一句只留一条，再评估就覆盖
+ * （{@see self::saveAssessment()}）；分数在 score，评估方法在 severity。
+ *
  * 写入方（`$actor`）由 {@see AgentGrantService::actor()} 给出：人类直接写，或 AI 模型凭人类
  * 授权代写。代写时 editor 是授权人、co_editor 是模型，权限一律按 editor 判，
  * 而且只能写授权覆盖的 channel / book 里的东西。
@@ -332,10 +336,13 @@ class DiscussionService
     }
 
     /**
-     * 发起话题，或新建一条批注（批注不发通知）。
+     * 发起话题，或新建一条批注 / 评估（批注与评估不发通知）。
+     *
+     * 评估（assessment）一句只留一条：该句已有评估就就地覆盖（分数、方法、理由、标题、署名），
+     * 回复保留，返回 200；没有才新建，返回 201。
      *
      * @param  array{editor: string, co_editor: string|null, scope: array{channel: string, book: int}|null}  $actor
-     * @param  array{target_type: string, target_id: string, type?: string, title?: string|null, content?: string|null, severity?: string|null, pos_start?: int|null, pos_end?: int|null, quote_exact?: string|null, quote_prefix?: string|null, quote_suffix?: string|null, tpl_id?: string|null, notify?: bool}  $data
+     * @param  array{target_type: string, target_id: string, type?: string, title?: string|null, content?: string|null, severity?: string|null, score?: int, pos_start?: int|null, pos_end?: int|null, quote_exact?: string|null, quote_prefix?: string|null, quote_suffix?: string|null, tpl_id?: string|null, notify?: bool}  $data
      */
     public function createTopic(array $actor, array $data): Discussion
     {
@@ -348,6 +355,9 @@ class DiscussionService
         $type = $data['type'] ?? 'discussion';
         if (! in_array($type, $this->creatableTypes($userUid, $data['target_type'], $data['target_id']), true)) {
             abort(403, __('messages.discussion_forbidden'));
+        }
+        if ($type === Discussion::TYPE_ASSESSMENT) {
+            return $this->fresh($this->saveAssessment($actor, $data), $userUid);
         }
 
         $topic = new Discussion;
@@ -369,6 +379,40 @@ class DiscussionService
         }
 
         return $this->fresh($topic, $userUid);
+    }
+
+    /**
+     * 新建或覆盖一句的评估。锁住句子行，免得并发评估同一句时各建一条。
+     * 覆盖时署名换成这次评估的人（及代写的模型），created_at 不变。
+     *
+     * @param  array{editor: string, co_editor: string|null, scope: array{channel: string, book: int}|null}  $actor
+     * @param  array{target_id: string, title?: string|null, content?: string|null, severity?: string|null, score?: int, tpl_id?: string|null}  $data
+     */
+    private function saveAssessment(array $actor, array $data): Discussion
+    {
+        return DB::transaction(function () use ($actor, $data) {
+            Sentence::where('uid', $data['target_id'])->lockForUpdate()->first(['uid']);
+            $assessment = Discussion::where('res_type', 'sentence')
+                ->where('res_id', $data['target_id'])
+                ->where('type', Discussion::TYPE_ASSESSMENT)
+                ->whereNull('parent')
+                ->latest('updated_at')
+                ->first() ?? new Discussion;
+            $assessment->res_type = 'sentence';
+            $assessment->res_id = $data['target_id'];
+            $assessment->type = Discussion::TYPE_ASSESSMENT;
+            $assessment->title = $data['title'] ?? null;
+            $assessment->content = $data['content'] ?? null;
+            $assessment->content_type = 'markdown';
+            $assessment->severity = $data['severity'];
+            $assessment->score = (int) $data['score'];
+            $assessment->tpl_id = $data['tpl_id'] ?? null;
+            $assessment->editor_uid = $actor['editor'];
+            $assessment->co_editor_uid = $actor['co_editor'];
+            $assessment->save();
+
+            return $assessment;
+        });
     }
 
     /**
@@ -426,12 +470,13 @@ class DiscussionService
      * 改成 glossary 须挂在句子上、且当前用户是该句的管理者（同新建）。
      * 批注：锚点可改，没有 status，type 只能在 note / commentary 之间改，
      * 正文不能清空，commentary 的正文必须是义注句子模板（按改后的 type 与正文判）。
+     * 评估：可改 score、severity（评估方法，不能清空）、标题、正文；没有 status，不能与其它类型互转。
      *
      * 改了内容（标题、正文、锚点）时 co_editor 改成这次写入的协作者：人亲自改则清空，
-     * AI 代改则换成该模型。只改 status / type / severity 不动 co_editor。
+     * AI 代改则换成该模型。只改 status / type / severity 不动 co_editor（评估的 score 算内容）。
      *
      * @param  array{editor: string, co_editor: string|null, scope: array{channel: string, book: int}|null}  $actor
-     * @param  array{title?: string, content?: string|null, status?: string, type?: string, severity?: string|null, pos_start?: int|null, pos_end?: int|null, quote_exact?: string|null, quote_prefix?: string|null, quote_suffix?: string|null}  $data
+     * @param  array{title?: string, content?: string|null, status?: string, type?: string, severity?: string|null, score?: int, pos_start?: int|null, pos_end?: int|null, quote_exact?: string|null, quote_prefix?: string|null, quote_suffix?: string|null}  $data
      */
     public function update(Discussion $discussion, array $actor, array $data): Discussion
     {
@@ -444,7 +489,7 @@ class DiscussionService
             abort(403, __('messages.discussion_forbidden'));
         }
         $isTopic = $discussion->parent === null;
-        $topicOnly = array_intersect_key($data, array_flip(['title', 'status', 'type', 'severity']));
+        $topicOnly = array_intersect_key($data, array_flip(['title', 'status', 'type', 'severity', 'score']));
         if (! $isTopic && $topicOnly !== []) {
             throw ValidationException::withMessages(
                 array_fill_keys(array_keys($topicOnly), __('messages.discussion_topic_only'))
@@ -459,7 +504,13 @@ class DiscussionService
         if ($type === Discussion::TYPE_GLOSSARY && $discussion->type !== Discussion::TYPE_GLOSSARY) {
             $this->assertCanBecomeGlossary($discussion, $userUid);
         }
-        if (array_key_exists('severity', $data)) {
+        if ($type === Discussion::TYPE_ASSESSMENT) {
+            // 评估的 severity 是评估方法：不能清空，格式见 ASSESSMENT_METHOD_PATTERN
+            if (array_key_exists('severity', $data)
+                && ! preg_match(Discussion::ASSESSMENT_METHOD_PATTERN, (string) $data['severity'])) {
+                throw ValidationException::withMessages(['severity' => __('messages.discussion_assessment_method')]);
+            }
+        } elseif (array_key_exists('severity', $data)) {
             if ($data['severity'] !== null && ! in_array($data['severity'], Discussion::SEVERITIES[$type] ?? [], true)) {
                 throw ValidationException::withMessages(['severity' => __('messages.discussion_severity_not_allowed')]);
             }
@@ -469,7 +520,7 @@ class DiscussionService
 
         DB::transaction(function () use ($discussion, $data, $actor) {
             $typeChanged = array_key_exists('type', $data) && $data['type'] !== $discussion->type;
-            $authored = array_intersect_key($data, array_flip(['title', 'content', ...self::ANCHOR_FIELDS]));
+            $authored = array_intersect_key($data, array_flip(['title', 'content', 'score', ...self::ANCHOR_FIELDS]));
             $discussion->fill($authored);
             // 改了内容，co_editor 就跟着这次写的人走：人亲自改 → 清空，AI 代改 → 换成这个模型。
             // 只改状态 / 类型 / severity 是管理动作，不动内容的署名。
@@ -590,17 +641,27 @@ class DiscussionService
     }
 
     /**
-     * 批注与评论线程在 PATCH 上的差异，见 {@see self::update()}。
+     * 批注、评估与评论线程在 PATCH 上的差异，见 {@see self::update()}。
      *
      * @param  array<string, mixed>  $data
      */
     private function assertAnnotationUpdate(Discussion $discussion, array $data): void
     {
         $isAnnotation = $this->isAnnotation($discussion);
+        $isAssessment = $discussion->type === Discussion::TYPE_ASSESSMENT;
         $errors = [];
         if (array_key_exists('type', $data)
+            && ($data['type'] === Discussion::TYPE_ASSESSMENT) !== $isAssessment) {
+            $errors['type'] = __('messages.discussion_assessment_type');
+        } elseif (array_key_exists('type', $data)
             && in_array($data['type'], Discussion::INJECTED_TYPES, true) !== $isAnnotation) {
             $errors['type'] = __('messages.discussion_type_group');
+        }
+        if (array_key_exists('score', $data) && ! $isAssessment) {
+            $errors['score'] = __('messages.discussion_score_not_allowed');
+        }
+        if ($isAssessment && array_key_exists('status', $data)) {
+            $errors['status'] = __('messages.discussion_assessment_no_status');
         }
         if (! in_array($data['type'] ?? $discussion->type, Discussion::ANCHORED_TYPES, true)) {
             foreach (array_intersect(self::ANCHOR_FIELDS, array_keys($data)) as $field) {
@@ -707,7 +768,7 @@ class DiscussionService
      * 当前用户能在这个对象上发起哪些类型的话题。
      *
      * 协作类（discussion / issue）登录即可；qa / help 沿用 v2 `can_create` 的口径：
-     * 只能发在文章上，而且只有文章的编辑者能发；批注（note / commentary）与 glossary 只能加在
+     * 只能发在文章上，而且只有文章的编辑者能发；批注（note / commentary）、glossary 与 assessment 只能加在
      * 句子上，而且只有该句的管理者能加（v2 登录即可，v3 收紧）。
      *
      * @return list<string>
@@ -721,9 +782,9 @@ class DiscussionService
         if ($targetType === 'article' && $this->canManageTarget($userUid, $targetType, $targetId)) {
             array_push($types, 'qa', 'help');
         }
-        // 批注注入阅读页、所有读者可见，只有该句的管理者能加
+        // 批注与评估注入阅读页、所有读者可见，只有该句的管理者能加
         if ($targetType === 'sentence' && $this->canManageTarget($userUid, $targetType, $targetId)) {
-            array_push($types, Discussion::TYPE_GLOSSARY, Discussion::TYPE_NOTE, Discussion::TYPE_COMMENTARY);
+            array_push($types, Discussion::TYPE_GLOSSARY, Discussion::TYPE_NOTE, Discussion::TYPE_COMMENTARY, Discussion::TYPE_ASSESSMENT);
         }
 
         return $types;
@@ -743,8 +804,8 @@ class DiscussionService
         $isAuthor = $discussion->editor_uid === $viewerUid;
         $canManage = $isAuthor || $this->canManageTarget($viewerUid, $discussion->res_type, $discussion->res_id);
         $isTopic = $discussion->parent === null;
-        if ($this->isAnnotation($discussion)) {
-            // 批注没有开关；回复与评论线程一样，登录即可
+        if (in_array($discussion->type, Discussion::STATELESS_TYPES, true)) {
+            // 批注与评估没有开关；回复与评论线程一样，登录即可
             return [
                 'update' => $canManage,
                 'delete' => $canManage,

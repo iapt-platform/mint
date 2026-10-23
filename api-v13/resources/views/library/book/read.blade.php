@@ -18,7 +18,7 @@
 {{-- 术语抽屉 --}}
 <x-wiki.term-drawer />
 
-{{-- issue 抽屉（手机端）：点击正文里的 issue 高亮 / 句尾图标时由 reader.js 填充；
+{{-- issue / 评估抽屉（手机端）：点击正文里的 issue 高亮、句尾三角或评估对勾时由 reader.js 填充；
      桌面端用 popover，文案同样取自 data-i18n --}}
 <div class="offcanvas offcanvas-bottom"
     tabindex="-1"
@@ -35,6 +35,8 @@
             'warning' => __('library.issue_severity_warning'),
             'suggestion' => __('library.issue_severity_suggestion'),
         ],
+        'assessmentTitle' => __('library.assessment_title'),
+        'method' => __('library.assessment_method'),
     ], JSON_UNESCAPED_UNICODE) }}">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="annoIssueDrawerLabel">{{ __('library.issue_title') }}</h5>

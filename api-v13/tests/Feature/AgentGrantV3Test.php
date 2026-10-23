@@ -100,6 +100,26 @@ it('records the grantor as editor and the model as co-editor', function () {
     ], authHeader($human))->assertCreated()->assertJsonPath('data.co_editor', null);
 });
 
+it('lets a model assess a sentence on a grant, overwriting with itself as co-editor', function () {
+    $human = makeStudio('owner');
+    $channel = makeChannel($human);
+    $sentence = makeSentence($channel, 1, 1, 1, 'text')->uid;
+    $model = AiModel::factory()->ownedBy($human)->create();
+    $payload = ['target_type' => 'sentence', 'target_id' => $sentence, 'type' => 'assessment', 'severity' => 'llm-judge'];
+
+    $this->postJson('/api/v3/discussions', [...$payload, 'score' => 70], modelHeader($model))->assertForbidden();
+
+    // 人先评，模型凭授权重评：覆盖同一条，editor 是授权人、co_editor 是模型
+    $id = $this->postJson('/api/v3/discussions', [...$payload, 'score' => 70], authHeader($human))
+        ->assertCreated()->assertJsonPath('data.co_editor', null)->json('data.id');
+    $this->postJson('/api/v3/discussions', [...$payload, 'score' => 81, 'content' => '理由'], modelHeader($model, grantFor($human, $model, $channel)))
+        ->assertOk()
+        ->assertJsonPath('data.id', $id)
+        ->assertJsonPath('data.score', 81)
+        ->assertJsonPath('data.editor.id', $human)
+        ->assertJsonPath('data.co_editor.id', $model->uid);
+});
+
 it('rejects agent writes that are not covered by a valid grant', function () {
     $human = makeStudio('owner');
     $channel = makeChannel($human);

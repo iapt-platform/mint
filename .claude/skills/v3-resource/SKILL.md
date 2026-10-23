@@ -840,7 +840,10 @@ Route::prefix('v3')->as('v3.')->group(function () {
 index 用 `spatie/laravel-query-builder` 把 scope 暴露成 `filter[]`，
 scope 和 filter 的组装写在 Service 里（硬规范第 5 条），控制器只负责调它。
 
-## 迁移九步
+## 迁移步骤
+
+0–9 每次都做；10–12 **只在改动涉及它们时才做**（判据写在各步开头），不涉及就跳过，
+但收尾报告里要说明跳过了哪几步、为什么不涉及。
 
 ### 0. 先盘点，列给用户确认
 
@@ -1106,7 +1109,8 @@ php api-test/run.php --username=test161 --password=12345 --filter=<资源>
 
 - 一个资源一个 `cases/NN_<资源>.php`，调用走生成的 `<Tag>Api` 类（tag 规则见生成器 `tagOf()`）
 - 至少覆盖：公开读 200、缺必填 422、无 token 写 401、带 token 的「建 → 改 → 删」完整一轮
-- 写操作**会在所有服务器上真实执行**，只用自建的临时数据并测完即删
+- 写操作**会在所有服务器上真实执行**，只用自建的临时数据并测完即删；能做成幂等的（如「一句只留一条、
+  再写就覆盖」的资源）可以不删，跑多少次都不累积。**本地开发库上跑完不要另外清理**——用户要看测试结果
 - 与 Pest 的分工：Pest 覆盖权限矩阵与边界；api-test 验证**部署出来的服务器**与规格一致
 
 ### 9. 更新 dashboard-test（只测 v6）
@@ -1123,6 +1127,40 @@ cd dashboard-test && npx playwright test <资源>
 - 建的数据命名 `e2e-tmp-<timestamp>`，测完清理；`E2E_DESTRUCTIVE=0` 可跳过
 - 迁移让某个页面「能链接到但没有路由」的（如复制链接），**在 v6 补上那个页面**再测
 - 正式跑一次就在 `dashboard-test/testlog/` 写测试日志（gitignore，只留本机）
+
+### 10. 按需：Laravel library 阅读器（api-v13 自带的阅读页）
+
+**涉及时才做**：改动影响阅读页正文的 HTML（`PaliContentService` 的渲染 / 注入、`AnnotationLayout`
+的新标记或新 class），或 library 页面（`routes/web.php` 的 `library.*`）要用到这个资源。
+
+- 代码在 api-v13 里：`resources/views/library/**`、`resources/js/modules/*.js`（如 `issue-popover.js`）、
+  `resources/css/modules/reader-content.css`，文案在 `resources/lang/{locale}/library.php`（至少 en 与 zh-Hans），
+  经 blade 的 `data-i18n` 传给 JS
+- 新的正文标记要有样式与交互（点击 → 取 `/api/v3/...`，桌面 popover、手机抽屉），分档、配色等
+  规则以后端输出的 class / `data-*` 为准，JS 不重复阈值
+- `npm run build`（`public/build` 不进版本库），用本地开发库的数据打开页面，
+  Playwright 截图核对桌面与手机两种宽度，确认没有 JS 报错
+
+### 11. 按需：wikipali-mobile（`/home/deploy/workspace/wikipali-mobile`，独立仓库）
+
+**涉及时才做**：mobile 调用的 v3 端点改了（`npx tsc --noEmit` 会报出来），或阅读正文的 HTML 变了
+（mobile 的阅读 WebView 直接渲染服务端 HTML，新标记不加样式就是裸的）。
+
+- 第 5 步已把 `schema.d.ts` 生成到 mobile；`npx tsc --noEmit` 必须过
+- 阅读正文：`src/screens/ReaderLayerPane.tsx` 的 WebView CSS 与点击上报（WebView 没有 tabler 字体，
+  图标用 SVG mask 画），弹层在 `src/components/`；配色唯一来源写在组件里，WebView CSS 变量从它生成
+- 文案 8 个 locale 都要补（缺 key `tsc` 报错），按 messages / labels / buttons 归类
+- 设计文档 `docs/<主题>.md` 补一节；遵守它自己的 CLAUDE.md（不提交、emoji 提交信息）
+
+### 12. 按需：wikipali-plugins（`/home/deploy/workspace/wikipali-plugins`，独立仓库）
+
+**涉及时才做**：这个资源是 agent 经插件读写的（discussions、sentences、术语、agent-grants……），
+或改动改变了插件在调的接口（入参、返回、状态码）。
+
+- 命令在 `plugins/wikipali/lib/cmd_*.py` + `lib/cli.py`；`./release-check.sh` 必须过
+- **它的 CLAUDE.md 要求同步 `docs/wikipali-api-calls.md`**（接口清单），另外 `references/api-write.md`、
+  `skills/write/SKILL.md`（含 description 的触发词）也要跟上
+- 版本号不自己定：提交前问用户要不要升、升到多少
 
 ## 验收：CI 三道闸
 
@@ -1151,5 +1189,6 @@ cd dashboard-v6 && npm run build                                  # 前端类型
 ## 收尾报告
 
 用一句话说清：迁了哪个资源、v2 的哪几个端点/view 映射成了 v3 的哪几个端点、
-补了几条 Pest 测试、api-test 与 dashboard-test 各加了什么、三道闸的结果。**改了名的话，提醒用户往 CLAUDE.md 的
+补了几条 Pest 测试、api-test 与 dashboard-test 各加了什么、三道闸的结果；
+第 10–12 步做了哪几步（没做的说明为什么不涉及）。**改了名的话，提醒用户往 CLAUDE.md 的
 「v2 → v3 对照表」加一行。**

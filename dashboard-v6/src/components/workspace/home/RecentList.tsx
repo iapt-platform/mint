@@ -2,11 +2,10 @@ import type { CSSProperties } from "react";
 import { theme } from "antd";
 import type { RecentItem as RecentItemType } from "../../../api/workspace";
 import RecentItem from "./RecentItem";
-import type { ArticleType } from "../../../api/article";
 
 type RecentListProps = {
   items: RecentItemType[];
-  onClick?: (type: ArticleType, id: string) => void;
+  onClick?: (item: RecentItemType) => void;
 };
 
 export default function RecentList({ items, onClick }: RecentListProps) {
@@ -28,7 +27,7 @@ export default function RecentList({ items, onClick }: RecentListProps) {
           key={item.id}
           {...item}
           onClick={() => {
-            onClick?.(item.type, item.id);
+            onClick?.(item);
           }}
         />
       ))}

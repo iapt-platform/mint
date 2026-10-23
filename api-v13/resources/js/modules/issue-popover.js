@@ -1,15 +1,17 @@
 // resources/js/modules/issue-popover.js
 //
-// 阅读页 issue 标注的点击查看。正文里的标注由后端注入
+// 阅读页 issue 与译文评估标注的点击查看。正文里的标注由后端注入
 // （PaliContentService::injectAnnotationNotes → AnnotationLayout）：
-//   span.anno-issue       有位置的 issue，包住被指出的原文（交叠的已合并成一个 span）
-//   span.anno-issue-mark  没有位置的 issue，句尾的三角叹号图标
-// 两者都带 data-discussion-ids="id1,id2"。点击后逐条取 GET /api/v3/discussions/{id}
-// （issue 对匿名公开），桌面端用 Bootstrap Popover，手机端用 #annoIssueDrawer 抽屉。
+//   span.anno-issue            有位置的 issue，包住被指出的原文（交叠的已合并成一个 span）
+//   span.anno-issue-mark       没有位置的 issue，句尾的三角叹号图标
+//   span.anno-assessment-mark  译文评估，句尾的对勾图标，颜色按分数档位（high / medium / low）
+// 都带 data-discussion-ids="id1,id2"。点击后逐条取 GET /api/v3/discussions/{id}
+// （issue 与评估对匿名公开），桌面端用 Bootstrap Popover，手机端用 #annoIssueDrawer 抽屉。
 
 import * as bootstrap from 'bootstrap';
 
 const isMobile = () => window.innerWidth < 768;
+const MARKERS = '.anno-issue, .anno-issue-mark, .anno-assessment-mark';
 const cache = new Map();
 
 function escapeHtml(text) {
@@ -48,9 +50,46 @@ async function fetchIssue(id) {
     }
 }
 
-function renderIssue(issue, i18n) {
+// level 取自标注的 data-level（后端 AnnotationLayout::assessmentLevel 定档），前端不重复分档阈值
+function renderAssessment(assessment, i18n, level) {
+    const score = Number(assessment.score ?? 0).toString();
+    const editor = assessment.editor?.nickName ?? '';
+    const coEditor = assessment.co_editor?.nickName ?? '';
+    const date = assessment.updated_at
+        ? new Date(assessment.updated_at).toLocaleDateString()
+        : '';
+    const replies = assessment.reply_count
+        ? i18n.replies.replace(':count', assessment.reply_count)
+        : '';
+    const body = (assessment.summary ?? assessment.content ?? '').trim();
+    const meta = [
+        i18n.method.replace(':method', assessment.severity ?? ''),
+        coEditor ? `${editor} + ${coEditor}` : editor,
+        date,
+        replies,
+    ]
+        .filter(Boolean)
+        .join(' · ');
+
+    return `
+        <div class="anno-issue-item anno-assessment-item anno-assessment-${level}">
+            <div class="anno-issue-item-head">
+                <i class="ti ti-circle-check"></i>
+                <span class="anno-assessment-score">${escapeHtml(score)}</span>
+                <span>${escapeHtml(assessment.title ?? '')}</span>
+            </div>
+            ${body ? `<div class="anno-issue-item-body">${escapeHtml(body)}</div>` : ''}
+            <div class="anno-issue-item-meta">${escapeHtml(meta)}</div>
+        </div>`;
+}
+
+function renderIssue(issue, i18n, level) {
     if (!issue) {
         return `<div class="anno-issue-item text-muted">${escapeHtml(i18n.notFound)}</div>`;
+    }
+
+    if (issue.type === 'assessment') {
+        return renderAssessment(issue, i18n, level ?? 'none');
     }
 
     const severity = issue.severity ?? '';
@@ -79,13 +118,13 @@ function renderIssue(issue, i18n) {
         </div>`;
 }
 
-async function renderList(ids, i18n) {
+async function renderList(ids, i18n, level) {
     const results = await Promise.allSettled(ids.map(fetchIssue));
 
     return results
         .map((r) =>
             r.status === 'fulfilled'
-                ? renderIssue(r.value, i18n)
+                ? renderIssue(r.value, i18n, level)
                 : `<div class="anno-issue-item text-danger">${escapeHtml(i18n.failed)}</div>`,
         )
         .join('');
@@ -95,7 +134,7 @@ export function initIssueMarkers() {
     const article = document.querySelector('article.reader-body');
     const drawerEl = document.getElementById('annoIssueDrawer');
 
-    if (!article || !article.querySelector('.anno-issue, .anno-issue-mark')) {
+    if (!article || !article.querySelector(MARKERS)) {
         return;
     }
 
@@ -105,6 +144,8 @@ export function initIssueMarkers() {
         notFound: '',
         replies: ':count',
         severity: {},
+        assessmentTitle: '',
+        method: ':method',
     };
 
     try {
@@ -140,8 +181,17 @@ export function initIssueMarkers() {
 
         activeEl = el;
         el.classList.add('is-active');
+        const title = el.classList.contains('anno-assessment-mark')
+            ? i18n.assessmentTitle
+            : i18n.title;
 
         if (isMobile() && drawerEl) {
+            const heading = drawerEl.querySelector('.offcanvas-title');
+
+            if (heading) {
+                heading.textContent = title;
+            }
+
             const body = drawerEl.querySelector('.offcanvas-body');
             body.innerHTML = loadingHtml;
             const drawer = bootstrap.Offcanvas.getOrCreateInstance(drawerEl);
@@ -149,7 +199,7 @@ export function initIssueMarkers() {
                 once: true,
             });
             drawer.show();
-            body.innerHTML = await renderList(ids, i18n);
+            body.innerHTML = await renderList(ids, i18n, el.dataset.level);
 
             return;
         }
@@ -161,12 +211,12 @@ export function initIssueMarkers() {
             placement: 'bottom',
             fallbackPlacements: ['top', 'bottom'],
             customClass: 'anno-issue-popover',
-            title: escapeHtml(i18n.title),
+            title: escapeHtml(title),
             content: `<div class="anno-issue-list">${loadingHtml}</div>`,
         });
         activePopover = popover;
         popover.show();
-        const html = await renderList(ids, i18n);
+        const html = await renderList(ids, i18n, el.dataset.level);
 
         if (activePopover !== popover) {
             return; // 等待期间已经切到别的标注
@@ -195,7 +245,7 @@ export function initIssueMarkers() {
             return;
         }
 
-        const el = e.target.closest('.anno-issue, .anno-issue-mark');
+        const el = e.target.closest(MARKERS);
 
         if (!el) {
             return;
@@ -206,7 +256,9 @@ export function initIssueMarkers() {
     });
 
     article.addEventListener('keydown', (e) => {
-        const el = e.target.closest?.('.anno-issue-mark');
+        const el = e.target.closest?.(
+            '.anno-issue-mark, .anno-assessment-mark',
+        );
 
         if (el && (e.key === 'Enter' || e.key === ' ')) {
             e.preventDefault();
@@ -218,9 +270,7 @@ export function initIssueMarkers() {
     document.addEventListener('click', (e) => {
         if (
             activePopover &&
-            !e.target.closest(
-                '.anno-issue, .anno-issue-mark, .anno-issue-popover',
-            )
+            !e.target.closest(`${MARKERS}, .anno-issue-popover`)
         ) {
             deactivate();
         }

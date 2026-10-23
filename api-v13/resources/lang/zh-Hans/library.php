@@ -178,4 +178,8 @@ return [
     'issue_severity_error' => '错误',
     'issue_severity_warning' => '警告',
     'issue_severity_suggestion' => '建议',
+
+    // reader: 译文评估标注（reader.js 弹出层）
+    'assessment_title' => '译文评估',
+    'assessment_method' => '方法：:method',
 ];
