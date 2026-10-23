@@ -296,19 +296,20 @@ test('assessment 一轮：建或覆盖 → 再评估覆盖同一条 → 公开�
     assert_eq('api-test', $first['body']['data']['severity'] ?? null, 'assessment 方法存在 severity');
 
     // 再评估：覆盖同一条，200，id 不变
-    $again = $post(['score' => 82.5, 'severity' => 'api-test', 'title' => '复评', 'content' => $stamp]);
+    $again = $post(['score' => 82, 'severity' => 'api-test', 'title' => '复评', 'content' => $stamp]);
     assert_status(200, $again, '再评估');
     assert_eq($id, $again['body']['data']['id'] ?? null, '再评估覆盖同一条');
-    assert_eq(82.5, $again['body']['data']['score'] ?? null, '覆盖后的 score');
+    assert_eq(82, $again['body']['data']['score'] ?? null, '覆盖后的 score');
 
     // 公开：匿名也读得到；不带 type 的列表不列评估
     assert_status(200, raw('GET', "/v3/discussions/{$id}"), '匿名读 assessment');
     $listed = raw('GET', '/v3/discussions', ['target_type' => 'sentence', 'target_id' => discussion_target(), 'type' => 'assessment']);
     assert_eq([$id], array_column($listed['body']['data'] ?? [], 'id'), 'type=assessment 列出这一条');
 
-    // 校验：缺分数、超范围、方法格式不对、其它类型带分数
+    // 校验：缺分数、超范围、带小数、方法格式不对、其它类型带分数
     assert_field_error('score', $post(['severity' => 'api-test']), 'assessment 缺 score');
     assert_field_error('score', $post(['score' => 101, 'severity' => 'api-test']), 'assessment score 超范围');
+    assert_field_error('score', $post(['score' => 80.5, 'severity' => 'api-test']), 'assessment score 只收整数');
     assert_field_error('severity', $post(['score' => 50, 'severity' => 'bad method']), 'assessment 方法格式');
     assert_field_error('score', raw('POST', '/v3/discussions', null, [
         'target_type' => 'sentence', 'target_id' => discussion_target(), 'type' => 'issue',
