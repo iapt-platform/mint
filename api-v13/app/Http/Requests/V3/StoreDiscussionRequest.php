@@ -15,6 +15,9 @@ use Illuminate\Validation\Rule;
  * 批注（note / commentary）与评论线程的规则不同：只能挂在句子上、标题可省、正文必填，
  * commentary 的正文必须是义注句子模板。glossary 也只能挂在句子上。
  * 锚点（pos_* / quote_*）只有 {@see Discussion::ANCHORED_TYPES} 收。
+ *
+ * assessment（译文评估）：score（0–100 的整数）与 severity（评估方法）必填，标题可省，理由写 content；
+ * 其它类型传 score 就 422。
  */
 class StoreDiscussionRequest extends FormRequest
 {
@@ -32,6 +35,7 @@ class StoreDiscussionRequest extends FormRequest
     {
         $type = $this->input('type', 'discussion');
         $severities = Discussion::SEVERITIES[$type] ?? [];
+        $isAssessment = $type === Discussion::TYPE_ASSESSMENT;
         $isAnnotation = in_array($type, Discussion::INJECTED_TYPES, true);
         $sentenceOnly = in_array($type, Discussion::SENTENCE_ONLY_TYPES, true);
         // 不收锚点的类型传了 422，免得静默丢掉
@@ -43,7 +47,7 @@ class StoreDiscussionRequest extends FormRequest
             'target_type' => ['required', 'string', Rule::in($sentenceOnly ? ['sentence'] : Discussion::TARGET_TYPES)],
             'target_id' => ['required', 'uuid'],
             'type' => ['sometimes', 'string', Rule::in(Discussion::COMMENT_TYPES)],
-            'title' => $isAnnotation
+            'title' => $isAnnotation || $isAssessment
                 ? ['sometimes', 'nullable', 'string', 'max:256']
                 : ['required', 'string', 'max:256'],
             'content' => match ($type) {
@@ -51,9 +55,14 @@ class StoreDiscussionRequest extends FormRequest
                 Discussion::TYPE_NOTE => ['required', 'string', 'max:20000'],
                 default => ['sometimes', 'nullable', 'string', 'max:20000'],
             },
-            'severity' => $severities === []
-                ? ['prohibited']
-                : ['sometimes', 'nullable', 'string', Rule::in($severities)],
+            'severity' => match (true) {
+                $isAssessment => ['required', 'string', 'regex:'.Discussion::ASSESSMENT_METHOD_PATTERN],
+                $severities === [] => ['prohibited'],
+                default => ['sometimes', 'nullable', 'string', Rule::in($severities)],
+            },
+            'score' => $isAssessment
+                ? ['required', 'integer', 'between:0,100']
+                : ['prohibited'],
             'pos_start' => $anchor(['integer', 'min:0']),
             'pos_end' => $anchor(['integer', 'min:0', 'gte:pos_start']),
             'quote_exact' => $anchor(['string', 'max:1024']),
@@ -72,11 +81,15 @@ class StoreDiscussionRequest extends FormRequest
         $messages = [
             'content.regex' => __('messages.discussion_commentary_format'),
             'severity.prohibited' => __('messages.discussion_severity_not_allowed'),
+            'severity.regex' => __('messages.discussion_assessment_method'),
+            'score.prohibited' => __('messages.discussion_score_not_allowed'),
         ];
         if (in_array($this->input('type'), Discussion::INJECTED_TYPES, true)) {
             $messages['target_type.in'] = __('messages.discussion_annotation_target');
         } elseif ($this->input('type') === Discussion::TYPE_GLOSSARY) {
             $messages['target_type.in'] = __('messages.discussion_glossary_target');
+        } elseif ($this->input('type') === Discussion::TYPE_ASSESSMENT) {
+            $messages['target_type.in'] = __('messages.discussion_assessment_target');
         }
         foreach (self::ANCHOR_FIELDS as $field) {
             $messages["{$field}.prohibited"] = __('messages.discussion_anchor_thread');

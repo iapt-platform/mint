@@ -752,22 +752,25 @@ class PaliContentService
      * - `glossary`（外挂术语）：锚点处的原文换成 `[[title#原文]]`，渲染成术语（title 是词头）；
      * - `issue`：锚点处的原文包一层高亮 span，带 discussion id，阅读器点击看内容；
      *   没有位置的合成一个三角叹号图标放在句尾。只在 html 格式输出。
-     * issue / glossary 只注入未关闭的；批注没有开关状态。
+     * - `assessment`（译文评估）：句尾一个对勾图标，颜色按分数分档，带 discussion id，
+     *   阅读器点击看分数与理由。一句只有一条（有并发残留时取最近更新的）。只在 html 格式输出。
+     *   同段里其它没有评估的句子由 {@see self::renderReadSentences()} 补灰色对勾。
+     * issue / glossary 只注入未关闭的；批注与评估没有开关状态。
      *
      * 位置按 pos_* 定位，与 quote_exact 对不上（正文改过）时按摘录重新定位。
      *
-     * @return array{content: string, notes: list<array{fnId: string, noteHtml: string, citeHtml: string}>}
+     * @return array{content: string, notes: list<array{fnId: string, noteHtml: string, citeHtml: string}>, assessed: bool}
      */
     protected function injectAnnotationNotes(Sentence $row, string $channelType, string $format = 'html'): array
     {
         $content = (string) $row->content;
-        $result = ['content' => $content, 'notes' => []];
+        $result = ['content' => $content, 'notes' => [], 'assessed' => false];
         $records = Discussion::where('res_type', 'sentence')
             ->where('res_id', $row->uid)
             ->whereIn('type', Discussion::READING_TYPES)
             // 只注入话题本身；回复（类型跟随话题）不进阅读页
             ->whereNull('parent')
-            ->where(fn ($q) => $q->whereIn('type', Discussion::INJECTED_TYPES)->orWhere('status', 'active'))
+            ->where(fn ($q) => $q->whereIn('type', Discussion::STATELESS_TYPES)->orWhere('status', 'active'))
             ->orderBy('created_at')
             ->get();
 
@@ -783,7 +786,15 @@ class PaliContentService
         $issues = [];
         $notes = [];
         $footnotes = [];
+        $assessment = null;
         foreach ($records as $record) {
+            if ($record->type === Discussion::TYPE_ASSESSMENT) {
+                if ($record->score !== null && ($assessment === null || $record->updated_at >= $assessment['updated_at'])) {
+                    $assessment = ['id' => $record->id, 'score' => (int) $record->score, 'updated_at' => $record->updated_at];
+                }
+
+                continue;
+            }
             if ($record->type === Discussion::TYPE_GLOSSARY) {
                 $range = $locate($record);
                 if ($range !== null) {
@@ -816,9 +827,17 @@ class PaliContentService
             ];
         }
 
-        $layout = AnnotationLayout::apply($content, $glossaries, $issues, $notes, $format === 'html');
+        $layout = AnnotationLayout::apply(
+            $content,
+            $glossaries,
+            $issues,
+            $notes,
+            $format === 'html',
+            $assessment === null ? null : ['id' => $assessment['id'], 'score' => $assessment['score']],
+        );
         $result['content'] = $layout['content'];
         $result['notes'] = array_map(fn ($id) => $footnotes[$id], $layout['notes']);
+        $result['assessed'] = $assessment !== null;
 
         Log::info('reading-annotations: inject', [
             'sid' => "{$row->book_id}-{$row->paragraph}-{$row->word_start}-{$row->word_end}",
@@ -950,9 +969,16 @@ class PaliContentService
             ->get();
 
         $allNotes = [];
-        foreach ($records as $row) {
-            $injected = $this->injectAnnotationNotes($row, $channelType, $format);
+        $injections = $records->map(fn (Sentence $row) => $this->injectAnnotationNotes($row, $channelType, $format));
+        // 段里有句子评估过，其余没评估的句子在句尾补灰色对勾：不然读者会把它与下一句的
+        // 对勾连起来，误以为是一句。整段都没评估就都不补（段落本身有分隔）。
+        $markUnassessed = $format === 'html' && $injections->contains('assessed', true);
+        foreach ($records as $i => $row) {
+            $injected = $injections[$i];
             $content = $injected['content'];
+            if ($markUnassessed && ! $injected['assessed'] && trim($content) !== '') {
+                $content .= AnnotationLayout::unassessedMark();
+            }
             $allNotes = array_merge($allNotes, $injected['notes']);
             $html = MdRender::render(
                 $content,

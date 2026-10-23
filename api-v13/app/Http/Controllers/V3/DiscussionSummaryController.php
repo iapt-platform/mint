@@ -30,7 +30,7 @@ class DiscussionSummaryController extends Controller
      *
      * @queryParam target_type string required 挂靠对象的类型。Enum: sentence,wbw,article,term,task
      * @queryParam target_id string required 挂靠对象的 uuid
-     * @queryParam type string 只数这种类型，不传则只数评论线程。Enum: discussion,qa,help,issue,glossary,note,commentary
+     * @queryParam type string 只数这种类型，不传则只数评论线程。Enum: discussion,qa,help,issue,glossary,note,commentary,assessment
      */
     public function __invoke(SummaryDiscussionRequest $request)
     {

@@ -28,8 +28,8 @@ class TipitakaDiscussionController extends Controller
      *
      * 只列挂在该 channel 句子上的话题（不含回复），按经文顺序（书、段、句）排列，同一句里按时间；
      * 每条带 `sentence`（所在句子的坐标）。删除了但还有回复的话题以墓碑出现。
-     * 不传 type 时只列评论线程（discussion / qa / help / issue / glossary），批注要显式
-     * type=note / commentary。可见性同 `GET /v3/discussions`：未登录看不到 discussion；
+     * 不传 type 时只列评论线程（discussion / qa / help / issue / glossary），批注与评估要显式
+     * type=note / commentary / assessment。可见性同 `GET /v3/discussions`：未登录看不到 discussion；
      * basic 角色在自己不能编辑的 channel 上只看得到自己发起的 discussion。
      * channel 不存在或范围内没有讨论都返回空列表；chapter 不存在 404。
      *
@@ -45,7 +45,7 @@ class TipitakaDiscussionController extends Controller
      * @queryParam to integer 结束段落号（含），缺省同 para。Example: 896
      * @queryParam type string 类型，逗号分隔多选；不传则只列评论线程。Example: issue,glossary
      * @queryParam status string 话题状态，不传则两种都要。Enum: active,close
-     * @queryParam severity string 严重程度，逗号分隔多选。Example: error,warning
+     * @queryParam severity string 严重程度（assessment 为评估方法），逗号分隔多选。Example: error,warning
      * @queryParam page integer 页码。Default: 1
      * @queryParam per_page integer 每页数量，最大 200。Default: 15
      */

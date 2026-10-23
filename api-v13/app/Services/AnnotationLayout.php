@@ -12,7 +12,8 @@ namespace App\Services;
  * - glossary：区间 [start, end) 的原文换成 `[[title#原文]]`，MdRender 渲染成术语；
  * - issue：区间外包一层 `<span class="anno-issue …" data-discussion-ids="…">`（高亮，点击看内容）；
  *   没有位置的 issue 合成一个三角叹号图标，放在句尾；
- * - note / commentary：在插入点插入调用方预先渲染好的 `{{note|…}}` 模板。
+ * - note / commentary：在插入点插入调用方预先渲染好的 `{{note|…}}` 模板；
+ * - assessment：句子最末尾一个对勾图标（在 issue 的三角之后），颜色按分数分档（{@see self::assessmentLevel()}）。
  *
  * 交叠的处理（核心约束：任何时候都不能切断一个标记）：
  * - 受保护区间：content 里本来就有的标记（`[[…]]`、`{{…}}`、`` `…` ``、`**…**`、HTML 标签），
@@ -31,6 +32,9 @@ class AnnotationLayout
 {
     /** 严重程度由轻到重；合并时取最重的，没有 severity 的最轻 */
     private const SEVERITY_RANK = ['suggestion' => 1, 'warning' => 2, 'error' => 3];
+
+    /** 评估分档的下限（含）：由高到低，都不够就是 low */
+    private const ASSESSMENT_LEVELS = ['high' => 80, 'medium' => 60];
 
     /** glossary 的原文或词头里不能有这些字符，否则 `[[title#原文]]` 会被拆坏 */
     private const GLOSSARY_FORBIDDEN = '/[\[\]{}|#\r\n]/u';
@@ -99,13 +103,14 @@ class AnnotationLayout
      * @param  list<array{id: string, start: int, end: int, title: string}>  $glossaries  已定位的术语
      * @param  list<array{id: string, start: int|null, end: int|null, severity: string|null}>  $issues  start/end 为 null 表示没有位置
      * @param  list<array{id: string, at: int, order: array<int, int>, html: string}>  $notes  at 是插入点，order 是同一插入点上的先后
-     * @param  bool  $withIssues  是否输出 issue 的高亮与图标（只有 html 格式需要）
+     * @param  bool  $withIssues  是否输出 issue 的高亮与图标、评估的对勾（只有 html 格式需要）
+     * @param  array{id: string, score: int}|null  $assessment  这句的评估，没有为 null
      * @return array{content: string, notes: list<string>, glossaries: list<string>, issues: list<array{ids: list<string>, severity: string|null, start: int|null, end: int|null}>}
      *
      * 返回值里 notes 是 note id 的阅读顺序，glossaries 是实际替换了的术语 id，
      * issues 是合并后的高亮（没有位置的合成一条，start / end 为 null）。
      */
-    public static function apply(string $content, array $glossaries, array $issues, array $notes, bool $withIssues = true): array
+    public static function apply(string $content, array $glossaries, array $issues, array $notes, bool $withIssues = true, ?array $assessment = null): array
     {
         $len = mb_strlen($content, 'UTF-8');
         $protected = self::protectedRanges($content);
@@ -226,6 +231,9 @@ class AnnotationLayout
                 self::maxSeverity(array_column($unanchored, 'severity')),
             );
         }
+        if ($withIssues && $assessment !== null) {
+            $out .= self::assessmentMark($assessment['id'], $assessment['score']);
+        }
 
         $report = array_map(fn ($s) => [
             'ids' => $s['ids'], 'severity' => $s['severity'], 'start' => $s['start'], 'end' => $s['end'],
@@ -340,6 +348,43 @@ class AnnotationLayout
         return '<span class="anno-issue anno-issue-'.($severity ?? 'none').'"'
             .' data-discussion-ids="'.e(implode(',', $ids)).'"'
             .' data-severity="'.e($severity ?? '').'">';
+    }
+
+    /**
+     * 评估分数的档位：high（≥80）/ medium（≥60）/ low。阅读器按档位着色（绿 / 橙 / 红）。
+     */
+    public static function assessmentLevel(int $score): string
+    {
+        foreach (self::ASSESSMENT_LEVELS as $level => $min) {
+            if ($score >= $min) {
+                return $level;
+            }
+        }
+
+        return 'low';
+    }
+
+    /**
+     * 没有评估的句子：灰色对勾，不能点（没有 discussion id）。只在同段有别的句子评估过时由
+     * {@see PaliContentService::renderReadSentences()} 补上，标出句子的边界。
+     */
+    public static function unassessedMark(): string
+    {
+        return '<span class="anno-assessment-mark anno-assessment-none" data-level="none" aria-hidden="true">'
+            .'<i class="ti ti-circle-check"></i></span>';
+    }
+
+    /**
+     * 评估：句尾一个对勾图标，颜色按分数档位，点击看分数与理由。
+     */
+    private static function assessmentMark(string $id, int $score): string
+    {
+        $level = self::assessmentLevel($score);
+
+        return '<span class="anno-assessment-mark anno-assessment-'.$level.'"'
+            .' data-discussion-ids="'.e($id).'"'
+            .' data-score="'.$score.'" data-level="'.$level.'" role="button" tabindex="0">'
+            .'<i class="ti ti-circle-check"></i></span>';
     }
 
     /**
