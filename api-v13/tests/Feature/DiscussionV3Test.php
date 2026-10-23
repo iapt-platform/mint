@@ -556,7 +556,7 @@ it('lets only the sentence manager assess a sentence, publicly and without notif
     $owner = makeStudio('owner');
     $target = makeTargetSentence($owner);
     $payload = ['target_type' => 'sentence', 'target_id' => $target, 'type' => 'assessment',
-        'severity' => 'mqm', 'score' => 87.5, 'content' => '术语一致，语序略生硬'];
+        'severity' => 'mqm', 'score' => 87, 'content' => '术语一致，语序略生硬'];
 
     $this->postJson('/api/v3/discussions', $payload)->assertUnauthorized();
     $this->postJson('/api/v3/discussions', $payload, authHeader(makeStudio('stranger')))->assertForbidden();
@@ -566,7 +566,7 @@ it('lets only the sentence manager assess a sentence, publicly and without notif
         ->assertCreated()
         ->assertJsonPath('data.type', 'assessment')
         ->assertJsonPath('data.severity', 'mqm')
-        ->assertJsonPath('data.score', 87.5)
+        ->assertJsonPath('data.score', 87)
         ->assertJsonPath('data.title', null)
         ->assertJsonPath('data.content', '术语一致，语序略生硬')
         ->assertJsonPath('data.abilities', ['update' => true, 'delete' => true, 'close' => false, 'reply' => true])
@@ -574,7 +574,7 @@ it('lets only the sentence manager assess a sentence, publicly and without notif
     Log::shouldNotHaveReceived('debug', fn (string $message) => $message === 'mq publish');
 
     // 公开：匿名看得到；不带 type 的列表不列评估
-    $this->getJson("/api/v3/discussions/{$id}")->assertOk()->assertJsonPath('data.score', 87.5);
+    $this->getJson("/api/v3/discussions/{$id}")->assertOk()->assertJsonPath('data.score', 87);
     $base = "/api/v3/discussions?target_type=sentence&target_id={$target}";
     $this->getJson($base)->assertJsonCount(0, 'data');
     $this->getJson("{$base}&type=assessment")->assertJsonCount(1, 'data');
@@ -617,6 +617,7 @@ it('validates assessment input', function () {
     $post(['score' => null])->assertStatus(422)->assertJsonValidationErrors('score');
     $post(['score' => 101])->assertStatus(422)->assertJsonValidationErrors('score');
     $post(['score' => -1])->assertStatus(422)->assertJsonValidationErrors('score');
+    $post(['score' => 80.5])->assertStatus(422)->assertJsonValidationErrors('score');   // 只收整数
     $post(['severity' => null])->assertStatus(422)->assertJsonValidationErrors('severity');
     $post(['severity' => 'has space'])->assertStatus(422)->assertJsonValidationErrors('severity');
     $post(['severity' => str_repeat('a', 17)])->assertStatus(422)->assertJsonValidationErrors('severity');
@@ -643,9 +644,9 @@ it('updates an assessment score and method, and keeps it apart from other types'
     $patch($topic, ['type' => 'assessment'])->assertStatus(422)->assertJsonValidationErrors('type');
     $patch($topic, ['score' => 10])->assertStatus(422)->assertJsonValidationErrors('score');
 
-    $patch($assessment, ['score' => 66.25, 'severity' => 'llm-judge', 'content' => '复核'])
+    $patch($assessment, ['score' => 66, 'severity' => 'llm-judge', 'content' => '复核'])
         ->assertOk()
-        ->assertJsonPath('data.score', 66.25)
+        ->assertJsonPath('data.score', 66)
         ->assertJsonPath('data.severity', 'llm-judge')
         ->assertJsonPath('data.content', '复核');
 });

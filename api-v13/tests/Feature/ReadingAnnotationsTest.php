@@ -169,7 +169,7 @@ it('leaves issue markup out of plain text output but keeps the glossary term', f
 
 /* ------------------------------------------------------------------ 评估 */
 
-it('marks an assessed sentence with a check coloured by score, after any issue mark', function (float $score, string $level) {
+it('marks an assessed sentence with a check coloured by score, after any issue mark', function (int $score, string $level) {
     [$channel, $sentence] = makeAnnotatedSentence();
     makeAnchored($sentence->uid, 'issue', ['severity' => 'warning']);
     $assessment = makeAnchored($sentence->uid, 'assessment', ['title' => null, 'severity' => 'mqm', 'score' => $score]);
@@ -182,9 +182,9 @@ it('marks an assessed sentence with a check coloured by score, after any issue m
         ->toContain('<i class="ti ti-circle-check"></i>')
         ->and(mb_strpos($display, 'anno-issue-mark'))->toBeLessThan(mb_strpos($display, 'anno-assessment-mark'));
 })->with([
-    'high' => [80.0, 'high'],
-    'medium' => [79.99, 'medium'],
-    'low' => [12.5, 'low'],
+    'high' => [80, 'high'],
+    'medium' => [79, 'medium'],
+    'low' => [12, 'low'],
 ]);
 
 it('drops the cache when an assessment is rescored, and leaves it out of plain text', function () {
@@ -193,8 +193,8 @@ it('drops the cache when an assessment is rescored, and leaves it out of plain t
 
     expect(readFirstParagraph($channel))->toContain('data-score="30"');
 
-    $assessment->forceFill(['score' => 95.5])->save();
-    expect(readFirstParagraph($channel))->toContain('data-score="95.5"')->toContain('anno-assessment-high');
+    $assessment->forceFill(['score' => 95])->save();
+    expect(readFirstParagraph($channel))->toContain('data-score="95"')->toContain('anno-assessment-high');
 
     $text = app(PaliContentService::class)->readParagraph(9101, 1, $channel, 'text')['display'];
     expect($text)->toBe('first sentence');
