@@ -7,7 +7,7 @@ info:
 
     由 `php openapi/scripts/generate.php` 依据 api-v13 的路由与控制器源码生成。
     响应统一封装为 `{ok, message, data}`；`ok=false` 时 `message` 为错误信息。
-  version: 2026.10.21
+  version: 2026.10.22
 servers:
   -
     url: /api

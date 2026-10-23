@@ -47,6 +47,7 @@ get:
           - glossary
           - note
           - commentary
+          - assessment
       description: 只数这种类型，不传则只数评论线程
   responses:
     200:

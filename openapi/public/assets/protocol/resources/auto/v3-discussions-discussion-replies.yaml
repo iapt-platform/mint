@@ -61,6 +61,9 @@ get:
                     severity:
                       type: string
                       nullable: true
+                    score:
+                      type: number
+                      nullable: true
                     status:
                       type: string
                     title:
@@ -187,6 +190,9 @@ post:
                   severity:
                     type: string
                     nullable: true
+                  score:
+                    type: number
+                    nullable: true
                   status:
                     type: string
                   title:
@@ -291,6 +297,9 @@ post:
                     type: string
                   severity:
                     type: string
+                    nullable: true
+                  score:
+                    type: number
                     nullable: true
                   status:
                     type: string
