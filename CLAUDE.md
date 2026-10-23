@@ -350,7 +350,7 @@ Resource / FormRequest / 测试同理；URL 只换版本前缀
 | `related-paragraph` / `RelatedParagraphController` | `tipitaka-related-paragraphs` (+`/aggregate`) / `V3\TipitakaRelatedParagraphController` + `V3\TipitakaRelatedParagraphAggregateController` | 字段改名 `book_title_pali`→`title`、`cs6_para`→`cs_para`；响应 `{ok,…}`→原生 Resource；消除逐行 N+1（批量 whereIn）；新增 `book_name`/`cs_para` 过滤器与独立 `/aggregate` 聚合端点（`group_by=book_id`→book_name 列表 / `group_by=book_name`→cs_para 列表，分页） |
 | `auth/forgot-password` + `auth/reset-password` / `ForgotPasswordController` + `ResetPasswordController` | `password-resets` (+`/{token}`) / `V3\PasswordResetController` | 三条并成一个资源：POST 发信、GET 看账号、PATCH 设密码（204）。库里只存 token 的 sha256、60 分钟过期、邮箱未注册也 204、不收 `dashboard` 参数（链接用 `mint.server.dashboard_v6_base_path` 拼到 v6 的 `/anonymous/reset-password/{token}`）、限流 |
 | `email-certification` + `invite/{id}`（读）+ `sign-up` / `EmailCertificationController` + `InviteController@show` + `SignUpController@store` | `email-certifications` + `invites` (+`/{invite}`) + `users` / `V3\EmailCertificationController` + `V3\InviteController` + `V3\UserController` | 注册。验证码改在服务端比对：v2 的 `GET email-certification/{id}`（把码交给前端）在 v3 没有对应端点，换成 `POST invites {email, code}` 签发 invite；自助与邀请注册都凭 invite 走 `POST users`。验证码 6 位、30 分钟、试错 5 次作废；验证通过前不写 invites 表。studio 发邀请（`POST /v2/invite`）不在此列，将来迁成 `studios/{studio}/invites` |
-| `discussion`（列表、单条、新建、修改、删除）/ `DiscussionController` | `discussions` (+`/summary`、`/{d}/replies`) / `V3\DiscussionController` + `V3\DiscussionSummaryController` + `V3\DiscussionReplyController` | 管评论线程（type `discussion` / `qa` / `help` / `issue`）与批注（`note` 边注、`commentary` 义注 / 复注对应——巴利注释书，不是普通评论）。批注只挂句子、只有该句管理者能建（AI 凭授权代写按授权人判）、带锚点 `pos_*`/`quote_*`、可回复、无开关、新建不发通知；列表与 summary 不带 `type` 时只算评论线程。写入支持 agent 代写（`X-Agent-Grant`），新增 `co_editor`（人亲自改内容时清空）。字段改名 `res_type`/`res_id`→`target_type`/`target_id`、`parent`→`parent_id`、`children_count`→`reply_count`；`view=question/res_id/question-by-topic`→列表，`view=answer`+带 parent 的 POST→`replies`，响应里的 `active`/`close`/`can_create`→`summary`；每条带 `abilities`；只有 PATCH；软删除（2026-10-15 起 v2 也是），有回复的话题留作墓碑。`view=topic-by-user`/`all`、课程参数、`discussion-anchor`、`sent-discussion-tree` 未迁；`discussion-count` 拆开：讨论角标迁成 `POST discussions/batch-count`（只给计数，入参改为对象 uid，套 v3 可见性与类型口径），标签部分仍走 v2、待迁标签时处理；课程模式的「学生的讨论」待课程迁移后补（TODO 在 `DiscussionService::batchCount`） |
+| `discussion`（列表、单条、新建、修改、删除）/ `DiscussionController` | `discussions` (+`/summary`、`/{d}/replies`) / `V3\DiscussionController` + `V3\DiscussionSummaryController` + `V3\DiscussionReplyController` | 管评论线程（type `discussion` / `qa` / `help` / `issue`）与批注（`note` 边注、`commentary` 义注 / 复注对应——巴利注释书，不是普通评论），2026-10-22 起还有译文评估（`assessment`：`score` 0–100、`severity` 存评估方法、只挂句子且只有该句管理者能建、一句只留一条再评估就覆盖、注入阅读页句尾按分数着色的对勾）。批注只挂句子、只有该句管理者能建（AI 凭授权代写按授权人判）、带锚点 `pos_*`/`quote_*`、可回复、无开关、新建不发通知；列表与 summary 不带 `type` 时只算评论线程。写入支持 agent 代写（`X-Agent-Grant`），新增 `co_editor`（人亲自改内容时清空）。字段改名 `res_type`/`res_id`→`target_type`/`target_id`、`parent`→`parent_id`、`children_count`→`reply_count`；`view=question/res_id/question-by-topic`→列表，`view=answer`+带 parent 的 POST→`replies`，响应里的 `active`/`close`/`can_create`→`summary`；每条带 `abilities`；只有 PATCH；软删除（2026-10-15 起 v2 也是），有回复的话题留作墓碑。`view=topic-by-user`/`all`、课程参数、`discussion-anchor`、`sent-discussion-tree` 未迁；`discussion-count` 拆开：讨论角标迁成 `POST discussions/batch-count`（只给计数，入参改为对象 uid，套 v3 可见性与类型口径），标签部分仍走 v2、待迁标签时处理；课程模式的「学生的讨论」待课程迁移后补（TODO 在 `DiscussionService::batchCount`） |
 | `access-token`（agent 用途）/ `AccessTokenController@store` | `agent-grants` / `V3\AgentGrantController` | 人类为自己名下的 AI 模型签 channel 写入授权。载荷由服务端决定（v2 原样签客户端 payload）、绑定模型（act）与签发人（grantor）、带模型 token_version、独立密钥；写入时放 `X-Agent-Grant` 头而不是请求体 |
 | `sent-discussion-tree`（部分）/ `DiscussionController@discussion_tree` | `tipitaka-discussions/{channel}` / `V3\TipitakaDiscussionController` | 新能力为主：按经文范围（channel 必填；`book` + `chapter` 或 `para`/`to`，不给 book 即整个 channel）列挂在句子上的话题，每条带 `sentence` 坐标，按经文顺序排；`type` 可逗号多选，默认只列话题，可见性同 `/v3/discussions`。v2 那条要调用方逐句列出坐标、只回标题与回复数，未迁也不迁（只有 v4 在用）。与 `/v3/discussions`（单个对象）必填参数不同，按规范第 1 条分成两个端点 |
 | `sign-in` + `auth/current` / `AuthController@signIn` + `@getUserInfoByToken` | `sessions` + `me` / `V3\SessionController` + `V3\MeController` | 登录一次返回 `{token, user}`，不再二次查询；`login` 字段收用户名或邮箱（邮箱不区分大小写），失败统一 422 `errors.login`；按账号 + IP 限流。`me` 的字段沿用 v2 的驼峰用户摘要（`UserService::profile()`），`roles` 恒为数组，另加 `email`，不再回显 token。token 与 v2 完全相同、两边互认 |
@@ -363,7 +363,7 @@ v3 这条只服务单 channel 的只读渲染。前端 `dashboard-v6/src/api/pal
 补偿手段要写进代码：v3 控制器的类注释写明「取代 `GET /v2/xxx`」，模型注释写明底层表名
 （如 `Reaction` 写明仍是 `likes` 表），这样从任一端都能找到另一端。
 
-**做迁移时使用 `v3-resource` skill**，里面有完整的九步链路与模板。
+**做迁移时使用 `v3-resource` skill**，里面有完整链路（0–9 步必做，10–12 步按需）与模板。
 
 **每迁一个资源，两套外部测试都要跟着更新**（skill 第 8、9 步），没更新就不算迁完：
 
@@ -371,6 +371,11 @@ v3 这条只服务单 channel 的只读渲染。前端 `dashboard-v6/src/api/pal
    用例（公开读、422、无 token 401、带 token 的建改删一轮），`php api-test/run.php` 跑绿。
 2. **`dashboard-test/`（只测 v6）**：给切过去的页面加 `src/tests/<资源>.spec.ts`，
    `npx playwright test <资源>` 跑绿。迁移牵出的「有链接没页面」在 v6 补上页面一起测。
+
+另有三处**只在涉及时**才改（skill 第 10–12 步）：Laravel library 阅读器（改了阅读页正文 HTML）、
+`wikipali-mobile`（改了它调的 v3 端点或阅读正文 HTML）、`wikipali-plugins`（agent 经插件读写的资源）。
+不涉及就不动，但收尾报告里要说明。本地开发库上测试写入的数据跑完不要删，用户要看结果。
+
 一次只迁一个资源。试点顺序：先 A 类 3 条（零线上风险，用来打磨样板与 CI 三道闸），
 再从 `channel` 开始啃 B 类。
 
