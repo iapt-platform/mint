@@ -108,9 +108,13 @@ class BookController extends Controller
             $channelId = ChannelApi::getSysChannel('_System_Pali_VRI_');
         }
 
+        abort_unless(preg_match('/^\d+-\d+$/', $id), 404);
         [$bookId, $paraId] = explode('-', $id);
         $bookId = (int) $bookId;
         $paraId = (int) $paraId;
+
+        $channel = ChannelApi::getById($channelId);
+        abort_unless($channel, 404);
 
         // 解析选中 chapter 的实际显示区间（起始/终止段落号），再按段落号聚合 HTML，
         // 避免选中父 chapter 时仅显示一个标题。
@@ -131,7 +135,6 @@ class BookController extends Controller
         $book = [];
 
         $book['toc'] = $this->getBookToc($bookId, $paraId, $channelId, 2, 7, [$range['start'], $range['end']]);
-        $channel = ChannelApi::getById($channelId);
         $studio = StudioApi::getById($channel['studio_id']);
         $book['categories'] = $chapter['category'];
         $book['title'] = $chapter['title'];
@@ -180,6 +183,7 @@ class BookController extends Controller
     private function resolveDisplayRange(int $book, int $para): array
     {
         $currBook = $this->bookStart($book, $para);
+        abort_if($currBook === null, 404);
         $bookStart = $currBook->paragraph;
         $bookEnd = $currBook->paragraph + $currBook->chapter_len - 1;
 
@@ -191,6 +195,8 @@ class BookController extends Controller
             ->get();
 
         $curr = $paragraphs->firstWhere('paragraph', $para);
+        // 选中的不是可导航的 chapter 节点（如正文段落 level=100）
+        abort_if($curr === null, 404);
         $endParagraph = $curr->paragraph + $curr->chapter_len - 1;
 
         if ($curr->chapter_strlen > $this->maxChapterStrlen) {

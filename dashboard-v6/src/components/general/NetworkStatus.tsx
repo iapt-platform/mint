@@ -32,6 +32,7 @@ import {
 } from "@ant-design/icons";
 
 import { apiServerHealth } from "../../api/api-health";
+import { nextPollDelay } from "../../utils/poll-backoff";
 import {
   selectNetStatus,
   statusChange,
@@ -42,9 +43,6 @@ import {
 const { Text } = Typography;
 
 // ─── 常量 ───────────────────────────────────────────────────────────────────
-
-/** API 轮询间隔（毫秒），默认 60 秒 */
-const POLL_INTERVAL_MS = 60_000;
 
 /** API 请求超时阈值（毫秒） */
 const API_TIMEOUT_MS = 8_000;
@@ -283,11 +281,12 @@ export const NetworkStatus: React.FC = () => {
   const netStatus = useSelector(selectNetStatus);
   const [open, setOpen] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // ── 核心检测逻辑 ──────────────────────────────────────────────────────────
 
-  const runCheck = useCallback(async () => {
+  /** 返回 API 是否在线，供轮询决定下一次的间隔 */
+  const runCheck = useCallback(async (): Promise<boolean> => {
     // 标记：检测中
     dispatch(
       statusChange({
@@ -311,7 +310,7 @@ export const NetworkStatus: React.FC = () => {
           lastCheckedAt: new Date().toISOString(),
         })
       );
-      return;
+      return false;
     }
 
     // Step 2：API 健康检测（带超时）
@@ -320,6 +319,7 @@ export const NetworkStatus: React.FC = () => {
     let finalStatus: ENetStatus = "api_error";
 
     try {
+      // FIXME: controller.signal 没有传给 apiServerHealth()，这个超时从来没生效过
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
 
@@ -348,6 +348,7 @@ export const NetworkStatus: React.FC = () => {
         lastCheckedAt: new Date().toISOString(),
       })
     );
+    return isApiOnline;
   }, [dispatch, netStatus.lastCheckedAt]);
 
   // ── 手动刷新 ──────────────────────────────────────────────────────────────
@@ -362,11 +363,22 @@ export const NetworkStatus: React.FC = () => {
   // ── 轮询 & 网络事件监听 ───────────────────────────────────────────────────
 
   useEffect(() => {
-    // 首次立即检测
-    runCheck();
+    let disposed = false;
+    let failures = 0;
 
-    // 定时轮询
-    timerRef.current = setInterval(runCheck, POLL_INTERVAL_MS);
+    // 定时轮询：用 setTimeout 链而不是 setInterval，每次按上一次的结果
+    // 决定下一次的间隔——成功 5 分钟，连续失败逐步退避（见 poll-backoff.ts）
+    const check = async () => {
+      const ok = await runCheck();
+      if (disposed) return;
+      failures = ok ? 0 : failures + 1;
+      // online 事件可能在上一轮未完成时又触发一轮，先清掉旧的，保证只有一条链
+      if (timerRef.current) clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(check, nextPollDelay(failures));
+    };
+
+    // 首次立即检测
+    check();
 
     // 监听浏览器网络事件（离线时立即触发）
     const handleOffline = () => {
@@ -380,13 +392,14 @@ export const NetworkStatus: React.FC = () => {
         })
       );
     };
-    const handleOnline = () => runCheck();
+    const handleOnline = () => check();
 
     window.addEventListener("offline", handleOffline);
     window.addEventListener("online", handleOnline);
 
     return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
+      disposed = true;
+      if (timerRef.current) clearTimeout(timerRef.current);
       window.removeEventListener("offline", handleOffline);
       window.removeEventListener("online", handleOnline);
     };

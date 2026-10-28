@@ -251,12 +251,12 @@ test('Accept-Language: zh-Hans → 中文错误文案 + Content-Language', funct
     $res = auth_wrong_code_in('zh-Hans');
     assert_field_error('code', $res, 'invites 错验证码（zh-Hans）');
     assert_eq('验证码不正确或已过期。', $res['body']['errors']['code'][0] ?? null, 'errors.code');
-    assert_eq('zh-Hans', $res['headers']['Content-Language'][0] ?? null, 'Content-Language');
+    assert_eq('zh-Hans', $res['headers']['content-language'][0] ?? null, 'Content-Language');
 });
 
 test('Accept-Language: zh-TW → 繁体；不支持的语言 → en', function () {
     $hant = auth_wrong_code_in('zh-TW');
     assert_eq('驗證碼不正確或已過期。', $hant['body']['errors']['code'][0] ?? null, 'zh-TW 的 errors.code');
     $fr = auth_wrong_code_in('fr-FR');
-    assert_eq('en', $fr['headers']['Content-Language'][0] ?? null, 'fr-FR 的 Content-Language');
+    assert_eq('en', $fr['headers']['content-language'][0] ?? null, 'fr-FR 的 Content-Language');
 });

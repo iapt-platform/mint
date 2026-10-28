@@ -70,7 +70,7 @@ function api(string $class, ?string $token = null): object
 }
 
 /**
- * 统一执行一次请求，返回 ['status'=>int, 'body'=>?array, 'headers'=>array]。
+ * 统一执行一次请求，返回 ['status'=>int, 'body'=>?array, 'headers'=>array]（头名已转小写）。
  * $fn 必须返回 WithHttpInfo 的三元组 [$content, $status, $headers]。
  * 非 2xx 时生成的客户端抛 ApiException，这里捕获并解出状态码与 body。
  */
@@ -79,7 +79,7 @@ function request(callable $fn): array
     try {
         [$content, $status, $headers] = $fn();
 
-        return ['status' => $status, 'body' => normalize($content), 'headers' => $headers];
+        return ['status' => $status, 'body' => normalize($content), 'headers' => array_change_key_case($headers, CASE_LOWER)];
     } catch (ApiException $e) {
         $status = $e->getCode();
         // 网络层错误（DNS/连接/超时）时，生成客户端把异常包成 ApiException 但 code 不是
@@ -89,7 +89,7 @@ function request(callable $fn): array
         }
         $body = json_decode((string) $e->getResponseBody(), true);
 
-        return ['status' => $status, 'body' => is_array($body) ? $body : null, 'headers' => $e->getResponseHeaders()];
+        return ['status' => $status, 'body' => is_array($body) ? $body : null, 'headers' => array_change_key_case($e->getResponseHeaders() ?? [], CASE_LOWER)];
     }
 }
 
@@ -119,7 +119,11 @@ function raw(string $method, string $path, ?array $query = null, ?array $json = 
     }
     $body = json_decode((string) $resp->getBody(), true);
 
-    return ['status' => $resp->getStatusCode(), 'body' => is_array($body) ? $body : null, 'headers' => $resp->getHeaders()];
+    // 头名一律转小写：HTTP 头名不区分大小写，staging 经 envoy 转发后全是小写，
+    // 本地 artisan serve 则是 Content-Language 这种写法，按原样取会两边不一致。
+    $headers = array_change_key_case($resp->getHeaders(), CASE_LOWER);
+
+    return ['status' => $resp->getStatusCode(), 'body' => is_array($body) ? $body : null, 'headers' => $headers];
 }
 
 function normalize(mixed $content): mixed
