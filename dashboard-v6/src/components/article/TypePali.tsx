@@ -28,6 +28,7 @@ import type { TTarget } from "../../types";
 import TocPath from "../tipitaka/TocPath";
 import ParagraphNode from "../tipitaka/ParagraphNode";
 import "./article.css";
+import { articlePath, fullUrl } from "../../utils";
 
 import { useIntl } from "react-intl";
 
@@ -189,6 +190,10 @@ const TypePali = ({
                   key: "library",
                   label: intl.formatMessage({ id: "buttons.open.in.library" }),
                 },
+                {
+                  key: "open_in_tab",
+                  label: intl.formatMessage({ id: "buttons.open.in.tab" }),
+                },
               ],
               onClick: ({ key }) => {
                 if (key === "task") setTaskBuilderModalOpen(true);
@@ -197,6 +202,17 @@ const TypePali = ({
                   window.open(
                     import.meta.env.VITE_APP_API_SERVER +
                       `/library/tipitaka/${id}/read?channel=${channels[0]}`,
+                    "_blank",
+                  );
+                }
+                if (key === "open_in_tab" && type && id) {
+                  // 按 props 拼地址而不是复制 location：本组件也会嵌在弹层/模板里
+                  const query = new URLSearchParams();
+                  if (mode) query.set("mode", mode);
+                  if (channelId) query.set("channel", channelId);
+                  const qs = query.toString();
+                  window.open(
+                    fullUrl(articlePath(type, id)) + (qs ? `?${qs}` : ""),
                     "_blank",
                   );
                 }
