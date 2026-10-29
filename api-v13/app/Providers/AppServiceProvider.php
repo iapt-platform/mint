@@ -96,6 +96,11 @@ class AppServiceProvider extends ServiceProvider
         */
         $this->configureDefaults();
 
+	// Force HTTPS scheme in production
+        if ($this->app->environment('production')) {
+            URL::forceScheme('https');
+        }
+
         /*
         |--------------------------------------------------------------------------
         | Custom Query Builder Macros
