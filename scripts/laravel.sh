@@ -11,7 +11,7 @@ npm install --save \
     bootstrap bulma @material/web \
     @tabler/core @tabler/icons @tabler/icons-webfont \
     @fortawesome/fontawesome-free dayjs \
-    marked dompurify jsdom
+    marked dompurify jsdom qrcode
 
 echo 'done.'
 exit 0
