@@ -51,11 +51,10 @@ class MqPr extends Command
         if (Tools::isStop()) {
             return 0;
         }
-        $exchange = 'router';
         $queue = 'suggestion';
         $this->info(" [*] Waiting for {$queue}. Ver. ".$this->ver);
         Log::debug('mq:pr start. ver='.$this->ver);
-        Mq::worker($exchange, $queue, function ($message) {
+        Mq::worker($queue, function ($message) {
             /**生成消息内容 */
 
             $msgTitle = '修改建议';

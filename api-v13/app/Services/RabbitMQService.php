@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Exceptions\TaskFailException;
+use App\Tools\Tools;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use PhpAmqpLib\Channel\AMQPChannel;
@@ -10,41 +10,52 @@ use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 use PhpAmqpLib\Wire\AMQPTable;
 
+/**
+ * RabbitMQ 的发布与消费。
+ *
+ * 消费策略：阻塞等待消息，每次只取一条；任务处理结束无论成功失败一律 ack，
+ * 不重试、不进死信队列。失败只记日志。
+ */
 class RabbitMQService
 {
-    private $connection;
+    private AMQPStreamConnection $connection;
 
-    private $channel;
+    private AMQPChannel $channel;
 
+    /**
+     * @var array{host: string, port: int|string, user: string, password: string, virtual_host: string}
+     */
     private array $config;
 
+    /**
+     * @var array<string, array{max_length?: int}>
+     */
     private array $queues;
 
     public function __construct()
     {
         $this->config = config('queue.connections.rabbitmq');
-        $this->queues = config('mint.rabbitmq.queues');
+        $this->queues = config('mint.rabbitmq.queues', []);
         $this->connect();
     }
 
-    private function connect()
+    private function connect(): void
     {
-        $conn = $this->config;
         $this->connection = new AMQPStreamConnection(
-            $conn['host'],
-            $conn['port'],
-            $conn['user'],
-            $conn['password'],
-            $conn['virtual_host']
+            $this->config['host'],
+            $this->config['port'],
+            $this->config['user'],
+            $this->config['password'],
+            $this->config['virtual_host']
         );
 
         $this->channel = $this->connection->channel();
 
-        // 设置 QoS - 每次只处理一条消息
+        // QoS：每次只投递一条未确认消息
         $this->channel->basic_qos(null, 1, null);
     }
 
-    public function isConnected()
+    public function isConnected(): bool
     {
         return $this->connection->isConnected();
     }
@@ -54,101 +65,31 @@ class RabbitMQService
         return $this->channel;
     }
 
+    /**
+     * 声明配置中的全部队列。
+     *
+     * @return list<string> 队列名
+     */
     public function createQueue(): array
     {
-        foreach ($this->queues as $name => $queue) {
-
-            $args = [];
-
-            // TTL
-            if (! empty($queue['ttl'])) {
-                $args['x-message-ttl'] = (int) $queue['ttl'];
-            }
-
-            // max length
-            if (! empty($queue['max_length'])) {
-                $args['x-max-length'] = (int) $queue['max_length'];
-            }
-
-            // dead letter exchange
-            if (! empty($queue['dead_letter_exchange'])) {
-                $args['x-dead-letter-exchange'] = $queue['dead_letter_exchange'];
-            }
-
-            // dead letter routing key（可选但建议）
-            if (! empty($queue['dead_letter_queue'])) {
-                $args['x-dead-letter-routing-key'] = $queue['dead_letter_queue'];
-            }
-
-            $this->channel->queue_declare(
-                $name,                 // queue 名称
-                false,                 // passive：检查是否存在（false=不存在则创建）
-                true,                  // durable：是否持久化（重启 RabbitMQ 后仍存在）
-                false,                 // exclusive：独占模式
-                false,                 // auto_delete：是否在无消费者时自动删除
-                false,                 // nowait：是否不等待服务器响应（false=阻塞等待确认）
-                new AMQPTable($args)   // arguments：附加参数（TTL / DLX / max-length 等）
-            );
+        foreach (array_keys($this->queues) as $name) {
+            $this->setupQueue($name);
         }
 
         return array_keys($this->queues);
     }
 
+    /**
+     * 声明一个持久化队列（不存在则创建）。
+     */
     public function setupQueue(string $queueName): void
     {
-        $queueConfig = config("mint.rabbitmq.queues.{$queueName}");
+        $queueConfig = $this->queues[$queueName] ?? [];
 
-        $workerArgs = [];
-        if (isset($queueConfig['ttl'])) {
-            $workerArgs['x-message-ttl'] = $queueConfig['ttl'];
+        $args = [];
+        if (! empty($queueConfig['max_length'])) {
+            $args['x-max-length'] = (int) $queueConfig['max_length'];
         }
-        if (isset($queueConfig['max_length'])) {
-            $workerArgs['x-max-length'] = $queueConfig['max_length'];
-        }
-
-        // 创建死信交换机
-        if (isset($queueConfig['dead_letter_exchange'])) {
-            $this->channel->exchange_declare(
-                $queueConfig['dead_letter_exchange'],
-                'direct',
-                false,
-                true,
-                false
-            );
-
-            $dlqName = $queueConfig['dead_letter_queue'];
-            $dlqConfig = config("mint.rabbitmq.dead_letter_queues.{$dlqName}", []);
-            $dlqArgs = [];
-            if (isset($dlqConfig['ttl'])) {
-                $dlqArgs['x-message-ttl'] = $dlqConfig['ttl'];
-            }
-            if (isset($dlqConfig['max_length'])) {
-                $dlqArgs['x-max-length'] = $dlqConfig['max_length'];
-            }
-            $dlqArguments = new AMQPTable($dlqArgs);
-
-            // 创建死信队列
-            $this->channel->queue_declare(
-                $dlqName,
-                false,  // passive
-                true,   // durable
-                false,  // exclusive
-                false,  // auto_delete
-                false,  // nowait
-                $dlqArguments
-            );
-
-            // 绑定死信队列到死信交换机
-            $this->channel->queue_bind(
-                $queueConfig['dead_letter_queue'],
-                $queueConfig['dead_letter_exchange']
-            );
-
-            // 主队列，配置死信
-            $workerArgs['x-dead-letter-exchange'] = $queueConfig['dead_letter_exchange'];
-            $workerArgs['x-dead-letter-routing-key'] = $queueConfig['dead_letter_queue'];
-        }
-        $arguments = new AMQPTable($workerArgs);
 
         $this->channel->queue_declare(
             $queueName,
@@ -157,47 +98,15 @@ class RabbitMQService
             false,  // exclusive
             false,  // auto_delete
             false,  // nowait
-            $arguments
+            new AMQPTable($args)
         );
-        /*
-        // 检查队列是否存在
-        try {
-            $this->channel->queue_declare(
-                $queueName,
-                true, // passive
-                true,   // durable
-                false, // exclusive
-                false, // auto_delete
-                false,  // nowait
-                $arguments
-            );
-            //存在，不用创建
-        } catch (\Exception $e) {
-            if (strpos($e->getMessage(), 'NOT_FOUND') !== false) {
-                Log::info("Queue $queueName does not exist.");
-                // 队列不存在，创建新队列
-                $this->channel->queue_declare(
-                    $queueName,
-                    false,  // passive
-                    true,   // durable
-                    false,  // exclusive
-                    false,  // auto_delete
-                    false,  // nowait
-                    $arguments
-                );
-            } else {
-                Log::error("Error checking queue $queueName: {$e->getMessage()}");
-                throw $e;
-            }
-        }
-            */
     }
 
     public function publishMessage(string $queueName, array $data): string
     {
         try {
             $this->setupQueue($queueName);
-            $msgId = Str::uuid();
+            $msgId = (string) Str::uuid();
             $message = new AMQPMessage(
                 json_encode($data, JSON_UNESCAPED_UNICODE),
                 [
@@ -221,123 +130,69 @@ class RabbitMQService
         }
     }
 
-    public function consume(string $queueName, callable $callback, ?int $maxIterations = null): void
+    /**
+     * 阻塞消费队列。
+     *
+     * 每条消息处理结束（成功、抛异常、JSON 解析失败）都 ack，不重试。
+     * 处理完 $loopLimit 条或检测到 .stop 文件后退出；$loopLimit 为 0 表示不限。
+     *
+     * @param  callable(mixed $data, AMQPMessage $message): void  $callback
+     * @param  int|null  $loopLimit  默认取 mint.mq.consumer_loop_limit
+     */
+    public function consume(string $queueName, callable $callback, ?int $loopLimit = null): void
     {
         $this->setupQueue($queueName);
-        $maxIterations = $maxIterations ?? $this->config['consumer']['max_iterations'];
-        $iteration = 0;
+        $loopLimit ??= (int) config('mint.mq.consumer_loop_limit', 0);
+        $processed = 0;
 
-        $consumerCallback = function (AMQPMessage $msg) use ($callback, $queueName, &$iteration) {
+        $consumerCallback = function (AMQPMessage $msg) use ($callback, $queueName, $loopLimit, &$processed): void {
+            $messageId = $msg->has('message_id') ? $msg->get('message_id') : null;
+            $context = ['queue' => $queueName, 'message_id' => $messageId];
+
             try {
-                $data = json_decode($msg->getBody(), true);
-                $retryCount = $this->getRetryCount($msg);
-                $maxRetries = $this->config['queues'][$queueName]['retry_count'];
-
-                Log::info("Processing message from queue: {$queueName}", [
-                    'data' => $data,
-                    'retry_count' => $retryCount,
-                    'delivery_tag' => $msg->getDeliveryTag(),
-                ]);
-
-                // 执行回调处理消息
-                $callback($data, $retryCount);
-                // 处理成功，确认消息
-                $msg->ack();
-                Log::info('Message processed successfully', ['delivery_tag' => $msg->getDeliveryTag()]);
-            } catch (TaskFailException $e) {
-                // no need requeue
-                Log::error('Error processing message', [
+                $data = json_decode($msg->getBody(), true, flags: JSON_THROW_ON_ERROR);
+                Log::info('mq message start', $context);
+                $callback($data, $msg);
+                Log::info('mq message done', $context);
+            } catch (\Throwable $e) {
+                Log::error('mq message failed', $context + [
                     'error' => $e->getMessage(),
-                    'delivery_tag' => $msg->getDeliveryTag(),
+                    'exception' => $e::class,
                 ]);
-                $msg->nack(false, false);
-            } catch (\Exception $e) {
-                // 处理失败，检查重试次数
-                if ($retryCount < $maxRetries) {
-                    // 重新入队，延迟处理
-                    $this->requeueWithDelay($msg, $queueName, $retryCount + 1);
-                    Log::warning('Message requeued for retry', [
-                        'delivery_tag' => $msg->getDeliveryTag(),
-                        'retry_count' => $retryCount + 1,
-                    ]);
-                } else {
-                    // 超过重试次数，拒绝消息（进入死信队列）
-                    $msg->nack(false, false);
-                    Log::error('Message rejected after max retries', [
-                        'delivery_tag' => $msg->getDeliveryTag(),
-                        'retry_count' => $retryCount,
-                    ]);
-                }
+            } finally {
+                $msg->ack();
             }
 
-            $iteration++;
+            $processed++;
+
+            if (($loopLimit > 0 && $processed >= $loopLimit) || Tools::isStop()) {
+                Log::info('mq consumer exit', $context + ['processed' => $processed]);
+                $msg->getChannel()->basic_cancel($msg->getConsumerTag());
+            }
         };
 
         $this->channel->basic_qos(null, 1, null);
-        $this->channel->basic_consume($queueName, '', false, false, false, false, $consumerCallback);
-
-        Log::info("Starting consumer for queue: {$queueName}", ['max_iterations' => $maxIterations]);
-
-        while ($this->channel->is_consuming() && $iteration < $maxIterations) {
-            $this->channel->wait(null, false, $this->config['consumer']['sleep_between_iterations']);
-        }
-
-        Log::info('Consumer stopped', ['iterations_processed' => $iteration]);
-    }
-
-    private function getRetryCount(AMQPMessage $msg): int
-    {
-        $headers = $msg->get_properties();
-
-        return isset($headers['application_headers']['x-retry-count'])
-            ? $headers['application_headers']['x-retry-count'] : 0;
-    }
-
-    private function requeueWithDelay(AMQPMessage $msg, string $queueName, int $retryCount): void
-    {
-        $delay = $this->config['queues'][$queueName]['retry_delay'];
-
-        // 创建延迟队列
-        $delayQueueName = "{$queueName}_delay_{$retryCount}";
-        $arguments = new AMQPTable([
-            'x-message-ttl' => $delay,
-            'x-dead-letter-exchange' => '',
-            'x-dead-letter-routing-key' => $queueName,
-        ]);
-
-        $this->channel->queue_declare(
-            $delayQueueName,
-            false,
-            true,
-            false,
-            false,
-            false,
-            $arguments
+        $this->channel->basic_consume(
+            $queueName,
+            '',     // consumer_tag
+            false,  // no_local
+            false,  // no_ack：手动 ack
+            false,  // exclusive
+            false,  // nowait
+            $consumerCallback
         );
 
-        // 重新发布消息到延迟队列
-        $data = json_decode($msg->getBody(), true);
-        $newMessage = new AMQPMessage(
-            json_encode($data),
-            [
-                'delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT,
-                'application_headers' => new AMQPTable([
-                    'x-retry-count' => $retryCount,
-                ]),
-            ]
-        );
+        Log::info("mq consumer start queue={$queueName}", ['loop_limit' => $loopLimit]);
 
-        $this->channel->basic_publish($newMessage, '', $delayQueueName);
-        $msg->ack();
+        // 阻塞等待，直到回调里 basic_cancel
+        $this->channel->consume();
+
+        Log::info("mq consumer stopped queue={$queueName}", ['processed' => $processed]);
     }
 
     public function close(): void
     {
-        if ($this->channel) {
-            $this->channel->close();
-        }
-        if ($this->connection) {
-            $this->connection->close();
-        }
+        $this->channel->close();
+        $this->connection->close();
     }
 }

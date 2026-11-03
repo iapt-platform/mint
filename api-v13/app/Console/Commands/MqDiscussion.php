@@ -56,11 +56,10 @@ class MqDiscussion extends Command
         if (Tools::isStop()) {
             return 0;
         }
-        $exchange = 'router';
         $queue = 'discussion';
         $this->info(" [*] Waiting for {$queue}. To exit press CTRL+C");
         Log::info('discussion worker start .');
-        Mq::worker($exchange, $queue, function ($message) {
+        Mq::worker($queue, function ($message) {
             Log::info('mq discussion receive {message}', ['message' => json_encode($message, JSON_UNESCAPED_UNICODE)]);
             $result = 0;
             $msgParam = [];

@@ -43,11 +43,10 @@ class MqWbwAnalyses extends Command
         if (Tools::isStop()) {
             return 0;
         }
-        $exchange = 'router';
         $queue = 'wbw-analyses';
         $this->info(" [*] Waiting for {$queue}. To exit press CTRL+C");
         Log::debug('mq:wbw.analyses start.');
-        Mq::worker($exchange, $queue, function ($message) {
+        Mq::worker($queue, function ($message) {
             $data = ['id' => implode(',', $message)];
             $ok = $this->call('upgrade:wbw.analyses', $data);
             if ($ok === 0) {

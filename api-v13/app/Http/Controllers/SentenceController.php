@@ -516,7 +516,8 @@ class SentenceController extends Controller
             'para' => $param[1],
             'channel' => $channelId,
         ]);
-        Mq::publish('content', new SentResource($sent));
+        // FIXME: content 队列没有任何消费者，消息只会堆积，先停发。content 已从 mint.rabbitmq.queues 移除，确认无用后删掉此行
+        // Mq::publish('content', new SentResource($sent));
 
         if ($channel->type === 'nissaya' && $sent->content_type === 'json') {
             $this->updateWbwAnalyses($sent->content, $channel->lang, $user['user_id']);

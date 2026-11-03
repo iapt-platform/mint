@@ -40,11 +40,10 @@ class MqExportPaliChapter extends Command
      */
     public function handle()
     {
-        $exchange = 'router';
         $queue = 'export_pali_chapter';
         $this->info(" [*] Waiting for {$queue}. To exit press CTRL+C");
         Log::debug('mq:export_pali_chapter start.');
-        Mq::worker($exchange, $queue, function ($message) {
+        Mq::worker($queue, function ($message) {
             $data = [
                 'book' => $message->book,
                 'para' => $message->para,

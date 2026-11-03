@@ -42,13 +42,14 @@ class MqProgress extends Command
     public function handle()
     {
         if (Tools::isStop()) {
+            Log::info('mq:progress. .stop exit');
+
             return 0;
         }
-        $exchange = 'router';
         $queue = 'progress';
         $this->info(" [*] Waiting for {$queue}. To exit press CTRL+C");
         Log::debug('mq:progress start.');
-        Mq::worker($exchange, $queue, function ($message) {
+        Mq::worker($queue, function ($message) {
             $data = [
                 '--book' => $message->book,
                 '--para' => $message->para,
@@ -62,13 +63,11 @@ class MqProgress extends Command
             if ($ok2 !== 0) {
                 Log::error('mq:progress upgrade:progress.chapter fail', $data);
             }
-            $this->info('Received book='.$message->book.' progress='.$ok1.' chapter='.$ok2);
             Log::debug('mq:progress: done book='.$message->book.' progress='.$ok1.' chapter='.$ok2);
 
             return $ok1 + $ok2;
         });
 
         return 0;
-
     }
 }

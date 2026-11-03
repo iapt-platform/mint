@@ -43,12 +43,10 @@ class MqEmpty extends Command
         if (Tools::isStop()) {
             return 0;
         }
-        $exchange = 'router';
         $queue = 'ai_translate';
         $this->info(" [*] Waiting for {$queue}. To exit press CTRL+C");
         Log::debug("mq worker {$queue} start.");
         Mq::worker(
-            $exchange,
             $queue,
             function ($message) {
                 $this->info('new message');
