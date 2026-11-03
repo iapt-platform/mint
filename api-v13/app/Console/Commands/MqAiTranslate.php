@@ -47,11 +47,10 @@ class MqAiTranslate extends Command
         if (Tools::isStop()) {
             return 0;
         }
-        $exchange = 'router';
         $queue = 'ai_translate';
         $this->info(" [*] Waiting for {$queue}. To exit press CTRL+C");
         Log::debug("mq worker {$queue} start.");
-        Mq::worker($exchange, $queue, function ($messages, $messageId) use ($queue) {
+        Mq::worker($queue, function ($messages, $messageId) use ($queue) {
             Log::debug('ai translate start', ['message' => count($messages)]);
             $this->info('ai translate task start task='.count($messages));
             if (! is_array($messages) || count($messages) === 0) {

@@ -150,39 +150,18 @@ return [
         ],
     ],
     'mq' => [
-        'loop_limit' => [
-            'ai_translate' => env('MQ_LOOP_LIMIT_AI_TRANSLATE', 0),
-        ],
+        'consumer_loop_limit' => env('MQ_CONSUMER_LOOP_LIMIT', 0),
     ],
     'rabbitmq' => [
         'queues' => [
-            'task' => ['retry_times' => env('RABBITMQ_AI_RETRY_TIMES', 3)],
-            'discussion' => ['retry_times' => env('RABBITMQ_AI_RETRY_TIMES', 3)],
-            'export_pali_chapter' => ['retry_times' => env('RABBITMQ_AI_RETRY_TIMES', 3)],
-            'export_article' => ['retry_times' => env('RABBITMQ_AI_RETRY_TIMES', 3)],
-            'progress' => ['retry_times' => env('RABBITMQ_AI_RETRY_TIMES', 3)],
-            'content' => ['retry_times' => env('RABBITMQ_AI_RETRY_TIMES', 3)],
-            'suggestion' => ['retry_times' => env('RABBITMQ_AI_RETRY_TIMES', 3)],
-            'wbw-analyses' => ['retry_times' => env('RABBITMQ_AI_RETRY_TIMES', 3)],
-            'ai_translate_v2' => [
-                'retry_times' => env('RABBITMQ_AI_RETRY_TIMES', 3),
-                'max_loop_count' => env('RABBITMQ_AI_MAX_LOOP', 10),
-                'timeout' => env('RABBITMQ_AI_TIMEOUT', 300),
-                'dead_letter_queue' => 'ai_translate_dlq',
-                'dead_letter_exchange' => 'ai_translate_dlx',
-            ],
-            'heartbeat_queue' => [
-                'ttl' => 86400000, // 24小时 TTL (毫秒)
-                'max_length' => 10000,
-            ],
-        ],
-
-        // 死信队列配置
-        'dead_letter_queues' => [
-            'ai_translate_dlq' => [
-                'ttl' => 86400000, // 24小时 TTL (毫秒)
-                'max_length' => 10000,
-            ],
+            'task' => [],
+            'discussion' => [],
+            'export_pali_chapter' => [],
+            'export_article' => [],
+            'progress' => [],
+            'suggestion' => [],
+            'wbw-analyses' => [],
+            'ai_translate_v2' => [],
         ],
     ],
     'opensearch' => [

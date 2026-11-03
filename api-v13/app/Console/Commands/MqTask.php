@@ -44,10 +44,9 @@ class MqTask extends Command
         }
         $this->info('env='.env('RABBITMQ_HOST'));
         $this->info('config='.config('queue.connections.rabbitmq.host'));
-        $exchange = 'router';
         $queue = 'task';
         $this->info(" [*] Waiting for {$queue}. To exit press CTRL+C");
-        Mq::worker($exchange, $queue, function ($message) {
+        Mq::worker($queue, function ($message) {
             $message = json_decode(json_encode($message), true);
             $this->info('name=', $message['name']);
 

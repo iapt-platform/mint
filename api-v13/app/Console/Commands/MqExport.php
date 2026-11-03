@@ -40,11 +40,10 @@ class MqExport extends Command
      */
     public function handle()
     {
-        $exchange = 'router';
         $queue = 'export';
         $this->info(" [*] Waiting for {$queue}. To exit press CTRL+C");
         Log::debug('mq:export start.');
-        Mq::worker($exchange, $queue, function ($message) {
+        Mq::worker($queue, function ($message) {
             $data = [
                 'book' => $message->book,
                 'para' => $message->para,

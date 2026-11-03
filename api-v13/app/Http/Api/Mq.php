@@ -5,11 +5,8 @@ namespace App\Http\Api;
 use App\Tools\Tools;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use PhpAmqpLib\Channel\AMQPChannel;
-use PhpAmqpLib\Connection\AbstractConnection;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
-use PhpAmqpLib\Exception\AMQPTimeoutException;
-use PhpAmqpLib\Exchange\AMQPExchangeType;
+use PhpAmqpLib\Exception\AMQPProtocolChannelException;
 use PhpAmqpLib\Message\AMQPMessage;
 
 class Mq
@@ -71,14 +68,19 @@ class Mq
     }
 
     /**
-     * @param  string  $exchange
-     * @param  string  $queue
-     * @param  callable|null  $callback
+     * 阻塞消费一个已存在的队列。
+     *
+     * - 队列必须事先建好（`php artisan app:create-queue`），不存在就记日志并抛异常退出，worker 不再自建队列。
+     * - 手动 ack、prefetch 1：每条消息处理结束无论成功失败一律 ack，不重试、不进死信队列。
+     * - 处理满 `mint.mq.consumer_loop_limit` 条（0 = 不限）或检测到 `.stop` 文件后退出。
+     *
+     * @param  callable(mixed $data, ?string $messageId): int|null  $callback  返回非 0 视为失败（只记日志）
+     *
+     * @throws \RuntimeException 队列不存在
      */
-    public static function worker($exchange, $queue, $callback = null)
+    public static function worker(string $queue, ?callable $callback = null): void
     {
-
-        $consumerTag = 'consumer';
+        $consumerTag = '';
 
         $host = config('queue.connections.rabbitmq.host');
         $port = config('queue.connections.rabbitmq.port');
@@ -89,120 +91,68 @@ class Mq
 
         $channel = $connection->channel();
 
-        /*
-     The following code is the same both in the consumer and the producer.
-     In this way we are sure we always have a queue to consume from and an
-         exchange where to publish messages.
- */
+        // passive：只检查不创建。不存在时服务端返回 404 并关闭 channel
+        try {
+            $channel->queue_declare($queue, true);
+        } catch (AMQPProtocolChannelException $e) {
+            Log::error("mq worker: queue {$queue} not found", ['error' => $e->getMessage()]);
+            $connection->close();
 
-        /*
-     name: $queue
-     passive: false
-     durable: true // the queue will survive server restarts
-     exclusive: false // the queue can be accessed in other channels
-     auto_delete: false //the queue won't be deleted once the channel is closed.
- */
-        $channel->queue_declare($queue, false, true, false, false);
+            throw new \RuntimeException("mq queue [{$queue}] does not exist, run `php artisan app:create-queue` first", 0, $e);
+        }
 
-        /*
-            name: $exchange
-            type: direct
-            passive: false
-            durable: true // the exchange will survive server restarts
-            auto_delete: false //the exchange won't be deleted once the channel is closed.
-        */
+        $loopLimit = (int) config('mint.mq.consumer_loop_limit', 0);
+        $processed = 0;
 
-        $channel->exchange_declare($exchange, AMQPExchangeType::DIRECT, false, true, false);
-        $channel->queue_bind($queue, $exchange);
-
-        /**
-         * @param  AMQPMessage  $message
-         */
-        $process_message = function (AMQPMessage $message) use ($callback, $queue) {
+        $process_message = function (AMQPMessage $message) use ($callback, $queue, $loopLimit, &$processed) {
+            $messageId = $message->has('message_id') ? $message->get('message_id') : null;
             Log::debug('received message', [
-                'message_id' => $message->get('message_id'),
-                'content_type' => $message->get('content_type'),
+                'message_id' => $messageId,
+                'content_type' => $message->has('content_type') ? $message->get('content_type') : null,
             ]);
-            if ($callback !== null) {
-                try {
-                    $result = $callback(json_decode($message->getBody()), $message->get('message_id'));
-                    Log::debug(
-                        'mq done',
-                        [
-                            'message_id' => $message->get('message_id'),
-                        ]
-                    );
+
+            try {
+                if ($callback !== null) {
+                    $result = $callback(json_decode($message->getBody()), $messageId);
+                    Log::debug('mq done', ['message_id' => $messageId]);
                     if ($result !== 0) {
                         throw new \Exception('task error');
                     }
-                } catch (\Exception $e) {
-                    Log::error("mq worker {$queue} exception", [
-                        'queue' => $queue,
-                        'message_id' => $message->get('message_id'),
-                        'exception' => $e,
-                    ]);
                 }
-
-                if (Tools::isStop()) {
-                    Log::info('mq worker: .stop file exist. cancel the consumer.');
-                    $message->getChannel()->basic_cancel($message->getConsumerTag());
-                }
+            } catch (\Throwable $e) {
+                Log::error("mq worker {$queue} exception", [
+                    'queue' => $queue,
+                    'message_id' => $messageId,
+                    'exception' => $e,
+                ]);
+            } finally {
+                $message->ack();
             }
 
-            // exit
-            foreach (config('mint.mq.loop_limit') as $key => $value) {
-                if ($queue === $key) {
-                    if ($value > 0) {
-                        if (isset($GLOBALS[$key])) {
-                            $GLOBALS[$key]++;
-                        } else {
-                            $GLOBALS[$key] = 1;
-                        }
-                        if ($GLOBALS[$key] >= $value) {
-                            Log::info("mq exit queue={$queue} loop=".$GLOBALS[$key]);
-                            $message->getChannel()->basic_cancel($message->getConsumerTag());
-                        }
-                    }
-                }
-            }
-            // Send a message with the string "quit" to cancel the consumer.
-            /*
-            if ($message->body === 'quit') {
+            $processed++;
+
+            if ($loopLimit > 0 && $processed >= $loopLimit) {
+                Log::info("mq exit queue={$queue} loop={$processed}");
+                $message->getChannel()->basic_cancel($message->getConsumerTag());
+            } elseif (Tools::isStop()) {
+                Log::info('mq worker: .stop file exist. cancel the consumer.');
                 $message->getChannel()->basic_cancel($message->getConsumerTag());
             }
-            */
         };
 
-        /*
-            queue: Queue from where to get the messages
-            consumer_tag: Consumer identifier
-            no_local: Don't receive messages published by this consumer.
-            no_ack: If set to true, automatic acknowledgement mode will be used by this consumer. See https://www.rabbitmq.com/confirms.html for details.
-            exclusive: Request exclusive consumer access, meaning only this consumer can access the queue
-            nowait:
-            callback: A PHP Callback
-        */
-        $channel->basic_consume($queue, $consumerTag, false, true, false, false, $process_message);
+        $channel->basic_qos(null, 1, false);
+        // no_ack = false：手动 ack
+        $channel->basic_consume($queue, $consumerTag, false, false, false, false, $process_message);
 
-        /**
-         * @param  AMQPChannel  $channel
-         * @param  AbstractConnection  $connection
-         */
-        $shutdown = function ($channel, $connection) {
-            $channel->close();
-            $connection->close();
-        };
-
-        register_shutdown_function($shutdown, $channel, $connection);
-
-        $timeout = 15;
-        // Loop as long as the channel has callbacks registered
-        while ($channel->is_consuming()) {
-            try {
-                $channel->wait(null, false, $timeout);
-            } catch (AMQPTimeoutException $e) {
-                // ignore it
-            }
+        try {
+            $channel->consume();
+        } catch (\Throwable $exception) {
+            Log::error($exception->getMessage());
         }
+
+        $channel->close();
+        $connection->close();
+
+        Log::info("mq worker stopped queue={$queue} processed={$processed}");
     }
 }

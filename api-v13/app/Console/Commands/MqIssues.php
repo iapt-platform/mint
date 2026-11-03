@@ -43,10 +43,9 @@ class MqIssues extends Command
         if (Tools::isStop()) {
             return 0;
         }
-        $exchange = 'router';
         $queue = 'issues';
         $this->info(" [*] Waiting for {$queue}. To exit press CTRL+C");
-        Mq::worker($exchange, $queue, function ($message) {
+        Mq::worker($queue, function ($message) {
             print_r($message);
 
             return 0;
