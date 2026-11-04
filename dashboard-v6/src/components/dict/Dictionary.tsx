@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Layout, Affix, Col, Row } from "antd";
 
 import DictSearch from "./DictSearch";
@@ -14,88 +14,111 @@ interface IWidget {
   onSearch?: (word?: string) => void;
 }
 
+interface IQuery {
+  type: string;
+  word?: string;
+  id?: string;
+}
+
+/**
+ * 解析查词串。普通词按小写查字典；带冒号的是高级格式，
+ * 如 `type:term id:xxx`、`type:term word:dhamma`。纯函数，不碰 state。
+ */
+function parseQuery(value?: string): IQuery {
+  if (!value?.includes(":")) {
+    return { type: "dict", word: value?.toLowerCase() };
+  }
+  // 与 v4 一致：没写 type 时沿用字典
+  const query: IQuery = { type: "dict", word: "" };
+  value.split(" ").forEach((item) => {
+    const kv = item.split(":");
+    if (kv.length !== 2) return;
+    switch (kv[0]) {
+      case "type":
+        query.type = kv[1];
+        break;
+      case "word":
+        query.word = kv[1];
+        break;
+      case "id":
+        query.id = kv[1];
+        break;
+      default:
+        break;
+    }
+  });
+  return query;
+}
+
 const DictionaryWidget = ({ word, compact = false, onSearch }: IWidget) => {
   const [split, setSplit] = useState<string>();
-  const [wordSearch, setWordSearch] = useState<string>();
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
-  const [dictType, setDictType] = useState("dict");
+  // 首次挂载就带着 word 时（如从 URL 进入）直接按它查，不必等 prop 变化
+  const [initial] = useState(() => parseQuery(word));
+  const [wordSearch, setWordSearch] = useState(initial.word);
+  const [dictType, setDictType] = useState(initial.type);
+  const [wordId, setWordId] = useState(initial.id);
   const [wordInput, setWordInput] = useState(word);
-  const [wordId, setWordId] = useState<string>();
 
   // 用 state 记录上一次的 prop，渲染期派生的标准做法
   const [prevWordProp, setPrevWordProp] = useState<string | undefined>(word);
-  const [prevSearch, setPrevSearch] = useState<string | undefined>(undefined);
+  const [prevSearch, setPrevSearch] = useState<string | undefined>(word);
 
-  const wordChange = useCallback((value?: string) => {
-    let currWord: string | undefined = "";
-    if (value?.includes(":")) {
-      const param = value.split(" ");
-      param.forEach((item) => {
-        const kv = item.split(":");
-        if (kv.length === 2) {
-          switch (kv[0]) {
-            case "type":
-              setDictType(kv[1]);
-              break;
-            case "word":
-              currWord = kv[1];
-              break;
-            case "id":
-              setWordId(kv[1]);
-              break;
-            default:
-              break;
-          }
-        }
-      });
-    } else {
-      setDictType("dict");
-      currWord = value?.toLowerCase();
-    }
-    document.getElementById("pcd_dict_top")?.scrollIntoView();
-    return currWord;
-  }, []);
+  /** 只更新本组件的 state，可在渲染期调用 */
+  const applyQuery = (query: IQuery) => {
+    setDictType(query.type);
+    // 只有高级格式带 id；普通词不清掉旧 id，与 v4 一致
+    if (query.id !== undefined) setWordId(query.id);
+    setWordSearch(query.word);
+  };
 
-  // 渲染期派生：word prop 变化时同步更新 wordInput / wordSearch
+  // 渲染期派生：word prop 变化（路由前进后退、redux 查词）时同步输入框并查词
   if (word !== prevWordProp) {
     setPrevWordProp(word);
     setWordInput(word);
-
     if (word !== prevSearch) {
       setPrevSearch(word);
-      const currWord = word?.includes(":")
-        ? word // 复杂格式保持原值，wordChange 会在实际搜索时解析
-        : word?.toLowerCase();
-      setWordSearch(currWord);
+      applyQuery(parseQuery(word));
     }
   }
 
-  const wordInputChange = useCallback(
-    (value: string | undefined) => {
-      setWordInput(value);
-      if (value === prevSearch) {
-        console.debug("same word, skip search", value);
-        return;
-      }
-      setPrevSearch(value);
-      const currWord = wordChange(value);
-      setWordSearch(currWord);
-    },
-    [wordChange, prevSearch]
-  );
+  // 换词后滚回顶部。副作用不能放在渲染期，所以放这里；首次挂载不滚
+  const mounted = useRef(false);
+  useEffect(() => {
+    if (!mounted.current) {
+      mounted.current = true;
+      return;
+    }
+    document.getElementById("pcd_dict_top")?.scrollIntoView();
+  }, [wordSearch, dictType, wordId]);
+
+  const wordInputChange = (value: string | undefined) => {
+    setWordInput(value);
+    if (value === prevSearch) {
+      console.debug("same word, skip search", value);
+      return;
+    }
+    setPrevSearch(value);
+    applyQuery(parseQuery(value));
+  };
 
   const dictSearch = useCallback(
     (value: string, isFactor?: boolean) => {
       console.info("onSearch", value);
-      const currWord = wordChange(value);
+      const query = parseQuery(value);
+      // 与 v4 一致，交给外部（路由 / redux）的只是解析出的单词，搜索框里的
+      // 高级格式不进地址栏；要重入请直接在地址栏写 type:term id:xxx
       if (typeof onSearch !== "undefined" && !isFactor) {
-        onSearch(currWord);
+        onSearch(query.word);
       }
-      // 用户主动搜索不去重
-      setPrevSearch(value);
-      setWordSearch(currWord);
+      // 用户主动搜索不去重。记下交给外部的词，它回传成 word prop 时不再重查，
+      // 否则会按普通词重新解析，把刚切到的术语视图冲掉
+      setPrevSearch(query.word);
+      setDictType(query.type);
+      if (query.id !== undefined) setWordId(query.id);
+      setWordSearch(query.word);
     },
-    [wordChange, onSearch]
+    [onSearch],
   );
 
   return (

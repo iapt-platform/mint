@@ -287,6 +287,27 @@ const Widget = ({ onSearch }: Props) => {
       label: intl.formatMessage({ id: "labels.tools" }),
       children: [
         {
+          key: "/workspace/dictionary",
+          label: intl.formatMessage({
+            id: "columns.library.dict.title",
+          }),
+          activeId: "workspace.dictionary",
+        },
+        {
+          key: "/workspace/grammar-book",
+          label: intl.formatMessage({
+            id: "columns.library.palihandbook.title",
+          }),
+          activeId: "workspace.grammar-book",
+        },
+        {
+          key: "/workspace/dict",
+          label: intl.formatMessage({
+            id: "columns.studio.userdict.title",
+          }),
+          activeId: "workspace.dict",
+        },
+        {
           key: "/workspace/tag",
           label: intl.formatMessage({
             id: "columns.studio.tag.title",
@@ -299,13 +320,6 @@ const Widget = ({ onSearch }: Props) => {
             id: "columns.studio.attachment.title",
           }),
           activeId: "workspace.driver",
-        },
-        {
-          key: "/workspace/dict",
-          label: intl.formatMessage({
-            id: "columns.studio.userdict.title",
-          }),
-          activeId: "workspace.dict",
         },
       ],
     },
