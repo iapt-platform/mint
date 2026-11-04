@@ -33,6 +33,12 @@ const SearchVocabulary = ({
   const [factors, setFactors] = useState<string[]>([]);
   // 请求序号：用于竞态防护，只保留最新一次请求的结果
   const seqRef = useRef(0);
+  // 回车只认键盘选中的候选项：鼠标悬停也会让某项高亮，此时回车 AutoComplete
+  // 会选中悬停项（先触发 Input.Search 的 onSearch 查输入的词，紧接着 onSelect
+  // 查悬停的词，后者覆盖前者）。用户要的是查自己输入的词。
+  const arrowNavRef = useRef(false); // 本次输入后是否按过 ↑↓
+  const enterRef = useRef(false); // 这次 onSelect 是否由回车触发
+  const typedRef = useRef<string | undefined>(undefined); // 回车那一刻输入框里的词
 
   // 外部 value（点击单词触发的查词）变化时，同步输入框显示。
   // 仅在 value 真正变化时同步，用户手动输入时 value 不会变，因此不会打断输入。
@@ -129,6 +135,8 @@ const SearchVocabulary = ({
         }}
         showSearch={{
           onSearch: (val: string) => {
+            // 只有打字会走这里（选中候选项不会），借此重置键盘选择
+            arrowNavRef.current = false;
             if (val === "") {
               // 空输入：立即取消挂起请求，并使在途请求失效，清空建议
               seqRef.current++;
@@ -142,6 +150,12 @@ const SearchVocabulary = ({
           },
         }}
         onSelect={(val: string) => {
+          if (enterRef.current && !arrowNavRef.current) {
+            // 回车但没用 ↑↓ 选过：高亮来自鼠标悬停，忽略。Input.Search 的
+            // onSearch 已经查过输入的词，这里把被改掉的输入框改回来
+            setInput(typedRef.current);
+            return;
+          }
           onSearch?.(val);
         }}
       >
@@ -150,7 +164,20 @@ const SearchVocabulary = ({
           size={compact ? undefined : "large"}
           placeholder="search here"
           loading={fetching}
+          onKeyDown={(e) => {
+            if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+              arrowNavRef.current = true;
+            } else if (e.key === "Enter") {
+              // onSelect 与本次 keydown 同步触发；之后清掉，免得影响鼠标点击选择
+              enterRef.current = true;
+              setTimeout(() => {
+                enterRef.current = false;
+              }, 0);
+            }
+          }}
           onSearch={(val: string) => {
+            // 回车时它先于 onSelect 触发，val 就是用户输入的词
+            typedRef.current = val;
             onSearch?.(val);
           }}
         />
