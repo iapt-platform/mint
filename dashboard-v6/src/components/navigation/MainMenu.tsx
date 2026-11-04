@@ -15,7 +15,6 @@ import {
   ChannelIcon,
   CourseOutLinedIcon,
   DocumentIcon,
-  RobotIcon,
   TaskIcon,
   TermIcon,
   TipitakaIcon,
@@ -158,12 +157,6 @@ const Widget = ({ onSearch }: Props) => {
           }}
         />
       ),
-    },
-    {
-      key: "/workspace/ai",
-      icon: <RobotIcon />,
-      label: "AI",
-      activeId: "workspace.ai",
     },
     {
       key: "/workspace/tipitaka/lib",
