@@ -8,10 +8,8 @@ import {
   ChannelIcon,
   DictIcon,
   GrammarIcon,
-  RobotIcon,
   SuggestionIcon,
 } from "../../assets/icon";
-import ChatPanel from "./panels/ChatPanel";
 import SuggestionPanel from "./panels/SuggestionPanel";
 import GrammarBookPanel from "./panels/GrammarBookPanel";
 import DiscussionBox from "../discussion/DiscussionBox";
@@ -165,12 +163,6 @@ export default function Editor({
       content: (
         <GrammarBookPanel articleId={articleId} anthologyId={anthologyId} />
       ),
-    },
-    {
-      key: "ai",
-      icon: <RobotIcon />,
-      label: "人工智能",
-      content: <ChatPanel articleId={articleId} anthologyId={anthologyId} />,
     },
   ];
 

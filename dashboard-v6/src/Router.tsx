@@ -17,6 +17,7 @@ import transferRoutes from "./routes/transferRoutes";
 import tagRoutes from "./routes/tagRoutes";
 import driverRoutes from "./routes/driverRoutes";
 import dictRoutes from "./routes/dictRoutes";
+import dictionaryRoutes from "./routes/dictionaryRoutes";
 import courseRoutes from "./routes/courseRoutes";
 import nissayaRoutes from "./routes/nissayaRoutes";
 import discussionRoutes from "./routes/discussionRoutes";
@@ -106,6 +107,7 @@ const router = createBrowserRouter(
             ...tagRoutes,
             ...driverRoutes,
             ...dictRoutes,
+            ...dictionaryRoutes,
             ...courseRoutes,
             ...nissayaRoutes,
             ...discussionRoutes,
