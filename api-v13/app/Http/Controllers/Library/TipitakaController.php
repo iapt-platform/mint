@@ -2,433 +2,324 @@
 
 namespace App\Http\Controllers\Library;
 
-use App\Http\Api\ChannelApi;
 use App\Http\Controllers\Controller;
-use App\Models\PaliText;
 use App\Models\ProgressChapter;
-use App\Models\Tag;
-use App\Models\TagMap;
-use App\Services\TermService;
+use App\Services\TipitakaCatalogService;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\View\View;
 
+/**
+ * library 三藏栏目：首页与按分类浏览（不限 channel）。
+ *
+ * 按译本浏览见 TipitakaChannelController，作品详情与阅读见 BookController。
+ */
 class TipitakaController extends Controller
 {
-    // 封面渐变色池：uid 首字节取余循环，保证同一文集颜色稳定
-    private array $coverGradients = [
-        'linear-gradient(160deg, #2d1020, #ae6b8b)',
-        'linear-gradient(160deg, #1a2d10,rgba(75, 114, 36, 0.61))',
-        'linear-gradient(160deg, #0d1f3c,rgb(55, 98, 150))',
-        'linear-gradient(160deg, #2d1020,rgb(151, 69, 94))',
-        'linear-gradient(160deg, #1a1a2d,rgb(76, 68, 146))',
-        'linear-gradient(160deg, #1a2820,rgb(55, 124, 99))',
-    ];
+    private const PER_PAGE = 8;
 
-    /**
-     * 构造函数，注入 TermService
-     */
     public function __construct(
-        protected TermService $termService,
+        protected TipitakaCatalogService $catalog,
     ) {}
 
-    // -------------------------------------------------------------------------
-    // 从 uid / id 字符串中提取一个稳定的整数，用于色池取余
-    // -------------------------------------------------------------------------
-    private function colorIndex(string $uid): int
+    /**
+     * 三藏首页：分类（两级卡片）、译本、最近更新。
+     *
+     * 旧地址 /library/tipitaka?channel=x（dashboard「我的 channel」在用）301 到该 channel 的页面。
+     */
+    public function index(Request $request): View|RedirectResponse
     {
-        return hexdec(substr(str_replace('-', '', $uid), 0, 4)) % 255;
-    }
-
-    protected static int $nextId = 1;
-
-    // app/Http/Controllers/Library/CategoryController.php
-    // category() 方法修改版
-    // 变更：
-    //   1. $id 改为可选参数，无参数时显示顶级分类（首页复用）
-    //   2. 新增 $filters 过滤参数（type / lang / author / sort）
-    //   3. 新增右边栏数据：$recommended / $activeAuthors
-    //   4. 新增 $filterOptions（过滤器选项 + 计数）
-    //   5. 新增 $totalCount
-
-    public function index(Request $request, ?int $id = null)
-    {
-
-        $locale = Cookie::get('language') ?? 'en';
-
-        $categories = $this->loadCategories();
-
-        // ── 当前分类 ──────────────────────────────────────────
-        if ($id) {
-            $currentCategory = collect($categories)->firstWhere('id', $id);
-            if (! $currentCategory) {
-                abort(404);
-            }
-            $breadcrumbs = $this->getBreadcrumbs($currentCategory, $categories);
-        } else {
-            // 首页：虚拟顶级分类
-            $currentCategory = ['id' => null, 'name' => '三藏'];
-            $breadcrumbs = [];
+        if (Str::isUuid($request->query('channel'))) {
+            return redirect()->route('library.tipitaka.channels.show', ['channel' => $request->query('channel')], 301);
         }
 
-        // ── 子分类 ─────────────────────────────────────────────
-        $subCategories = array_values(array_filter(
-            $categories,
-            fn ($cat) => $cat['parent_id'] == $id
-        ));
-        if (count($subCategories) === 0 && ! $request->has('book')) {
-            $paliBooks = $this->getPaliBooks($categories, $id);
-            foreach ($paliBooks as $value) {
+        $locale = Cookie::get('language') ?? 'en';
+        $names = $this->catalog->localNames($this->catalog->categories(), $locale);
+
+        $categoryData = array_map(fn ($top) => [
+            'category' => [...$top, 'local_name' => $names[$top['name']] ?? $top['name']],
+            'children' => array_map(
+                fn ($child) => [...$child, 'local_name' => $names[$child['name']] ?? $child['name']],
+                $this->catalog->children($top['id'])
+            ),
+        ], $this->catalog->children(0));
+
+        $channels = $this->catalog->publicChannels(null, 8)->items();
+        $recentBooks = $this->recentBooks($this->catalog->works(), 12);
+
+        return view('library.tipitaka.index', compact('categoryData', 'channels', 'recentBooks'));
+    }
+
+    /**
+     * 分类页：子分类 + 过滤器 + 该分类下所有公开 channel 的作品版本（分页）。
+     *
+     * 末级分类的「子分类」位置列出该类下的作品，点开进作品版本页。
+     * 旧链接带 ?channel= 的 301 到该 channel 的分类视图，带 ?book= 的 301 到作品版本页。
+     */
+    public function category(Request $request, int $id): View|RedirectResponse
+    {
+        if (Str::isUuid($request->query('channel'))) {
+            return redirect()->route('library.tipitaka.channels.category', ['channel' => $request->query('channel'), 'id' => $id], 301);
+        }
+        if (preg_match('/^(\d+)-(\d+)$/', (string) $request->query('book'), $m)
+            && ($work = $this->catalog->workAt((int) $m[1], (int) $m[2]))) {
+            return redirect()->route('library.tipitaka.work', ['sn' => $work['sn']], 301);
+        }
+
+        $currentCategory = $this->catalog->category($id);
+        abort_unless($currentCategory, 404);
+
+        $localize = $this->localizer();
+        $currentCategory = $localize($currentCategory);
+        $breadcrumbs = array_map($localize, $this->catalog->categoryPath($id));
+        $works = $this->catalog->worksInCategory($id);
+
+        $subCategories = array_map(fn ($c) => [
+            ...$localize($c),
+            'url' => route('library.tipitaka.category', ['id' => $c['id']]),
+            'is_work' => false,
+        ], $this->catalog->children($id));
+        if (empty($subCategories)) {
+            foreach ($works as $work) {
                 $subCategories[] = [
-                    'id' => $id,
-                    'name' => $value->text,
-                    'book' => "{$value->book}-{$value->paragraph}",
+                    'name' => $work['title'],
+                    'url' => route('library.tipitaka.work', ['sn' => $work['sn']]),
+                    'is_work' => true,
                 ];
             }
         }
-        $allNames = array_map(fn ($item) => $item['name'], $subCategories);
 
-        // 去重
-        $allNames = array_values(array_unique($allNames));
+        $sideTree = $this->sideTree(0, array_column($breadcrumbs, 'id'), $id, $localize);
+        $recentBooks = $this->recentBooks($works, 5);
+        $activeChannels = $this->activeChannels($works, 5);
 
-        // 查词典
-        $terms = $this->termService->glossaryByLemma($allNames, $locale);
-        // 构建映射
-        $termMap = [];
-        if ($terms) {
-            foreach ($terms as $term) {
-                $termMap[$term->word] = $term->meaning;
-            }
-        }
-        // 回填
-        foreach ($subCategories as $key => $cat) {
-            $name = $cat['name'] ?? null;
-            $subCategories[$key]['name'] = $termMap[$name] ?? $name;
-        }
+        return view('library.tipitaka.category', [
+            ...$this->versionList($request, $works),
+            ...compact('currentCategory', 'subCategories', 'breadcrumbs', 'sideTree', 'recentBooks', 'activeChannels'),
+        ]);
+    }
 
-        // ── 过滤参数 ────────────────────────────────────────────
-        $selectedType = request('type', 'all');
-        $selectedLang = request('lang', 'all');
-        $selectedAuthor = request('author', 'all');
-        $selectedSort = request('sort', 'new');
-        $selectedChannel = request('channel', 'all');
+    /**
+     * 作品版本页：一部作品（book_titles.sn）在所有公开 channel 里的版本。
+     * 版式同译本列表页：按 type 分组，左栏可按语言过滤，每行带该版本的进度。
+     */
+    public function work(Request $request, int $sn): View
+    {
+        $work = $this->catalog->work($sn);
+        abort_unless($work, 404);
 
-        // ── 当前频道（提供 channel 参数时） ──────────────────────
-        $currentChannel = $selectedChannel !== 'all'
-            ? (ChannelApi::getById($selectedChannel) ?: null)
-            : null;
+        $all = array_map(fn ($c) => [
+            ...$c,
+            'url' => route('library.tipitaka.channels.work', ['channel' => $c['uid'], 'sn' => $sn]),
+        ], $this->catalog->workChannels($work));
+        // 语言过滤不能叫 lang：SetLocale 中间件用 ?lang= 切换界面语言
+        $selectedLang = $request->query('channel_lang', 'all');
+        $versions = $selectedLang === 'all' ? $all : array_values(array_filter($all, fn ($c) => $c['lang'] === $selectedLang));
+        $groups = $this->catalog->groupByType($versions);
+        $languages = $this->catalog->filterOptions(collect($all)->countBy('lang')->all());
 
-        $sortList = [
-            ['key' => 'new',         'label' => __('library.badge_updated')],
-            ['key' => 'progress',    'label' => '完成度'],
-        ];
+        $localize = $this->localizer();
+        $breadcrumbs = $work['category_id'] === null
+            ? []
+            : array_map($localize, $this->catalog->categoryPath($work['category_id']));
+        $kind = $work['kind'] ? __('library.'.$work['kind']) : null;
 
+        return view('library.tipitaka.work', compact('work', 'breadcrumbs', 'groups', 'languages', 'selectedLang', 'kind'));
+    }
+
+    /**
+     * 分类页的版本列表：过滤器选项、当前过滤、排序与分页后的书卡片。
+     *
+     * @param  list<array<string, mixed>>  $works
+     * @return array{selected: array{type: string, lang: string, sort: string}, filterOptions: array, sortList: array, paginator: LengthAwarePaginator, categoryBooks: list<array>, totalCount: int}
+     */
+    private function versionList(Request $request, array $works): array
+    {
         $selected = [
-            'type' => $selectedType,
-            'lang' => $selectedLang,
-            'author' => $selectedAuthor,
-            'sort' => $selectedSort,
-            'channel' => $selectedChannel,
+            'type' => $request->query('type', 'all'),
+            // 不能叫 lang：SetLocale 中间件用 ?lang= 切换界面语言
+            'lang' => $request->query('channel_lang', 'all'),
+            'sort' => $request->query('sort', 'new'),
         ];
-        if ($request->has('book')) {
-            $selected['book'] = $request->input('book');
-        }
 
-        // ── 书籍列表（过滤+排序，真实实现替换此处） ──────────────
-        $categoryBooks = $this->getBooks($categories, $id, $selected);
-
-        $totalCount = count($categoryBooks);
-
-        // ── 过滤器选项（mock，真实实现从书籍数据聚合） ────────────
+        $base = $this->versionsQuery($works);
         $filterOptions = [
-            'types' => $this->filterTypes(),
-            'languages' => $this->filterLanguages(),
-            'authors' => $this->getAuthorOptions($categoryBooks),
+            'types' => $this->filterOptions(clone $base, 'type', 'labels'),
+            'languages' => $this->filterOptions(clone $base, 'lang', 'language'),
         ];
 
-        // ── 右边栏：本周推荐（mock） ────────────────────────────
-        $recommended = $this->mockRecommended();
+        $query = (clone $base)->select('progress_chapters.*')->with('channel.owner')
+            ->when($selected['type'] !== 'all', fn ($q) => $q->whereHas('channel', fn ($c) => $c->where('type', $selected['type'])))
+            ->when($selected['lang'] !== 'all', fn ($q) => $q->whereHas('channel', fn ($c) => $c->where('lang', $selected['lang'])));
+        $query = $selected['sort'] === 'progress'
+            ? $query->orderByDesc('progress')
+            : $query->orderByDesc('updated_at');
 
-        // ── 右边栏：活跃译者（mock） ────────────────────────────
-        $activeAuthors = $this->mockActiveAuthors();
+        $paginator = $query->paginate(self::PER_PAGE)->withQueryString();
 
-        $types = $this->types();
-
-        return view('library.tipitaka.category', compact(
-            'currentCategory',
-            'subCategories',
-            'categoryBooks',
-            'breadcrumbs',
-            'types',
-            'selected',
-            'filterOptions',
-            'totalCount',
-            'recommended',
-            'activeAuthors',
-            'sortList',
-            'currentChannel'
-        ));
-    }
-
-    private function filterLanguages()
-    {
         return [
-            ['value' => 'all',  'label' => '全部',   'count' => 0],
-            ['value' => 'zh-Hans',   'label' => '简体中文',   'count' => 0],
-            ['value' => 'zh-Hant',   'label' => '繁体中文',   'count' => 0],
-            ['value' => 'pi',   'label' => '巴利语', 'count' => 0],
-            ['value' => 'en',   'label' => '英语',   'count' => 0],
-        ];
-    }
-
-    private function filterTypes()
-    {
-        return [
-            ['value' => 'all',         'label' => '全部',    'count' => 0],
-            ['value' => 'original',    'label' => '原文',    'count' => 0],
-            ['value' => 'translation', 'label' => '译文',    'count' => 0],
-            ['value' => 'nissaya',     'label' => 'Nissaya', 'count' => 0],
-        ];
-    }
-
-    private function mockRecommended()
-    {
-        return [
-            ['id' => 1, 'title' => '相应部·因缘篇',  'category' => '经藏'],
-            ['id' => 2, 'title' => '法句经',          'category' => '经藏'],
-            ['id' => 3, 'title' => '清净道论',        'category' => '注释'],
-            ['id' => 4, 'title' => '律藏·波罗夷',    'category' => '律藏'],
-            ['id' => 5, 'title' => '长部·梵网经',    'category' => '经藏'],
-        ];
-    }
-
-    private function mockActiveAuthors()
-    {
-        return [
-            [
-                'name' => 'Bhikkhu Bodhi',
-                'avatar' => null,
-                'color' => '#2d5a8e',
-                'initials' => 'BB',
-                'count' => 24,
+            'selected' => $selected,
+            'filterOptions' => $filterOptions,
+            'sortList' => [
+                ['key' => 'new', 'label' => __('library.badge_updated')],
+                ['key' => 'progress', 'label' => __('library.sort_progress')],
             ],
-            [
-                'name' => 'Bhikkhu Sujato',
-                'avatar' => null,
-                'color' => '#5a2d8e',
-                'initials' => 'BS',
-                'count' => 18,
-            ],
+            'paginator' => $paginator,
+            'categoryBooks' => $this->toCards($paginator->getCollection(), $works),
+            'totalCount' => $paginator->total(),
         ];
     }
 
-    // ── 辅助：从书籍列表聚合作者选项（mock，真实实现替换） ─────────
-    private function getAuthorOptions(array $books): array
+    /**
+     * 左栏分类树：顶级分类全列；沿当前分类的路径逐级展开，当前分类也展开它的下一级。
+     *
+     * @param  list<int>  $pathIds  从顶级到当前分类的 id
+     * @return list<array{id: int, name: string, active: bool, open: bool, children: list<array>}>
+     */
+    private function sideTree(int $parentId, array $pathIds, int $currentId, \Closure $localize): array
     {
-        // TODO: 从 $books 聚合真实作者列表
+        return array_map(fn ($c) => [
+            'id' => $c['id'],
+            'name' => $localize($c)['name'],
+            'active' => $c['id'] === $currentId,
+            // 在当前路径上（祖先或自身），加粗以区分层级
+            'open' => in_array($c['id'], $pathIds, true),
+            'children' => in_array($c['id'], $pathIds, true)
+                ? $this->sideTree($c['id'], $pathIds, $currentId, $localize)
+                : [],
+        ], $this->catalog->children($parentId));
+    }
+
+    /**
+     * 分类名本地化：查术语表，查不到用巴利名。
+     *
+     * @return \Closure(array): array
+     */
+    private function localizer(): \Closure
+    {
+        $names = $this->catalog->localNames($this->catalog->categories(), Cookie::get('language') ?? 'en');
+
+        return fn (array $c) => [...$c, 'name' => $names[$c['name']] ?? $c['name']];
+    }
+
+    /**
+     * 这些作品在公开 channel 里的全部版本（progress_chapters 的作品根节点行）。
+     *
+     * 两步：作品根节点 (book, para) 取自目录缓存，不查库；再和 progress_chapters 做 join。
+     * 根节点写成 VALUES 临时表 join，而不是 whereIns 的 (book, para) in ((..),(..)…)：
+     * 没有索引时都要全表扫描，但 join 走哈希，281 个根节点时 94ms → 20ms（2026-11-06 实测）。
+     * 需要模型的调用方要自己 select('progress_chapters.*')，否则 work_roots 的列会混进来。
+     *
+     * TODO: 缺 progress_chapters (book, para) 索引，仍是全表扫描，见 TipitakaCatalogService 类注释。
+     *
+     * @param  list<array{book: int, para: int}>  $works
+     */
+    private function versionsQuery(array $works): Builder
+    {
+        $query = ProgressChapter::query()->whereHas('channel', fn ($q) => $q->where('status', 30));
+        if (empty($works)) {
+            return $query->whereRaw('1 = 0');
+        }
+
+        // book / para 是目录里的整数，强转后直接拼进 SQL，不会注入
+        $values = implode(',', array_map(fn ($w) => '('.(int) $w['book'].','.(int) $w['para'].')', $works));
+
+        return $query->join(
+            DB::raw("(values {$values}) as work_roots(book, para)"),
+            fn ($join) => $join->on('work_roots.book', '=', 'progress_chapters.book')
+                ->on('work_roots.para', '=', 'progress_chapters.para')
+        );
+    }
+
+    /**
+     * 过滤器选项：按 channel 的某一列聚合版本数。
+     *
+     * @return list<array{value: string, label: string, count: int}>
+     */
+    private function filterOptions(Builder $base, string $column, string $langFile): array
+    {
+        $rows = $base->join('channels', 'channels.uid', '=', 'progress_chapters.channel_id')
+            ->groupBy("channels.{$column}")
+            ->orderByRaw('count(*) desc')
+            ->get([DB::raw("channels.{$column} as value"), DB::raw('count(*) as count')]);
+
         return [
-            ['value' => 'all',             'label' => '全部作者',      'count' => count($books)],
-            ['value' => 'bhikkhu-bodhi',   'label' => 'Bhikkhu Bodhi', 'count' => 0],
-            ['value' => 'bhikkhu-sujato',  'label' => 'Bhikkhu Sujato', 'count' => 0],
-            ['value' => 'buddhaghosa',     'label' => 'Buddhaghosa',   'count' => 0],
-            ['value' => 'bhikkhu-brahmali', 'label' => 'Bhikkhu Brahmali', 'count' => 0],
+            ['value' => 'all', 'label' => __('library.all'), 'count' => (int) $rows->sum('count')],
+            ...$rows->map(fn ($row) => [
+                'value' => $row->value,
+                'label' => __("{$langFile}.{$row->value}"),
+                'count' => (int) $row->count,
+            ])->all(),
         ];
     }
 
-    private function types()
+    /**
+     * progress_chapters 行 → 书卡片。
+     *
+     * @param  iterable<ProgressChapter>  $rows
+     * @param  list<array<string, mixed>>  $works
+     * @return list<array<string, mixed>>
+     */
+    private function toCards(iterable $rows, array $works): array
     {
-        return [
-            ['id' => '1', 'name' => 'sutta'],
-            ['id' => '48', 'name' => 'vinaya'],
-            ['id' => '66', 'name' => 'abhidhamma'],
-            ['id' => '82', 'name' => 'añña'],
-        ];
-    }
-
-    private function subCategories($categories, int $id)
-    {
-        return array_filter($categories, function ($cat) use ($id) {
-            return $cat['parent_id'] == $id;
-        });
-    }
-
-    private function getBooksIdInCat(array $categories, ?string $id)
-    {
-        if ($id) {
-            $currentCategory = collect($categories)->firstWhere('id', $id);
-            if (! $currentCategory) {
-                abort(404);
+        $byRoot = collect($works)->keyBy(fn ($w) => "{$w['book']}-{$w['para']}");
+        $cards = [];
+        foreach ($rows as $row) {
+            $work = $byRoot->get("{$row->book}-{$row->para}");
+            if (! $work || ! $row->channel) {
+                continue;
             }
-            // 标签查章节
-            $tagNames = $currentCategory['tag'];
-            $booksChapter = PaliText::withAllTags($tagNames)
-                ->where('level', 1)->get();
-        } else {
-            $booksChapter = PaliText::select(['book', 'paragraph'])
-                ->where('level', 1)
-                ->get();
+            $cards[] = $this->catalog->bookCard($work, [
+                'uid' => (string) $row->channel_id,
+                'name' => $row->channel->name,
+                'type' => $row->channel->type,
+                'lang' => $row->channel->lang,
+                'owner' => $row->channel->owner,
+            ], ['progress' => (float) $row->progress, 'title' => $row->title, 'summary' => $row->summary]);
         }
 
-        $chapters = [];
-        foreach ($booksChapter as $key => $value) {
-            $chapters[] = [$value->book, $value->paragraph];
-        }
-
-        return $chapters;
+        return $cards;
     }
 
-    private function getPaliBooks(array $categories, string $id)
+    /**
+     * 这些作品最近更新的版本。
+     *
+     * @return list<array<string, mixed>>
+     */
+    private function recentBooks(array $works, int $limit): array
     {
-        $chapters = $this->getBooksIdInCat($categories, $id);
+        $rows = $this->versionsQuery($works)->select('progress_chapters.*')->with('channel.owner')
+            ->orderByDesc('updated_at')
+            ->take($limit)
+            ->get();
 
-        $books = PaliText::whereIns(['book', 'paragraph'], $chapters)->get();
-
-        return $books;
+        return $this->toCards($rows, $works);
     }
 
-    private function getBooks(array $categories, ?string $id, array $filters)
+    /**
+     * 这些作品里收录最多的公开 channel，给右栏「本类译本」用。
+     *
+     * @return list<array{uid: string, name: string, lang: string, count: int}>
+     */
+    private function activeChannels(array $works, int $limit): array
     {
-        // 根据分类获取书号
-        if (isset($filters['book'])) {
-            $chapters = [explode('-', $filters['book'])];
-        } else {
-            $chapters = $this->getBooksIdInCat($categories, $id);
-        }
-
-        $table = ProgressChapter::with('channel.owner')
-            ->whereHas('channel', function ($query) use ($filters) {
-                if ($filters['type'] !== 'all') {
-                    $query->where('type', $filters['type'])
-                        ->where('status', 30);
-                }
-
-                if ($filters['lang'] !== 'all') {
-                    $query->where('lang', $filters['lang'])
-                        ->where('status', 30);
-                }
-
-                if ($filters['channel'] !== 'all' && Str::isUuid($filters['channel'])) {
-                    $query->where('uid', $filters['channel']);
-                }
-            })
-            ->whereNotNull('last_chapter_completed_at')
-            ->whereIns(['book', 'para'], $chapters);
-        if ($filters['sort'] === 'new') {
-            $table = $table->orderBy('last_chapter_completed_at', 'desc');
-        } elseif ($filters['sort'] === 'progress') {
-            $table = $table->orderBy('progress', 'desc');
-        }
-        $books = $table->take(100)->get();
-
-        return $this->getBooksInfo($books);
-    }
-
-    private function getBooksInfo(mixed $books)
-    {
-        $pali = PaliText::where('level', 1)->get();
-        // 获取该分类下的书籍
-        $categoryBooks = [];
-        $books->each(function ($book) use (&$categoryBooks, $pali) {
-            $title = $book->title;
-            if (empty($title)) {
-                $title = $pali->firstWhere('book', $book->book)->toc;
-            }
-
-            $pcd_book_id = $pali->first(function ($item) use ($book) {
-                return $item->book == $book->book
-                    && $item->paragraph == $book->para;
-            })?->pcd_book_id;
-
-            $coverFile = "/assets/images/cover/zh-hans/1/{$pcd_book_id}.png";
-            if (File::exists(public_path($coverFile))) {
-                $coverUrl = $coverFile;
-            } else {
-                $coverUrl = null;
-            }
-            $colorIdx = $this->colorIndex($book->uid);
-            $subTitle = $this->getBookType($book->book, $book->para);
-
-            $categoryBooks[] = [
-                'id' => $book->uid,
-                'title' => $title,
-                'author' => $book->channel->name,
-                'subTitle' => $subTitle,
-                'publisher' => $book->channel->owner,
-                'completed_chapters' => $book->completed_chapters,
-                'type' => __('labels.'.$book->channel->type),
-                'cover' => $coverUrl,
-                'cover_gradient' => $this->coverGradients[$colorIdx % count($this->coverGradients)],
-                'description' => $book->summary ?? '比库戒律的详细说明',
-                'language' => __('language.'.$book->channel->lang),
-            ];
-        });
-
-        return $categoryBooks;
-    }
-
-    private function getBookType(int $book, int $para)
-    {
-
-        $paliTextUuid = PaliText::where('book', $book)->where('paragraph', $para)->value('uid');
-        $tagIds = TagMap::where('anchor_id', $paliTextUuid)->select('tag_id')->get();
-        $tags = Tag::whereIn('id', $tagIds)->select('name')->get();
-        foreach ($tags as $key => $tag) {
-            if (in_array($tag->name, ['pāḷi', 'aṭṭhakathā', 'ṭīkā'])) {
-                return __('library.'.$tag->name);
-            }
-        }
-
-        return null;
-    }
-
-    private function loadCategories()
-    {
-        $json = file_get_contents(public_path('data/category/default.json'));
-        $tree = json_decode($json, true);
-        $flat = self::flattenWithIds($tree);
-
-        return $flat;
-    }
-
-    public static function flattenWithIds(array $tree, int $parentId = 0, int $level = 1): array
-    {
-
-        $flat = [];
-
-        foreach ($tree as $node) {
-            $currentId = self::$nextId++;
-
-            $item = [
-                'id' => $currentId,
-                'parent_id' => $parentId,
-                'name' => $node['name'] ?? null,
-                'tag' => $node['tag'] ?? [],
-                'description' => '佛教戒律经典',
-                'level' => $level,
-            ];
-
-            $flat[] = $item;
-
-            if (isset($node['children']) && is_array($node['children'])) {
-                $childrenLevel = $level + 1;
-                $flat = array_merge($flat, self::flattenWithIds($node['children'], $currentId, $childrenLevel));
-            }
-        }
-
-        return $flat;
-    }
-
-    private function getBreadcrumbs($category, $categories)
-    {
-        $breadcrumbs = [];
-        $current = $category;
-
-        while ($current) {
-            array_unshift($breadcrumbs, $current);
-            $current = collect($categories)->firstWhere('id', $current['parent_id']);
-        }
-
-        return $breadcrumbs;
+        return $this->versionsQuery($works)
+            ->join('channels', 'channels.uid', '=', 'progress_chapters.channel_id')
+            ->groupBy('channels.uid', 'channels.name', 'channels.lang')
+            ->orderByRaw('count(*) desc')
+            ->take($limit)
+            ->get([DB::raw('channels.uid as uid'), 'channels.name', 'channels.lang', DB::raw('count(*) as count')])
+            ->map(fn ($row) => [
+                'uid' => (string) $row->uid,
+                'name' => $row->name,
+                'lang' => $row->lang,
+                'count' => (int) $row->count,
+            ])
+            ->all();
     }
 }

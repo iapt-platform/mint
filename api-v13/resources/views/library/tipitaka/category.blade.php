@@ -1,6 +1,6 @@
 {{-- resources/views/library/tipitaka/category.blade.php
-     Tipitaka 分类页 / 首页（$currentCategory['id'] 为 null 时是首页）
-     三栏：左边栏（大分类）/ 中间（子分类+过滤器+书籍列表）/ 右边栏（推荐+译者）
+     三藏分类页（不限 channel）。
+     三栏：左边栏（分类树，沿当前路径展开）/ 中间（子分类 + 过滤器 + 版本列表，分页）/ 右边栏（最近更新 + 本类译本）
 --}}
 @extends('layouts.library')
 
@@ -14,7 +14,6 @@
 <li class="breadcrumb-item">
     <a href="{{ route('library.home') }}">{{ __('library.home') }}</a>
 </li>
-@if($currentCategory['id'])
 <li class="breadcrumb-item">
     <a href="{{ route('library.tipitaka.index') }}">{{ __('library.tipitaka') }}</a>
 </li>
@@ -23,53 +22,27 @@
 <li class="breadcrumb-item active">{{ $breadcrumb['name'] }}</li>
 @else
 <li class="breadcrumb-item">
-    <a href="{{ route('library.tipitaka.category', array_filter(['id' => $breadcrumb['id'], 'channel' => request('channel')])) }}">
-        {{ $breadcrumb['name'] }}
-    </a>
+    <a href="{{ route('library.tipitaka.category', ['id' => $breadcrumb['id']]) }}">{{ $breadcrumb['name'] }}</a>
 </li>
 @endif
 @endforeach
-@else
-<li class="breadcrumb-item active">{{ __('library.tipitaka') }}</li>
-@endif
 @endsection
 
 @section('content')
 <div class="page-body">
     <div class="container-xl wiki-layout">
 
-        {{-- ══ 左边栏：大分类导航 ══ --}}
+        {{-- ══ 左边栏：分类树，沿当前路径展开 ══ --}}
         <aside class="wiki-sidebar-left">
-
-
-
-            {{-- 大分类 --}}
             <div class="wiki-sidebar-section">
                 <div class="wiki-sidebar-title">{{ __('library.categories') }}</div>
-                <ul class="wiki-cat-list">
-                    <li>
-                        <a href="{{ route('library.tipitaka.index', array_filter(['channel' => request('channel')])) }}"
-                            class="{{ !$currentCategory['id'] ? 'active' : '' }}">
-                            {{ __('library.all') }}
-                        </a>
-                    </li>
-                    @foreach($types as $type)
-                    <li>
-                        <a href="{{ route('library.tipitaka.category', array_filter(['id' => $type['id'], 'channel' => request('channel')])) }}"
-                            class="{{ ($currentCategory['id'] ?? null) == $type['id'] ? 'active' : '' }}">
-                            {{ $type['name'] }}
-                        </a>
-                    </li>
-                    @endforeach
-                </ul>
+                @include('library.tipitaka._side-tree', ['nodes' => $sideTree])
             </div>
-
         </aside>
 
         {{-- ══ 主内容 ══ --}}
         <main class="wiki-main">
 
-            {{-- 搜索框 --}}
             <div>
                 <x-ui.search-input
                     :value="request('q')"
@@ -77,93 +50,13 @@
                     :hidden-fields="['resource_type' => 'tipitaka']" />
             </div>
 
-
-
-            {{-- 2. 过滤器区 --}}
-            <div class="wiki-card tipitaka-filters">
-
-                @if($currentChannel)
-                {{-- 当前频道 --}}
-                <div class="tipitaka-filter-row">
-                    <span class="tipitaka-filter-label">{{ __('library.current_channel') }}</span>
-                    <div class="tipitaka-filter-pills">
-                        <span class="tipitaka-pill tipitaka-pill--active">{{ $currentChannel['name'] }}</span>
-                    </div>
-                </div>
-                @else
-                {{-- 类型 --}}
-                <div class="tipitaka-filter-row">
-                    <span class="tipitaka-filter-label">{{ __('library.type') }}</span>
-                    <div class="tipitaka-filter-pills">
-                        @foreach($filterOptions['types'] as $opt)
-                        <a href="{{ request()->fullUrlWithQuery(['type' => $opt['value'], 'page' => null]) }}"
-                            class="tipitaka-pill {{ $selected['type'] === $opt['value'] ? 'tipitaka-pill--active' : '' }}">
-                            {{ $opt['label'] }}
-                            @if($opt['count'] > 0)
-                            <span class="tipitaka-pill-count">{{ $opt['count'] }}</span>
-                            @endif
-                        </a>
-                        @endforeach
-                    </div>
-                </div>
-
-                {{-- 语言 --}}
-                <div class="tipitaka-filter-row">
-                    <span class="tipitaka-filter-label">{{ __('library.language') }}</span>
-                    <div class="tipitaka-filter-pills">
-                        @foreach($filterOptions['languages'] as $opt)
-                        <a href="{{ request()->fullUrlWithQuery(['lang' => $opt['value'], 'page' => null]) }}"
-                            class="tipitaka-pill {{ $selected['lang'] === $opt['value'] ? 'tipitaka-pill--active' : '' }}">
-                            {{ $opt['label'] }}
-                            @if($opt['count'] > 0)
-                            <span class="tipitaka-pill-count">{{ $opt['count'] }}</span>
-                            @endif
-                        </a>
-                        @endforeach
-                    </div>
-                </div>
-                @endif
-
-                {{-- 作者 --}}
-                <div class="tipitaka-filter-row" style="display:none">
-                    <span class="tipitaka-filter-label">{{ __('library.author') }}</span>
-                    <select class="form-select form-select-sm tipitaka-author-select"
-                        onchange="window.location=this.value">
-                        @foreach($filterOptions['authors'] as $opt)
-                        <option value="{{ request()->fullUrlWithQuery(['author' => $opt['value'], 'page' => null]) }}"
-                            {{ $selected['author'] === $opt['value'] ? 'selected' : '' }}>
-                            {{ $opt['label'] }}@if($opt['count'] > 0)（{{ $opt['count'] }}）@endif
-                        </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                {{-- 清除过滤器 --}}
-                @php
-                $hasFilter = $selected['type'] !== 'all'
-                || $selected['lang'] !== 'all'
-                || $selected['author'] !== 'all'
-                || $selected['channel'] !== 'all';
-                @endphp
-                @if($hasFilter)
-                <div class="tipitaka-filter-clear">
-                    <a href="{{ rtrim(request()->fullUrlWithQuery(['type' => null, 'lang' => null, 'author' => null, 'channel' => null, 'page' => null]), '?') }}"
-                        class="tipitaka-clear-btn">
-                        <i class="ti ti-x"></i> {{ __('library.clear_filters') }}
-                    </a>
-                </div>
-                @endif
-
-            </div>
-
-            {{-- 1. 子分类 --}}
+            {{-- 子分类；末级分类列出其下作品，点开进作品版本页 --}}
             @if(count($subCategories) > 0)
             <div class="wiki-card tipitaka-subcategories">
                 <div class="tipitaka-subcategory-grid">
                     @foreach($subCategories as $sub)
-                    <a href="{{ route('library.tipitaka.category', array_filter(['id' => $sub['id'], 'book' => $sub['book'] ?? null, 'channel' => request('channel')])) }}"
-                        class="tipitaka-subcategory-item">
-                        <i class="ti {{ !empty($sub['book']) ? 'ti-book' : 'ti-folder' }} tipitaka-subcategory-icon" aria-hidden="true"></i>
+                    <a href="{{ $sub['url'] }}" class="tipitaka-subcategory-item">
+                        <i class="ti {{ $sub['is_work'] ? 'ti-book' : 'ti-folder' }} tipitaka-subcategory-icon" aria-hidden="true"></i>
                         <span class="tipitaka-subcategory-name">{{ $sub['name'] }}</span>
                     </a>
                     @endforeach
@@ -171,26 +64,66 @@
             </div>
             @endif
 
-            {{-- 3. 排序 + 结果数 --}}
+            {{-- 过滤器 --}}
+            <div class="wiki-card tipitaka-filters">
+                <div class="tipitaka-filter-row">
+                    <span class="tipitaka-filter-label">{{ __('library.type') }}</span>
+                    <div class="tipitaka-filter-pills">
+                        @foreach($filterOptions['types'] as $opt)
+                        <a href="{{ request()->fullUrlWithQuery(['type' => $opt['value'], 'page' => null]) }}"
+                            class="tipitaka-pill {{ $selected['type'] === $opt['value'] ? 'tipitaka-pill--active' : '' }}">
+                            {{ $opt['label'] }}
+                            <span class="tipitaka-pill-count">{{ $opt['count'] }}</span>
+                        </a>
+                        @endforeach
+                    </div>
+                </div>
+
+                <div class="tipitaka-filter-row">
+                    <span class="tipitaka-filter-label">{{ __('library.language') }}</span>
+                    <div class="tipitaka-filter-pills">
+                        @foreach($filterOptions['languages'] as $opt)
+                        <a href="{{ request()->fullUrlWithQuery(['channel_lang' => $opt['value'], 'page' => null]) }}"
+                            class="tipitaka-pill {{ $selected['lang'] === $opt['value'] ? 'tipitaka-pill--active' : '' }}">
+                            {{ $opt['label'] }}
+                            <span class="tipitaka-pill-count">{{ $opt['count'] }}</span>
+                        </a>
+                        @endforeach
+                    </div>
+                </div>
+
+                @if($selected['type'] !== 'all' || $selected['lang'] !== 'all')
+                <div class="tipitaka-filter-clear">
+                    <a href="{{ route('library.tipitaka.category', ['id' => $currentCategory['id']]) }}"
+                        class="tipitaka-clear-btn">
+                        <i class="ti ti-x"></i> {{ __('library.clear_filters') }}
+                    </a>
+                </div>
+                @endif
+            </div>
+
+
+            {{-- 排序 + 结果数 --}}
             <div class="tipitaka-sort-bar">
                 <span class="tipitaka-sort-bar__count">
-                    {{ __('library.total_prefix') }} <strong>{{ $totalCount }}</strong> {{ __('library.book_unit') }}
+                    {{ __('library.total_prefix') }} <strong>{{ $totalCount }}</strong> {{ __('library.version_unit') }}
                 </span>
                 <div class="tipitaka-sort-bar__right">
                     <span class="tipitaka-sort-bar__label">{{ __('library.sort') }}</span>
                     <select class="form-select form-select-sm tipitaka-sort-select"
                         onchange="window.location=this.value">
                         @foreach($sortList as $sort)
-                        <option value="{{ request()->fullUrlWithQuery(['sort' => $sort['key']]) }}"
+                        <option value="{{ request()->fullUrlWithQuery(['sort' => $sort['key'], 'page' => null]) }}"
                             {{ $selected['sort'] === $sort['key'] ? 'selected' : '' }}>{{ $sort['label'] }}</option>
                         @endforeach
                     </select>
                 </div>
             </div>
 
-            {{-- 4. 书籍列表 --}}
+            {{-- 版本列表 --}}
             <div class="wiki-card">
                 <x-ui.book-grid :books="$categoryBooks" />
+                <div class="tipitaka-pager">{{ $paginator->links('library.anthology.pagination') }}</div>
             </div>
 
         </main>
@@ -198,16 +131,15 @@
         {{-- ══ 右边栏 ══ --}}
         <aside class="wiki-sidebar-right">
 
-            {{-- 本周推荐 --}}
-            @if(!empty($recommended))
+            @if(!empty($recentBooks))
             <div class="wiki-sidebar-section">
-                <div class="wiki-sidebar-title">{{ __('library.weekly_picks') }}</div>
+                <div class="wiki-sidebar-title">{{ __('library.recent_updates') }}</div>
                 <ul class="wiki-cat-list">
-                    @foreach($recommended as $item)
+                    @foreach($recentBooks as $item)
                     <li>
-                        <a href="{{ route('library.tipitaka.show', $item['id']) }}">
+                        <a href="{{ $item['url'] }}">
                             {{ $item['title'] }}
-                            <span class="wiki-cat-count">{{ $item['category'] }}</span>
+                            <span class="wiki-cat-count">{{ $item['author'] }}</span>
                         </a>
                     </li>
                     @endforeach
@@ -215,23 +147,21 @@
             </div>
             @endif
 
-            {{-- 活跃译者 --}}
-            @if(!empty($activeAuthors))
+            @if(!empty($activeChannels))
             <div class="wiki-sidebar-section">
-                <div class="wiki-sidebar-title">{{ __('library.active_authors') }}</div>
+                <div class="wiki-sidebar-title">{{ __('library.category_channels') }}</div>
                 <ul class="tipitaka-author-list">
-                    @foreach($activeAuthors as $author)
+                    @foreach($activeChannels as $channel)
                     <li>
-                        <a href="{{ request()->fullUrlWithQuery(['author' => \Str::slug($author['name']), 'page' => null]) }}"
+                        <a href="{{ route('library.tipitaka.channels.category', ['channel' => $channel['uid'], 'id' => $currentCategory['id']]) }}"
                             class="tipitaka-author-item">
                             <x-ui.author-avatar
-                                :avatar="$author['avatar'] ?? null"
-                                :color="$author['color']"
-                                :initials="$author['initials']"
+                                :color="\App\Services\TipitakaCatalogService::channelColor($channel['uid'])"
+                                :initials="mb_substr($channel['name'], 0, 1)"
                                 size="sm" />
                             <div class="tipitaka-author-item__info">
-                                <span class="tipitaka-author-item__name">{{ $author['name'] }}</span>
-                                <span class="tipitaka-author-item__count">{{ $author['count'] }} {{ __('library.book_unit') }}</span>
+                                <span class="tipitaka-author-item__name">{{ $channel['name'] }}</span>
+                                <span class="tipitaka-author-item__count">{{ __('language.'.$channel['lang']) }} · {{ $channel['count'] }} {{ __('library.work_unit') }}</span>
                             </div>
                         </a>
                     </li>

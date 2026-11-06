@@ -5,12 +5,13 @@
        $book — 书籍数据数组，包含：
                id, title, author, cover(可选),
                cover_gradient(可选), publisher(object, 可选),
-               language(可选), type(可选)
+               language(可选), type(可选),
+               url(可选，默认旧的 library.tipitaka.show), progress(可选，0–100，给出时显示进度条)
 --}}
 @props(['book'])
 
 <div class="card-book">
-    <a href="{{ route('library.tipitaka.show', $book['id']) }}" class="card-book__link">
+    <a href="{{ $book['url'] ?? route('library.tipitaka.show', $book['id']) }}" class="card-book__link">
 
         {{-- 封面 --}}
         <x-ui.book-cover
@@ -49,6 +50,10 @@
                 <span class="card-book__badge">§{{ $book['completed_chapters'] }}</span>
                 @endif
             </div>
+
+            @isset($book['progress'])
+            <x-ui.progress-bar :value="$book['progress']" class="card-book__progress" />
+            @endisset
         </div>
 
     </a>
