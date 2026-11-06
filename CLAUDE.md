@@ -442,6 +442,9 @@ v3 这条只服务单 channel 的只读渲染。前端 `dashboard-v6/src/api/pal
 ## 工作约定
 
 - 改完代码留在工作区，等用户 review，不要自动 `git commit`。
+- **提交信息用 gitmoji**（2026-11-06 起）：标题写成 `✨ (library): 说明`——Unicode emoji 代替
+  `feat` / `fix`，范围放括号里，不要再写 `feat(scope):`。emoji 怎么选、范围名用哪些，见根目录
+  `GITMOJI.md`。「功能」与「还债」两个 commit 分别用 ✨ / 🐛 等与 ♻️。
 - 文档文件只在用户明确要求时创建。
 - **不要擅自安装或升级任何依赖**（npm、composer 都一样）。需要新依赖就说明理由，
   等用户自己装完通知你。
