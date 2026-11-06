@@ -1,6 +1,6 @@
 {{-- resources/views/library/search.blade.php
      全站统一搜索结果页。
-     路由：/library/search?q=&type=&category=&lang=
+     路由：/library/search?q=&type=&category=&language=（不能用 lang：那是界面语言）
      原 wiki/search.blade.php 移至此处，@extends 路径更新，
      搜索框改用 <x-ui.search-input>，空状态改用 <x-ui.empty-state>。
 --}}
@@ -51,7 +51,8 @@
     routeName="library.search"
     :queryParams="array_filter([
                 'q'        => $query,
-                'lang'     => $lang,
+                // 控制器读的是 language；lang 是界面语言（SetLocale）
+                'language' => $lang,
                 'category' => $category !== 'all' ? $category : null,
             ])" />
 @endif
@@ -103,7 +104,7 @@
     <div class="wiki-sidebar-title">{{ __('library.did_you_mean') }}</div>
     <ul class="wiki-related-list">
         <li>
-            <a href="{{ route('library.search', ['q' => substr($query, 0, -1), 'lang' => $lang]) }}">
+            <a href="{{ route('library.search', ['q' => substr($query, 0, -1), 'language' => $lang]) }}">
                 {{ substr($query, 0, -1) }}
             </a>
         </li>
