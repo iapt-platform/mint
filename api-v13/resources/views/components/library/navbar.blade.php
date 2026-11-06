@@ -2,6 +2,12 @@
     <div class="container-xl">
         <div class="bc-inner">
 
+            {{-- 站点 logo，回 wikipali 首页。浅色导航栏用深色字版；压在 hero 上时（导航透明）换白字版，见 navbar.css --}}
+            <a href="{{ url('/') }}" class="bc-logo" aria-label="WikiPāli">
+                <img src="{{ asset('assets/images/wikipali_logo_dark.svg') }}" alt="WikiPāli" class="bc-logo__img bc-logo__img--dark">
+                <img src="{{ asset('assets/images/wikipali_logo.svg') }}" alt="" aria-hidden="true" class="bc-logo__img bc-logo__img--light">
+            </a>
+
             <ol class="breadcrumb mb-0">
                 @yield('breadcrumb')
             </ol>

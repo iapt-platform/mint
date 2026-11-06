@@ -1,9 +1,12 @@
 <?php
+
 return [
     'home' => 'Home',
     'translation' => 'Translation',
     'original' => 'Original',
     'nissaya' => 'Nissaya',
+    'commentary' => 'Commentary',
+    'similar' => 'Parallels',
 
     'script_convertor' => 'Pāli Script Converter',
     'input_script' => 'Input Script',

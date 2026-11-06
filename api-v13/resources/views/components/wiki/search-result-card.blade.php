@@ -10,7 +10,10 @@
             {{ route('library.wiki.show', [$result['lang'], $result['id']]) }}
             @endif
             @if($result['type']==='tipitaka')
-            {{ route('library.tipitaka.read', ['id' => $result['chapter']['id'], 'channel' => $result['chapter']['channel']]) }}
+            {{-- channel 是从 OpenSearch 文档 id 里拆出来的，不是 uuid 时生成新路由会抛异常，退回旧地址 --}}
+            {{ \Illuminate\Support\Str::isUuid($result['chapter']['channel'] ?? null)
+                ? route('library.tipitaka.channels.chapter', ['channel' => $result['chapter']['channel'], 'chapter' => $result['chapter']['id']])
+                : url('/library/tipitaka/'.$result['chapter']['id'].'/read') }}
             @endif
             ">
             {{ $result['title'] }}

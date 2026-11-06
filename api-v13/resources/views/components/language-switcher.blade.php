@@ -2,16 +2,9 @@
 $currentLocale = app()->getLocale();
 $languages = config('mint.languages');
 $currentLanguage = $languages[$currentLocale] ?? 'en';
-// 首页等无名路由用当前 URL 追加 ?lang= ，具名路由仍按路由参数生成，保持原有链接形式
-$localeUrl = function (string $locale) {
-    $routeName = Route::currentRouteName();
-
-    if ($routeName) {
-        return route($routeName, array_merge(request()->route()->parameters(), ['lang' => $locale]));
-    }
-
-    return request()->fullUrlWithQuery(['lang' => $locale]);
-};
+// 当前地址原样保留（路径参数与查询串都不动），只替换 ?lang=（SetLocale 中间件只认查询串）。
+// 不能按路由参数重新生成：wiki 的路径参数也叫 {lang}，会被换成界面语言；查询串（筛选、页码、搜索词）也会丢。
+$localeUrl = fn (string $locale) => request()->fullUrlWithQuery(['lang' => $locale]);
 @endphp
 
 <div class="language-switcher">

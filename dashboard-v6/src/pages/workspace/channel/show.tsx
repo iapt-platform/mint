@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { useIntl } from "react-intl";
-import { Button, Card, Tabs } from "antd";
-import { TeamOutlined } from "@ant-design/icons";
+import { Button, Card, Space, Tabs } from "antd";
+import { ExportOutlined, TeamOutlined } from "@ant-design/icons";
 
 import { get } from "../../../request";
 
@@ -39,17 +39,28 @@ const Widget = () => {
         title={title}
         extra={
           channelId ? (
-            <ShareModal
-              trigger={
-                <Button icon={<TeamOutlined />}>
-                  {intl.formatMessage({
-                    id: "buttons.share",
-                  })}
-                </Button>
-              }
-              resId={channelId}
-              resType={EResType.channel}
-            />
+            <Space>
+              <Button
+                icon={<ExportOutlined />}
+                href={`${import.meta.env.VITE_APP_API_SERVER}/library/tipitaka/channels/${channelId}`}
+                target="_blank"
+              >
+                {intl.formatMessage({
+                  id: "buttons.open.in.library",
+                })}
+              </Button>
+              <ShareModal
+                trigger={
+                  <Button icon={<TeamOutlined />}>
+                    {intl.formatMessage({
+                      id: "buttons.share",
+                    })}
+                  </Button>
+                }
+                resId={channelId}
+                resType={EResType.channel}
+              />
+            </Space>
           ) : undefined
         }
       >

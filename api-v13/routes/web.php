@@ -9,6 +9,7 @@ use App\Http\Controllers\Library\BookController;
 use App\Http\Controllers\Library\CourseController;
 use App\Http\Controllers\Library\HomeController;
 use App\Http\Controllers\Library\SearchController;
+use App\Http\Controllers\Library\TipitakaChannelController;
 use App\Http\Controllers\Library\TipitakaController;
 use App\Http\Controllers\Library\WikiController;
 use App\Http\Controllers\PageIndexController;
@@ -65,9 +66,27 @@ Route::prefix('library')->name('library.')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
 
     Route::get('/tipitaka', [TipitakaController::class, 'index'])->name('tipitaka.index');
-    Route::get('/tipitaka/category/{id}', [TipitakaController::class, 'index'])->name('tipitaka.category');
-    Route::get('/tipitaka/{id}', [BookController::class, 'show'])->name('tipitaka.show');
-    Route::get('/tipitaka/{id}/read', [BookController::class, 'read'])->name('tipitaka.read');
+    Route::get('/tipitaka/category/{id}', [TipitakaController::class, 'category'])
+        ->whereNumber('id')->name('tipitaka.category');
+    // 作品版本页：一部作品在所有公开译本里的版本
+    Route::get('/tipitaka/work/{sn}', [TipitakaController::class, 'work'])->whereNumber('sn')->name('tipitaka.work');
+
+    // 按译本浏览：channel → 分类 / 作品 → 章节
+    Route::get('/tipitaka/channels', [TipitakaChannelController::class, 'index'])->name('tipitaka.channels.index');
+    Route::prefix('/tipitaka/channels/{channel}')->whereUuid('channel')->name('tipitaka.channels.')->group(function () {
+        Route::get('/', [TipitakaChannelController::class, 'show'])->name('show');
+        // 不带 id = 全部分类
+        Route::get('/category/{id?}', [TipitakaChannelController::class, 'category'])->whereNumber('id')->name('category');
+        Route::get('/work/{sn}', [BookController::class, 'show'])->whereNumber('sn')->name('work');
+        Route::get('/work/{sn}/read', [BookController::class, 'readWork'])->whereNumber('sn')->name('work.read');
+        Route::get('/chapter/{chapter}', [BookController::class, 'read'])
+            ->where('chapter', '\d+-\d+')->name('chapter');
+    });
+
+    // 旧地址，301 到新地址。mobile 深链、dashboard 与外部分享的链接都还在用，不要删
+    Route::get('/tipitaka/{id}/read', [BookController::class, 'legacyRead'])
+        ->where('id', '\d+-\d+')->name('tipitaka.read');
+    Route::get('/tipitaka/{id}', [BookController::class, 'legacyShow'])->whereUuid('id')->name('tipitaka.show');
 
     Route::get('/wiki', [WikiController::class, 'home'])->name('wiki.home');
     Route::get('/wiki/{lang}', [WikiController::class, 'index'])->name('wiki.index');

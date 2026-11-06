@@ -11,8 +11,12 @@ use App\Models\Sentence;
 use App\Services\ChapterService;
 use App\Services\PaliContentService;
 use App\Services\PaliTextService;
+use App\Services\TipitakaCatalogService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Str;
+use Illuminate\View\View;
 
 class BookController extends Controller
 {
@@ -29,43 +33,115 @@ class BookController extends Controller
     protected $minChapterLen = 100;
 
     /**
-     * 构造函数，注入文本与段落内容服务
+     * 构造函数，注入文本、段落内容与三藏目录服务
      */
     public function __construct(
         protected PaliTextService $paliTextService,
-        protected PaliContentService $paliContentService
+        protected PaliContentService $paliContentService,
+        protected TipitakaCatalogService $catalog,
     ) {}
 
-    public function show(string $id)
+    /**
+     * 作品详情：某 channel 的某部作品（work_id = book_titles.sn）。该 channel 没收录这部作品时 404。
+     */
+    public function show(string $channel, int $sn): View
     {
-        $bookRaw = $this->loadBook($id);
+        $work = $this->catalog->work($sn);
+        $channelModel = $this->catalog->channel($channel);
+        abort_unless($work && $channelModel, 404);
+        $progress = $this->catalog->channelProgress($channel)["{$work['book']}-{$work['para']}"] ?? null;
+        abort_unless($progress, 404);
 
-        if (! $bookRaw) {
-            abort(404);
-        }
+        $channelInfo = [
+            'uid' => $channel,
+            'name' => $channelModel->name,
+            'type' => $channelModel->type,
+            'lang' => $channelModel->lang,
+            'owner' => $channelModel->owner,
+        ];
+        $book = $this->catalog->bookCard($work, $channelInfo, $progress);
+        $book['channel'] = $channelInfo;
+        $book['pali_title'] = $work['title'];
+        $book['updated_at'] = $progress['updated_at'];
+        $book['read_url'] = route('library.tipitaka.channels.work.read', ['channel' => $channel, 'sn' => $sn]);
+        $book['contents'] = $this->getBookToc($work['book'], $work['para'], $channel, 2, 2, null, [$work['para'], $work['end']]);
 
-        // 查询章节
-        $channelId = $bookRaw->channel_id; // 替换为具体的 channel_id 值
+        $names = $this->catalog->localNames($this->catalog->categories(), Cookie::get('language') ?? 'en');
+        $book['categories'] = $work['category_id'] === null ? [] : array_map(fn ($c) => [
+            'name' => $names[$c['name']] ?? $c['name'],
+            'url' => route('library.tipitaka.channels.category', ['channel' => $channel, 'id' => $c['id']]),
+        ], $this->catalog->categoryPath($work['category_id']));
 
-        $book = $this->getBookInfo($bookRaw);
-        $book['contents'] = $this->getBookToc($bookRaw->book, $bookRaw->para, $channelId);
-        $book['book_title'] = $this->getBookTitle($bookRaw->book, $bookRaw->para, $channelId);
-        // 获取其他版本
-        $others = ProgressChapter::with('channel.owner')
-            ->where('book', $bookRaw->book)
-            ->where('para', $bookRaw->para)
-            ->whereHas('channel', function ($query) {
-                $query->where('status', 30);
-            })
-            ->where('progress', '>', 0.2)
-            ->get();
+        $otherVersions = array_map(fn ($c) => [
+            ...$c,
+            'url' => route('library.tipitaka.channels.work', ['channel' => $c['uid'], 'sn' => $sn]),
+        ], $this->catalog->workChannels($work, $channel));
 
-        $otherVersions = [];
-        $others->each(function ($book) use (&$otherVersions) {
-            $otherVersions[] = $this->getBookInfo($book);
-        });
+        // 同一分类下、本 channel 也收录了的其他作品
+        $channelProgress = $this->catalog->channelProgress($channel);
+        $relatedWorks = $work['category_id'] === null ? [] : collect($this->catalog->worksInCategory($work['category_id']))
+            ->filter(fn ($w) => $w['sn'] !== $sn && isset($channelProgress["{$w['book']}-{$w['para']}"]))
+            ->take(5)
+            ->map(fn ($w) => [
+                'title' => $channelProgress["{$w['book']}-{$w['para']}"]['title'] ?: $w['title'],
+                'url' => route('library.tipitaka.channels.work', ['channel' => $channel, 'sn' => $w['sn']]),
+            ])
+            ->values()
+            ->all();
 
-        return view('library.tipitaka.show', compact('book', 'otherVersions'));
+        return view('library.tipitaka.show', compact('book', 'otherVersions', 'relatedWorks'));
+    }
+
+    /**
+     * 阅读入口：作品区间内第一个本 channel 有译文的章节（level 2–7），没有就从作品起点读。
+     * 目标随翻译进度变化，所以是 302。
+     */
+    public function readWork(string $channel, int $sn): RedirectResponse
+    {
+        $work = $this->catalog->work($sn);
+        abort_unless($work && ChannelApi::getById($channel), 404);
+
+        $chapterParas = PaliText::where('book', $work['book'])
+            ->whereBetween('paragraph', [$work['para'], $work['end']])
+            ->whereBetween('level', [2, 7])
+            ->pluck('paragraph');
+        $first = ProgressChapter::where('channel_id', $channel)
+            ->where('book', $work['book'])
+            ->whereIn('para', $chapterParas)
+            ->min('para');
+
+        return redirect()->route('library.tipitaka.channels.chapter', [
+            'channel' => $channel,
+            'chapter' => "{$work['book']}-".($first ?? $work['para']),
+        ]);
+    }
+
+    /**
+     * 旧地址 /library/tipitaka/{book}-{para}/read?channel=x → 新地址（301）。
+     * 没带 channel 的读巴利原文；其余查询参数（如 comm）原样带过去。
+     */
+    public function legacyRead(Request $request, string $id): RedirectResponse
+    {
+        $channelId = $request->query('channel') ?: ChannelApi::getSysChannel('_System_Pali_VRI_');
+        abort_unless(Str::isUuid($channelId) && ChannelApi::getById($channelId), 404);
+
+        return redirect()->route('library.tipitaka.channels.chapter', [
+            'channel' => $channelId,
+            'chapter' => $id,
+            ...$request->except('channel'),
+        ], 301);
+    }
+
+    /**
+     * 旧地址 /library/tipitaka/{progress_chapters.uid} → 该 channel 的作品详情（301）。
+     */
+    public function legacyShow(string $id): RedirectResponse
+    {
+        $row = ProgressChapter::find($id);
+        $work = $row ? $this->catalog->workAt((int) $row->book, (int) $row->para) : null;
+        abort_unless($work, 404);
+
+        return redirect()->route('library.tipitaka.channels.work', ['channel' => $row->channel_id, 'sn' => $work['sn']], 301);
     }
 
     private function fetchCommentary(int $book, int $paraStart, int $paraEnd, string $channelId)
@@ -99,14 +175,15 @@ class BookController extends Controller
         );
     }
 
-    public function read(Request $request, string $id)
+    /**
+     * 阅读页 /library/tipitaka/channels/{channel}/chapter/{book}-{para}。
+     */
+    public function read(Request $request, string $channel, string $chapter): View
     {
-
-        $channelId = $request->input('channel');
-        $isDefaultChannel = empty($channelId);
-        if ($isDefaultChannel) {
-            $channelId = ChannelApi::getSysChannel('_System_Pali_VRI_');
-        }
+        $channelId = $channel;
+        $id = $chapter;
+        // 读的是巴利原文（旧地址没带 channel 时也落到这里），提示可切换版本
+        $isDefaultChannel = $channelId === ChannelApi::getSysChannel('_System_Pali_VRI_');
 
         abort_unless(preg_match('/^\d+-\d+$/', $id), 404);
         [$bookId, $paraId] = explode('-', $id);
@@ -155,14 +232,22 @@ class BookController extends Controller
         $commentaryChannels = array_filter($allChannels, function ($channel) {
             return $channel['type'] === 'commentary';
         });
-        $channels = array_filter($allChannels, function ($channel) {
+        $channels = array_map(fn ($channel) => [
+            ...$channel,
+            'url' => route('library.tipitaka.channels.chapter', ['channel' => $channel['id'], 'chapter' => $id, ...$request->query()]),
+        ], array_filter($allChannels, function ($channel) {
             return $channel['type'] !== 'commentary';
-        });
+        }));
+
+        $work = $this->catalog->workAt($bookId, $paraId);
+        $book['work_url'] = $work
+            ? route('library.tipitaka.channels.work', ['channel' => $channelId, 'sn' => $work['sn']])
+            : null;
 
         $editor_link = config('mint.server.dashboard_base_path')
             ."/workspace/tipitaka/chapter/{$id}?channel={$channelId}";
 
-        $view = view('library.book.read', compact('book', 'channels', 'editor_link', 'commentaryChannels', 'isDefaultChannel'));
+        $view = view('library.book.read', compact('book', 'channels', 'editor_link', 'commentaryChannels', 'isDefaultChannel', 'channelId'));
 
         return $view;
     }
@@ -260,40 +345,12 @@ class BookController extends Controller
         ];
     }
 
-    private function loadBook(string $id)
-    {
-        $book = ProgressChapter::with('channel.owner')->find($id);
-
-        return $book;
-    }
-
     public function toggleTheme(Request $request)
     {
         $theme = $request->input('theme', 'light');
         session(['theme' => $theme]);
 
         return response()->json(['status' => 'success']);
-    }
-
-    private function getBookInfo($book)
-    {
-        $title = $book->title;
-        if (empty($title)) {
-            $title = PaliText::where('book', $book->book)
-                ->where('paragraph', $book->para)->first()->toc;
-        }
-
-        return [
-            'id' => $book->uid,
-            'title' => $title,
-            'author' => $book->channel->name,
-            'publisher' => $book->channel->owner,
-            'type' => __('label.'.$book->channel->type),
-            'category_id' => 11,
-            'cover' => '/assets/images/cover/1/214.jpg',
-            'description' => $book->summary ?? '',
-            'language' => __('language.'.$book->channel->lang),
-        ];
     }
 
     private function getBookTitle(int $book, int $paragraph, string $channelId)
@@ -316,13 +373,18 @@ class BookController extends Controller
      * @param  array{0: int, 1: int}|null  $activeRange  实际显示的段落区间 [start, end]；
      *                                                   传入时区间内的所有 chapter 均高亮（active），
      *                                                   用于聚合显示多个 chapter 的场景。不传则仅高亮选中段落。
+     * @param  array{0: int, 1: int}|null  $bounds  目录的段落范围；不传取所在 level-1 节点（整本书）。
+     *                                              作品详情页传作品区间（一个 level-1 节点里可能有多部作品）。
      */
-    private function getBookToc(int $book, int $paragraph, string $channelId, $minLevel = 2, $maxLevel = 2, ?array $activeRange = null): array
+    private function getBookToc(int $book, int $paragraph, string $channelId, $minLevel = 2, $maxLevel = 2, ?array $activeRange = null, ?array $bounds = null): array
     {
-        $currBook = $this->bookStart($book, $paragraph);
-
-        $start = $currBook->paragraph;
-        $end = $currBook->paragraph + $currBook->chapter_len - 1;
+        if ($bounds !== null) {
+            [$start, $end] = $bounds;
+        } else {
+            $currBook = $this->bookStart($book, $paragraph);
+            $start = $currBook->paragraph;
+            $end = $currBook->paragraph + $currBook->chapter_len - 1;
+        }
 
         $paliTexts = PaliText::where('book', $book)
             ->whereBetween('paragraph', [$start, $end])
@@ -529,52 +591,5 @@ class BookController extends Controller
             ->where('level', '<', 8)
             ->orderBy('paragraph', 'desc')
             ->first();
-    }
-
-    public function show2($id)
-    {
-        // Sample book data (replace with database query)
-        $book = [
-            'title' => 'Sample Book Title',
-            'author' => 'John Doe',
-            'category' => 'Fiction',
-            'tags' => ['Adventure', 'Mystery', 'Bestseller'],
-            'toc' => ['Introduction', 'Chapter 1', 'Chapter 2', 'Conclusion'],
-            'content' => [
-                'This is the introduction to the book...',
-                'Chapter 1 content goes here...',
-                'Chapter 2 content goes here...',
-                'Conclusion of the book...',
-            ],
-            'downloads' => [
-                ['format' => 'PDF', 'url' => '#'],
-                ['format' => 'EPUB', 'url' => '#'],
-                ['format' => 'MOBI', 'url' => '#'],
-            ],
-        ];
-
-        // Sample related books (replace with database query)
-        $relatedBooks = [
-            [
-                'title' => 'Related Book 1',
-                'description' => 'A thrilling adventure...',
-                'image' => 'https://via.placeholder.com/300x200',
-                'link' => '#',
-            ],
-            [
-                'title' => 'Related Book 2',
-                'description' => 'A mystery novel...',
-                'image' => 'https://via.placeholder.com/300x200',
-                'link' => '#',
-            ],
-            [
-                'title' => 'Related Book 3',
-                'description' => 'A bestseller...',
-                'image' => 'https://via.placeholder.com/300x200',
-                'link' => '#',
-            ],
-        ];
-
-        return view('library.book.read2', compact('book', 'relatedBooks'));
     }
 }
