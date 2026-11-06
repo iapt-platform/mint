@@ -68,3 +68,45 @@ development-{640|1280|2560}.{avif|webp|jpg}
 ```
 
 建议流程：先生成一张 **2560px 宽**的主图，再降采样出 1280 / 640 三档，分别压成 AVIF、WebP、JPEG。
+
+---
+
+## 05 Tipiṭaka · 三藏栏目 Hero
+
+用于 `/library/tipitaka` 顶部通栏（`resources/views/library/tipitaka/index.blade.php`），替换目前与 library 首页共用的 `hero-2.jpg`。
+
+**版式约束（与上面四张卡片不同，先读这条）：**
+
+- 通栏高度固定 **250px**，宽度随屏幕：桌面约 1920–2560px（≈ 8:1 的细长横条），手机约 375px（≈ 1.5:1，只剩正中一小块）。`background-size: cover` + `center`，**上下会被大幅裁掉**。
+- 白色大标题「三藏」、副标题和搜索框**居中**压在图上，上面还有一层 20% 黑色遮罩和透明导航栏。所以：
+  - **正中横带**（宽度中间 50%、高度中间 60%）必须是**平静、低对比、中等明度**的质感，不放主体，否则压字看不清。
+  - 主体元素沿水平方向**分散在左右两端**，画面像一条横向展开的长卷。
+  - 手机上只看得到正中，所以正中也要好看：均匀的纸纹 / 光影即可，不能是一块死色。
+- **明度例外**：上面四张要求明亮，这张不行。白字需要背景足够深，整体用**中等偏深**的暖色调（正中亮度约 35–55%），不要出现大片白色高光。
+- 沿用全局禁忌：不出现佛像、寺庙、僧侣、佛塔、念珠、香炉、莲花等宗教符号，不出现可辨认的文字。
+
+- 色调：深檀木棕 + 贝叶暖金（tint `#5A4632`，高光 `#C9A66B`）
+- 主题方向：贝叶写本 / 经夹木板 / 长卷式的横向展开
+
+**提示词（主推）：**
+
+> 超宽幅横向长卷构图的静物摄影，俯视角度：深色檀木桌面上，一排排细长的贝叶写本沿水平方向舒展排开，叶片边缘微微卷曲、泛着温润的暖金色，用棉线串起，两端压着素面的深色木质经夹板。贝叶与经夹集中在画面最左和最右两端，向中间逐渐稀疏、虚化，画面正中是一大片平整均匀的深棕木纹与柔和阴影，干净、安静、低对比，留作叠加白色标题。光线是低角度的侧向暖光，从左向右掠过，形成细腻的明暗过渡。整体色调为中等偏深的檀木棕与暖金，哑光质感，浅景深，宁静、庄重、克制。贝叶表面只有模糊的刻痕肌理，没有任何可辨认的文字。画面中不要出现人物、手、佛像、寺庙、佛塔、莲花、念珠、香炉、蜡烛、任何宗教符号、标志、水印、可读文字。
+
+**提示词（备选，更抽象）：**
+
+> 超宽幅抽象背景：无数细长的半透明暖金色叶片形光带，沿水平方向层层叠叠地流动，像缓缓展开的长卷，在画面左右两端较为密集、有清晰的纤维质感，向中央逐渐融化成柔和均匀的深琥珀色雾霭。正中区域平静、低对比、色调均匀，用于叠加白色标题文字。整体为中等偏深的檀木棕与琥珀金，哑光，通透，宁静内敛。画面中不要出现任何具象物体、人物、宗教符号、文字、标志、水印。
+
+**English version**（部分生图工具英文效果更好）：
+
+> Ultra-wide panoramic still life, top-down view: rows of long, narrow palm-leaf manuscripts laid out horizontally on a dark sandalwood table, edges slightly curled, warm golden tone, bound with cotton string, plain dark wooden cover boards at each end. The manuscripts gather only at the far left and far right edges and fade and blur toward the center; the center is a wide, calm, evenly lit area of dark brown wood grain and soft shadow, low contrast, reserved for white title text. Low raking warm side light from the left. Mid-to-dark sandalwood brown and warm gold palette, matte, shallow depth of field, serene and restrained. Only faint incised texture on the leaves, no legible script. No people, hands, Buddha statues, temples, stupas, lotus, prayer beads, incense, candles, religious symbols, logos, watermarks or readable text.
+
+**交付规格：**
+
+- 生成时选工具支持的**最宽画幅**（21:9 或 3:1），主体保持在**垂直方向中间 60%** 以内，然后从中间裁出 **2560 × 400** 的横条作主图。
+- 文件放 `public/assets/images/`，命名 `hero-tipitaka.jpg`（2560 × 400，≤ 250KB），另出 `hero-tipitaka-1280.jpg` 给窄屏备用。
+- 换图时只改 `tipitaka/index.blade.php` 里的 `hero-2.jpg`，library 首页继续用原图。
+- **2026-11-04 已交付**：用主推提示词在 ChatGPT 生成，原图 2048 × 768 PNG。贝叶本来就只占左右两端、
+  上下留足，`cover` 居中裁切后桌面与手机都不压字，所以没有再裁成横条，直接压成
+  `hero-tipitaka.jpg`（2048 × 768，JPEG q82，177KB）。没出 1280 版：模板是内联 `background-image`，
+  没有按屏宽切图的地方。
+- 验收：在 1920px 和 375px 宽下各看一次，确认白色标题与搜索框清晰可读、正中没有压字的主体。
