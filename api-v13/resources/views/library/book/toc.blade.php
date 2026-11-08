@@ -1,6 +1,6 @@
 {{-- resources/views/library/book/toc.blade.php
      TOC 列表局部视图，在 offcanvas 和侧边栏中复用。
-     变量：$toc array，$anthologyId（可选）
+     变量：$toc array，$anthologyId（可选，文集阅读），$channelId（可选，三藏阅读）
      每个 item：active（当前章节高亮）、hide（折叠模式下隐藏的节点）。
      折叠/展开由 .toc-tree 上的 .toc-expanded 类切换（见 reader.js / reader.css）。
 --}}
@@ -26,7 +26,7 @@
         <a href="{{ route('library.anthology.read', ['anthology' => $anthologyId, 'article' => $item['id'], 'channel' => request('channel')]) }}"
             title="{{ $item['title'] }}">{{ $item['title'] }}</a>
         @else
-        <a href="{{ route('library.tipitaka.read', ['id' => $item['id'], 'channel' => request('channel')]) }}"
+        <a href="{{ route('library.tipitaka.channels.chapter', ['channel' => $item['channel'] ?? $channelId, 'chapter' => $item['id']]) }}"
             title="{{ $item['title'] }}">{{ $item['title'] }}</a>
         @endif
         @else

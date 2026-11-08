@@ -182,4 +182,26 @@ return [
     // reader: 译文评估标注（reader.js 弹出层）
     'assessment_title' => '译文评估',
     'assessment_method' => '方法：:method',
+
+    // 三藏：按译本浏览、作品详情、channel 目录树
+    'tipitaka_hero_subtitle' => '原文 · 译文 · 义注 · Nissaya，按分类或按译本浏览',
+    'channels' => '译本',
+    'channel' => '译本',
+    'work_unit' => '部',
+    'channel_unit' => '个译本',
+    'version_unit' => '个版本',
+    'page_of' => '第 :page / :last 页',
+    'sort_progress' => '完成度',
+    'sort_canon' => '经典顺序',
+    'category_channels' => '本类译本',
+    'progress' => '完成度',
+    'related_works' => '相关作品',
+    'all_works' => '全部作品',
+    'by_category' => '按分类',
+    'no_channels' => '暂无译本',
+    'collapse_to_cards' => '折叠到各部',
+    'only_included' => '只看已收录',
+    'show_missing' => '显示未收录作品',
+    'no_works_in_category' => '该译本在此分类下没有作品',
+    'not_included' => '未收录',
 ];

@@ -53,6 +53,8 @@ function parseQuery(value?: string): IQuery {
 const DictionaryWidget = ({ word, compact = false, onSearch }: IWidget) => {
   const [split, setSplit] = useState<string>();
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
+  // 右边栏可同时开多个字典 tab，不能用全局 id 定位顶部
+  const topRef = useRef<HTMLDivElement>(null);
   // 首次挂载就带着 word 时（如从 URL 进入）直接按它查，不必等 prop 变化
   const [initial] = useState(() => parseQuery(word));
   const [wordSearch, setWordSearch] = useState(initial.word);
@@ -89,7 +91,7 @@ const DictionaryWidget = ({ word, compact = false, onSearch }: IWidget) => {
       mounted.current = true;
       return;
     }
-    document.getElementById("pcd_dict_top")?.scrollIntoView();
+    topRef.current?.scrollIntoView();
   }, [wordSearch, dictType, wordId]);
 
   const wordInputChange = (value: string | undefined) => {
@@ -123,7 +125,7 @@ const DictionaryWidget = ({ word, compact = false, onSearch }: IWidget) => {
 
   return (
     <div ref={setContainer}>
-      <div id="pcd_dict_top"></div>
+      <div ref={topRef}></div>
       <Affix
         offsetTop={0}
         target={compact ? () => container : undefined}

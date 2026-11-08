@@ -179,4 +179,30 @@ return [
     // reader: 译文评估标注（reader.js 弹出层）
     'assessment_title' => 'Assessment',
     'assessment_method' => 'Method: :method',
+
+    'pāḷi' => 'Pāḷi',
+    'aṭṭhakathā' => 'Aṭṭhakathā',
+    'ṭīkā' => 'Ṭīkā',
+
+    // Tipiṭaka: browse by channel, work detail, channel catalogue tree
+    'tipitaka_hero_subtitle' => 'Pāḷi · translations · commentaries · Nissaya — browse by category or by translation',
+    'channels' => 'Translations',
+    'channel' => 'Translation',
+    'work_unit' => 'works',
+    'channel_unit' => 'translations',
+    'version_unit' => 'versions',
+    'page_of' => 'page :page of :last',
+    'sort_progress' => 'Progress',
+    'sort_canon' => 'Canonical order',
+    'category_channels' => 'Translations in this category',
+    'progress' => 'Progress',
+    'related_works' => 'Related works',
+    'all_works' => 'All works',
+    'by_category' => 'By category',
+    'no_channels' => 'No translations yet',
+    'collapse_to_cards' => 'Collapse to groups',
+    'only_included' => 'Included only',
+    'show_missing' => 'Show missing works',
+    'no_works_in_category' => 'This translation has no works in this category',
+    'not_included' => 'not included',
 ];

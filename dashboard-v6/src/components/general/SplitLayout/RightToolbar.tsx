@@ -16,6 +16,11 @@ export interface RightToolbarTab {
    * - 不传则点击图标不展开面板（纯按钮行为）。
    */
   content?: ReactNode;
+  /**
+   * 不渲染面板 header（标题 + 关闭按钮）。
+   * 面板自己提供顶栏时用，关闭按钮通过 useSplitLayout().closeRightPanel 自行放置。
+   */
+  hideHeader?: boolean;
 }
 
 interface RightToolbarProps {
@@ -56,20 +61,24 @@ export default function RightToolbar({
       {panelOpen && (
         <div className={styles.panel}>
           {/* 面板 header */}
-          <div className={styles.panelHeader}>
-            <span className={styles.panelTitle}>{activeTab!.label}</span>
-            <Button
-              type="text"
-              size="small"
-              icon={<CloseOutlined />}
-              onClick={onClose}
-              className={styles.closeBtn}
-              title="关闭面板"
-            />
-          </div>
+          {!activeTab!.hideHeader && (
+            <div className={styles.panelHeader}>
+              <span className={styles.panelTitle}>{activeTab!.label}</span>
+              <Button
+                type="text"
+                size="small"
+                icon={<CloseOutlined />}
+                onClick={onClose}
+                className={styles.closeBtn}
+                title="关闭面板"
+              />
+            </div>
+          )}
 
           {/* 各 tab 内容：懒创建，隐藏不销毁 */}
-          <div className={styles.panelBody}>
+          <div
+            className={`${styles.panelBody} ${activeTab!.hideHeader ? styles.panelBodyFull : ""}`}
+          >
             {tabs
               .filter((t) => t.content && mounted.has(t.key))
               .map((t) => (

@@ -59,6 +59,11 @@
   flex-direction: column;
 }
 
+/* 面板自带顶栏（hideHeader）时占满整个高度 */
+.panelBodyFull {
+  height: 100vh;
+}
+
 /* ── 纵向图标工具栏 ── */
 .toolbar {
   display: flex;

@@ -118,6 +118,8 @@ export default function Editor({
       key: "dict",
       icon: <DictIcon />,
       label: "字典",
+      // DictPanel 自带 tabs 顶栏（含关闭按钮）
+      hideHeader: true,
       content: <DictPanel />,
     },
     {

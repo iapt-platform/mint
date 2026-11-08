@@ -450,3 +450,426 @@
     line-height: 1.4;
     color: var(--tblr-secondary);
 }
+
+/* ══════════════════════════════════════════
+   两栏（无右边栏）：channel 列表 / channel 作品列表
+   ══════════════════════════════════════════ */
+
+.wiki-layout--two {
+    grid-template-columns: 200px 1fr;
+    grid-template-areas: 'left main';
+}
+
+@media (max-width: 768px) {
+    .wiki-layout--two {
+        grid-template-columns: 1fr;
+        grid-template-areas: 'main' 'left';
+    }
+}
+
+/* ══════════════════════════════════════════
+   进度条（x-ui.progress-bar）
+   ══════════════════════════════════════════ */
+
+.ui-progress {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-width: 0;
+}
+
+.ui-progress__bar {
+    flex: 1;
+    height: 6px;
+}
+
+.ui-progress__label {
+    font-size: 0.7rem;
+    color: var(--tblr-secondary);
+    white-space: nowrap;
+    min-width: 2.2em;
+    text-align: right;
+}
+
+.card-book__progress {
+    margin-top: 0.4rem;
+}
+
+.tipitaka-toc-summary {
+    font-size: 0.75rem;
+    color: var(--tblr-secondary);
+    margin-left: 0.5rem;
+}
+
+.wiki-toc-list .toc-disabled .toc-title {
+    color: var(--tblr-disabled-color, #aab);
+}
+
+.tipitaka-work-pali {
+    color: var(--tblr-secondary);
+    font-size: 0.875rem;
+}
+
+.tipitaka-pager {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+/* ══════════════════════════════════════════
+   译本：首页磁贴 / 列表行 / channel 页头
+   ══════════════════════════════════════════ */
+
+.tipitaka-channel-tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.75rem;
+}
+
+.tipitaka-channel-tile,
+.tipitaka-channel-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--tblr-body-color);
+    text-decoration: none;
+}
+
+.tipitaka-channel-tile {
+    padding: 0.7rem 0.8rem;
+    border: 1px solid var(--tblr-border-color);
+    border-radius: var(--tblr-border-radius);
+    background: var(--tblr-bg-surface);
+}
+
+.tipitaka-channel-tile:hover {
+    border-color: var(--tblr-primary);
+    text-decoration: none;
+}
+
+.tipitaka-channel-tile__info,
+.tipitaka-channel-row__info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    flex: 1;
+}
+
+.tipitaka-channel-tile__name,
+.tipitaka-channel-row__name {
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.tipitaka-channel-tile__meta,
+.tipitaka-channel-row__meta,
+.tipitaka-channel-row__count {
+    font-size: 0.75rem;
+    color: var(--tblr-secondary);
+}
+
+.tipitaka-channel-row {
+    padding: 0.65rem 0.25rem;
+    border-bottom: 1px solid var(--tblr-border-color);
+}
+
+.tipitaka-channel-row:last-child {
+    border-bottom: 0;
+}
+
+.tipitaka-channel-row:hover {
+    background: var(--tblr-bg-surface-secondary);
+    text-decoration: none;
+}
+
+.tipitaka-channel-head {
+    margin-top: 1.5rem;
+}
+
+.tipitaka-channel-head__main {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.tipitaka-channel-head__name {
+    margin: 0;
+    font-size: 1.35rem;
+}
+
+.tipitaka-channel-head__meta {
+    font-size: 0.8125rem;
+    color: var(--tblr-secondary);
+}
+
+.tipitaka-channel-tabs {
+    display: flex;
+    gap: 1.25rem;
+    border-bottom: 1px solid var(--tblr-border-color);
+    margin-top: 1rem;
+}
+
+.tipitaka-channel-tabs a {
+    padding: 0.5rem 0;
+    color: var(--tblr-secondary);
+    border-bottom: 2px solid transparent;
+    text-decoration: none;
+}
+
+.tipitaka-channel-tabs a.active {
+    color: var(--tblr-primary);
+    border-color: var(--tblr-primary);
+    font-weight: 600;
+}
+
+/* ══════════════════════════════════════════
+   channel 分类目录树（参考 documents/tipitaka_org.html）
+   ══════════════════════════════════════════ */
+
+.tipitaka-tree-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: space-between;
+    margin: 1rem 0 0;
+}
+
+.tipitaka-tree-bar__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.tipitaka-tree {
+    padding: 1rem 0 3rem;
+}
+
+.tipitaka-tree ul {
+    list-style: none;
+    margin: 0;
+    padding-left: 26px;
+}
+
+.tipitaka-tree ul.tipitaka-tree__root {
+    padding-left: 0;
+}
+
+.tipitaka-tree li[data-node] {
+    position: relative;
+    margin: 8px 0;
+}
+
+.tipitaka-tree ul ul > li[data-node]::before {
+    content: '';
+    position: absolute;
+    left: -16px;
+    top: 0;
+    bottom: -8px;
+    border-left: 1px solid var(--tblr-border-color);
+}
+
+.tipitaka-tree ul ul > li[data-node]:last-child::before {
+    bottom: auto;
+    height: 22px;
+}
+
+.tipitaka-tree ul ul > li[data-node]::after {
+    content: '';
+    position: absolute;
+    left: -16px;
+    top: 22px;
+    width: 14px;
+    border-top: 1px solid var(--tblr-border-color);
+}
+
+.tipitaka-tree__node {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 7px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--tblr-border-color);
+    background: var(--tblr-bg-surface);
+}
+
+.tipitaka-tree__toggle {
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--tblr-secondary);
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.tipitaka-tree__name {
+    font-weight: 700;
+}
+
+.tipitaka-tree__count {
+    font-size: 12px;
+    color: var(--tblr-secondary);
+}
+
+.tipitaka-tree__progress {
+    width: 110px;
+}
+
+.tipitaka-tree__level-0 > .tipitaka-tree__node {
+    background: var(--tblr-dark, #1d273b);
+    border-color: var(--tblr-dark, #1d273b);
+    color: #fff;
+}
+
+.tipitaka-tree__level-0 > .tipitaka-tree__node .tipitaka-tree__toggle,
+.tipitaka-tree__level-0 > .tipitaka-tree__node .tipitaka-tree__count,
+.tipitaka-tree__level-0 > .tipitaka-tree__node .ui-progress__label {
+    color: #cfd6e0;
+}
+
+.tipitaka-tree__level-1 > .tipitaka-tree__node {
+    background: #f3e2c7;
+    border-color: #c4761c;
+}
+
+.tipitaka-tree__level-2 > .tipitaka-tree__node {
+    background: var(--tblr-primary-lt, #e8f0fa);
+    border-color: var(--tblr-primary);
+}
+
+.tipitaka-tree__cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 10px;
+    padding: 8px 0 4px 26px;
+}
+
+.tipitaka-tree__root > li > .tipitaka-tree__cards:only-of-type {
+    padding-left: 0;
+}
+
+.tipitaka-tree__card {
+    background: var(--tblr-bg-surface);
+    border: 1px solid var(--tblr-border-color);
+    border-radius: 8px;
+    padding: 8px 12px;
+}
+
+.tipitaka-tree__card-title {
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 4px;
+}
+
+.tipitaka-tree__card ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.tipitaka-tree__card li {
+    border-top: 1px dotted var(--tblr-border-color);
+}
+
+.tipitaka-tree__card li:first-child {
+    border-top: 0;
+}
+
+.tipitaka-tree__work {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 4px 0;
+    font-size: 13px;
+    color: var(--tblr-body-color);
+    text-decoration: none;
+}
+
+a.tipitaka-tree__work:hover {
+    color: var(--tblr-primary);
+    text-decoration: none;
+}
+
+.tipitaka-tree__work-title {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.tipitaka-tree__work-progress {
+    width: 90px;
+    flex: none;
+}
+
+.tipitaka-tree__card li.is-missing .tipitaka-tree__work {
+    color: var(--tblr-disabled-color, #aab);
+}
+
+.tipitaka-tree__work-missing {
+    font-size: 11px;
+}
+
+.tipitaka-tree li.collapsed > ul,
+.tipitaka-tree li.collapsed > .tipitaka-tree__cards {
+    display: none;
+}
+
+/* ══════════════════════════════════════════
+   三藏首页 hero：底图是深色檀木（hero-tipitaka.jpg），
+   Tabler 给 h1 单独设了标题色，会盖掉 .hero-content 继承的白色，这里显式改回白字
+   ══════════════════════════════════════════ */
+
+.hero-section--dark .hero-title,
+.hero-section--dark .hero-subtitle {
+    color: #fff;
+}
+
+.tipitaka-channel-row__progress {
+    width: 140px;
+    flex: none;
+}
+
+/* 分类页左栏：顶级加粗；当前路径上的祖先加粗；下一级字号更小、颜色更浅、缩进并带竖线与圆点 */
+.tipitaka-side-tree > li > a {
+    font-weight: 600;
+}
+
+/* 叠两个类：.wiki-cat-list 的 margin/padding: 0 加载在后，同优先级会盖掉缩进 */
+.wiki-cat-list.tipitaka-side-tree__children {
+    margin: 2px 0 6px 0.75rem;
+    padding-left: 0.5rem;
+    border-left: 2px solid var(--tblr-border-color);
+}
+
+.tipitaka-side-tree .tipitaka-side-tree__children > li > a {
+    font-weight: 400;
+    font-size: 0.75rem;
+    color: var(--tblr-secondary);
+    padding: 3px 8px;
+}
+
+.tipitaka-side-tree .tipitaka-side-tree__children > li > a::before {
+    content: '';
+    flex: none;
+    width: 4px;
+    height: 4px;
+    margin-right: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.6;
+}
+
+.tipitaka-side-tree .tipitaka-side-tree__children > li > a.is-open {
+    font-weight: 600;
+    color: var(--tblr-body-color);
+}
+
+.tipitaka-side-tree .tipitaka-side-tree__children > li > a.active {
+    color: var(--tblr-primary);
+    font-weight: 600;
+}

@@ -164,14 +164,14 @@
     <div class="offcanvas-body">
         <div class="list-group list-group-flush">
             @foreach($channels as $channel)
-            @php $isActive = request('channel') == $channel['id']; @endphp
+            @php $isActive = ($channelId ?? request('channel')) == $channel['id']; @endphp
             @if($isActive)
             <div class="list-group-item active pe-none">
                 <div class="fw-bold">{{ $channel['name'] }}</div>
                 <small class="opacity-75">{{ __('language.' . $channel['lang']) }}</small>
             </div>
             @else
-            <a href="{{ request()->fullUrlWithQuery(['channel' => $channel['id']]) }}"
+            <a href="{{ $channel['url'] ?? request()->fullUrlWithQuery(['channel' => $channel['id']]) }}"
                 class="list-group-item list-group-item-action">
                 <div class="fw-bold">{{ $channel['name'] }}</div>
                 <small class="text-muted">{{ __('language.' . $channel['lang']) }}</small>
@@ -201,7 +201,13 @@
         {{-- TOC 侧边栏（tablet+） --}}
         <div class="toc-sidebar card">
             <div class="card-body">
-                <h5>{{ $book['book_title'] }}</h5>
+                <h5>
+                    @if(!empty($book['work_url']))
+                    <a href="{{ $book['work_url'] }}" class="text-reset">{{ $book['book_title'] }}</a>
+                    @else
+                    {{ $book['book_title'] }}
+                    @endif
+                </h5>
                 @include('library.book.toc', ['toc' => $book['toc'] ?? []])
             </div>
         </div>
@@ -255,7 +261,7 @@
                         <li class="page-item page-prev">
                             <a class="page-link" href="{{ isset($anthologyId)
                             ? route('library.anthology.read', ['anthology' => $anthologyId, 'article' => $book['pagination']['prev']['id'], 'channel' => request('channel')])
-                            : route('library.tipitaka.read', ['id' => $book['pagination']['prev']['id'], 'channel' => request('channel')]) }}">
+                            : route('library.tipitaka.channels.chapter', ['channel' => $channelId, 'chapter' => $book['pagination']['prev']['id']]) }}">
                                 <div class="row align-items-center">
                                     <div class="col-auto">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -274,7 +280,7 @@
                         <li class="page-item page-next">
                             <a class="page-link" href="{{ isset($anthologyId)
                             ? route('library.anthology.read', ['anthology' => $anthologyId, 'article' => $book['pagination']['next']['id'], 'channel' => request('channel')])
-                            : route('library.tipitaka.read', ['id' => $book['pagination']['next']['id'], 'channel' => request('channel')]) }}">
+                            : route('library.tipitaka.channels.chapter', ['channel' => $channelId, 'chapter' => $book['pagination']['next']['id']]) }}">
                                 <div class="row align-items-center">
                                     <div class="col">
                                         <div class="page-item-subtitle">{{ __('library.next_article') }}</div>

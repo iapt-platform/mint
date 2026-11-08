@@ -37,6 +37,29 @@
     color: var(--wp-ink-muted);
 }
 
+/* ── 站点 logo（回 wikipali 首页） ── */
+.anthology-breadcrumb-bar .bc-logo {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.anthology-breadcrumb-bar .bc-logo__img {
+    display: block;
+    height: 40px;
+    width: auto;
+}
+
+/* 默认浅色导航栏用深色字版；hero 上的白字版在下面「Hero 覆盖状态」里切换 */
+.anthology-breadcrumb-bar .bc-logo__img--light {
+    display: none;
+}
+
+/* logo 之后的面包屑紧贴 logo，不被 space-between 推到中间 */
+.anthology-breadcrumb-bar .bc-logo + .breadcrumb {
+    margin-right: auto;
+}
+
 /* ── Hero 覆盖状态：breadcrumb bar 透明悬浮于 hero 之上 ── */
 .hero-wrapper:has(.hero-section) .anthology-breadcrumb-bar {
     position: absolute;
@@ -46,6 +69,14 @@
     z-index: 10;
     background: transparent;
     border-bottom: none;
+}
+
+.hero-wrapper:has(.hero-section) .bc-logo__img--dark {
+    display: none;
+}
+
+.hero-wrapper:has(.hero-section) .bc-logo__img--light {
+    display: block;
 }
 
 .hero-wrapper:has(.hero-section) .bc-nav li a {
@@ -115,5 +146,25 @@
     .bc-hamburger {
         display: inline-flex;
         align-items: center;
+    }
+}
+
+/* 窄屏：面包屑可收缩、超出截断，保证 logo 与右侧菜单按钮都在屏内 */
+@media (max-width: 768px) {
+    .anthology-breadcrumb-bar .bc-logo + .breadcrumb {
+        flex-shrink: 1;
+        flex-wrap: nowrap;
+        min-width: 0;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    /* 各项本身不压缩，只在末尾截掉，避免分隔符和文字挤在一起 */
+    .anthology-breadcrumb-bar .bc-logo + .breadcrumb .breadcrumb-item {
+        flex-shrink: 0;
+    }
+
+    .anthology-breadcrumb-bar .bc-logo__img {
+        height: 32px;
     }
 }
