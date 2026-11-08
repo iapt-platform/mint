@@ -1,0 +1,20 @@
+/* 字典面板顶栏：tabs + 关闭按钮一行，滚动时吸顶 */
+.tabs > :global(.ant-tabs-nav) {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  margin: 0;
+  padding: 4px 4px 0 8px;
+  min-height: 40px;
+  background: var(--ant-color-bg-container, #fff);
+}
+
+/* 长词截断，悬停看全文 */
+.label {
+  display: inline-block;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: bottom;
+}
