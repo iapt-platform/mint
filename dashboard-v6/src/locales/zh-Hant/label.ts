@@ -149,6 +149,11 @@ const items = {
   "term.fields.meaning2.tooltip": "其他意思將出現在後面的括號裡",
   "term.fields.note.label": "註釋",
   "term.general-in-studio": "通用於本Studio",
+  "labels.resources": "資源",
+  "labels.char-count": "字元",
+  "labels.paragraph-count": "段落",
+  "labels.pagination.total": "結果: {total}",
+  "labels.channel.select": "版本選擇",
 };
 
 export default items;

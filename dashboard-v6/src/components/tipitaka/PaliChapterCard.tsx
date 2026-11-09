@@ -2,6 +2,7 @@ import { Row, Col, Space } from "antd";
 import { Typography } from "antd";
 import { Tiny } from "@ant-design/plots";
 import TocPath from "./TocPath";
+import { useIntl } from "react-intl";
 
 const { Title, Text, Link } = Typography;
 
@@ -33,14 +34,15 @@ const ChapterStats = ({
   data: IPaliChapterData;
   fontSize?: number;
 }) => {
+  const intl = useIntl();
   // 接口不一定两项都给（v2 view=chapter 没有段落数），缺的那项不显示
   const items = [
     data.chapterStrLen != null && {
-      label: "字符",
+      label: intl.formatMessage({ id: "labels.char-count" }),
       value: formatCount(data.chapterStrLen),
     },
     data.paragraphCount != null && {
-      label: "段落",
+      label: intl.formatMessage({ id: "labels.paragraph-count" }),
       value: data.paragraphCount.toLocaleString("en"),
     },
   ].filter((it): it is { label: string; value: string } => Boolean(it));

@@ -61,7 +61,10 @@ const ChapterInChannelWidget = ({
                 total: channels.length,
                 position: "bottom",
                 showTotal: (total) => {
-                  return `结果: ${total}`;
+                  return intl.formatMessage(
+                    { id: "labels.pagination.total" },
+                    { total }
+                  );
                 },
               }
         }
@@ -137,7 +140,7 @@ const ChapterInChannelWidget = ({
           </Button>
         </div>
         <Modal
-          title="版本选择"
+          title={intl.formatMessage({ id: "labels.channel.select" })}
           open={open}
           onCancel={handleCancel}
           onOk={handleCancel}

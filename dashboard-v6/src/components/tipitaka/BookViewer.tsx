@@ -48,11 +48,15 @@ const BookViewerWidget = ({ chapter, onChange }: IWidget) => {
         </Button>
       </Link>
       <div style={{ marginTop: 8 }}>
-        <Typography.Title level={5}>资源</Typography.Title>
+        <Typography.Title level={5}>
+          {intl.formatMessage({ id: "labels.resources" })}
+        </Typography.Title>
         <PaliChapterChannelList para={currChapter} />
       </div>
       <div style={{ marginTop: 16 }}>
-        <Typography.Title level={5}>目录</Typography.Title>
+        <Typography.Title level={5}>
+          {intl.formatMessage({ id: "labels.table-of-content" })}
+        </Typography.Title>
         <PaliChapterListByPara
           compact
           chapter={currChapter}
