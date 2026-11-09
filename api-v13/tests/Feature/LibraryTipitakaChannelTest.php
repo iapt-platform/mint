@@ -262,6 +262,28 @@ it('lists every public version of a work grouped by type', function () {
     $this->get('/library/tipitaka/work/424242')->assertNotFound();
 });
 
+it('lists the versions of a work through the chapter channel service', function () {
+    ['channel' => $channel] = libTipitakaFixture();
+    $secret = makeChannel(makeStudio('lib-secret-owner'), 'secret channel');
+    Channel::where('uid', $secret)->update(['status' => 10]);
+    libProgress($secret, 9100, 3, 0.9);
+
+    // 与 v3 tipitaka-chapter-channels 同一份查询：私有的不列，所有者名字照常显示
+    $this->get('/library/tipitaka/work/9100')
+        ->assertOk()
+        ->assertSee('lib channel')
+        ->assertSee('lib-owner')
+        ->assertDontSee('secret channel');
+
+    // 译本详情页的「其他版本」排除当前译本
+    $other = makeChannel(makeStudio('lib-other'), 'other channel');
+    libProgress($other, 9100, 3, 0.1);
+    $this->get("/library/tipitaka/channels/{$channel}/work/9100")
+        ->assertOk()
+        ->assertSee('other channel')
+        ->assertDontSee('secret channel');
+});
+
 it('redirects the legacy channel query to the channel pages', function () {
     ['channel' => $channel] = libTipitakaFixture();
 

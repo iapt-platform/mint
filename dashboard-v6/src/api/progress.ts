@@ -65,37 +65,3 @@ export interface IChapterLangListResponse {
   message: string;
   data: { rows: ILangList[]; count: number };
 }
-
-/**
- * progress?view=chapter_channels&book=98&par=22
- */
-export interface IChapterChannelData {
-  book: number;
-  para: number;
-  uid: string;
-  channel_id: string;
-  progress: number;
-  progress_line?: number[];
-  updated_at: string;
-  views: number;
-  likes: number[];
-  channel: {
-    type: TChannelType;
-    owner_uid: string;
-    editor_id: number;
-    name: string;
-    summary: string;
-    lang: string;
-    status: number;
-    created_at: string;
-    updated_at: string;
-    uid: string;
-  };
-  studio: IStudio;
-}
-
-export interface IChapterChannelListResponse {
-  ok: boolean;
-  message: string;
-  data: { rows: IChapterChannelData[]; count: number };
-}

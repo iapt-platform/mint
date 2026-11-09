@@ -8283,6 +8283,32 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v3/tipitaka-chapter-channels/{book}/{para}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 列出一章的 channel
+         * @description 按完成度从高到低。只列看得见的 channel：公开的，加上登录用户自己的、共享给他（或他所在群组）的；
+         *     未登录只看得到公开的。章节不存在或没有任何 channel 时返回空列表。
+         *     `progress` 是 0–1 的完成度；`progress_line` 是近几周每周的修改次数（从早到晚，由 `upgrade:chapter.dynamic.weekly` 每周算一次，
+         *     没算过就是 null），画活跃度小图用；
+         *     `views` 是这一章在该 channel 下被浏览的次数。
+         *
+         *     实现：`V3\TipitakaChapterChannelController@__invoke`
+         */
+        get: operations["get_api_v3_tipitaka_chapter_channels_book_para_"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v3/tipitaka-discussions/{channel}": {
         parameters: {
             query?: never;
@@ -36427,6 +36453,67 @@ export interface operations {
                     "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
             };
+        };
+    };
+    get_api_v3_tipitaka_chapter_channels_book_para_: {
+        parameters: {
+            query?: {
+                /** @description 每页数量，最大 200 */
+                per_page?: number;
+                /** @description 页码 */
+                page?: number;
+            };
+            header?: never;
+            path: {
+                /**
+                 * @description 书号
+                 * @example 94
+                 */
+                book: number;
+                /**
+                 * @description 章节起始段落号
+                 * @example 385
+                 */
+                para: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            book?: number;
+                            para?: number;
+                            progress?: number;
+                            progress_line?: number[] | null;
+                            views?: number;
+                            updated_at?: string;
+                            channel?: {
+                                id?: string;
+                                name?: string;
+                                type?: string;
+                                lang?: string;
+                            };
+                            studio?: {
+                                id?: string;
+                                nickName?: string;
+                                realName?: string;
+                                /** @description 仅在部分查询口径下返回。 */
+                                avatar?: string;
+                            } | null;
+                        }[];
+                        meta?: components["schemas"]["PaginationMeta"];
+                    };
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
         };
     };
     get_api_v3_tipitaka_discussions_channel_: {

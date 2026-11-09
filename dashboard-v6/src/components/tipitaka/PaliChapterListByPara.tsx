@@ -8,9 +8,14 @@ import PaliChapterList, { type IChapterClickEvent } from "./PaliChapterList";
 
 interface IWidget {
   chapter: IChapter;
+  compact?: boolean;
   onChapterClick?: (e: IChapterClickEvent) => void;
 }
-const PaliChapterListByParaWidget = ({ chapter, onChapterClick }: IWidget) => {
+const PaliChapterListByParaWidget = ({
+  chapter,
+  compact = false,
+  onChapterClick,
+}: IWidget) => {
   const [tableData, setTableData] = useState<IPaliChapterData[]>([]);
 
   useEffect(() => {
@@ -38,6 +43,7 @@ const PaliChapterListByParaWidget = ({ chapter, onChapterClick }: IWidget) => {
   return (
     <>
       <PaliChapterList
+        compact={compact}
         onChapterClick={(e: IChapterClickEvent) => {
           if (onChapterClick) {
             onChapterClick(e);

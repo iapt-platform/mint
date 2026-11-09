@@ -62,6 +62,7 @@ const items = {
   "buttons.copy.id": "copy id",
   "buttons.reply": "reply",
   "buttons.open": "open",
+  "buttons.open.original": "Open Pali text",
   "buttons.compact": "compact",
   "buttons.magic-dict": "magic-dict",
   "buttons.theme.ant": "theme ant",

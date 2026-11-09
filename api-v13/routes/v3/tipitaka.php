@@ -18,6 +18,7 @@
 |
 */
 
+use App\Http\Controllers\V3\TipitakaChapterChannelController;
 use App\Http\Controllers\V3\TipitakaDiscussionController;
 use App\Http\Controllers\V3\TipitakaReadingController;
 use App\Http\Controllers\V3\TipitakaRelatedParagraphAggregateController;
@@ -33,6 +34,10 @@ Route::get('tipitaka-reading/{channel}', TipitakaReadingController::class)
 // 与 /v3/discussions（按单个对象查）必填参数不同，是另一个契约。
 Route::get('tipitaka-discussions/{channel}', TipitakaDiscussionController::class)
     ->whereUuid('channel');
+
+// 一章有哪些 channel 及其完成度（原 v2 progress?view=chapter_channels）。book、para 都必填，进路径。
+Route::get('tipitaka-chapter-channels/{book}/{para}', TipitakaChapterChannelController::class)
+    ->whereNumber(['book', 'para']);
 
 // 段落关联关系：查询（原 v2 related-paragraph）+ 聚合（book_name 列表 / 某 book_name 的 cs_para）。
 Route::get('tipitaka-related-paragraphs/aggregate', [TipitakaRelatedParagraphAggregateController::class, 'index'])

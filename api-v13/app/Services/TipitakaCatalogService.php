@@ -8,6 +8,7 @@ use App\Models\Channel;
 use App\Models\PaliText;
 use App\Models\ProgressChapter;
 use App\Models\TagMap;
+use App\Services\V3\TipitakaChapterChannelService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
@@ -31,7 +32,8 @@ use Illuminate\Support\Facades\DB;
  * TODO: 给 progress_chapters 加 (book, para) 索引（只加索引，不改列；migration 由用户决定，2026-11-04 定为以后做）。
  *       现在按作品根节点查版本只能全表扫描（本地 12.6 万行）。2026-11-04 在事务里临时建索引实测（测完回滚），
  *       各页 SQL 合计：三藏首页 132→14ms、分类「经藏」292→19ms、分类末级 76→9ms、译本列表 67→13ms、
- *       作品详情 17→5ms。受影响的查询：本类的 publicChannelsQuery()、workChannels()，以及
+ *       作品详情 17→5ms。受影响的查询：本类的 publicChannelsQuery()、workChannels()（实际在
+ *       V3\TipitakaChapterChannelService，v3 tipitaka-chapter-channels 端点也用它），以及
  *       TipitakaController::versionsQuery()。
  *       顺带可考虑 pali_texts (level) 索引：buildWorks() 冷启动里 `where level = 1` 占 ~106ms（一天一次，不急）。
  */
@@ -79,7 +81,10 @@ class TipitakaCatalogService
      */
     private const AVATAR_COLORS = ['#206bc4', '#7a3fc4', '#2fb344', '#c77700', '#d63939', '#0ca678', '#4263eb', '#ae3ec9'];
 
-    public function __construct(protected TermService $termService) {}
+    public function __construct(
+        protected TermService $termService,
+        protected TipitakaChapterChannelService $chapterChannels,
+    ) {}
 
     public static function channelColor(string $uid): string
     {
@@ -401,28 +406,26 @@ class TipitakaCatalogService
     }
 
     /**
-     * 收录了该作品的其他公开 channel。
+     * 收录了该作品的公开 channel，按完成度从高到低。
      *
-     * @return list<array{uid: string, name: string, lang: string, type: string, owner: mixed, progress: int, updated_at: string|null}>
+     * 与 v3 `GET /v3/tipitaka-chapter-channels/{book}/{para}` 同一份查询与可见性
+     * （{@see TipitakaChapterChannelService::all()}）；library 不登录，所以只有公开的。
+     *
+     * @return list<array{uid: string, name: string, lang: string, type: string, owner_name: string|null, progress: int, updated_at: string|null}>
      */
     public function workChannels(array $work, ?string $exceptChannel = null): array
     {
-        return ProgressChapter::with('channel.owner')
-            ->where('book', $work['book'])
-            ->where('para', $work['para'])
-            ->when($exceptChannel, fn ($q) => $q->where('channel_id', '<>', $exceptChannel))
-            ->whereHas('channel', fn ($q) => $q->where('status', 30))
-            ->orderByDesc('progress')
-            ->get()
+        return $this->chapterChannels->all($work['book'], $work['para'], null, $exceptChannel)
             ->map(fn ($row) => [
                 'uid' => (string) $row->channel_id,
-                'name' => $row->channel->name,
-                'lang' => $row->channel->lang,
-                'type' => $row->channel->type,
-                'owner' => $row->channel->owner,
+                'name' => $row->channel_name,
+                'lang' => $row->channel_lang,
+                'type' => $row->channel_type,
+                'owner_name' => $row->studio['nickName'] ?? null,
                 'progress' => (int) round($row->progress * 100),
                 'updated_at' => $row->updated_at?->toDateString(),
             ])
+            ->values()
             ->all();
     }
 

@@ -1,6 +1,6 @@
 import { Button, Col, List, Modal, Row, Space, Tabs } from "antd";
 import { Typography } from "antd";
-import { LikeOutlined, EyeOutlined } from "@ant-design/icons";
+import { EyeOutlined } from "@ant-design/icons";
 import { Tiny } from "@ant-design/plots";
 
 import type { IChannelApiData } from "../../api/channel";
@@ -17,11 +17,10 @@ const { Text } = Typography;
 
 export interface IChapterChannelData {
   channel: IChannelApiData;
-  studio: IStudio;
+  studio?: IStudio;
   progress: number;
   progressLine?: number[];
   hit: number;
-  like: number;
   updatedAt: string;
 }
 interface IWidgetChapterInChannel {
@@ -58,11 +57,14 @@ const ChapterInChannelWidget = ({
             : {
                 showQuickJumper: false,
                 showSizeChanger: false,
-                pageSize: 5,
+                pageSize: 3,
                 total: channels.length,
                 position: "bottom",
                 showTotal: (total) => {
-                  return `结果: ${total}`;
+                  return intl.formatMessage(
+                    { id: "labels.pagination.total" },
+                    { total }
+                  );
                 },
               }
         }
@@ -100,8 +102,7 @@ const ChapterInChannelWidget = ({
                 <Text type="secondary">
                   <Space style={{ paddingLeft: "2em" }}>
                     <EyeOutlined />
-                    {item.hit} | <LikeOutlined />
-                    {item.like} |
+                    {item.hit} |
                     <TimeShow updatedAt={item.updatedAt} /> |
                     <ProgressOutlinedIcon />
                     {`${item.progress}%`}
@@ -139,7 +140,7 @@ const ChapterInChannelWidget = ({
           </Button>
         </div>
         <Modal
-          title="版本选择"
+          title={intl.formatMessage({ id: "labels.channel.select" })}
           open={open}
           onCancel={handleCancel}
           onOk={handleCancel}

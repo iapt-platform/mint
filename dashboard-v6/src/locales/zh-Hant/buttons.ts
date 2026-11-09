@@ -62,6 +62,7 @@ const items = {
   "buttons.copy.id": "複製編號",
   "buttons.reply": "回覆",
   "buttons.open": "開啟",
+  "buttons.open.original": "開啟原文",
   "buttons.compact": "緊湊",
   "buttons.magic-dict": "神奇字典",
   "buttons.theme.ant": "預設",

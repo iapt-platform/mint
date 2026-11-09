@@ -1,4 +1,5 @@
-{{-- channel 列表的一行。变量：$channel{uid, name, type, lang, owner?, updated_at?, url, works? | progress?}、$showType（可选，显示类型标签）
+{{-- channel 列表的一行。变量：$channel{uid, name, type, lang, owner?|owner_name?, updated_at?, url, works? | progress?}、$showType（可选，显示类型标签）
+     owner 是 UserInfo 模型；作品版本页的行来自 TipitakaChapterChannelService，只有 owner_name（所有者可能是群组）。
      有 progress（作品版本页）时右侧显示进度条，否则显示收录作品数。 --}}
 <a href="{{ $channel['url'] }}" class="tipitaka-channel-row">
     <x-ui.author-avatar
@@ -12,7 +13,7 @@
         </div>
         <div class="tipitaka-channel-row__meta">
             {{ __('language.'.$channel['lang']) }}
-            @if(!empty($channel['owner'])) · {{ $channel['owner']->nickname }} @endif
+            @if(!empty($channel['owner_name'])) · {{ $channel['owner_name'] }} @elseif(!empty($channel['owner'])) · {{ $channel['owner']->nickname }} @endif
             @if(!empty($channel['updated_at'])) · {{ __('library.updated') }} {{ $channel['updated_at'] }} @endif
         </div>
     </div>

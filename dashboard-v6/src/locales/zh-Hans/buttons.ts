@@ -62,6 +62,7 @@ const items = {
   "buttons.copy.id": "复制编号",
   "buttons.reply": "回复",
   "buttons.open": "打开",
+  "buttons.open.original": "打开原文",
   "buttons.compact": "紧凑",
   "buttons.magic-dict": "神奇字典",
   "buttons.theme.ant": "默认",

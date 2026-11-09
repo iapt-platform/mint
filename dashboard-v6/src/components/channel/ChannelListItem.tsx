@@ -6,7 +6,7 @@ import type { IStudio } from "../../api/Auth";
 
 interface IWidget {
   channel: IChannelApiData;
-  studio: IStudio;
+  studio?: IStudio;
   showProgress?: boolean;
   showLike?: boolean;
 }
