@@ -1,0 +1,11 @@
+/* 紧凑模式（右侧抽屉目录）的列表项：整行可点，hover 高亮 */
+.compactItem {
+  padding: 4px 8px !important;
+  border-radius: var(--ant-border-radius, 6px);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.compactItem:hover {
+  background-color: var(--ant-color-fill-tertiary, rgba(0, 0, 0, 0.04));
+}

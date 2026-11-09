@@ -57,7 +57,7 @@ const ChapterInChannelWidget = ({
             : {
                 showQuickJumper: false,
                 showSizeChanger: false,
-                pageSize: 5,
+                pageSize: 3,
                 total: channels.length,
                 position: "bottom",
                 showTotal: (total) => {

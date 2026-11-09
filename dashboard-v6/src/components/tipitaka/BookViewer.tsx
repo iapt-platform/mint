@@ -4,7 +4,9 @@ import PaliChapterChannelList from "./PaliChapterChannelList";
 import PaliChapterListByPara from "./PaliChapterListByPara";
 import PaliChapterHead from "./PaliChapterHead";
 import type { IChapterClickEvent } from "./PaliChapterList";
-import { Tabs } from "antd";
+import { Button, Typography } from "antd";
+import { useIntl } from "react-intl";
+import { Link } from "react-router";
 
 export interface IChapter {
   book: number;
@@ -17,6 +19,7 @@ interface IWidget {
   onChange?: (currChapter: IChapter) => void;
 }
 const BookViewerWidget = ({ chapter, onChange }: IWidget) => {
+  const intl = useIntl();
   const [currChapter, setCurrChapter] = useState(chapter);
   useEffect(() => {
     if (typeof onChange !== "undefined") {
@@ -35,29 +38,29 @@ const BookViewerWidget = ({ chapter, onChange }: IWidget) => {
         }}
         para={currChapter}
       />
-      <Tabs
-        size="small"
-        items={[
-          {
-            label: `目录`,
-            key: "toc",
-            children: (
-              <PaliChapterListByPara
-                chapter={currChapter}
-                onChapterClick={(e: IChapterClickEvent) => {
-                  setCurrChapter({ book: e.para.Book, para: e.para.Paragraph });
-                  console.log("PaliChapterListByPara", "onchange", e);
-                }}
-              />
-            ),
-          },
-          {
-            label: `资源`,
-            key: "res",
-            children: <PaliChapterChannelList para={currChapter} />,
-          },
-        ]}
-      />
+      {/* 不带 channel 打开阅读页，只看巴利原文；与下面资源链接一样新标签页打开 */}
+      <Link
+        to={`/workspace/tipitaka/chapter/${currChapter.book}-${currChapter.para}`}
+        target="_blank"
+      >
+        <Button type="primary">
+          {intl.formatMessage({ id: "buttons.open.original" })}
+        </Button>
+      </Link>
+      <div style={{ marginTop: 8 }}>
+        <Typography.Title level={5}>资源</Typography.Title>
+        <PaliChapterChannelList para={currChapter} />
+      </div>
+      <div style={{ marginTop: 16 }}>
+        <Typography.Title level={5}>目录</Typography.Title>
+        <PaliChapterListByPara
+          compact
+          chapter={currChapter}
+          onChapterClick={(e: IChapterClickEvent) => {
+            setCurrChapter({ book: e.para.Book, para: e.para.Paragraph });
+          }}
+        />
+      </div>
     </>
   );
 };
