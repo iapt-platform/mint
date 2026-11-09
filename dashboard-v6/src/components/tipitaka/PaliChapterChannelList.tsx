@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 
-import { get } from "../../request";
-
 import type { IChapter } from "./BookViewer";
 import ChapterInChannel, { type IChapterChannelData } from "./ChapterInChannel";
-import type { IChapterChannelListResponse } from "../../api/progress";
+import { fetchChapterChannels } from "../../api/tipitaka-chapter-channel";
+import type { TChannelType } from "../../api/channel";
 
 interface IWidget {
   para: IChapter;
@@ -20,25 +19,21 @@ const PaliChapterChannelList = ({
   const [tableData, setTableData] = useState<IChapterChannelData[]>([]);
 
   useEffect(() => {
-    const url = `/api/v2/progress?view=chapter_channels&book=${para.book}&par=${para.para}`;
-    get<IChapterChannelListResponse>(url).then(function (json) {
-      const newData: IChapterChannelData[] = json.data.rows.map((item) => {
-        return {
+    fetchChapterChannels(para.book, para.para).then((rows) => {
+      setTableData(
+        rows.map((item) => ({
           channel: {
-            name: item.channel.name,
-            id: item.channel.uid,
-            type: item.channel.type,
+            name: item.channel?.name ?? "",
+            id: item.channel?.id ?? "",
+            type: item.channel?.type as TChannelType | undefined,
           },
-          studio: item.studio,
-          progress: Math.ceil(item.progress * 100),
-          progressLine: item.progress_line,
-          hit: item.views,
-          like: 0,
-          updatedAt: item.updated_at,
-        };
-      });
-      setTableData(newData);
-      console.log("chapter", newData);
+          studio: item.studio?.id ? { ...item.studio, id: item.studio.id } : undefined,
+          progress: Math.ceil((item.progress ?? 0) * 100),
+          progressLine: item.progress_line ?? undefined,
+          hit: item.views ?? 0,
+          updatedAt: item.updated_at ?? "",
+        }))
+      );
     });
   }, [para]);
 

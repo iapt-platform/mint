@@ -1,6 +1,6 @@
 import { Button, Col, List, Modal, Row, Space, Tabs } from "antd";
 import { Typography } from "antd";
-import { LikeOutlined, EyeOutlined } from "@ant-design/icons";
+import { EyeOutlined } from "@ant-design/icons";
 import { Tiny } from "@ant-design/plots";
 
 import type { IChannelApiData } from "../../api/channel";
@@ -17,11 +17,10 @@ const { Text } = Typography;
 
 export interface IChapterChannelData {
   channel: IChannelApiData;
-  studio: IStudio;
+  studio?: IStudio;
   progress: number;
   progressLine?: number[];
   hit: number;
-  like: number;
   updatedAt: string;
 }
 interface IWidgetChapterInChannel {
@@ -100,8 +99,7 @@ const ChapterInChannelWidget = ({
                 <Text type="secondary">
                   <Space style={{ paddingLeft: "2em" }}>
                     <EyeOutlined />
-                    {item.hit} | <LikeOutlined />
-                    {item.like} |
+                    {item.hit} |
                     <TimeShow updatedAt={item.updatedAt} /> |
                     <ProgressOutlinedIcon />
                     {`${item.progress}%`}

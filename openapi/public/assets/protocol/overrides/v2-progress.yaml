@@ -13,7 +13,7 @@ get:
                     items:
                       anyOf:
                         - type: object
-                          description: view=chapter_channels
+                          description: view=chapter_channels（已被 `GET /v3/tipitaka-chapter-channels/{book}/{para}` 取代，保留仅为 dashboard-v4 兼容，待 v4 下线后删除）
                           properties:
                             book:
                               type: integer
