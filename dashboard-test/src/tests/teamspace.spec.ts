@@ -77,7 +77,8 @@ test.describe('团队空间切换', () => {
     });
 
     await test.step('2. 主导航：可团队化与个人专属的模块置灰，全局模块照常', async () => {
-      await expect(menuItem(page, '版本风格')).toHaveClass(/ant-menu-item-disabled/);
+      // channel 已迁 v3，团队空间里可用（看团队名下的与共享给团队的）
+      await expect(menuItem(page, '版本风格')).not.toHaveClass(/ant-menu-item-disabled/);
       await expect(menuItem(page, '术语')).toHaveClass(/ant-menu-item-disabled/);
       await expect(menuItem(page, '最近')).toHaveClass(/ant-menu-item-disabled/);
       await expect(menuItem(page, '主页')).not.toHaveClass(/ant-menu-item-disabled/);
@@ -117,8 +118,8 @@ test.describe('团队空间切换', () => {
       await expect(badge(page)).toContainText(TEAM);
     });
 
-    await test.step('3. 直接输入地址也进不去', async () => {
-      await page.goto('workspace/channel', { waitUntil: 'networkidle' });
+    await test.step('3. 直接输入地址也进不去（还没迁 v3 的术语）', async () => {
+      await page.goto('workspace/term', { waitUntil: 'networkidle' });
       await expect(page.getByTestId('teamspace-blocked')).toContainText('该模块暂不支持团队空间');
       await expect(page.locator('.ant-table')).toHaveCount(0);
       await shot(page, '03-blocked');

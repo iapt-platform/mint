@@ -12,6 +12,7 @@ docs/Api/AgentGrantsApi.md
 docs/Api/AgentQuotaApi.md
 docs/Api/AgentThreadsApi.md
 docs/Api/AgentTracesApi.md
+docs/Api/ChannelsApi.md
 docs/Api/CreditPolicyApi.md
 docs/Api/DiscussionsApi.md
 docs/Api/EmailCertificationsApi.md
@@ -26,9 +27,12 @@ docs/Api/ReadingTimeApi.md
 docs/Api/SearchApi.md
 docs/Api/SearchSuggestApi.md
 docs/Api/SessionsApi.md
+docs/Api/StudiosApi.md
+docs/Api/TipitakaChannelsApi.md
 docs/Api/TipitakaChapterChannelsApi.md
 docs/Api/TipitakaChaptersApi.md
 docs/Api/TipitakaDiscussionsApi.md
+docs/Api/TipitakaParagraphChannelsApi.md
 docs/Api/TipitakaReadingApi.md
 docs/Api/TipitakaRelatedParagraphsApi.md
 docs/Api/UpgradeApi.md
@@ -65,6 +69,11 @@ docs/Model/GetApiV3AgentQuota200Response.md
 docs/Model/GetApiV3AgentQuota200ResponseData.md
 docs/Model/GetApiV3AgentQuota200ResponseDataCost.md
 docs/Model/GetApiV3AgentQuota200ResponseDataEarnedToday.md
+docs/Model/GetApiV3Channels200Response.md
+docs/Model/GetApiV3Channels200ResponseDataInner.md
+docs/Model/GetApiV3Channels200ResponseDataInnerAbilities.md
+docs/Model/GetApiV3Channels200ResponseDataInnerOwner.md
+docs/Model/GetApiV3ChannelsChannel200Response.md
 docs/Model/GetApiV3CreditPolicy200Response.md
 docs/Model/GetApiV3CreditPolicy200ResponseData.md
 docs/Model/GetApiV3CreditPolicy200ResponseDataDailyFree.md
@@ -104,6 +113,8 @@ docs/Model/GetApiV3ReactionsTally200Response.md
 docs/Model/GetApiV3ReactionsTally200ResponseDataInner.md
 docs/Model/GetApiV3Search200Response.md
 docs/Model/GetApiV3SearchSearch200Response.md
+docs/Model/GetApiV3TipitakaChannels200Response.md
+docs/Model/GetApiV3TipitakaChannels200ResponseDataInner.md
 docs/Model/GetApiV3TipitakaChapterChannelsBookPara200Response.md
 docs/Model/GetApiV3TipitakaChapterChannelsBookPara200ResponseDataInner.md
 docs/Model/GetApiV3TipitakaChapterChannelsBookPara200ResponseDataInnerChannel.md
@@ -124,6 +135,7 @@ docs/Model/GetApiV3TipitakaRelatedParagraphsAggregate200ResponseDataInner.md
 docs/Model/GetApiV3TipitakaRelatedParagraphsAggregateBookName200Response.md
 docs/Model/GetApiV3TipitakaRelatedParagraphsAggregateBookName200ResponseDataInner.md
 docs/Model/PaginationMeta.md
+docs/Model/PatchApiV3ChannelsChannelRequest.md
 docs/Model/PatchApiV3DiscussionsDiscussionRequest.md
 docs/Model/PatchApiV3GroupsGroupMembersMemberRequest.md
 docs/Model/PatchApiV3GroupsGroupRequest.md
@@ -144,6 +156,9 @@ docs/Model/PostApiV3AgentGrantsRequest.md
 docs/Model/PostApiV3AgentTraces200Response.md
 docs/Model/PostApiV3AgentTraces200ResponseData.md
 docs/Model/PostApiV3AgentTracesRequest.md
+docs/Model/PostApiV3ChannelsBatchProgress200Response.md
+docs/Model/PostApiV3ChannelsBatchProgress200ResponseDataInner.md
+docs/Model/PostApiV3ChannelsBatchProgressRequest.md
 docs/Model/PostApiV3Discussions200Response.md
 docs/Model/PostApiV3DiscussionsBatchCount200Response.md
 docs/Model/PostApiV3DiscussionsBatchCount200ResponseDataInner.md
@@ -169,6 +184,7 @@ docs/Model/PostApiV3SearchRequest.md
 docs/Model/PostApiV3Sessions200Response.md
 docs/Model/PostApiV3Sessions200ResponseData.md
 docs/Model/PostApiV3SessionsRequest.md
+docs/Model/PostApiV3StudiosStudioChannelsRequest.md
 docs/Model/PostApiV3Users200Response.md
 docs/Model/PostApiV3Users200ResponseData.md
 docs/Model/PostApiV3UsersRequest.md
@@ -182,6 +198,7 @@ lib/Api/AgentGrantsApi.php
 lib/Api/AgentQuotaApi.php
 lib/Api/AgentThreadsApi.php
 lib/Api/AgentTracesApi.php
+lib/Api/ChannelsApi.php
 lib/Api/CreditPolicyApi.php
 lib/Api/DiscussionsApi.php
 lib/Api/EmailCertificationsApi.php
@@ -196,9 +213,12 @@ lib/Api/ReadingTimeApi.php
 lib/Api/SearchApi.php
 lib/Api/SearchSuggestApi.php
 lib/Api/SessionsApi.php
+lib/Api/StudiosApi.php
+lib/Api/TipitakaChannelsApi.php
 lib/Api/TipitakaChapterChannelsApi.php
 lib/Api/TipitakaChaptersApi.php
 lib/Api/TipitakaDiscussionsApi.php
+lib/Api/TipitakaParagraphChannelsApi.php
 lib/Api/TipitakaReadingApi.php
 lib/Api/TipitakaRelatedParagraphsApi.php
 lib/Api/UpgradeApi.php
@@ -239,6 +259,11 @@ lib/Model/GetApiV3AgentQuota200Response.php
 lib/Model/GetApiV3AgentQuota200ResponseData.php
 lib/Model/GetApiV3AgentQuota200ResponseDataCost.php
 lib/Model/GetApiV3AgentQuota200ResponseDataEarnedToday.php
+lib/Model/GetApiV3Channels200Response.php
+lib/Model/GetApiV3Channels200ResponseDataInner.php
+lib/Model/GetApiV3Channels200ResponseDataInnerAbilities.php
+lib/Model/GetApiV3Channels200ResponseDataInnerOwner.php
+lib/Model/GetApiV3ChannelsChannel200Response.php
 lib/Model/GetApiV3CreditPolicy200Response.php
 lib/Model/GetApiV3CreditPolicy200ResponseData.php
 lib/Model/GetApiV3CreditPolicy200ResponseDataDailyFree.php
@@ -278,6 +303,8 @@ lib/Model/GetApiV3ReactionsTally200Response.php
 lib/Model/GetApiV3ReactionsTally200ResponseDataInner.php
 lib/Model/GetApiV3Search200Response.php
 lib/Model/GetApiV3SearchSearch200Response.php
+lib/Model/GetApiV3TipitakaChannels200Response.php
+lib/Model/GetApiV3TipitakaChannels200ResponseDataInner.php
 lib/Model/GetApiV3TipitakaChapterChannelsBookPara200Response.php
 lib/Model/GetApiV3TipitakaChapterChannelsBookPara200ResponseDataInner.php
 lib/Model/GetApiV3TipitakaChapterChannelsBookPara200ResponseDataInnerChannel.php
@@ -299,6 +326,7 @@ lib/Model/GetApiV3TipitakaRelatedParagraphsAggregateBookName200Response.php
 lib/Model/GetApiV3TipitakaRelatedParagraphsAggregateBookName200ResponseDataInner.php
 lib/Model/ModelInterface.php
 lib/Model/PaginationMeta.php
+lib/Model/PatchApiV3ChannelsChannelRequest.php
 lib/Model/PatchApiV3DiscussionsDiscussionRequest.php
 lib/Model/PatchApiV3GroupsGroupMembersMemberRequest.php
 lib/Model/PatchApiV3GroupsGroupRequest.php
@@ -319,6 +347,9 @@ lib/Model/PostApiV3AgentGrantsRequest.php
 lib/Model/PostApiV3AgentTraces200Response.php
 lib/Model/PostApiV3AgentTraces200ResponseData.php
 lib/Model/PostApiV3AgentTracesRequest.php
+lib/Model/PostApiV3ChannelsBatchProgress200Response.php
+lib/Model/PostApiV3ChannelsBatchProgress200ResponseDataInner.php
+lib/Model/PostApiV3ChannelsBatchProgressRequest.php
 lib/Model/PostApiV3Discussions200Response.php
 lib/Model/PostApiV3DiscussionsBatchCount200Response.php
 lib/Model/PostApiV3DiscussionsBatchCount200ResponseDataInner.php
@@ -344,6 +375,7 @@ lib/Model/PostApiV3SearchRequest.php
 lib/Model/PostApiV3Sessions200Response.php
 lib/Model/PostApiV3Sessions200ResponseData.php
 lib/Model/PostApiV3SessionsRequest.php
+lib/Model/PostApiV3StudiosStudioChannelsRequest.php
 lib/Model/PostApiV3Users200Response.php
 lib/Model/PostApiV3Users200ResponseData.php
 lib/Model/PostApiV3UsersRequest.php
@@ -358,6 +390,7 @@ test/Api/AgentGrantsApiTest.php
 test/Api/AgentQuotaApiTest.php
 test/Api/AgentThreadsApiTest.php
 test/Api/AgentTracesApiTest.php
+test/Api/ChannelsApiTest.php
 test/Api/CreditPolicyApiTest.php
 test/Api/DiscussionsApiTest.php
 test/Api/EmailCertificationsApiTest.php
@@ -372,9 +405,12 @@ test/Api/ReadingTimeApiTest.php
 test/Api/SearchApiTest.php
 test/Api/SearchSuggestApiTest.php
 test/Api/SessionsApiTest.php
+test/Api/StudiosApiTest.php
+test/Api/TipitakaChannelsApiTest.php
 test/Api/TipitakaChapterChannelsApiTest.php
 test/Api/TipitakaChaptersApiTest.php
 test/Api/TipitakaDiscussionsApiTest.php
+test/Api/TipitakaParagraphChannelsApiTest.php
 test/Api/TipitakaReadingApiTest.php
 test/Api/TipitakaRelatedParagraphsApiTest.php
 test/Api/UpgradeApiTest.php
@@ -411,6 +447,11 @@ test/Model/GetApiV3AgentQuota200ResponseDataCostTest.php
 test/Model/GetApiV3AgentQuota200ResponseDataEarnedTodayTest.php
 test/Model/GetApiV3AgentQuota200ResponseDataTest.php
 test/Model/GetApiV3AgentQuota200ResponseTest.php
+test/Model/GetApiV3Channels200ResponseDataInnerAbilitiesTest.php
+test/Model/GetApiV3Channels200ResponseDataInnerOwnerTest.php
+test/Model/GetApiV3Channels200ResponseDataInnerTest.php
+test/Model/GetApiV3Channels200ResponseTest.php
+test/Model/GetApiV3ChannelsChannel200ResponseTest.php
 test/Model/GetApiV3CreditPolicy200ResponseDataDailyFreeTest.php
 test/Model/GetApiV3CreditPolicy200ResponseDataEarnReadingTest.php
 test/Model/GetApiV3CreditPolicy200ResponseDataEarnTest.php
@@ -450,6 +491,8 @@ test/Model/GetApiV3ReactionsTally200ResponseDataInnerTest.php
 test/Model/GetApiV3ReactionsTally200ResponseTest.php
 test/Model/GetApiV3Search200ResponseTest.php
 test/Model/GetApiV3SearchSearch200ResponseTest.php
+test/Model/GetApiV3TipitakaChannels200ResponseDataInnerTest.php
+test/Model/GetApiV3TipitakaChannels200ResponseTest.php
 test/Model/GetApiV3TipitakaChapterChannelsBookPara200ResponseDataInnerChannelTest.php
 test/Model/GetApiV3TipitakaChapterChannelsBookPara200ResponseDataInnerStudioTest.php
 test/Model/GetApiV3TipitakaChapterChannelsBookPara200ResponseDataInnerTest.php
@@ -470,6 +513,7 @@ test/Model/GetApiV3TipitakaRelatedParagraphsAggregate200ResponseTest.php
 test/Model/GetApiV3TipitakaRelatedParagraphsAggregateBookName200ResponseDataInnerTest.php
 test/Model/GetApiV3TipitakaRelatedParagraphsAggregateBookName200ResponseTest.php
 test/Model/PaginationMetaTest.php
+test/Model/PatchApiV3ChannelsChannelRequestTest.php
 test/Model/PatchApiV3DiscussionsDiscussionRequestTest.php
 test/Model/PatchApiV3GroupsGroupMembersMemberRequestTest.php
 test/Model/PatchApiV3GroupsGroupRequestTest.php
@@ -490,6 +534,9 @@ test/Model/PostApiV3AgentGrantsRequestTest.php
 test/Model/PostApiV3AgentTraces200ResponseDataTest.php
 test/Model/PostApiV3AgentTraces200ResponseTest.php
 test/Model/PostApiV3AgentTracesRequestTest.php
+test/Model/PostApiV3ChannelsBatchProgress200ResponseDataInnerTest.php
+test/Model/PostApiV3ChannelsBatchProgress200ResponseTest.php
+test/Model/PostApiV3ChannelsBatchProgressRequestTest.php
 test/Model/PostApiV3Discussions200ResponseTest.php
 test/Model/PostApiV3DiscussionsBatchCount200ResponseDataInnerTest.php
 test/Model/PostApiV3DiscussionsBatchCount200ResponseTest.php
@@ -515,6 +562,7 @@ test/Model/PostApiV3SearchRequestTest.php
 test/Model/PostApiV3Sessions200ResponseDataTest.php
 test/Model/PostApiV3Sessions200ResponseTest.php
 test/Model/PostApiV3SessionsRequestTest.php
+test/Model/PostApiV3StudiosStudioChannelsRequestTest.php
 test/Model/PostApiV3Users200ResponseDataTest.php
 test/Model/PostApiV3Users200ResponseTest.php
 test/Model/PostApiV3UsersRequestTest.php

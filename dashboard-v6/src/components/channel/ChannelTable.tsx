@@ -2,6 +2,7 @@ import { type ActionType, ProTable } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
 import { Link } from "react-router";
 import { Alert, message, Modal, Progress, Typography } from "antd";
+import type { SortOrder } from "antd/es/table/interface";
 import { Button, Dropdown, Popover } from "antd";
 import {
   PlusOutlined,
@@ -11,22 +12,27 @@ import {
 } from "@ant-design/icons";
 
 import ChannelCreate from "./ChannelCreate";
-import { delete_, get } from "../../../src/request";
-import type {
-  IApiResponseChannelList,
-  IChannel,
-  TChannelType,
+import {
+  channelOwnerStudio,
+  channelRole,
+  deleteChannel,
+  fetchPublicChannels,
+  fetchStudioChannels,
+  type IChannel,
+  type TChannelType,
 } from "../../api/channel";
 import { PublicityValueEnum } from "../studio/table";
-import type { IDeleteResponse } from "../../api/article";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { loadPageSize, savePageSize } from "../../utils/pageSize";
+
+/** 每页条数的本地记忆用这个列表名（工作区列表页与选版本弹窗共用） */
+export const CHANNEL_LIST = "channel";
 import type { IStudio, TRole } from "../../../src/api/Auth";
 import ShareModal from "../share/ShareModal";
 
 import StudioName from "../../../src/components/auth/Studio";
 import StudioSelect from "./StudioSelect";
 
-import { getSorterUrl } from "../../../src/utils";
 import TransferCreate from "../transfer/TransferCreate";
 import { TransferOutLinedIcon } from "../../../src/assets/icon";
 import { channelTypeFilter } from "./utils";
@@ -62,7 +68,30 @@ interface IChannelItem {
   created_at: string;
 }
 
+/** 列表的可重入状态：工作区列表页把它放进 URL，刷新（F5）后原样恢复 */
+export interface IChannelListQuery {
+  /** 页签：my 本工作室 / collaboration 协作 / community 社区 */
+  tab: "my" | "collaboration" | "community";
+  page: number;
+  pageSize: number;
+  /** 关键字 */
+  q?: string;
+  /** 协作页签里只看某个拥有者共享过来的 */
+  collaborator?: string;
+  order?: "created_at" | "updated_at" | "name" | "progress";
+  dir?: "asc" | "desc";
+}
+
 interface IWidget {
+  /**
+   * 受控模式：传了 query + onQueryChange 就由外部（URL）保存页签、页码、搜索、排序；
+   * 不传则组件自己记（选版本弹窗里用，不该改地址栏）。
+   */
+  query?: IChannelListQuery;
+  onQueryChange?: (next: Partial<IChannelListQuery>) => void;
+  /** v3：本人或团队的 uuid（列表、数量、新建都按它） */
+  studioId?: string;
+  /** 转让、协作者筛选仍走 v2，要 studio 名 */
   studioName?: string;
   type?: string;
   disableChannels?: string[];
@@ -71,7 +100,21 @@ interface IWidget {
   onSelect?: (channel: IChannel) => void;
 }
 
+/** 列表排序：ProTable 的 sorter → v3 的 order / dir */
+const toOrder = (sorter: Record<string, SortOrder>) => {
+  const [field, order] = Object.entries(sorter).find(([, v]) => v) ?? [];
+  return field
+    ? {
+        order: field as "created_at" | "updated_at" | "name" | "progress",
+        dir: (order === "ascend" ? "asc" : "desc") as "asc" | "desc",
+      }
+    : {};
+};
+
 const ChannelTableWidget = ({
+  query: controlledQuery,
+  onQueryChange,
+  studioId,
   studioName,
   disableChannels,
   channelType,
@@ -82,10 +125,32 @@ const ChannelTableWidget = ({
 
   const [openCreate, setOpenCreate] = useState(false);
 
-  const [activeKey, setActiveKey] = useState<React.Key | undefined>("my");
+  // 不受控时组件自己记；受控时一律以外部 query 为准
+  const [innerQuery, setInnerQuery] = useState<IChannelListQuery>(() => ({
+    tab: "my",
+    page: 1,
+    pageSize: loadPageSize(CHANNEL_LIST),
+  }));
+  const query = controlledQuery ?? innerQuery;
+  const changeQuery = (next: Partial<IChannelListQuery>) => {
+    // 用户改了每页条数就记下来，下次打开沿用
+    if (next.pageSize !== undefined && next.pageSize !== query.pageSize) {
+      savePageSize(CHANNEL_LIST, next.pageSize);
+    }
+    if (onQueryChange) {
+      onQueryChange(next);
+    } else {
+      setInnerQuery((prev) => ({ ...prev, ...next }));
+    }
+  };
+  const activeKey = query.tab;
+  // 搜索框的输入草稿：按回车才写进 query；query.q 变了（如从 URL 恢复、切页签）就跟着同步
+  const [keywordDraft, setKeywordDraft] = useState(query.q ?? "");
+  useEffect(() => setKeywordDraft(query.q ?? ""), [query.q]);
+  const collaborator = query.collaborator;
   const [myNumber, setMyNumber] = useState<number>(0);
   const [collaborationNumber, setCollaborationNumber] = useState<number>(0);
-  const [collaborator, setCollaborator] = useState<string>();
+  const [communityNumber, setCommunityNumber] = useState<number>(0);
   const [transfer, setTransfer] = useState<string[]>();
   const [transferName, setTransferName] = useState<string>();
   const [transferOpen, setTransferOpen] = useState(false);
@@ -94,19 +159,29 @@ const ChannelTableWidget = ({
     ref.current?.reload();
   }, [disableChannels]);
 
-  useEffect(() => {
-    /**
-     * 获取各种channel的数量
-     */
-    const url = `/api/v2/channel-my-number?studio=${studioName}`;
-    console.log("url", url);
-    get<IResNumberResponse>(url).then((json) => {
-      if (json.ok) {
-        setMyNumber(json.data.my);
-        setCollaborationNumber(json.data.collaboration);
-      }
-    });
-  }, [studioName]);
+  /**
+   * 三个页签的数量：各取一条，读 meta.total。条件与表格一致（带上 channelType），
+   * 角标才会等于切过去后表格下方的「总共 N 条」（不含关键字：角标是页签的总量）。
+   */
+  const refreshNumbers = useCallback(() => {
+    fetchPublicChannels({ type: channelType, per_page: 1 }).then((res) =>
+      setCommunityNumber(res.meta?.total ?? 0),
+    );
+    if (!studioId) {
+      return;
+    }
+    fetchStudioChannels(studioId, {
+      relation: "own",
+      type: channelType,
+      per_page: 1,
+    }).then((res) => setMyNumber(res.meta?.total ?? 0));
+    fetchStudioChannels(studioId, {
+      relation: "shared",
+      type: channelType,
+      per_page: 1,
+    }).then((res) => setCollaborationNumber(res.meta?.total ?? 0));
+  }, [studioId, channelType]);
+  useEffect(refreshNumbers, [refreshNumbers]);
 
   const showDeleteConfirm = (id: string, title: string) => {
     Modal.confirm({
@@ -127,20 +202,12 @@ const ChannelTableWidget = ({
       cancelText: intl.formatMessage({
         id: "buttons.no",
       }),
-      onOk() {
-        const url = `/api/v2/channel/${id}`;
-        console.log("delete api request", url);
-        return delete_<IDeleteResponse>(url)
-          .then((json) => {
-            console.info("api response", json);
-            if (json.ok) {
-              message.success("删除成功");
-              ref.current?.reload();
-            } else {
-              message.error(json.message);
-            }
-          })
-          .catch((e) => console.log("Oops errors!", e));
+      async onOk() {
+        // 有内容或无权删除时后端拒绝，原因由 unwrap 弹出
+        await deleteChannel(id);
+        message.success(intl.formatMessage({ id: "flashes.success" }));
+        ref.current?.reload();
+        refreshNumbers();
       },
     });
   };
@@ -158,6 +225,19 @@ const ChannelTableWidget = ({
       ) : undefined}
       <ProTable<IChannelItem>
         actionRef={ref}
+        // 与文章列表同一套做法（ArticleList）：分页不受控，用 defaultCurrent / defaultPageSize；
+        // 除页码外的状态一变就换 key 重新挂载，让新的默认值生效。受控的 current / pageSize 会和
+        // ProTable 内部的分页状态互相纠正，URL 来回改、页面一直闪
+        key={[
+          // 切换个人 / 团队空间时 studioId 变，表格要按新身份重新取
+          studioId,
+          query.tab,
+          query.pageSize,
+          query.q,
+          query.collaborator,
+          query.order,
+          query.dir,
+        ].join("|")}
         columns={[
           {
             title: intl.formatMessage({
@@ -308,6 +388,12 @@ const ChannelTableWidget = ({
             dataIndex: "created_at",
             valueType: "date",
             sorter: true,
+            defaultSortOrder:
+              query.order === "created_at"
+                ? query.dir === "asc"
+                  ? "ascend"
+                  : "descend"
+                : undefined,
           },
           {
             title: intl.formatMessage({ id: "buttons.option" }),
@@ -378,80 +464,119 @@ const ChannelTableWidget = ({
             },
           },
         ]}
-        request={async (params = {}, sorter, filter) => {
-          console.log(params, sorter, filter);
-          let url = `/api/v2/channel?`;
-          if (activeKey === "community") {
-            url += `view=public`;
-          } else {
-            url += `view=studio&view2=${activeKey}&name=${studioName}`;
+        // 页签、页码、搜索、排序都在 query 里：它一变 ProTable 就重新请求
+        // 只在用户真的翻页、改每页条数、点排序时触发一次，写回 query（受控时进 URL）
+        onChange={(pagination, _filters, sorter) => {
+          const one = Array.isArray(sorter) ? sorter[0] : sorter;
+          const sort = one?.order
+            ? toOrder({ [String(one.columnKey ?? one.field)]: one.order })
+            : { order: undefined, dir: undefined };
+          const pageSize = pagination.pageSize ?? query.pageSize;
+          const sortChanged =
+            sort.order !== query.order || sort.dir !== query.dir;
+          // 每页条数或排序变了回到第 1 页
+          const page =
+            pageSize !== query.pageSize || sortChanged
+              ? 1
+              : (pagination.current ?? 1);
+          if (
+            page !== query.page ||
+            pageSize !== query.pageSize ||
+            sortChanged
+          ) {
+            changeQuery({ ...sort, page, pageSize });
           }
-          if (chapter) {
-            url += `&book=${chapter.book}&paragraph=${chapter.paragraph}`;
-          }
-          const offset =
-            ((params.current ? params.current : 1) - 1) *
-            (params.pageSize ? params.pageSize : 20);
-          url += `&limit=${params.pageSize}&offset=${offset}`;
-
-          url += collaborator ? "&collaborator=" + collaborator : "";
-          url += params.keyword ? "&search=" + params.keyword : "";
-          url += channelType ? "&type=" + channelType : "";
-          if (chapter && activeKey === "community") {
-            url += "&order=progress";
-          } else {
-            url += getSorterUrl(sorter);
-          }
-
-          console.log("url", url);
-          const res: IApiResponseChannelList = await get(url);
-          const items: IChannelItem[] = res.data.rows.map((item, id) => {
-            return {
-              id: id + 1,
-              uid: item.uid,
-              title: item.name,
-              summary: item.summary,
-              type: item.type,
-              role: item.role,
-              progress: item.progress,
-              studio: item.studio,
-              publicity: item.status,
-              created_at: item.created_at,
-            };
-          });
-          return {
-            total: res.data.count,
-            succcess: true,
-            data: items,
+        }}
+        request={async (params = {}) => {
+          // 页码由 ProTable 管（初值来自 query 的 defaultCurrent），其余条件取自 query
+          const page = params.current ?? query.page;
+          const perPage = params.pageSize ?? query.pageSize;
+          const listQuery = {
+            search: query.q || undefined,
+            type: channelType,
+            book: chapter?.book,
+            para: chapter?.paragraph,
+            page,
+            per_page: perPage,
+            ...(chapter && activeKey === "community"
+              ? { order: "progress" as const }
+              : { order: query.order, dir: query.dir }),
           };
+          try {
+            const res =
+              activeKey === "community"
+                ? await fetchPublicChannels(listQuery)
+                : studioId
+                  ? await fetchStudioChannels(studioId, {
+                      ...listQuery,
+                      relation: activeKey === "my" ? "own" : "shared",
+                      collaborator:
+                        collaborator && collaborator !== "all"
+                          ? collaborator
+                          : undefined,
+                    })
+                  : undefined;
+            const items: IChannelItem[] = (res?.data ?? []).map(
+              (item, index) => ({
+                id: (page - 1) * perPage + index + 1,
+                uid: item.id ?? "",
+                title: item.name ?? "",
+                summary: item.summary ?? "",
+                type: item.type as TChannelType,
+                role: channelRole(item.abilities),
+                progress: item.progress ?? undefined,
+                studio: channelOwnerStudio(item.owner),
+                publicity: item.status ?? 0,
+                created_at: item.created_at ?? "",
+              }),
+            );
+            return { total: res?.meta?.total ?? 0, success: true, data: items };
+          } catch {
+            return { total: 0, success: false, data: [] };
+          }
         }}
         rowKey="id"
         bordered
         pagination={{
+          defaultCurrent: query.page,
+          defaultPageSize: query.pageSize,
           showQuickJumper: true,
           showSizeChanger: true,
         }}
         search={false}
         options={{
-          search: true,
+          search: {
+            value: keywordDraft,
+            onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+              setKeywordDraft(e.target.value),
+            // 关键字记进 query（受控时进 URL），返回 false 让 ProTable 不再自己存一份
+            onSearch: (keyword: string) => {
+              changeQuery({ q: keyword || undefined, page: 1 });
+              return false;
+            },
+          },
         }}
         toolBarRender={() => [
           activeKey !== "my" ? (
             <StudioSelect
               studioName={studioName}
+              value={collaborator}
               onSelect={(value: string) => {
-                setCollaborator(value);
-                ref.current?.reload();
+                changeQuery({
+                  collaborator: value && value !== "all" ? value : undefined,
+                  page: 1,
+                });
               }}
             />
           ) : undefined,
           <Popover
             content={
               <ChannelCreate
-                studio={studioName}
+                studioId={studioId}
                 onSuccess={() => {
                   setOpenCreate(false);
                   ref.current?.reload();
+                  refreshNumbers();
                 }}
               />
             }
@@ -498,7 +623,7 @@ const ChannelTableWidget = ({
                   <span>
                     {intl.formatMessage({ id: "labels.community" })}
                     <StatusBadge
-                      count={collaborationNumber}
+                      count={communityNumber}
                       active={activeKey === "community"}
                     />
                   </span>
@@ -506,10 +631,11 @@ const ChannelTableWidget = ({
               },
             ],
             onChange(key) {
-              console.log("show course", key);
-              setActiveKey(key);
-              setCollaborator(undefined);
-              ref.current?.reload();
+              changeQuery({
+                tab: key as IChannelListQuery["tab"],
+                collaborator: undefined,
+                page: 1,
+              });
             },
           },
         }}

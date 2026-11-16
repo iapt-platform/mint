@@ -1,0 +1,352 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-studios-studio-channels.yaml
+get:
+  summary: '列出 studio 的 channel'
+  tags:
+    - studios
+  operationId: get_api_v3_studios_studio_channels
+  description: |-
+    只有本人，或该团队的成员能看。`relation`：own 它名下的（默认），shared 直接共享给它的
+    （个人空间不含经团队转来的——团队的在团队空间里看），all 两者合起来。
+
+    实现：`V3\StudioChannelController@index`
+  security:
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: studio
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '用户 uuid 或团队 uuid'
+    -
+      name: per_page
+      in: query
+      schema:
+        type: integer
+        default: 20
+      description: '每页数量，最大 200'
+    -
+      name: relation
+      in: query
+      schema:
+        type: string
+        enum:
+          - own
+          - shared
+          - all
+        default: own
+      description: 关系
+    -
+      name: collaborator
+      in: query
+      schema:
+        type: string
+      description: 只看这个拥有者共享过来的（uuid）
+    -
+      name: search
+      in: query
+      schema:
+        type: string
+      description: 按名字模糊匹配
+    -
+      name: type
+      in: query
+      schema:
+        type: string
+        enum:
+          - translation
+          - nissaya
+          - original
+          - wbw
+          - commentary
+          - similar
+      description: 'channel 类型'
+    -
+      name: lang
+      in: query
+      schema:
+        type: string
+      description: 语言
+    -
+      name: book
+      in: query
+      schema:
+        type: integer
+      description: '章节所在的书（与 para 同时给）'
+    -
+      name: para
+      in: query
+      schema:
+        type: integer
+      description: '章节起始段（与 book 同时给）'
+    -
+      name: order
+      in: query
+      schema:
+        type: string
+        enum:
+          - updated_at
+          - created_at
+          - name
+          - progress
+        default: updated_at
+      description: 排序字段
+    -
+      name: dir
+      in: query
+      schema:
+        type: string
+        enum:
+          - asc
+          - desc
+        default: desc
+      description: 排序方向
+    -
+      name: page
+      in: query
+      schema:
+        type: integer
+        default: 1
+      description: 页码
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    summary:
+                      type: string
+                      nullable: true
+                    type:
+                      type: string
+                    lang:
+                      type: string
+                    status:
+                      type: integer
+                    is_system:
+                      type: boolean
+                    source_type:
+                      type: string
+                    source_id:
+                      type: string
+                      nullable: true
+                    owner:
+                      type: object
+                      properties: { kind: { type: string }, id: { type: string }, nickName: { type: string }, realName: { type: string }, avatar: { type: string, nullable: true } }
+                    abilities:
+                      type: object
+                      properties: { read: { type: boolean }, write: { type: boolean }, update: { type: boolean }, delete: { type: boolean } }
+                    progress:
+                      type: number
+                      nullable: true
+                      description: 仅在部分查询口径下返回。
+                    created_at:
+                      type: string
+                    updated_at:
+                      type: string
+              meta:
+                $ref: '../../main.yaml#/components/schemas/PaginationMeta'
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    403:
+      description: '不能查看这个 studio'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'
+post:
+  summary: '在 studio 名下建 channel'
+  tags:
+    - studios
+  operationId: post_api_v3_studios_studio_channels
+  description: |-
+    本人名下，或团队名下（团队 owner / manager）。同一 studio 内不能重名。默认私有。AI 模型不能建。
+
+    实现：`V3\StudioChannelController@store`
+  security:
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: studio
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '用户 uuid 或团队 uuid'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+              description: '名字，最长 128'
+            type:
+              type: string
+              description: 类型
+              enum:
+                - translation
+                - nissaya
+                - original
+                - wbw
+                - commentary
+                - similar
+            lang:
+              type: string
+              description: '语言，最长 16'
+            summary:
+              type: string
+              description: '简介，最长 1024'
+            status:
+              type: integer
+              description: '10 私有、20 公开不列出（拿到链接能看，不进任何公开列表）、30 公开'
+              default: 10
+            source_type:
+              type: string
+              description: 来源
+              enum:
+                - original
+                - reprint
+                - ai
+            source_id:
+              type: string
+              description: '来源 id'
+          required:
+            - name
+            - type
+            - lang
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  summary:
+                    type: string
+                    nullable: true
+                  type:
+                    type: string
+                  lang:
+                    type: string
+                  status:
+                    type: integer
+                  is_system:
+                    type: boolean
+                  source_type:
+                    type: string
+                  source_id:
+                    type: string
+                    nullable: true
+                  owner:
+                    type: object
+                    properties:
+                      kind: { type: string }
+                      id: { type: string }
+                      nickName: { type: string }
+                      realName: { type: string }
+                      avatar: { type: string, nullable: true }
+                  abilities:
+                    type: object
+                    properties:
+                      read: { type: boolean }
+                      write: { type: boolean }
+                      update: { type: boolean }
+                      delete: { type: boolean }
+                  progress:
+                    type: number
+                    nullable: true
+                    description: 仅在部分查询口径下返回。
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+    201:
+      description: 建好了
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  summary:
+                    type: string
+                    nullable: true
+                  type:
+                    type: string
+                  lang:
+                    type: string
+                  status:
+                    type: integer
+                  is_system:
+                    type: boolean
+                  source_type:
+                    type: string
+                  source_id:
+                    type: string
+                    nullable: true
+                  owner:
+                    type: object
+                    properties:
+                      kind: { type: string }
+                      id: { type: string }
+                      nickName: { type: string }
+                      realName: { type: string }
+                      avatar: { type: string, nullable: true }
+                  abilities:
+                    type: object
+                    properties:
+                      read: { type: boolean }
+                      write: { type: boolean }
+                      update: { type: boolean }
+                      delete: { type: boolean }
+                  progress:
+                    type: number
+                    nullable: true
+                    description: 仅在部分查询口径下返回。
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    403:
+      description: '不能在这个 studio 名下建'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

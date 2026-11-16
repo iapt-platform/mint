@@ -18,9 +18,11 @@ interface IOptions {
 }
 interface IWidget {
   studioName?: string;
+  /** 当前选中的拥有者 uuid（列表页从 URL 恢复）；不传 = 全部 */
+  value?: string;
   onSelect?: (value: string) => void;
 }
-const StudioSelectWidget = ({ studioName, onSelect }: IWidget) => {
+const StudioSelectWidget = ({ studioName, value, onSelect }: IWidget) => {
   const [anthology, setAnthology] = useState<IOptions[]>([
     { value: "all", label: "全部" },
   ]);
@@ -48,7 +50,7 @@ const StudioSelectWidget = ({ studioName, onSelect }: IWidget) => {
   }, [studioName]);
   return (
     <Select
-      defaultValue="all"
+      value={value ?? "all"}
       style={{ width: 180 }}
       onChange={(value: string) => {
         console.log(`selected ${value}`);

@@ -21,6 +21,7 @@ import { useState, useEffect, useCallback } from "react";
 import {
   fetchChannelProgress,
   fetchSentencesInChapter,
+  toChannelItem,
   type IChannelItem,
 } from "../../../api/channel";
 import type { ArticleType } from "../../../api/article";
@@ -36,7 +37,7 @@ interface IUseChannelProgressReturn {
 
 export const useChannelProgress = (
   type?: ArticleType | "editable",
-  articleId?: string
+  articleId?: string,
 ): IUseChannelProgressReturn => {
   const [channels, setChannels] = useState<IChannelItem[]>([]);
   const [sentencesId, setSentencesId] = useState<string[]>([]);
@@ -66,7 +67,7 @@ export const useChannelProgress = (
 
             sentList = res.data.rows.map(
               (item) =>
-                `${item.book}-${item.paragraph}-${item.word_begin}-${item.word_end}`
+                `${item.book}-${item.paragraph}-${item.word_begin}-${item.word_end}`,
             );
           }
         } else {
@@ -78,38 +79,14 @@ export const useChannelProgress = (
         setSentenceCount(sentList.length);
 
         // ── 2. 拉取频道进度 ──────────────────────────────────────────────────
-        const res = await fetchChannelProgress(sentList, "all");
+        const rows = await fetchChannelProgress(sentList);
         if (!active) return;
 
-        const items: IChannelItem[] = res.data.rows
-          .filter((v) => !v.name.startsWith("_sys"))
-          .map((item, id) => {
-            let all = 0;
-            let finished = 0;
-            item.final?.forEach((v) => {
-              all += v[0];
-              if (v[1]) finished += v[0];
-            });
-
-            return {
-              id,
-              uid: item.uid,
-              title: item.name,
-              summary: item.summary,
-              studio: item.studio,
-              shareType: "my",
-              role: item.role,
-              type: item.type,
-              publicity: item.status,
-              createdAt: new Date(item.created_at).getTime(),
-              final: item.final,
-              progress: all ? finished / all : 0,
-              content_created_at: item.content_created_at,
-              content_updated_at: item.content_updated_at,
-            };
-          });
-
-        setChannels(items);
+        setChannels(
+          rows
+            .map(toChannelItem)
+            .filter((item): item is IChannelItem => item !== undefined),
+        );
       } catch (err) {
         console.error("useChannelProgress fetch error", err);
       } finally {

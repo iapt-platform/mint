@@ -707,6 +707,14 @@ paths:
     $ref: ./resources/auto/v3-agent-quota.yaml
   /v3/agent-traces:
     $ref: ./resources/auto/v3-agent-traces.yaml
+  /v3/channels:
+    $ref: ./resources/auto/v3-channels.yaml
+  /v3/channels/batch-progress:
+    $ref: ./resources/auto/v3-channels-batch-progress.yaml
+  /v3/channels/editable:
+    $ref: ./resources/auto/v3-channels-editable.yaml
+  '/v3/channels/{channel}':
+    $ref: ./resources/auto/v3-channels-channel.yaml
   /v3/credit-policy:
     $ref: ./resources/auto/v3-credit-policy.yaml
   /v3/discussions:
@@ -773,12 +781,18 @@ paths:
     $ref: ./resources/auto/v3-search-search.yaml
   /v3/sessions:
     $ref: ./resources/auto/v3-sessions.yaml
+  '/v3/studios/{studio}/channels':
+    $ref: ./resources/auto/v3-studios-studio-channels.yaml
+  /v3/tipitaka-channels:
+    $ref: ./resources/auto/v3-tipitaka-channels.yaml
   '/v3/tipitaka-chapter-channels/{book}/{para}':
     $ref: ./resources/auto/v3-tipitaka-chapter-channels-book-para.yaml
   /v3/tipitaka-chapters:
     $ref: ./resources/auto/v3-tipitaka-chapters.yaml
   '/v3/tipitaka-discussions/{channel}':
     $ref: ./resources/auto/v3-tipitaka-discussions-channel.yaml
+  '/v3/tipitaka-paragraph-channels/{book}/{para}':
+    $ref: ./resources/auto/v3-tipitaka-paragraph-channels-book-para.yaml
   '/v3/tipitaka-reading/{channel}':
     $ref: ./resources/auto/v3-tipitaka-reading-channel.yaml
   /v3/tipitaka-related-paragraphs:

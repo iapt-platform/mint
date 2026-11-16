@@ -68,6 +68,8 @@ const ProjectTableWidget = ({ studioName, disableChannels }: IWidget) => {
         id: "buttons.no",
       }),
       onOk() {
+        // FIXME: 从 ChannelTable 复制来没改——删项目却调了删 channel 的接口（id 是项目 id，永远删不掉）。
+        // 应调项目的删除接口；迁任务 / 项目到 v3 时一并修。
         const url = `/api/v2/channel/${id}`;
         console.log("delete api request", url);
         return delete_<IDeleteResponse>(url)

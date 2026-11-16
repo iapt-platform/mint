@@ -6,8 +6,7 @@ import {
 } from "@ant-design/pro-components";
 import { message } from "antd";
 
-import { post } from "../../../src/request";
-import type { IApiResponseChannel } from "../../api/channel";
+import { createChannel } from "../../api/channel";
 import ChannelTypeSelect from "./ChannelTypeSelect";
 import LangSelect from "../../../src/components/general/LangSelect";
 import { useRef } from "react";
@@ -16,14 +15,14 @@ interface IFormData {
   name: string;
   type: string;
   lang: string;
-  studio: string;
 }
 
 interface IWidget {
-  studio?: string;
+  /** 建在哪个 studio 名下：用户 uuid，或团队空间里的团队 uuid */
+  studioId?: string;
   onSuccess?: () => void;
 }
-const ChannelCreateWidget = ({ studio, onSuccess }: IWidget) => {
+const ChannelCreateWidget = ({ studioId, onSuccess }: IWidget) => {
   const intl = useIntl();
   const formRef = useRef<ProFormInstance | undefined>(undefined);
 
@@ -31,20 +30,18 @@ const ChannelCreateWidget = ({ studio, onSuccess }: IWidget) => {
     <ProForm<IFormData>
       formRef={formRef}
       onFinish={async (values: IFormData) => {
-        if (typeof studio === "undefined") {
+        if (!studioId) {
           return;
         }
-        values.studio = studio;
-        const res: IApiResponseChannel = await post(`/api/v2/channel`, values);
-        if (res.ok) {
-          message.success(intl.formatMessage({ id: "flashes.success" }));
-          if (typeof onSuccess !== "undefined") {
-            onSuccess();
-            formRef.current?.resetFields(["name"]);
-          }
-        } else {
-          message.error(res.message);
-        }
+        // 重名、无权在这个 studio 名下建等，由 unwrap 统一弹提示
+        await createChannel(studioId, {
+          name: values.name,
+          type: values.type as "translation",
+          lang: values.lang,
+        });
+        message.success(intl.formatMessage({ id: "flashes.success" }));
+        formRef.current?.resetFields(["name"]);
+        onSuccess?.();
       }}
     >
       <ProForm.Group>

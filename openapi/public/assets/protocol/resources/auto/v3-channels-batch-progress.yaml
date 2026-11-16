@@ -1,0 +1,93 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-channels-batch-progress.yaml
+post:
+  summary: '查一批句子在各 channel 的完成度'
+  tags:
+    - channels
+  operationId: post_api_v3_channels_batch_progress
+  description: |-
+    列出这些句子上有译文且看得见的 channel，加上我能写的 channel（没译文也列）。
+    给了 `studio` 只列该 studio 名下的。不登录只看得到公开的。
+
+    实现：`V3\ChannelBatchProgressController@__invoke`
+  security:
+    - {  }
+    -
+      bearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            sentences:
+              type: array
+              description: '句子 id 列表，`book-para-wordStart-wordEnd`，最多 2000 个'
+            studio:
+              type: string
+              description: '只看这个 studio（用户或团队 uuid）名下的'
+          required:
+            - sentences
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    summary:
+                      type: string
+                      nullable: true
+                    type:
+                      type: string
+                    lang:
+                      type: string
+                    status:
+                      type: integer
+                    is_system:
+                      type: boolean
+                    source_type:
+                      type: string
+                    source_id:
+                      type: string
+                      nullable: true
+                    owner:
+                      type: object
+                      properties: { kind: { type: string }, id: { type: string }, nickName: { type: string }, realName: { type: string }, avatar: { type: string, nullable: true } }
+                    abilities:
+                      type: object
+                      properties: { read: { type: boolean }, write: { type: boolean }, update: { type: boolean }, delete: { type: boolean } }
+                    final:
+                      type: array
+                      items: { type: string }
+                      nullable: true
+                    content_created_at:
+                      type: string
+                      nullable: true
+                    content_updated_at:
+                      type: string
+                      nullable: true
+                    created_at:
+                      type: string
+                    updated_at:
+                      type: string
+              meta:
+                $ref: '../../main.yaml#/components/schemas/PaginationMeta'
+    403:
+      description: '给了 studio，但不能查看它'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

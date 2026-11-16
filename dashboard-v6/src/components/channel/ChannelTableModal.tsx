@@ -72,6 +72,7 @@ const ChannelTableModalWidget = ({
       >
         <div style={{ overflowX: "scroll" }}>
           <ChannelTable
+            studioId={user?.id}
             studioName={user?.realName}
             type={type}
             chapter={chapter}

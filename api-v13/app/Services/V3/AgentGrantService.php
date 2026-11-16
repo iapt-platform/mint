@@ -141,6 +141,18 @@ class AgentGrantService
         return $channelUid === $scope['channel'] && ($scope['book'] === 0 || $book === $scope['book']);
     }
 
+    /**
+     * 只许人类操作的写入（channel、团队这类「权限本身」的资源不支持 agent 代写）：模型 token 一律 403。
+     *
+     * @throws AuthorizationException
+     */
+    public function assertHuman(string $uid): void
+    {
+        if ($this->isModel($uid)) {
+            throw new AuthorizationException(__('messages.agent_not_allowed'));
+        }
+    }
+
     private function isModel(string $uid): bool
     {
         return AiModel::where('uid', $uid)->exists();

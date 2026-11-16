@@ -18,9 +18,11 @@
 |
 */
 
+use App\Http\Controllers\V3\TipitakaChannelController;
 use App\Http\Controllers\V3\TipitakaChapterChannelController;
 use App\Http\Controllers\V3\TipitakaChapterController;
 use App\Http\Controllers\V3\TipitakaDiscussionController;
+use App\Http\Controllers\V3\TipitakaParagraphChannelController;
 use App\Http\Controllers\V3\TipitakaReadingController;
 use App\Http\Controllers\V3\TipitakaRelatedParagraphAggregateController;
 use App\Http\Controllers\V3\TipitakaRelatedParagraphController;
@@ -41,6 +43,15 @@ Route::get('tipitaka-chapter-channels/{book}/{para}', TipitakaChapterChannelCont
     ->whereNumber(['book', 'para']);
 
 // 章节标题：按名字找章节（容错），或列出一本书的全部标题（原 v2 search-title-index）。q / book 至少给一个，都是过滤条件。
+// 某段有内容的 channel（取代 v2 channel?view=paragraphs）
+Route::get('tipitaka-paragraph-channels/{book}/{para}', TipitakaParagraphChannelController::class)
+    ->name('tipitaka-paragraph-channels.index')
+    ->whereNumber(['book', 'para']);
+
+// 有译文的公开 channel 目录（取代 v2 progress?view=channel）
+Route::get('tipitaka-channels', TipitakaChannelController::class)
+    ->name('tipitaka-channels.index');
+
 Route::get('tipitaka-chapters', TipitakaChapterController::class)
     ->name('tipitaka-chapters.index');
 

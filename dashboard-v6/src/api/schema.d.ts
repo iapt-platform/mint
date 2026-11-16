@@ -1189,19 +1189,21 @@ export interface paths {
         };
         /**
          * 列出 channel（译文集）
-         * @description 按 view 指定的口径返回 channel 列表，支持关键字搜索、分页、排序。
-         *     需要登录的口径：studio、studio-all、user-edit、user-in-chapter。
-         *
-         *     实现：`ChannelController@index`
+         * @deprecated
+         * @description 各 view 的去向：
+         *     - `public` / `system` → `GET /v3/channels`（`system=true`）
+         *     - `studio`（含 `view2`、`collaborator`）/ `studio-all` → `GET /v3/studios/{studio}/channels?relation=own|shared|all`
+         *     - `user-edit` → `GET /v3/channels/editable`（搜索参数是 `search`）
+         *     - `paragraphs` → `GET /v3/tipitaka-paragraph-channels/{book}/{para}`
+         *     - `id`、`user-in-chapter` 没有消费者，不迁
+         *     保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         get: operations["get_api_v2_channel"];
         put?: never;
         /**
          * 新建 channel
-         * @description 在指定 studio 下新建译文集。同一 studio 内不允许重名。
-         *     调用者必须对该 studio 有管理权限。
-         *
-         *     实现：`ChannelController@store`
+         * @deprecated
+         * @description 已被 `POST /v3/studios/{studio}/channels` 取代。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         post: operations["post_api_v2_channel"];
         delete?: never;
@@ -1281,7 +1283,8 @@ export interface paths {
         };
         /**
          * 获取我的，和协作channel数量
-         * @description 实现：`ChannelController@showMyNumber`
+         * @deprecated
+         * @description 改读 `GET /v3/studios/{studio}/channels?relation=own|shared` 的 `meta.total`。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         get: operations["get_api_v2_channel_my_number"];
         put?: never;
@@ -1323,7 +1326,8 @@ export interface paths {
         put?: never;
         /**
          * 获取章节的进度
-         * @description 实现：`ChannelController@progress`
+         * @deprecated
+         * @description 已被 `POST /v3/channels/batch-progress` 取代（`owner=all|my` 改为可选的 `studio`）。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         post: operations["post_api_v2_channel_progress"];
         delete?: never;
@@ -1341,35 +1345,30 @@ export interface paths {
         };
         /**
          * 获取单个 channel
-         * @description 返回 channel 详情，附带所属 studio 与作者信息。
-         *
-         *     实现：`ChannelController@show`
+         * @deprecated
+         * @description 已被 `GET /v3/channels/{channel}` 取代（带 `abilities`、拥有者可以是团队）。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         get: operations["get_api_v2_channel_channel_"];
         /**
          * 整体更新 channel
-         * @description 覆盖式更新，未传的字段会被写成 null；只改部分字段请用 PATCH /channel。
-         *     系统 channel 不可修改；非 owner 需要 30 以上的协作权限。
-         *
-         *     实现：`ChannelController@update`
+         * @deprecated
+         * @description 已被 `PATCH /v3/channels/{channel}`（局部更新）取代。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         put: operations["put_api_v2_channel_channel_"];
         post?: never;
         /**
          * 删除 channel
-         * @description 只有 owner 可以删除。channel 下已有译文、术语或逐词解析数据时拒绝删除。
-         *
-         *     实现：`ChannelController@destroy`
+         * @deprecated
+         * @description 已被 `DELETE /v3/channels/{channel}`（软删除）取代。2026-11-16 起两边都是软删除。
+         *     保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         delete: operations["delete_api_v2_channel_channel_"];
         options?: never;
         head?: never;
         /**
          * 整体更新 channel
-         * @description 覆盖式更新，未传的字段会被写成 null；只改部分字段请用 PATCH /channel。
-         *     系统 channel 不可修改；非 owner 需要 30 以上的协作权限。
-         *
-         *     实现：`ChannelController@update`
+         * @deprecated
+         * @description 已被 `PATCH /v3/channels/{channel}`（局部更新）取代。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         patch: operations["patch_api_v2_channel_channel_"];
         trace?: never;
@@ -8020,6 +8019,109 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v3/channels": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 公开 channel 目录
+         * @description 只列全网公开的。`system=true` 只要系统 channel——系统 channel 是全站共用的原文、术语等，
+         *     不论 status 都列（巴利原文 `_System_Pali_VRI_` 就是 status 10）。带 `book` + `para` 时每条多返回该章的完成度
+         *     `progress`，并可按它排序。
+         *
+         *     实现：`V3\ChannelController@index`
+         */
+        get: operations["get_api_v3_channels"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/channels/batch-progress": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 查一批句子在各 channel 的完成度
+         * @description 列出这些句子上有译文且看得见的 channel，加上我能写的 channel（没译文也列）。
+         *     给了 `studio` 只列该 studio 名下的。不登录只看得到公开的。
+         *
+         *     实现：`V3\ChannelBatchProgressController@__invoke`
+         */
+        post: operations["post_api_v3_channels_batch_progress"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/channels/editable": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 列出我能写的 channel
+         * @description 实现：`V3\EditableChannelController@__invoke`
+         */
+        get: operations["get_api_v3_channels_editable"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/channels/{channel}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * channel 详情
+         * @description 公开的谁都能看；私有的只有拥有者、团队成员、被共享的人能看。带查看者的 `abilities`。
+         *
+         *     实现：`V3\ChannelController@show`
+         */
+        get: operations["get_api_v3_channels_channel_"];
+        put?: never;
+        post?: never;
+        /**
+         * 删除 channel
+         * @description 软删除，返回被删的 channel。个人 channel 由拥有者删，团队的只有团队 owner 能删。
+         *     channel 下已有译文、术语或逐词时拒绝（409，`content` 列出有哪几类）。系统 channel 不能删。
+         *
+         *     实现：`V3\ChannelController@destroy`
+         */
+        delete: operations["delete_api_v3_channels_channel_"];
+        options?: never;
+        head?: never;
+        /**
+         * 改 channel 信息
+         * @description 只改传了的字段。拥有者；团队的 channel 由团队 owner / manager / editor 改；共享权限 ≥30 也能改。
+         *     系统 channel 不能改。AI 模型不能改。
+         *
+         *     实现：`V3\ChannelController@update`
+         */
+        patch: operations["patch_api_v3_channels_channel_"];
+        trace?: never;
+    };
     "/v3/credit-policy": {
         parameters: {
             query?: never;
@@ -8867,6 +8969,9 @@ export interface paths {
         /**
          * 按 id 取单条检索结果
          * @description 直接从 OpenSearch 按文档 id 取回，不走检索。取不到返回 404。
+         *     整章正文文档（`tipitaka_chapter_{book}-{para}_{channel}`）按它所属 channel 判权限：
+         *     私有 channel 只有拥有者、团队成员、被共享的人能读（要带 token）。索引里收了所有 channel，
+         *     不在这里挡的话拼出 id 就能读到私有正文。
          *
          *     实现：`V3\SearchPlusController@show`
          */
@@ -8897,6 +9002,57 @@ export interface paths {
          *     实现：`V3\SessionController@store`
          */
         post: operations["post_api_v3_sessions"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/studios/{studio}/channels": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 列出 studio 的 channel
+         * @description 只有本人，或该团队的成员能看。`relation`：own 它名下的（默认），shared 直接共享给它的
+         *     （个人空间不含经团队转来的——团队的在团队空间里看），all 两者合起来。
+         *
+         *     实现：`V3\StudioChannelController@index`
+         */
+        get: operations["get_api_v3_studios_studio_channels"];
+        put?: never;
+        /**
+         * 在 studio 名下建 channel
+         * @description 本人名下，或团队名下（团队 owner / manager）。同一 studio 内不能重名。默认私有。AI 模型不能建。
+         *
+         *     实现：`V3\StudioChannelController@store`
+         */
+        post: operations["post_api_v3_studios_studio_channels"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/tipitaka-channels": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 列出有译文的公开 channel
+         * @description 只列公开的、有完成度过门槛的章节的 channel，按章节数降序，每条带 `chapter_count`。
+         *
+         *     实现：`V3\TipitakaChannelController@__invoke`
+         */
+        get: operations["get_api_v3_tipitaka_channels"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -8986,6 +9142,28 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v3/tipitaka-paragraph-channels/{book}/{para}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 列出某段有内容的 channel
+         * @description 最近更新的在前。不登录只看得到公开的。
+         *
+         *     实现：`V3\TipitakaParagraphChannelController@__invoke`
+         */
+        get: operations["get_api_v3_tipitaka_paragraph_channels_book_para_"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v3/tipitaka-reading/{channel}": {
         parameters: {
             query?: never;
@@ -9003,6 +9181,7 @@ export interface paths {
          *     `total` / `remaining` 只在带了 `book` 过滤时才给：不带过滤时结果集是整个
          *     channel（实测最大的有 52 万段、跨 217 本书），每翻一页都去 count 一次不划算。
          *     无过滤时用 `next_cursor` 是否为 null 判断结束，不要指望百分比。
+         *     私有 channel 只有拥有者、团队成员、被共享的人能读（要带 token）；公开与「公开不列出」不用登录。
          *
          *     实现：`V3\TipitakaReadingController@__invoke`
          */
@@ -36052,6 +36231,443 @@ export interface operations {
             422: components["responses"]["ProblemValidation"];
         };
     };
+    get_api_v3_channels: {
+        parameters: {
+            query?: {
+                /** @description 只列系统 channel */
+                system?: boolean;
+                /** @description 每页数量，最大 200 */
+                per_page?: number;
+                /** @description 按名字模糊匹配 */
+                search?: string;
+                /** @description channel 类型 */
+                type?: "translation" | "nissaya" | "original" | "wbw" | "commentary" | "similar";
+                /** @description 语言 */
+                lang?: string;
+                /** @description 章节所在的书（与 para 同时给） */
+                book?: number;
+                /** @description 章节起始段（与 book 同时给） */
+                para?: number;
+                /** @description 排序字段 */
+                order?: "updated_at" | "created_at" | "name" | "progress";
+                /** @description 排序方向 */
+                dir?: "asc" | "desc";
+                /** @description 页码 */
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            name?: string;
+                            summary?: string | null;
+                            type?: string;
+                            lang?: string;
+                            status?: number;
+                            is_system?: boolean;
+                            source_type?: string;
+                            source_id?: string | null;
+                            owner?: {
+                                kind?: string;
+                                id?: string;
+                                nickName?: string;
+                                realName?: string;
+                                avatar?: string | null;
+                            };
+                            abilities?: {
+                                read?: boolean;
+                                write?: boolean;
+                                update?: boolean;
+                                delete?: boolean;
+                            };
+                            /** @description 仅在部分查询口径下返回。 */
+                            progress?: number | null;
+                            created_at?: string;
+                            updated_at?: string;
+                        }[];
+                        meta?: components["schemas"]["PaginationMeta"];
+                    };
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    post_api_v3_channels_batch_progress: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description 句子 id 列表，`book-para-wordStart-wordEnd`，最多 2000 个 */
+                    sentences: unknown[];
+                    /** @description 只看这个 studio（用户或团队 uuid）名下的 */
+                    studio?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            name?: string;
+                            summary?: string | null;
+                            type?: string;
+                            lang?: string;
+                            status?: number;
+                            is_system?: boolean;
+                            source_type?: string;
+                            source_id?: string | null;
+                            owner?: {
+                                kind?: string;
+                                id?: string;
+                                nickName?: string;
+                                realName?: string;
+                                avatar?: string | null;
+                            };
+                            abilities?: {
+                                read?: boolean;
+                                write?: boolean;
+                                update?: boolean;
+                                delete?: boolean;
+                            };
+                            final?: string[] | null;
+                            content_created_at?: string | null;
+                            content_updated_at?: string | null;
+                            created_at?: string;
+                            updated_at?: string;
+                        }[];
+                        meta?: components["schemas"]["PaginationMeta"];
+                    };
+                };
+            };
+            /** @description 给了 studio，但不能查看它 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    get_api_v3_channels_editable: {
+        parameters: {
+            query?: {
+                /** @description 每页数量，最大 200 */
+                per_page?: number;
+                /** @description 按名字模糊匹配 */
+                search?: string;
+                /** @description channel 类型 */
+                type?: "translation" | "nissaya" | "original" | "wbw" | "commentary" | "similar";
+                /** @description 语言 */
+                lang?: string;
+                /** @description 章节所在的书（与 para 同时给） */
+                book?: number;
+                /** @description 章节起始段（与 book 同时给） */
+                para?: number;
+                /** @description 排序字段 */
+                order?: "updated_at" | "created_at" | "name" | "progress";
+                /** @description 排序方向 */
+                dir?: "asc" | "desc";
+                /** @description 页码 */
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            name?: string;
+                            summary?: string | null;
+                            type?: string;
+                            lang?: string;
+                            status?: number;
+                            is_system?: boolean;
+                            source_type?: string;
+                            source_id?: string | null;
+                            owner?: {
+                                kind?: string;
+                                id?: string;
+                                nickName?: string;
+                                realName?: string;
+                                avatar?: string | null;
+                            };
+                            abilities?: {
+                                read?: boolean;
+                                write?: boolean;
+                                update?: boolean;
+                                delete?: boolean;
+                            };
+                            /** @description 仅在部分查询口径下返回。 */
+                            progress?: number | null;
+                            created_at?: string;
+                            updated_at?: string;
+                        }[];
+                        meta?: components["schemas"]["PaginationMeta"];
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    get_api_v3_channels_channel_: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description channel uid */
+                channel: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            name?: string;
+                            summary?: string | null;
+                            type?: string;
+                            lang?: string;
+                            status?: number;
+                            is_system?: boolean;
+                            source_type?: string;
+                            source_id?: string | null;
+                            owner?: {
+                                kind?: string;
+                                id?: string;
+                                nickName?: string;
+                                realName?: string;
+                                avatar?: string | null;
+                            };
+                            abilities?: {
+                                read?: boolean;
+                                write?: boolean;
+                                update?: boolean;
+                                delete?: boolean;
+                            };
+                            /** @description 仅在部分查询口径下返回。 */
+                            progress?: number | null;
+                            created_at?: string;
+                            updated_at?: string;
+                        };
+                    };
+                };
+            };
+            /** @description 私有 channel，且看不见 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    delete_api_v3_channels_channel_: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description channel uid */
+                channel: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            name?: string;
+                            summary?: string | null;
+                            type?: string;
+                            lang?: string;
+                            status?: number;
+                            is_system?: boolean;
+                            source_type?: string;
+                            source_id?: string | null;
+                            owner?: {
+                                kind?: string;
+                                id?: string;
+                                nickName?: string;
+                                realName?: string;
+                                avatar?: string | null;
+                            };
+                            abilities?: {
+                                read?: boolean;
+                                write?: boolean;
+                                update?: boolean;
+                                delete?: boolean;
+                            };
+                            /** @description 仅在部分查询口径下返回。 */
+                            progress?: number | null;
+                            created_at?: string;
+                            updated_at?: string;
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            /** @description 不能删除 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description channel 下还有内容 */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    patch_api_v3_channels_channel_: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description channel uid */
+                channel: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    /** @description 名字，最长 128；同一 studio 内不能重名 */
+                    name?: string;
+                    /**
+                     * @description 类型
+                     * @enum {string}
+                     */
+                    type?: "translation" | "nissaya" | "original" | "wbw" | "commentary" | "similar";
+                    /** @description 语言，最长 16 */
+                    lang?: string;
+                    /** @description 简介，最长 1024 */
+                    summary?: string;
+                    /** @description 10 私有、20 公开不列出（拿到链接能看，不进任何公开列表）、30 公开 */
+                    status?: number;
+                    /**
+                     * @description 来源
+                     * @enum {string}
+                     */
+                    source_type?: "original" | "reprint" | "ai";
+                    /** @description 来源 id */
+                    source_id?: string;
+                    /** @description 配置 */
+                    config?: Record<string, never>;
+                };
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            name?: string;
+                            summary?: string | null;
+                            type?: string;
+                            lang?: string;
+                            status?: number;
+                            is_system?: boolean;
+                            source_type?: string;
+                            source_id?: string | null;
+                            owner?: {
+                                kind?: string;
+                                id?: string;
+                                nickName?: string;
+                                realName?: string;
+                                avatar?: string | null;
+                            };
+                            abilities?: {
+                                read?: boolean;
+                                write?: boolean;
+                                update?: boolean;
+                                delete?: boolean;
+                            };
+                            /** @description 仅在部分查询口径下返回。 */
+                            progress?: number | null;
+                            created_at?: string;
+                            updated_at?: string;
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            /** @description 不能修改 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
     get_api_v3_credit_policy: {
         parameters: {
             query?: never;
@@ -38947,6 +39563,15 @@ export interface operations {
                     };
                 };
             };
+            /** @description 整章正文所属的 channel 是私有的，且当前身份看不见 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
             422: components["responses"]["ProblemValidation"];
         };
     };
@@ -39024,6 +39649,286 @@ export interface operations {
                     "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
             };
+        };
+    };
+    get_api_v3_studios_studio_channels: {
+        parameters: {
+            query?: {
+                /** @description 每页数量，最大 200 */
+                per_page?: number;
+                /** @description 关系 */
+                relation?: "own" | "shared" | "all";
+                /** @description 只看这个拥有者共享过来的（uuid） */
+                collaborator?: string;
+                /** @description 按名字模糊匹配 */
+                search?: string;
+                /** @description channel 类型 */
+                type?: "translation" | "nissaya" | "original" | "wbw" | "commentary" | "similar";
+                /** @description 语言 */
+                lang?: string;
+                /** @description 章节所在的书（与 para 同时给） */
+                book?: number;
+                /** @description 章节起始段（与 book 同时给） */
+                para?: number;
+                /** @description 排序字段 */
+                order?: "updated_at" | "created_at" | "name" | "progress";
+                /** @description 排序方向 */
+                dir?: "asc" | "desc";
+                /** @description 页码 */
+                page?: number;
+            };
+            header?: never;
+            path: {
+                /** @description 用户 uuid 或团队 uuid */
+                studio: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            name?: string;
+                            summary?: string | null;
+                            type?: string;
+                            lang?: string;
+                            status?: number;
+                            is_system?: boolean;
+                            source_type?: string;
+                            source_id?: string | null;
+                            owner?: {
+                                kind?: string;
+                                id?: string;
+                                nickName?: string;
+                                realName?: string;
+                                avatar?: string | null;
+                            };
+                            abilities?: {
+                                read?: boolean;
+                                write?: boolean;
+                                update?: boolean;
+                                delete?: boolean;
+                            };
+                            /** @description 仅在部分查询口径下返回。 */
+                            progress?: number | null;
+                            created_at?: string;
+                            updated_at?: string;
+                        }[];
+                        meta?: components["schemas"]["PaginationMeta"];
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            /** @description 不能查看这个 studio */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    post_api_v3_studios_studio_channels: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 用户 uuid 或团队 uuid */
+                studio: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description 名字，最长 128 */
+                    name: string;
+                    /**
+                     * @description 类型
+                     * @enum {string}
+                     */
+                    type: "translation" | "nissaya" | "original" | "wbw" | "commentary" | "similar";
+                    /** @description 语言，最长 16 */
+                    lang: string;
+                    /** @description 简介，最长 1024 */
+                    summary?: string;
+                    /**
+                     * @description 10 私有、20 公开不列出（拿到链接能看，不进任何公开列表）、30 公开
+                     * @default 10
+                     */
+                    status?: number;
+                    /**
+                     * @description 来源
+                     * @enum {string}
+                     */
+                    source_type?: "original" | "reprint" | "ai";
+                    /** @description 来源 id */
+                    source_id?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            name?: string;
+                            summary?: string | null;
+                            type?: string;
+                            lang?: string;
+                            status?: number;
+                            is_system?: boolean;
+                            source_type?: string;
+                            source_id?: string | null;
+                            owner?: {
+                                kind?: string;
+                                id?: string;
+                                nickName?: string;
+                                realName?: string;
+                                avatar?: string | null;
+                            };
+                            abilities?: {
+                                read?: boolean;
+                                write?: boolean;
+                                update?: boolean;
+                                delete?: boolean;
+                            };
+                            /** @description 仅在部分查询口径下返回。 */
+                            progress?: number | null;
+                            created_at?: string;
+                            updated_at?: string;
+                        };
+                    };
+                };
+            };
+            /** @description 建好了 */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            name?: string;
+                            summary?: string | null;
+                            type?: string;
+                            lang?: string;
+                            status?: number;
+                            is_system?: boolean;
+                            source_type?: string;
+                            source_id?: string | null;
+                            owner?: {
+                                kind?: string;
+                                id?: string;
+                                nickName?: string;
+                                realName?: string;
+                                avatar?: string | null;
+                            };
+                            abilities?: {
+                                read?: boolean;
+                                write?: boolean;
+                                update?: boolean;
+                                delete?: boolean;
+                            };
+                            /** @description 仅在部分查询口径下返回。 */
+                            progress?: number | null;
+                            created_at?: string;
+                            updated_at?: string;
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            /** @description 不能在这个 studio 名下建 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    get_api_v3_tipitaka_channels: {
+        parameters: {
+            query?: {
+                /** @description 每页数量，最大 200 */
+                per_page?: number;
+                /** @description channel 类型 */
+                type?: "translation" | "nissaya" | "original" | "wbw" | "commentary" | "similar";
+                /**
+                 * @description 译文语族（progress_chapters.lang，zh 涵盖简繁）
+                 * @example zh
+                 */
+                lang?: string;
+                /** @description 章节完成度门槛 0–1 */
+                min_progress?: number;
+                /** @description 页码 */
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            name?: string;
+                            summary?: string | null;
+                            type?: string;
+                            lang?: string;
+                            status?: number;
+                            is_system?: boolean;
+                            source_type?: string;
+                            source_id?: string | null;
+                            owner?: {
+                                kind?: string;
+                                id?: string;
+                                nickName?: string;
+                                realName?: string;
+                                avatar?: string | null;
+                            };
+                            abilities?: {
+                                read?: boolean;
+                                write?: boolean;
+                                update?: boolean;
+                                delete?: boolean;
+                            };
+                            chapter_count?: number;
+                            created_at?: string;
+                            updated_at?: string;
+                        }[];
+                        meta?: components["schemas"]["PaginationMeta"];
+                    };
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
         };
     };
     get_api_v3_tipitaka_chapter_channels_book_para_: {
@@ -39292,6 +40197,67 @@ export interface operations {
             422: components["responses"]["ProblemValidation"];
         };
     };
+    get_api_v3_tipitaka_paragraph_channels_book_para_: {
+        parameters: {
+            query?: {
+                /** @description 每页数量，最大 200 */
+                per_page?: number;
+                /** @description 页码 */
+                page?: number;
+            };
+            header?: never;
+            path: {
+                /** @description 书 */
+                book: number;
+                /** @description 段 */
+                para: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            name?: string;
+                            summary?: string | null;
+                            type?: string;
+                            lang?: string;
+                            status?: number;
+                            is_system?: boolean;
+                            source_type?: string;
+                            source_id?: string | null;
+                            owner?: {
+                                kind?: string;
+                                id?: string;
+                                nickName?: string;
+                                realName?: string;
+                                avatar?: string | null;
+                            };
+                            abilities?: {
+                                read?: boolean;
+                                write?: boolean;
+                                update?: boolean;
+                                delete?: boolean;
+                            };
+                            /** @description 仅在部分查询口径下返回。 */
+                            progress?: number | null;
+                            created_at?: string;
+                            updated_at?: string;
+                        }[];
+                        meta?: components["schemas"]["PaginationMeta"];
+                    };
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
     get_api_v3_tipitaka_reading_channel_: {
         parameters: {
             query?: {
@@ -39356,7 +40322,16 @@ export interface operations {
                     };
                 };
             };
-            /** @description 指定的 chapter 在 pali_texts 里不存在 */
+            /** @description 私有 channel，且当前身份看不见 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description channel 不存在，或指定的 chapter 在 pali_texts 里不存在 */
             404: {
                 headers: {
                     [name: string]: unknown;

@@ -10,8 +10,7 @@ import Edit from "../../../components/channel/Edit";
 import WebhookList from "../../../components/webhook/WebhookList";
 import WebhookEdit from "../../../components/webhook/WebhookEdit";
 import { EResType } from "../../../components/share/utils";
-import type { IApiResponseChannelData } from "../../../api/channel";
-import { useActiveStudio } from "../../../hooks/useActiveStudio";
+import type { Channel } from "../../../api/channel";
 
 const Widget = () => {
   const intl = useIntl();
@@ -23,7 +22,6 @@ const Widget = () => {
     id: "columns.studio.channel.title",
   });
   const navigate = useNavigate();
-  const { studioName } = useActiveStudio();
 
   return (
     <>
@@ -50,9 +48,7 @@ const Widget = () => {
           size="small"
           defaultActiveKey={type}
           onChange={(activeKey: string) => {
-            navigate(
-              `/studio/${studioName}/channel/${channelId}/setting/${activeKey}`
-            );
+            navigate(`/workspace/channel/${channelId}/setting/${activeKey}`);
           }}
           items={[
             {
@@ -60,11 +56,8 @@ const Widget = () => {
               key: "basic",
               children: (
                 <Edit
-                  studioName={studioName}
                   channelId={channelId}
-                  onLoad={(data: IApiResponseChannelData) =>
-                    setTitle(data.name)
-                  }
+                  onLoad={(data: Channel) => setTitle(data.name ?? "")}
                 />
               ),
             },
@@ -74,14 +67,12 @@ const Widget = () => {
               children: id ? (
                 id === "new" ? (
                   <WebhookEdit
-                    studioName={studioName}
                     channelId={channelId}
                     res_type="channel"
                     res_id={channelId}
                   />
                 ) : (
                   <WebhookEdit
-                    studioName={studioName}
                     channelId={channelId}
                     id={id}
                     res_type="channel"
@@ -89,7 +80,7 @@ const Widget = () => {
                   />
                 )
               ) : (
-                <WebhookList studioName={studioName} channelId={channelId} />
+                <WebhookList channelId={channelId} />
               ),
             },
           ]}

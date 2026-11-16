@@ -1,0 +1,105 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-tipitaka-channels.yaml
+get:
+  summary: '列出有译文的公开 channel'
+  tags:
+    - tipitaka-channels
+  operationId: get_api_v3_tipitaka_channels
+  description: |-
+    只列公开的、有完成度过门槛的章节的 channel，按章节数降序，每条带 `chapter_count`。
+
+    实现：`V3\TipitakaChannelController@__invoke`
+  security:
+    - {  }
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: per_page
+      in: query
+      schema:
+        type: integer
+        default: 20
+      description: '每页数量，最大 200'
+    -
+      name: type
+      in: query
+      schema:
+        type: string
+        enum:
+          - translation
+          - nissaya
+          - original
+          - wbw
+          - commentary
+          - similar
+      description: 'channel 类型'
+    -
+      name: lang
+      in: query
+      schema:
+        type: string
+      description: '译文语族（progress_chapters.lang，zh 涵盖简繁）'
+      example: zh
+    -
+      name: min_progress
+      in: query
+      schema:
+        type: number
+        default: 0.8
+      description: '章节完成度门槛 0–1'
+    -
+      name: page
+      in: query
+      schema:
+        type: integer
+        default: 1
+      description: 页码
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    summary:
+                      type: string
+                      nullable: true
+                    type:
+                      type: string
+                    lang:
+                      type: string
+                    status:
+                      type: integer
+                    is_system:
+                      type: boolean
+                    source_type:
+                      type: string
+                    source_id:
+                      type: string
+                      nullable: true
+                    owner:
+                      type: object
+                      properties: { kind: { type: string }, id: { type: string }, nickName: { type: string }, realName: { type: string }, avatar: { type: string, nullable: true } }
+                    abilities:
+                      type: object
+                      properties: { read: { type: boolean }, write: { type: boolean }, update: { type: boolean }, delete: { type: boolean } }
+                    chapter_count:
+                      type: integer
+                    created_at:
+                      type: string
+                    updated_at:
+                      type: string
+              meta:
+                $ref: '../../main.yaml#/components/schemas/PaginationMeta'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

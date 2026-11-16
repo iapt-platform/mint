@@ -13,7 +13,7 @@ import { useActiveStudio } from "../../../hooks/useActiveStudio";
 const Widget = () => {
   const intl = useIntl();
   const { courseId } = useParams(); //url 参数
-  const { studioName } = useActiveStudio();
+  const { studioId } = useActiveStudio();
   const [title, setTitle] = useState("loading");
   const [selected, setSelected] = useState<string>();
   const courseTitle = intl.formatMessage({
@@ -33,7 +33,7 @@ const Widget = () => {
               label: intl.formatMessage({ id: "course.basic.info.label" }),
               children: (
                 <CourseInfoEdit
-                  studioName={studioName}
+                  studioId={studioId}
                   courseId={courseId}
                   onTitleChange={(title: string) => {
                     setTitle(title);

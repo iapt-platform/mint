@@ -4,15 +4,13 @@ import { useIntl } from "react-intl";
 import { Button, Card, Space, Tabs } from "antd";
 import { ExportOutlined, TeamOutlined } from "@ant-design/icons";
 
-import { get } from "../../../request";
-
 import ChapterInChannelList from "../../../components/channel/ChapterInChannelList";
 import ShareModal from "../../../components/share/ShareModal";
 
 import { articlePath, fullUrl } from "../../../utils";
 import type { IArticleParam } from "../../../types/article";
 import { EResType } from "../../../components/share/utils";
-import type { IApiResponseChannel } from "../../../api/channel";
+import { fetchChannel } from "../../../api/channel";
 import TermList from "../../../components/term/TermList";
 
 const Widget = () => {
@@ -27,10 +25,9 @@ const Widget = () => {
   //const [param, setParam] = useState<IArticleParam>();
 
   useEffect(() => {
-    get<IApiResponseChannel>(`/api/v2/channel/${channelId}`).then((json) => {
-      console.debug("channel fetch", json.data);
-      setTitle(json.data.name);
-    });
+    if (channelId) {
+      fetchChannel(channelId).then((channel) => setTitle(channel?.name));
+    }
   }, [channelId]);
   return (
     <>
@@ -75,7 +72,7 @@ const Widget = () => {
                   channelId={channelId}
                   onSelect={(
                     event: React.MouseEvent<HTMLElement, MouseEvent>,
-                    chapter: IArticleParam
+                    chapter: IArticleParam,
                   ) => {
                     if (event.ctrlKey || event.metaKey) {
                       let url = `${articlePath(chapter.type, chapter.articleId)}?mode=`;

@@ -8,12 +8,13 @@ import {
 import { Alert, message } from "antd";
 
 import {
+  fetchChannel,
   SOURCE_TYPE_OPTIONS,
-  type IApiResponseChannel,
-  type IApiResponseChannelData,
+  updateChannel,
+  type Channel,
+  type ChannelInput,
   type TChannelSourceType,
 } from "../../api/channel";
-import { get, put } from "../../request";
 import ChannelTypeSelect from "./ChannelTypeSelect";
 import LangSelect from "../general/LangSelect";
 import PublicitySelect from "../studio/PublicitySelect";
@@ -27,20 +28,23 @@ interface IFormData {
   lang: string;
   summary: string;
   status: number;
-  studio: string;
   source_type?: TChannelSourceType | null;
   source_id?: string | null;
-  isSystem: boolean;
 }
 interface IWidget {
-  studioName?: string;
   channelId?: string;
-  onLoad?: (data: IApiResponseChannelData) => void;
+  onLoad?: (data: Channel) => void;
 }
-const EditWidget = ({ studioName, channelId, onLoad }: IWidget) => {
+/**
+ * channel 基本信息。没有「改信息」权限（abilities.update）时整张表只读——
+ * 系统 channel、只读成员、共享权限不足都属于这种。
+ */
+const EditWidget = ({ channelId, onLoad }: IWidget) => {
   const intl = useIntl();
   const [isSystem, setIsSystem] = useState<boolean>();
-  const [data, setData] = useState<IApiResponseChannelData>();
+  // 默认只读，取到 abilities 再放开，避免先可编辑、再变只读
+  const [readonly, setReadonly] = useState<boolean>(true);
+  const [data, setData] = useState<Channel>();
 
   const user = useAppSelector(currentUser);
   return (
@@ -52,46 +56,39 @@ const EditWidget = ({ studioName, channelId, onLoad }: IWidget) => {
       )}
       <ProForm<IFormData>
         submitter={{
-          resetButtonProps: { disabled: isSystem ? true : false },
-          submitButtonProps: { disabled: isSystem ? true : false },
+          resetButtonProps: { disabled: readonly },
+          submitButtonProps: { disabled: readonly },
         }}
         onFinish={async (values: IFormData) => {
-          console.log(values);
-          const res = await put(`/api/v2/channel/${channelId}`, values);
-          console.log(res);
+          if (!channelId) {
+            return;
+          }
+          // 只改动过的字段也无妨：PATCH 只认传了的字段。失败由 unwrap 统一弹提示
+          await updateChannel(channelId, {
+            ...values,
+            source_type: values.source_type ?? undefined,
+          } as ChannelInput);
           message.success(intl.formatMessage({ id: "flashes.success" }));
         }}
         formKey="channel_edit"
         request={async () => {
-          const res = await get<IApiResponseChannel>(
-            `/api/v2/channel/${channelId}`
-          );
-          if (res.ok === false) {
-            return {
-              name: "",
-              type: "",
-              lang: "",
-              summary: "",
-              status: 0,
-              studio: "",
-              isSystem: true,
-            };
+          const channel = channelId ? await fetchChannel(channelId) : undefined;
+          if (!channel) {
+            return { name: "", type: "", lang: "", summary: "", status: 0 };
           }
-          setData(res.data);
-          if (typeof onLoad !== "undefined") {
-            onLoad(res.data);
-          }
-          setIsSystem(res.data.is_system);
+          setData(channel);
+          onLoad?.(channel);
+          setIsSystem(channel.is_system);
+          setReadonly(!channel.abilities?.update);
           return {
-            name: res.data.name,
-            type: res.data.type,
-            lang: res.data.lang,
-            summary: res.data.summary,
-            status: res.data.status,
-            source_type: res.data.source_type,
-            source_id: res.data.source_id,
-            studio: studioName ? studioName : "",
-            isSystem: res.data.is_system,
+            name: channel.name ?? "",
+            type: channel.type ?? "",
+            lang: channel.lang ?? "",
+            summary: channel.summary ?? "",
+            status: channel.status ?? 0,
+            source_type: (channel.source_type ??
+              null) as TChannelSourceType | null,
+            source_id: channel.source_id,
           };
         }}
       >
@@ -99,7 +96,7 @@ const EditWidget = ({ studioName, channelId, onLoad }: IWidget) => {
           <ProFormText
             width="md"
             name="name"
-            readonly={isSystem ? true : false}
+            readonly={readonly}
             required
             label={intl.formatMessage({ id: "channel.name" })}
             rules={[
@@ -111,8 +108,8 @@ const EditWidget = ({ studioName, channelId, onLoad }: IWidget) => {
         </ProForm.Group>
 
         <ProForm.Group>
-          <ChannelTypeSelect readonly={isSystem ? true : false} />
-          <LangSelect readonly={isSystem ? true : false} />
+          <ChannelTypeSelect readonly={readonly} />
+          <LangSelect readonly={readonly} />
         </ProForm.Group>
         <ProForm.Group>
           <ProFormSelect
@@ -136,17 +133,14 @@ const EditWidget = ({ studioName, channelId, onLoad }: IWidget) => {
         <ProForm.Group>
           <PublicitySelect
             readonly={
-              isSystem || user?.roles?.includes("basic") || data?.status === 5
-                ? true
-                : false
+              readonly || user?.roles?.includes("basic") || data?.status === 5
             }
-            disable={["public_no_list"]}
           />
         </ProForm.Group>
 
         <ProForm.Group>
           <ProFormTextArea
-            readonly={isSystem ? true : false}
+            readonly={readonly}
             width="md"
             name="summary"
             label="简介"

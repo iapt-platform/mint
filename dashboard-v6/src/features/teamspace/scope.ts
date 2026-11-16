@@ -24,7 +24,6 @@ const PERSONAL_ONLY = [
 const NOT_YET_SUPPORTED = [
   "workspace.article",
   "workspace.anthology",
-  "workspace.channel",
   "workspace.term",
   "workspace.course",
   "workspace.task",
@@ -36,10 +35,7 @@ const NOT_YET_SUPPORTED = [
 const TEAMSPACE_ONLY = ["workspace.members"];
 
 export type TeamspaceAvailability =
-  | "available"
-  | "personal"
-  | "unsupported"
-  | "teamspace-only";
+  "available" | "personal" | "unsupported" | "teamspace-only";
 
 const matches = (routeId: string, list: string[]) =>
   list.some((id) => routeId === id || routeId.startsWith(id + "."));
@@ -47,7 +43,7 @@ const matches = (routeId: string, list: string[]) =>
 /** 某个路由在当前空间（个人 / 团队）下能不能用；没有 id 的路由一律可用 */
 export function teamspaceAvailability(
   routeId: string | undefined,
-  isTeamspace: boolean
+  isTeamspace: boolean,
 ): TeamspaceAvailability {
   if (!routeId) {
     return "available";
