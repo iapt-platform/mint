@@ -171,6 +171,9 @@ const items = {
   "labels.group.share.missing": "（資源已刪除）",
   "labels.group.share.editor": "可編輯",
   "labels.group.share.reader": "唯讀",
+  "labels.route-error.404": "要找的內容不存在，或已被刪除",
+  "labels.route-error.403": "你沒有權限查看這個內容",
+  "labels.route-error.other": "載入失敗，請稍後再試",
 };
 
 export default items;

@@ -164,6 +164,9 @@ const items = {
   "labels.group.share.missing": "(deleted)",
   "labels.group.share.editor": "Can edit",
   "labels.group.share.reader": "Read only",
+  "labels.route-error.404": "This content does not exist or has been deleted",
+  "labels.route-error.403": "You are not allowed to view this content",
+  "labels.route-error.other": "Failed to load. Please try again later",
 };
 
 export default items;

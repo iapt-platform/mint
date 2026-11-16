@@ -171,6 +171,9 @@ const items = {
   "labels.group.share.missing": "（资源已删除）",
   "labels.group.share.editor": "可编辑",
   "labels.group.share.reader": "只读",
+  "labels.route-error.404": "要找的内容不存在，或已被删除",
+  "labels.route-error.403": "你没有权限查看这个内容",
+  "labels.route-error.other": "加载失败，请稍后再试",
 };
 
 export default items;

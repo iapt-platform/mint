@@ -119,6 +119,7 @@ const items = {
   "buttons.word_count": "Word Count",
   "buttons.teamspace.switch": "Switch to teamspace",
   "buttons.teamspace.leave": "Back to personal space",
+  "buttons.back": "Back",
 };
 
 export default items;

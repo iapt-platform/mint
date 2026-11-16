@@ -120,6 +120,7 @@ const items = {
   "buttons.word_count": "字數統計",
   "buttons.teamspace.switch": "切換到團隊空間",
   "buttons.teamspace.leave": "切回個人空間",
+  "buttons.back": "返回",
 };
 
 export default items;
