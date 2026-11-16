@@ -317,7 +317,8 @@ function parseDocTags(array $tagLines): array
             $entry['enum'] = array_values(array_filter(array_map('trim', explode(',', $e[1]))));
             $rest = trim(str_replace($e[0], '', $rest));
         }
-        if (preg_match('/\bDefault:\s*((?:(?!\bExample:)[^.。\n])+)/u', $rest, $d)) {
+        // 「.」后面紧跟数字时是小数点不是句号（Default: 0.8），不能在那里截断
+        if (preg_match('/\bDefault:\s*((?:(?!\bExample:)(?:[^.。\n]|\.(?=\d)))+)/u', $rest, $d)) {
             $entry['default'] = castToType(trim($d[1]), $entry['type']);
             $rest = trim(str_replace($d[0], '', $rest));
         }
