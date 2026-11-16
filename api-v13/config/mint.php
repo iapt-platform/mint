@@ -202,7 +202,9 @@ return [
         ],
     ],
     'opensearch' => [
-        'index' => 'wikipali_20260813',
+        'index' => 'wikipali_global_20260813',
+        // 索引 settings + mappings 定义文件所在目录，文件名为「{index}.json」
+        'index_definition_path' => env('OPENSEARCH_INDEX_DEFINITION_PATH', base_path('../opensearch/indices')),
         'config' => [
             'scheme' => env('OPENSEARCH_SCHEME', 'http'),
             'host' => env('OPENSEARCH_HOST', '127.0.0.1'),

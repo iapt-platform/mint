@@ -1,0 +1,283 @@
+{
+    "settings": {
+        "index": {
+            "knn": true
+        },
+        "analysis": {
+            "analyzer": {
+                "pali_query_analyzer": {
+                    "tokenizer": "standard",
+                    "filter": [
+                        "lowercase",
+                        "pali_synonyms"
+                    ]
+                },
+                "pali_index_analyzer": {
+                    "type": "custom",
+                    "tokenizer": "standard",
+                    "char_filter": [
+                        "markdown_strip"
+                    ],
+                    "filter": [
+                        "lowercase"
+                    ]
+                },
+                "markdown_clean": {
+                    "type": "custom",
+                    "tokenizer": "standard",
+                    "char_filter": [
+                        "markdown_strip"
+                    ],
+                    "filter": [
+                        "lowercase"
+                    ]
+                },
+                "pali_suggest_analyzer": {
+                    "tokenizer": "standard",
+                    "filter": [
+                        "lowercase",
+                        "asciifolding"
+                    ]
+                },
+                "zh_suggest_analyzer": {
+                    "tokenizer": "ik_max_word",
+                    "char_filter": [
+                        "tsconvert"
+                    ]
+                },
+                "zh_index_analyzer": {
+                    "tokenizer": "ik_max_word",
+                    "char_filter": [
+                        "tsconvert"
+                    ]
+                },
+                "zh_query_analyzer": {
+                    "tokenizer": "ik_smart",
+                    "char_filter": [
+                        "tsconvert"
+                    ]
+                }
+            },
+            "filter": {
+                "pali_synonyms": {
+                    "type": "synonym_graph",
+                    "synonyms_path": "analysis/pali_synonyms.txt",
+                    "updateable": true
+                }
+            },
+            "char_filter": {
+                "markdown_strip": {
+                    "type": "pattern_replace",
+                    "pattern": "\\*\\*|\\*|_|`|~",
+                    "replacement": ""
+                },
+                "tsconvert": {
+                    "type": "stconvert",
+                    "convert_type": "t2s"
+                }
+            }
+        }
+    },
+    "mappings": {
+        "properties": {
+            "id": {
+                "type": "keyword"
+            },
+            "resource_id": {
+                "type": "keyword"
+            },
+            "resource_type": {
+                "type": "keyword"
+            },
+            "title": {
+                "properties": {
+                    "text": {
+                        "properties": {
+                            "pali": {
+                                "type": "text",
+                                "analyzer": "pali_index_analyzer",
+                                "search_analyzer": "pali_query_analyzer",
+                                "fields": {
+                                    "exact": {
+                                        "type": "text",
+                                        "analyzer": "markdown_clean"
+                                    }
+                                }
+                            },
+                            "zh": {
+                                "type": "text",
+                                "analyzer": "zh_index_analyzer",
+                                "search_analyzer": "zh_query_analyzer"
+                            }
+                        }
+                    },
+                    "vector": {
+                        "type": "knn_vector",
+                        "dimension": 1536,
+                        "method": {
+                            "name": "hnsw",
+                            "space_type": "innerproduct",
+                            "engine": "faiss"
+                        }
+                    },
+                    "suggest": {
+                        "properties": {
+                            "pali": {
+                                "type": "completion",
+                                "analyzer": "pali_suggest_analyzer"
+                            },
+                            "zh": {
+                                "type": "completion",
+                                "analyzer": "zh_suggest_analyzer"
+                            }
+                        }
+                    }
+                }
+            },
+            "summary": {
+                "properties": {
+                    "text": {
+                        "type": "text",
+                        "analyzer": "zh_index_analyzer",
+                        "search_analyzer": "zh_query_analyzer"
+                    },
+                    "vector": {
+                        "type": "knn_vector",
+                        "dimension": 1536,
+                        "method": {
+                            "name": "hnsw",
+                            "space_type": "innerproduct",
+                            "engine": "faiss"
+                        }
+                    }
+                }
+            },
+            "content": {
+                "properties": {
+                    "text": {
+                        "properties": {
+                            "pali": {
+                                "type": "text",
+                                "analyzer": "pali_index_analyzer",
+                                "search_analyzer": "pali_query_analyzer",
+                                "fields": {
+                                    "exact": {
+                                        "type": "text",
+                                        "analyzer": "markdown_clean"
+                                    }
+                                }
+                            },
+                            "zh": {
+                                "type": "text",
+                                "analyzer": "zh_index_analyzer",
+                                "search_analyzer": "zh_query_analyzer"
+                            }
+                        }
+                    },
+                    "tokens": {
+                        "type": "nested",
+                        "properties": {
+                            "surface": {
+                                "type": "keyword"
+                            },
+                            "lemma": {
+                                "type": "keyword"
+                            },
+                            "compound_parts": {
+                                "type": "keyword"
+                            },
+                            "case": {
+                                "type": "keyword"
+                            }
+                        }
+                    },
+                    "vector": {
+                        "type": "knn_vector",
+                        "dimension": 1536,
+                        "method": {
+                            "name": "hnsw",
+                            "space_type": "innerproduct",
+                            "engine": "faiss"
+                        }
+                    },
+                    "suggest": {
+                        "properties": {
+                            "pali": {
+                                "type": "completion",
+                                "analyzer": "pali_suggest_analyzer"
+                            },
+                            "zh": {
+                                "type": "completion",
+                                "analyzer": "zh_suggest_analyzer"
+                            }
+                        }
+                    },
+                    "display": {
+                        "type": "text",
+                        "index": false
+                    }
+                }
+            },
+            "related_id": {
+                "type": "keyword"
+            },
+            "bold_single": {
+                "type": "text",
+                "analyzer": "standard",
+                "search_analyzer": "pali_query_analyzer"
+            },
+            "bold_multi": {
+                "type": "text",
+                "analyzer": "standard",
+                "search_analyzer": "pali_query_analyzer"
+            },
+            "path": {
+                "type": "text",
+                "analyzer": "standard"
+            },
+            "page_refs": {
+                "type": "keyword"
+            },
+            "tags": {
+                "type": "keyword"
+            },
+            "category": {
+                "type": "keyword"
+            },
+            "author": {
+                "type": "text"
+            },
+            "language": {
+                "type": "keyword"
+            },
+            "updated_at": {
+                "type": "date"
+            },
+            "granularity": {
+                "type": "keyword"
+            },
+            "metadata": {
+                "properties": {
+                    "APA": {
+                        "type": "text",
+                        "index": false
+                    },
+                    "MLA": {
+                        "type": "text",
+                        "index": false
+                    },
+                    "widget": {
+                        "type": "text",
+                        "index": false
+                    },
+                    "author": {
+                        "type": "text"
+                    },
+                    "channel": {
+                        "type": "text"
+                    }
+                }
+            }
+        }
+    }
+}

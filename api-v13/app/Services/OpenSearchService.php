@@ -99,255 +99,38 @@ class OpenSearchService
      *   ├── text   (text)
      *   └── vector (knn_vector, dim=1536)
      *
-     * @var array
+     * 分类维度（resource_id、resource_type、language 等）一律 keyword：它们是枚举值，
+     * 不该被分词。若声明成 text，'zh-Hans' 会被切成 zh + hans，查 language=zh
+     * 就会把 zh-Hans 的文档一并捞进来（实测 401 vs 410），而且不报错。
+     *
+     * 定义本身在 opensearch/indices/{index}.json，见 indexDefinition()。
      */
-    private $indexDefinition = [
-        'settings' => [
-            'index' => [
-                'knn' => true,
-            ],
-            'analysis' => [
-                'analyzer' => [
-                    'pali_query_analyzer' => [
-                        'tokenizer' => 'standard',
-                        'filter' => ['lowercase', 'pali_synonyms'],
-                    ],
-                    'pali_index_analyzer' => [
-                        'type' => 'custom',
-                        'tokenizer' => 'standard',
-                        'char_filter' => ['markdown_strip'],
-                        'filter' => ['lowercase'],
-                    ],
-                    'markdown_clean' => [
-                        'type' => 'custom',
-                        'tokenizer' => 'standard',
-                        'char_filter' => ['markdown_strip'],
-                        'filter' => ['lowercase'],
-                    ],
-                    // Suggest 专用（忽略大小写 + 变音）
-                    'pali_suggest_analyzer' => [
-                        'tokenizer' => 'standard',
-                        'filter' => ['lowercase', 'asciifolding'],
-                    ],
-                    'zh_suggest_analyzer' => [
-                        'tokenizer' => 'ik_max_word',
-                        'char_filter' => ['tsconvert'],
-                    ],
-                    // 中文简繁统一 (繁 -> 简)
-                    'zh_index_analyzer' => [
-                        'tokenizer' => 'ik_max_word',
-                        'char_filter' => ['tsconvert'],
-                    ],
-                    'zh_query_analyzer' => [
-                        'tokenizer' => 'ik_smart',
-                        'char_filter' => ['tsconvert'],
-                    ],
-                ],
-                'filter' => [
-                    'pali_synonyms' => [
-                        'type' => 'synonym_graph',
-                        'synonyms_path' => 'analysis/pali_synonyms.txt',
-                        'updateable' => true,
-                    ],
-                ],
-                'char_filter' => [
-                    'markdown_strip' => [
-                        'type' => 'pattern_replace',
-                        'pattern' => '\\*\\*|\\*|_|`|~',
-                        'replacement' => '',
-                    ],
-                    'tsconvert' => [
-                        'type' => 'stconvert',
-                        'convert_type' => 't2s',
-                    ],
-                ],
-            ],
-        ],
-        'mappings' => [
-            'properties' => [
-                'id' => ['type' => 'keyword'],
-                // 分类维度一律 keyword：它们是枚举值，不该被分词。
-                // 若声明成 text，'zh-Hans' 会被切成 zh + hans，查 language=zh 就会把
-                // zh-Hans 的文档一并捞进来（实测 401 vs 410），而且不报错。
-                'resource_id' => ['type' => 'keyword'],
-                'resource_type' => ['type' => 'keyword'],
+    private ?array $indexDefinition = null;
 
-                // ----------------------------------------------------------------
-                // title
-                //   text.pali  → 模糊查询（+ exact subfield 精确查询）
-                //   text.zh    → 中文查询
-                //   vector     → 语义向量
-                //   suggest.pali / suggest.zh → 自动建议
-                // ----------------------------------------------------------------
-                'title' => [
-                    'properties' => [
-                        'text' => [
-                            'properties' => [
-                                'pali' => [
-                                    'type' => 'text',
-                                    'analyzer' => 'pali_index_analyzer',
-                                    'search_analyzer' => 'pali_query_analyzer',
-                                    'fields' => [
-                                        'exact' => [
-                                            'type' => 'text',
-                                            'analyzer' => 'markdown_clean',
-                                        ],
-                                    ],
-                                ],
-                                'zh' => [
-                                    'type' => 'text',
-                                    'analyzer' => 'zh_index_analyzer',
-                                    'search_analyzer' => 'zh_query_analyzer',
-                                ],
-                            ],
-                        ],
-                        'vector' => [
-                            'type' => 'knn_vector',
-                            'dimension' => 1536,
-                            'method' => [
-                                'name' => 'hnsw',
-                                'space_type' => 'innerproduct',
-                                'engine' => 'faiss',
-                            ],
-                        ],
-                        'suggest' => [
-                            'properties' => [
-                                'pali' => [
-                                    'type' => 'completion',
-                                    'analyzer' => 'pali_suggest_analyzer',
-                                ],
-                                'zh' => [
-                                    'type' => 'completion',
-                                    'analyzer' => 'zh_suggest_analyzer',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
+    /**
+     * 读取索引定义（settings + mappings）
+     *
+     * 文件名与索引名一致：{index_definition_path}/{index}.json，
+     * 默认目录为仓库根目录的 opensearch/indices/。换索引版本时新增一个同名 JSON。
+     *
+     * @return array{settings: array, mappings: array}
+     *
+     * @throws Exception 文件不存在或不是合法 JSON 时抛出
+     */
+    protected function indexDefinition(): array
+    {
+        if ($this->indexDefinition !== null) {
+            return $this->indexDefinition;
+        }
 
-                // ----------------------------------------------------------------
-                // summary（LLM 生成的简体中文摘要，结构保持不变）
-                //   text   → 中文查询
-                //   vector → 语义向量
-                // ----------------------------------------------------------------
-                'summary' => [
-                    'properties' => [
-                        'text' => [
-                            'type' => 'text',
-                            'analyzer' => 'zh_index_analyzer',
-                            'search_analyzer' => 'zh_query_analyzer',
-                        ],
-                        'vector' => [
-                            'type' => 'knn_vector',
-                            'dimension' => 1536,
-                            'method' => [
-                                'name' => 'hnsw',
-                                'space_type' => 'innerproduct',
-                                'engine' => 'faiss',
-                            ],
-                        ],
-                    ],
-                ],
+        $path = Str::finish(config('mint.opensearch.index_definition_path'), '/')
+            .config('mint.opensearch.index').'.json';
+        if (! is_file($path)) {
+            throw new Exception("OpenSearch index definition [$path] not found.");
+        }
 
-                // ----------------------------------------------------------------
-                // content（结构与 title 对称，额外包含 tokens nested 字段）
-                //   text.pali  → 模糊查询（+ exact subfield 精确查询）
-                //   text.zh    → 中文查询
-                //   tokens     → 词法分析结果（nested）
-                //   vector     → 语义向量
-                //   suggest.pali / suggest.zh → 自动建议
-                // ----------------------------------------------------------------
-                'content' => [
-                    'properties' => [
-                        'text' => [
-                            'properties' => [
-                                'pali' => [
-                                    'type' => 'text',
-                                    'analyzer' => 'pali_index_analyzer',
-                                    'search_analyzer' => 'pali_query_analyzer',
-                                    'fields' => [
-                                        'exact' => [
-                                            'type' => 'text',
-                                            'analyzer' => 'markdown_clean',
-                                        ],
-                                    ],
-                                ],
-                                'zh' => [
-                                    'type' => 'text',
-                                    'analyzer' => 'zh_index_analyzer',
-                                    'search_analyzer' => 'zh_query_analyzer',
-                                ],
-                            ],
-                        ],
-                        'tokens' => [
-                            'type' => 'nested',
-                            'properties' => [
-                                'surface' => ['type' => 'keyword'],
-                                'lemma' => ['type' => 'keyword'],
-                                'compound_parts' => ['type' => 'keyword'],
-                                'case' => ['type' => 'keyword'],
-                            ],
-                        ],
-                        'vector' => [
-                            'type' => 'knn_vector',
-                            'dimension' => 1536,
-                            'method' => [
-                                'name' => 'hnsw',
-                                'space_type' => 'innerproduct',
-                                'engine' => 'faiss',
-                            ],
-                        ],
-                        'suggest' => [
-                            'properties' => [
-                                'pali' => [
-                                    'type' => 'completion',
-                                    'analyzer' => 'pali_suggest_analyzer',
-                                ],
-                                'zh' => [
-                                    'type' => 'completion',
-                                    'analyzer' => 'zh_suggest_analyzer',
-                                ],
-                            ],
-                        ],
-                        // 前端展示用，原始 HTML，不参与索引
-                        'display' => [
-                            'type' => 'text',
-                            'index' => false,
-                        ],
-                    ],
-                ],
-
-                'related_id' => ['type' => 'keyword'],
-                'bold_single' => [
-                    'type' => 'text',
-                    'analyzer' => 'standard',
-                    'search_analyzer' => 'pali_query_analyzer',
-                ],
-                'bold_multi' => [
-                    'type' => 'text',
-                    'analyzer' => 'standard',
-                    'search_analyzer' => 'pali_query_analyzer',
-                ],
-                'path' => ['type' => 'text', 'analyzer' => 'standard'],
-                'page_refs' => ['type' => 'keyword'],
-                'tags' => ['type' => 'keyword'],
-                'category' => ['type' => 'keyword'],
-                'author' => ['type' => 'text'],
-                'language' => ['type' => 'keyword'],
-                'updated_at' => ['type' => 'date'],
-                'granularity' => ['type' => 'keyword'],
-                'metadata' => [
-                    'properties' => [
-                        'APA' => ['type' => 'text', 'index' => false],
-                        'MLA' => ['type' => 'text', 'index' => false],
-                        'widget' => ['type' => 'text', 'index' => false],
-                        'author' => ['type' => 'text'],
-                        'channel' => ['type' => 'text'],
-                    ],
-                ],
-            ],
-        ],
-    ];
+        return $this->indexDefinition = json_decode(file_get_contents($path), true, flags: JSON_THROW_ON_ERROR);
+    }
 
     /**
      * 创建 OpenSearchService 实例
@@ -420,7 +203,7 @@ class OpenSearchService
     /**
      * 创建 OpenSearch 索引
      *
-     * 使用 $indexDefinition 中定义的 settings 和 mappings 创建索引。
+     * 使用 indexDefinition() 读到的 settings 和 mappings 创建索引。
      * 若索引已存在则抛出异常，避免覆盖生产数据。
      *
      * @return array OpenSearch 响应
@@ -438,7 +221,7 @@ class OpenSearchService
 
         return $this->client->indices()->create([
             'index' => $index,
-            'body' => $this->indexDefinition,
+            'body' => $this->indexDefinition(),
         ]);
     }
 
@@ -453,8 +236,8 @@ class OpenSearchService
     public function updateIndex(): array
     {
         $index = config('mint.opensearch.index');
-        $settings = $this->indexDefinition['settings'] ?? [];
-        $mappings = $this->indexDefinition['mappings'] ?? [];
+        $settings = $this->indexDefinition()['settings'] ?? [];
+        $mappings = $this->indexDefinition()['mappings'] ?? [];
         $response = [];
 
         if (! empty($settings)) {
@@ -511,7 +294,7 @@ class OpenSearchService
         ]);
 
         // 以代码中的 analysis 定义为准，只替换同义词文件路径
-        $analysis = $this->indexDefinition['settings']['analysis'];
+        $analysis = $this->indexDefinition()['settings']['analysis'];
         $analysis['filter']['pali_synonyms']['synonyms_path'] = $path;
 
         $this->client->indices()->close(['index' => $index]);
