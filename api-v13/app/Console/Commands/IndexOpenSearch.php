@@ -30,7 +30,8 @@ class IndexOpenSearch extends Command
         //
         $service = app(OpenSearchService::class);
         if ($service->count() === 0) {
-            $this->call('opensearch:index-tipitaka', ['book' => 0, '--granularity' => 'all']);
+            $this->call('opensearch:index-tipitaka', ['book' => 0, '--summary' => 'off', '--granularity' => 'paragraph']);
+            $this->call('opensearch:index-tipitaka', ['book' => 0, '--summary' => 'off', '--granularity' => 'chapter']);
             $this->call('opensearch:index-term');
         } else {
             if (App::environment('local')) {

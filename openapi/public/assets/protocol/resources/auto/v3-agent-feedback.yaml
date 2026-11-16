@@ -1,0 +1,106 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-agent-feedback.yaml
+post:
+  summary: 评价一条回答（再次提交即更新）
+  tags:
+    - agent-feedback
+  operationId: post_api_v3_agent_feedback
+  description: |-
+    一人对一条回答只留一条：首次 201，更新 200。点赞的 tags 取 accurate / useful_citations / clear / inspiring，
+    点踩的 tags 是原因：citation_wrong / missed / off_topic / incorrect / too_long / too_academic / slow / other；
+    只有选了 other 时 comment 才会保存。asked＝这条是被主动询问问出来的。
+
+    实现：`V3\AgentFeedbackController@store`
+  security:
+    - {  }
+    -
+      bearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message_id:
+              type: string
+              description: 'AG-UI 回答消息 id'
+            thread_id:
+              type: string
+              description: '会话 id（uuid）'
+            rating:
+              type: integer
+              description: '1 赞 / -1 踩（只能是这两个值）'
+            tags:
+              type: array
+              description: 点赞标签或点踩原因
+            comment:
+              type: string
+              description: '选了 other 时的文字说明，最长 1000 字'
+            asked:
+              type: boolean
+              description: 是否主动询问问出来的
+            device_id:
+              type: string
+              description: '设备匿名 id（uuid）。未登录时必填'
+            client:
+              type: string
+              description: 客户端
+              enum:
+                - mobile
+                - web
+          required:
+            - message_id
+            - rating
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  message_id:
+                    type: string
+                  rating:
+                    type: integer
+                  tags:
+                    type: array
+                    items:
+                      type: string
+                  comment:
+                    type: string
+                    nullable: true
+                  asked:
+                    type: boolean
+                  updated_at:
+                    type: string
+    201:
+      description: '首次评价。响应体与 200 同形'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  message_id:
+                    type: string
+                  rating:
+                    type: integer
+                  tags:
+                    type: array
+                    items:
+                      type: string
+                  comment:
+                    type: string
+                    nullable: true
+                  asked:
+                    type: boolean
+                  updated_at:
+                    type: string
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

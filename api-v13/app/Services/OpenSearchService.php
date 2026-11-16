@@ -99,255 +99,38 @@ class OpenSearchService
      *   ├── text   (text)
      *   └── vector (knn_vector, dim=1536)
      *
-     * @var array
+     * 分类维度（resource_id、resource_type、language 等）一律 keyword：它们是枚举值，
+     * 不该被分词。若声明成 text，'zh-Hans' 会被切成 zh + hans，查 language=zh
+     * 就会把 zh-Hans 的文档一并捞进来（实测 401 vs 410），而且不报错。
+     *
+     * 定义本身在 opensearch/indices/{index}.json，见 indexDefinition()。
      */
-    private $indexDefinition = [
-        'settings' => [
-            'index' => [
-                'knn' => true,
-            ],
-            'analysis' => [
-                'analyzer' => [
-                    'pali_query_analyzer' => [
-                        'tokenizer' => 'standard',
-                        'filter' => ['lowercase', 'pali_synonyms'],
-                    ],
-                    'pali_index_analyzer' => [
-                        'type' => 'custom',
-                        'tokenizer' => 'standard',
-                        'char_filter' => ['markdown_strip'],
-                        'filter' => ['lowercase'],
-                    ],
-                    'markdown_clean' => [
-                        'type' => 'custom',
-                        'tokenizer' => 'standard',
-                        'char_filter' => ['markdown_strip'],
-                        'filter' => ['lowercase'],
-                    ],
-                    // Suggest 专用（忽略大小写 + 变音）
-                    'pali_suggest_analyzer' => [
-                        'tokenizer' => 'standard',
-                        'filter' => ['lowercase', 'asciifolding'],
-                    ],
-                    'zh_suggest_analyzer' => [
-                        'tokenizer' => 'ik_max_word',
-                        'char_filter' => ['tsconvert'],
-                    ],
-                    // 中文简繁统一 (繁 -> 简)
-                    'zh_index_analyzer' => [
-                        'tokenizer' => 'ik_max_word',
-                        'char_filter' => ['tsconvert'],
-                    ],
-                    'zh_query_analyzer' => [
-                        'tokenizer' => 'ik_smart',
-                        'char_filter' => ['tsconvert'],
-                    ],
-                ],
-                'filter' => [
-                    'pali_synonyms' => [
-                        'type' => 'synonym_graph',
-                        'synonyms_path' => 'analysis/pali_synonyms.txt',
-                        'updateable' => true,
-                    ],
-                ],
-                'char_filter' => [
-                    'markdown_strip' => [
-                        'type' => 'pattern_replace',
-                        'pattern' => '\\*\\*|\\*|_|`|~',
-                        'replacement' => '',
-                    ],
-                    'tsconvert' => [
-                        'type' => 'stconvert',
-                        'convert_type' => 't2s',
-                    ],
-                ],
-            ],
-        ],
-        'mappings' => [
-            'properties' => [
-                'id' => ['type' => 'keyword'],
-                // 分类维度一律 keyword：它们是枚举值，不该被分词。
-                // 若声明成 text，'zh-Hans' 会被切成 zh + hans，查 language=zh 就会把
-                // zh-Hans 的文档一并捞进来（实测 401 vs 410），而且不报错。
-                'resource_id' => ['type' => 'keyword'],
-                'resource_type' => ['type' => 'keyword'],
+    private ?array $indexDefinition = null;
 
-                // ----------------------------------------------------------------
-                // title
-                //   text.pali  → 模糊查询（+ exact subfield 精确查询）
-                //   text.zh    → 中文查询
-                //   vector     → 语义向量
-                //   suggest.pali / suggest.zh → 自动建议
-                // ----------------------------------------------------------------
-                'title' => [
-                    'properties' => [
-                        'text' => [
-                            'properties' => [
-                                'pali' => [
-                                    'type' => 'text',
-                                    'analyzer' => 'pali_index_analyzer',
-                                    'search_analyzer' => 'pali_query_analyzer',
-                                    'fields' => [
-                                        'exact' => [
-                                            'type' => 'text',
-                                            'analyzer' => 'markdown_clean',
-                                        ],
-                                    ],
-                                ],
-                                'zh' => [
-                                    'type' => 'text',
-                                    'analyzer' => 'zh_index_analyzer',
-                                    'search_analyzer' => 'zh_query_analyzer',
-                                ],
-                            ],
-                        ],
-                        'vector' => [
-                            'type' => 'knn_vector',
-                            'dimension' => 1536,
-                            'method' => [
-                                'name' => 'hnsw',
-                                'space_type' => 'innerproduct',
-                                'engine' => 'faiss',
-                            ],
-                        ],
-                        'suggest' => [
-                            'properties' => [
-                                'pali' => [
-                                    'type' => 'completion',
-                                    'analyzer' => 'pali_suggest_analyzer',
-                                ],
-                                'zh' => [
-                                    'type' => 'completion',
-                                    'analyzer' => 'zh_suggest_analyzer',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
+    /**
+     * 读取索引定义（settings + mappings）
+     *
+     * 文件名与索引名一致：{index_definition_path}/{index}.json，
+     * 默认目录为仓库根目录的 opensearch/indices/。换索引版本时新增一个同名 JSON。
+     *
+     * @return array{settings: array, mappings: array}
+     *
+     * @throws Exception 文件不存在或不是合法 JSON 时抛出
+     */
+    protected function indexDefinition(): array
+    {
+        if ($this->indexDefinition !== null) {
+            return $this->indexDefinition;
+        }
 
-                // ----------------------------------------------------------------
-                // summary（LLM 生成的简体中文摘要，结构保持不变）
-                //   text   → 中文查询
-                //   vector → 语义向量
-                // ----------------------------------------------------------------
-                'summary' => [
-                    'properties' => [
-                        'text' => [
-                            'type' => 'text',
-                            'analyzer' => 'zh_index_analyzer',
-                            'search_analyzer' => 'zh_query_analyzer',
-                        ],
-                        'vector' => [
-                            'type' => 'knn_vector',
-                            'dimension' => 1536,
-                            'method' => [
-                                'name' => 'hnsw',
-                                'space_type' => 'innerproduct',
-                                'engine' => 'faiss',
-                            ],
-                        ],
-                    ],
-                ],
+        $path = Str::finish(config('mint.opensearch.index_definition_path'), '/')
+            .config('mint.opensearch.index').'.json';
+        if (! is_file($path)) {
+            throw new Exception("OpenSearch index definition [$path] not found.");
+        }
 
-                // ----------------------------------------------------------------
-                // content（结构与 title 对称，额外包含 tokens nested 字段）
-                //   text.pali  → 模糊查询（+ exact subfield 精确查询）
-                //   text.zh    → 中文查询
-                //   tokens     → 词法分析结果（nested）
-                //   vector     → 语义向量
-                //   suggest.pali / suggest.zh → 自动建议
-                // ----------------------------------------------------------------
-                'content' => [
-                    'properties' => [
-                        'text' => [
-                            'properties' => [
-                                'pali' => [
-                                    'type' => 'text',
-                                    'analyzer' => 'pali_index_analyzer',
-                                    'search_analyzer' => 'pali_query_analyzer',
-                                    'fields' => [
-                                        'exact' => [
-                                            'type' => 'text',
-                                            'analyzer' => 'markdown_clean',
-                                        ],
-                                    ],
-                                ],
-                                'zh' => [
-                                    'type' => 'text',
-                                    'analyzer' => 'zh_index_analyzer',
-                                    'search_analyzer' => 'zh_query_analyzer',
-                                ],
-                            ],
-                        ],
-                        'tokens' => [
-                            'type' => 'nested',
-                            'properties' => [
-                                'surface' => ['type' => 'keyword'],
-                                'lemma' => ['type' => 'keyword'],
-                                'compound_parts' => ['type' => 'keyword'],
-                                'case' => ['type' => 'keyword'],
-                            ],
-                        ],
-                        'vector' => [
-                            'type' => 'knn_vector',
-                            'dimension' => 1536,
-                            'method' => [
-                                'name' => 'hnsw',
-                                'space_type' => 'innerproduct',
-                                'engine' => 'faiss',
-                            ],
-                        ],
-                        'suggest' => [
-                            'properties' => [
-                                'pali' => [
-                                    'type' => 'completion',
-                                    'analyzer' => 'pali_suggest_analyzer',
-                                ],
-                                'zh' => [
-                                    'type' => 'completion',
-                                    'analyzer' => 'zh_suggest_analyzer',
-                                ],
-                            ],
-                        ],
-                        // 前端展示用，原始 HTML，不参与索引
-                        'display' => [
-                            'type' => 'text',
-                            'index' => false,
-                        ],
-                    ],
-                ],
-
-                'related_id' => ['type' => 'keyword'],
-                'bold_single' => [
-                    'type' => 'text',
-                    'analyzer' => 'standard',
-                    'search_analyzer' => 'pali_query_analyzer',
-                ],
-                'bold_multi' => [
-                    'type' => 'text',
-                    'analyzer' => 'standard',
-                    'search_analyzer' => 'pali_query_analyzer',
-                ],
-                'path' => ['type' => 'text', 'analyzer' => 'standard'],
-                'page_refs' => ['type' => 'keyword'],
-                'tags' => ['type' => 'keyword'],
-                'category' => ['type' => 'keyword'],
-                'author' => ['type' => 'text'],
-                'language' => ['type' => 'keyword'],
-                'updated_at' => ['type' => 'date'],
-                'granularity' => ['type' => 'keyword'],
-                'metadata' => [
-                    'properties' => [
-                        'APA' => ['type' => 'text', 'index' => false],
-                        'MLA' => ['type' => 'text', 'index' => false],
-                        'widget' => ['type' => 'text', 'index' => false],
-                        'author' => ['type' => 'text'],
-                        'channel' => ['type' => 'text'],
-                    ],
-                ],
-            ],
-        ],
-    ];
+        return $this->indexDefinition = json_decode(file_get_contents($path), true, flags: JSON_THROW_ON_ERROR);
+    }
 
     /**
      * 创建 OpenSearchService 实例
@@ -420,7 +203,7 @@ class OpenSearchService
     /**
      * 创建 OpenSearch 索引
      *
-     * 使用 $indexDefinition 中定义的 settings 和 mappings 创建索引。
+     * 使用 indexDefinition() 读到的 settings 和 mappings 创建索引。
      * 若索引已存在则抛出异常，避免覆盖生产数据。
      *
      * @return array OpenSearch 响应
@@ -438,7 +221,7 @@ class OpenSearchService
 
         return $this->client->indices()->create([
             'index' => $index,
-            'body' => $this->indexDefinition,
+            'body' => $this->indexDefinition(),
         ]);
     }
 
@@ -453,8 +236,8 @@ class OpenSearchService
     public function updateIndex(): array
     {
         $index = config('mint.opensearch.index');
-        $settings = $this->indexDefinition['settings'] ?? [];
-        $mappings = $this->indexDefinition['mappings'] ?? [];
+        $settings = $this->indexDefinition()['settings'] ?? [];
+        $mappings = $this->indexDefinition()['mappings'] ?? [];
         $response = [];
 
         if (! empty($settings)) {
@@ -511,7 +294,7 @@ class OpenSearchService
         ]);
 
         // 以代码中的 analysis 定义为准，只替换同义词文件路径
-        $analysis = $this->indexDefinition['settings']['analysis'];
+        $analysis = $this->indexDefinition()['settings']['analysis'];
         $analysis['filter']['pali_synonyms']['synonyms_path'] = $path;
 
         $this->client->indices()->close(['index' => $index]);
@@ -624,11 +407,12 @@ class OpenSearchService
     /**
      * 执行高级搜索
      *
-     * 支持四种搜索模式：
-     *   - fuzzy    多字段模糊查询（默认），基于 BM25
-     *   - exact    精确匹配，使用 markdown_clean analyzer
-     *   - semantic 纯语义向量搜索，需要 OpenAI embedding
-     *   - hybrid   fuzzy + semantic 混合，权重由 fuzzy_ratio / semantic_ratio 控制
+     * 支持五种搜索模式：
+     *   - fuzzy       多字段模糊查询（默认），巴利文走三层排序
+     *   - exact       精确匹配，使用 markdown_clean analyzer
+     *   - semantic    纯语义向量搜索，需要 OpenAI embedding
+     *   - hybrid      fuzzy + semantic 混合，权重由 fuzzy_ratio / semantic_ratio 控制
+     *   - definition  定义查询，黑体字（bold_single/bold_multi）高权重，术语定义排前
      *
      * 支持的过滤参数：
      *   resourceType, resourceId, granularity, language, category,
@@ -727,6 +511,12 @@ class OpenSearchService
         // ---------- 查询部分 ----------
         $queryText = trim($params['query'] ?? '');
 
+        // fuzzy / definition 的巴利文多词查询按词的罕见度加权；其余模式不需要
+        $weights = null;
+        if ($queryText !== '' && ! in_array($mode, ['exact', 'semantic', 'hybrid'], true) && ! $this->isCjkQuery($queryText)) {
+            $weights = $this->wordRarityWeights($this->scoringWords($this->splitQueryWords($queryText)));
+        }
+
         if ($queryText === '') {
             $query = ['match_all' => new \stdClass];
         } else {
@@ -743,9 +533,13 @@ class OpenSearchService
                     $query = $this->buildHybridQuery($queryText);
                     break;
 
+                case 'definition':
+                    $query = $this->buildDefinitionQuery($queryText, $weights);
+                    break;
+
                 case 'fuzzy':
                 default:
-                    $query = $this->buildFuzzyQuery($queryText);
+                    $query = $this->buildFuzzyQuery($queryText, $weights);
                     break;
             }
         }
@@ -782,16 +576,14 @@ class OpenSearchService
             ],
         ];
 
-        // 只有有搜索词时才开启高亮
+        // 只有有搜索词时才开启高亮；字段按语种路由，避免把巴利文喂给中文分词器
         if ($queryText !== '') {
+            $highlightFields = $this->isCjkQuery($queryText)
+                ? ['title.text.zh', 'summary.text', 'content.text.zh']
+                : ['title.text.pali', 'content.text.pali'];
+
             $dsl['highlight'] = [
-                'fields' => [
-                    'title.text.pali' => new \stdClass,
-                    'title.text.zh' => new \stdClass,
-                    'summary.text' => new \stdClass,
-                    'content.text.pali' => new \stdClass,
-                    'content.text.zh' => new \stdClass,
-                ],
+                'fields' => array_fill_keys($highlightFields, new \stdClass),
                 'fragmenter' => 'sentence',
                 'fragment_size' => 200,
                 'number_of_fragments' => 1,
@@ -868,24 +660,465 @@ class OpenSearchService
     /**
      * 构建 fuzzy（多字段模糊）查询
      *
-     * 基于 BM25 的 multi_match best_fields 查询，
-     * 字段权重取自 $weights['fuzzy']。
+     * 按查询语种路由字段，避免巴利文被中文分词器切碎、中文被巴利文 analyzer 误伤：
+     *   - 含汉字 → 只搜 bold_* + *.text.zh + summary.text
+     *   - 巴利文（拉丁字母）→ 走三层排序（见 buildPaliFuzzyQuery）+ bold_* 提权
      *
      * @param  string  $query  搜索关键词
+     * @param  array<string, float>|null  $weights  巴利文各词的罕见度权重，null 表示都按 1
      * @return array OpenSearch DSL query 片段
      */
-    protected function buildFuzzyQuery(string $query): array
+    protected function buildFuzzyQuery(string $query, ?array $weights = null): array
     {
-        $fields = [];
-        foreach ($this->weights['fuzzy'] as $field => $weight) {
-            $fields[] = $field.'^'.$weight;
+        if ($this->isCjkQuery($query)) {
+            return [
+                'multi_match' => [
+                    'query' => $query,
+                    'fields' => [
+                        'bold_single^50',
+                        'bold_multi^10',
+                        'title.text.zh^3',
+                        'summary.text^2',
+                        'content.text.zh^1',
+                    ],
+                    'type' => 'best_fields',
+                ],
+            ];
+        }
+
+        return $this->buildPaliFuzzyQuery($query, 1.0, $weights);
+    }
+
+    /**
+     * 巴利文 fuzzy 的计分表（全部是固定分，逐项累加）
+     *
+     * 一个文档的得分 = 命中的每一项相加，于是「部分符合」自然逐级降分：
+     *   - phrase   整句按原顺序、拼写完全相同（≥2 个词才有）
+     *   - bigram   相邻两词按原顺序、拼写相同，每对一次（≥3 个词才有，2 个词时与 phrase 重合）
+     *   - exact    单个原始词拼写相同，每词一次
+     *   - synonym  单个原始词经同义词可替代，每词一次（拼写相同的词也会命中这一项）
+     *
+     * 以 3 个词为例：整句原样 66 > 全部拼写相同但乱序 36 > 两词相邻拼写相同 + 一词同义 31
+     * > 两词拼写相同不相邻 24 > 三词全靠同义词 6 > 一词同义 2。
+     *
+     * @var array{phrase: int, bigram: int, exact: int, synonym: int}
+     */
+    private const PALI_FUZZY_SCORES = [
+        'phrase' => 20,
+        'bigram' => 5,
+        'exact' => 10,
+        'synonym' => 2,
+    ];
+
+    /**
+     * definition 的计分表（黑体字部分，每个原始词各算一次）
+     *
+     * 主分不分词形：同义词词典的一行就是一个词的全部变格变位，所以「任一词形」走同义词，
+     * 与 v2 search-pali-wbw 把全部词形一视同仁的口径一致；原拼写只给少量加分，排在同档前面。
+     *
+     *   - single        该词（任一词形）是单独黑体字
+     *   - single_exact  再加：拼写也相同
+     *   - multi         该词（任一词形）出现在多词黑体短语里
+     *   - multi_exact   再加：拼写也相同
+     *   - multi_phrase  整句按原顺序、拼写相同出现在多词黑体短语里（≥2 个词才有）
+     *
+     * 每个词：单独黑体 ≥ 100 > 多词黑体 ≤ 35，于是命中的单独黑体字越多排越前。
+     * 正文得分按 DEFINITION_TEXT_SCALE 缩小后叠加，只用来给黑体同分的文档排先后。
+     *
+     * @var array{single: int, single_exact: int, multi: int, multi_exact: int, multi_phrase: int}
+     */
+    private const DEFINITION_SCORES = [
+        'single' => 100,
+        'single_exact' => 10,
+        'multi' => 30,
+        'multi_exact' => 5,
+        'multi_phrase' => 30,
+    ];
+
+    /**
+     * definition 模式里正文得分的缩放系数，保证正文再怎么命中也压不过一个黑体字
+     */
+    private const DEFINITION_TEXT_SCALE = 0.1;
+
+    /**
+     * 同分时的 BM25 微调权重：BM25 一般 < 30，乘上后 < 0.3，小于计分表的最小档差
+     */
+    private const TIE_BREAKER_BOOST = 0.01;
+
+    /**
+     * 罕见度权重的下限：再常见的词也保留这么多分量，不至于完全不计
+     */
+    private const RARITY_WEIGHT_FLOOR = 0.2;
+
+    /**
+     * 罕见度权重的指数：IDF 取了对数，887 段与 211 段的词只差 0.82 : 1，拉不开；
+     * 归一后再取幂放大差距
+     */
+    private const RARITY_EXPONENT = 4;
+
+    /**
+     * 每个词的文档频率在 RedisCache 里的保存期（秒）。语料按月更新，一天足够新
+     */
+    private const DOC_FREQUENCY_TTL = 86400;
+
+    /**
+     * 多词查询里每个词的罕见度权重（类 BM25 的 IDF，按最罕见的词归一到 1）
+     *
+     * 按词计的固定分让每个词分量相同，常见词（如 bojjhaṅga，到处都是黑体）会把罕见的
+     * 目标词（dhammavicayasambojjhaṅga）挤出前排。乘上这个权重后，越罕见的词分越高。
+     * 文档频率按 title/content 的 .pali（带同义词，即全部词形）统计，一次 _msearch 取齐，
+     * 逐词缓存。取不到时返回全 1（等于不加权），只记日志不报错。
+     *
+     * @param  list<string>  $words  参与计分的原始词（已去掉停用词）
+     * @return array<string, float> 原始词 => 权重，范围 [RARITY_WEIGHT_FLOOR, 1]
+     */
+    protected function wordRarityWeights(array $words): array
+    {
+        $uniqueWords = array_values(array_unique($words));
+        $flat = array_fill_keys($uniqueWords, 1.0);
+
+        if (count($uniqueWords) < 2) {
+            return $flat;
+        }
+
+        try {
+            $index = config('mint.opensearch.index');
+            $total = RedisCache::remember("/opensearch/{$index}/doc-count", self::DOC_FREQUENCY_TTL, fn () => $this->count());
+            $frequencies = $this->documentFrequencies($index, $uniqueWords);
+        } catch (Exception $e) {
+            Log::warning('opensearch word rarity weights failed', ['words' => $uniqueWords, 'error' => $e->getMessage()]);
+
+            return $flat;
+        }
+
+        $idf = [];
+        foreach ($uniqueWords as $word) {
+            $df = $frequencies[$word] ?? 0;
+            $idf[$word] = log(1 + ($total - $df + 0.5) / ($df + 0.5));
+        }
+
+        $maxIdf = max($idf);
+        if ($maxIdf <= 0) {
+            return $flat;
+        }
+
+        return array_map(
+            fn (float $value): float => max(self::RARITY_WEIGHT_FLOOR, ($value / $maxIdf) ** self::RARITY_EXPONENT),
+            $idf,
+        );
+    }
+
+    /**
+     * 每个词出现在多少个文档里（含同义词展开的全部词形），逐词缓存，未缓存的一次 _msearch 取齐
+     *
+     * @param  string  $index  索引名
+     * @param  list<string>  $words  原始词
+     * @return array<string, int> 原始词 => 文档数
+     */
+    protected function documentFrequencies(string $index, array $words): array
+    {
+        $frequencies = [];
+        $missing = [];
+
+        foreach ($words as $word) {
+            $cached = RedisCache::get($this->documentFrequencyCacheKey($index, $word));
+            if ($cached === null) {
+                $missing[] = $word;
+            } else {
+                $frequencies[$word] = (int) $cached;
+            }
+        }
+
+        if ($missing === []) {
+            return $frequencies;
+        }
+
+        $body = [];
+        foreach ($missing as $word) {
+            $body[] = ['index' => $index];
+            $body[] = [
+                'size' => 0,
+                'track_total_hits' => true,
+                'query' => ['multi_match' => ['query' => $word, 'fields' => ['title.text.pali', 'content.text.pali']]],
+            ];
+        }
+
+        $responses = $this->client->msearch(['body' => $body])['responses'] ?? [];
+
+        foreach ($missing as $i => $word) {
+            $df = (int) ($responses[$i]['hits']['total']['value'] ?? 0);
+            $frequencies[$word] = $df;
+            RedisCache::put($this->documentFrequencyCacheKey($index, $word), $df, self::DOC_FREQUENCY_TTL);
+        }
+
+        return $frequencies;
+    }
+
+    /**
+     * @param  string  $index  索引名
+     * @param  string  $word  原始词
+     * @return string 文档频率的缓存 key
+     */
+    protected function documentFrequencyCacheKey(string $index, string $word): string
+    {
+        return "/opensearch/{$index}/word-df/".md5(mb_strtolower($word));
+    }
+
+    /**
+     * 巴利文停用词（小写；比较前去掉标点）
+     *
+     * 取自 pg 全文检索的 pali.stop（api-v8/public/app/fts/pali.stop），另加 vā。
+     * 停用词只参与词序打分（整句、相邻两词），不单独计分、不单独召回，见 buildPaliFuzzyQuery。
+     *
+     * @var list<string>
+     */
+    private const PALI_STOPWORDS = ['na', 'no', 'ca', 'va', 'vā', 'hi', 'pana', 'iva', 'eva'];
+
+    /**
+     * 判断原始词是否巴利文停用词
+     *
+     * @param  string  $word  原始词（可带标点，如「ca,」「‘‘na」）
+     * @return bool 是停用词返回 true
+     */
+    protected function isPaliStopword(string $word): bool
+    {
+        $normalized = mb_strtolower(preg_replace('/[^\p{L}\p{M}]/u', '', $word) ?? '');
+
+        return in_array($normalized, self::PALI_STOPWORDS, true);
+    }
+
+    /**
+     * 取出用于单独计分的词：去掉停用词；全是停用词时原样返回，避免查不到东西
+     *
+     * @param  list<string>  $words  原始词
+     * @return list<string>
+     */
+    protected function scoringWords(array $words): array
+    {
+        $contentWords = array_values(array_filter(
+            $words,
+            fn (string $word): bool => ! $this->isPaliStopword($word),
+        ));
+
+        return $contentWords === [] ? $words : $contentWords;
+    }
+
+    /**
+     * 把查询切成原始词
+     *
+     * 按空白切分，并丢掉不含字母的片段（如「–」「.」）：它们经分析器后没有 token，
+     * 留着会让按词计分的子句永远不命中。
+     *
+     * @param  string  $query  搜索关键词
+     * @return list<string>
+     */
+    protected function splitQueryWords(string $query): array
+    {
+        $words = preg_split('/\s+/u', trim($query)) ?: [];
+
+        return array_values(array_filter(
+            $words,
+            fn (string $word): bool => preg_match('/\p{L}/u', $word) === 1,
+        ));
+    }
+
+    /**
+     * 包一层 constant_score：命中即得固定分，不受 BM25 字段长度归一化影响
+     *
+     * @param  array<string, mixed>  $filter  过滤子句
+     * @param  float  $boost  命中时的固定分
+     * @return array{constant_score: array{filter: array<string, mixed>, boost: float}}
+     */
+    protected function constantScore(array $filter, float $boost): array
+    {
+        return ['constant_score' => ['filter' => $filter, 'boost' => $boost]];
+    }
+
+    /**
+     * 构建巴利文查询：词序符合、拼写相同得高分，部分符合逐级降分
+     *
+     * 命中按「原始词」（空格切分）计，不按同义词展开后的 token 计——每个原始词一个
+     * constant_score 子句，命中几个同义词都只算一次。计分表见 PALI_FUZZY_SCORES。
+     * 拼写相同打在 .exact 子字段（markdown_clean，无同义词），同义词打在 .pali。
+     * 最后加一条极小权重的 BM25 子句，只用来给同分文档排先后。
+     *
+     * 停用词（PALI_STOPWORDS）只出现在整句、相邻两词的子句里，保住词序判断；
+     * 不生成单词子句，也不进 BM25 子句，于是只命中「ca」的文档不会被召回。
+     * 两个停用词组成的相邻词对同理跳过。查询全是停用词时按普通词处理。
+     *
+     * 单词子句（拼写、同义词）乘上该词的罕见度权重（见 wordRarityWeights），
+     * 常见词分量小、罕见词分量大；词序子句（整句、相邻两词）不乘。
+     *
+     * @param  string  $query  搜索关键词
+     * @param  float  $scale  整体缩放（definition 模式用它把正文得分压到黑体字之下）
+     * @param  array<string, float>|null  $weights  原始词 => 罕见度权重，null 表示都按 1
+     * @return array OpenSearch DSL query 片段
+     */
+    protected function buildPaliFuzzyQuery(string $query, float $scale = 1.0, ?array $weights = null): array
+    {
+        $words = $this->splitQueryWords($query);
+        $wordCount = count($words);
+
+        if ($wordCount === 0) {
+            return ['match_all' => new \stdClass];
+        }
+
+        $scoringWords = $this->scoringWords($words);
+        $allStopwords = array_all($words, fn (string $word): bool => $this->isPaliStopword($word));
+
+        $exactFields = ['title.text.pali.exact', 'content.text.pali.exact'];
+        $fuzzyFields = ['title.text.pali', 'content.text.pali'];
+        $scores = array_map(fn (int $score): float => $score * $scale, self::PALI_FUZZY_SCORES);
+
+        $should = [];
+
+        // 词序：整句原样
+        if ($wordCount >= 2) {
+            $should[] = $this->constantScore([
+                'multi_match' => [
+                    'query' => implode(' ', $words),
+                    'type' => 'phrase',
+                    'fields' => $exactFields,
+                ],
+            ], $scores['phrase']);
+        }
+
+        // 词序：相邻两词原样（部分顺序符合）
+        if ($wordCount >= 3) {
+            for ($i = 0; $i < $wordCount - 1; $i++) {
+                $bothStopwords = $this->isPaliStopword($words[$i]) && $this->isPaliStopword($words[$i + 1]);
+                if ($bothStopwords && ! $allStopwords) {
+                    continue;
+                }
+
+                $should[] = $this->constantScore([
+                    'multi_match' => [
+                        'query' => $words[$i].' '.$words[$i + 1],
+                        'type' => 'phrase',
+                        'fields' => $exactFields,
+                    ],
+                ], $scores['bigram']);
+            }
+        }
+
+        // 拼写：每个词各算一次（停用词不算），按罕见度加权
+        foreach ($scoringWords as $word) {
+            $weight = $weights[$word] ?? 1.0;
+
+            $should[] = $this->constantScore([
+                'multi_match' => [
+                    'query' => $word,
+                    'fields' => $exactFields,
+                    'operator' => 'and',
+                ],
+            ], $scores['exact'] * $weight);
+
+            $should[] = $this->constantScore([
+                'multi_match' => [
+                    'query' => $word,
+                    'fields' => $fuzzyFields,
+                ],
+            ], $scores['synonym'] * $weight);
+        }
+
+        // 同分文档按 BM25 排先后
+        $should[] = [
+            'match' => [
+                'content.text.pali' => [
+                    'query' => implode(' ', $scoringWords),
+                    'boost' => self::TIE_BREAKER_BOOST * $scale,
+                ],
+            ],
+        ];
+
+        return [
+            'bool' => [
+                'should' => $should,
+            ],
+        ];
+    }
+
+    /**
+     * 判断查询是否含中文（CJK 统一表意文字）
+     *
+     * @param  string  $query  搜索关键词
+     * @return bool 含汉字返回 true，否则按巴利文（拉丁字母）处理
+     */
+    protected function isCjkQuery(string $query): bool
+    {
+        return (bool) preg_match('/[\x{4E00}-\x{9FFF}\x{3400}-\x{4DBF}\x{F900}-\x{FAFF}]/u', $query);
+    }
+
+    /**
+     * 构建 definition（定义查询）
+     *
+     * 义注里的黑体字通常就是被解释的词，所以黑体字命中决定排序，正文只做次级排序：
+     *   - 每个原始词单独算：命中的单独黑体字（bold_single）越多分越高
+     *   - 单独黑体字 > 多词黑体短语（bold_multi）里的词
+     *   - 词形不分高下（走同义词，即该词的全部变格变位），原拼写只在同档内加少量分：
+     *     bold_* 建索引用 standard，查询时显式指定 analyzer=standard 即是「拼写相同」，
+     *     不指定则走带同义词的 pali_query_analyzer
+     *   - 多词黑体也按任一词形算：bold_* 取自 wbw_templates.real（已拆连音），
+     *     正文里粘了连音（如 vitakkanti）匹配不到的词，往往靠它召回
+     *   - 用 match_phrase 而不是 match：中文在 standard 下按字切分，phrase 要求字连续，
+     *     避免一个字重合就命中
+     *   - 每个词的黑体分乘上它的罕见度权重（见 wordRarityWeights）：常见词（bojjhaṅga）
+     *     不再与罕见的目标词（dhammavicayasambojjhaṅga）同分，挤占前排
+     * 计分表见 DEFINITION_SCORES；正文部分复用 fuzzy 的计分，乘 DEFINITION_TEXT_SCALE。
+     *
+     * @param  string  $query  搜索关键词
+     * @param  array<string, float>|null  $weights  原始词 => 罕见度权重，null 表示都按 1
+     * @return array OpenSearch DSL query 片段
+     */
+    protected function buildDefinitionQuery(string $query, ?array $weights = null): array
+    {
+        $words = $this->splitQueryWords($query);
+
+        if ($words === []) {
+            return ['match_all' => new \stdClass];
+        }
+
+        $should = [];
+
+        // 停用词不单独算黑体分（整句的 multi_phrase 仍带上它们）
+        foreach ($this->scoringWords($words) as $word) {
+            $weight = $weights[$word] ?? 1.0;
+
+            foreach (['single' => 'bold_single', 'multi' => 'bold_multi'] as $tier => $field) {
+                $should[] = $this->constantScore(
+                    ['match_phrase' => [$field => $word]],
+                    self::DEFINITION_SCORES[$tier] * $weight,
+                );
+                $should[] = $this->constantScore(
+                    ['match_phrase' => [$field => ['query' => $word, 'analyzer' => 'standard']]],
+                    self::DEFINITION_SCORES[$tier.'_exact'] * $weight,
+                );
+            }
+        }
+
+        if (count($words) >= 2) {
+            $should[] = $this->constantScore(
+                ['match_phrase' => ['bold_multi' => ['query' => implode(' ', $words), 'analyzer' => 'standard']]],
+                self::DEFINITION_SCORES['multi_phrase'],
+            );
+        }
+
+        // 正文：黑体同分时的次级排序，也保留没有黑体的文档（偈颂等）的召回
+        if ($this->isCjkQuery($query)) {
+            $should[] = [
+                'multi_match' => [
+                    'query' => $query,
+                    'fields' => ['title.text.zh^3', 'content.text.zh'],
+                    'boost' => self::DEFINITION_TEXT_SCALE,
+                ],
+            ];
+        } else {
+            $should[] = $this->buildPaliFuzzyQuery($query, self::DEFINITION_TEXT_SCALE, $weights);
         }
 
         return [
-            'multi_match' => [
-                'query' => $query,
-                'fields' => $fields,
-                'type' => 'best_fields',
+            'bool' => [
+                'should' => $should,
             ],
         ];
     }

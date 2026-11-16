@@ -1,0 +1,48 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-credit-policy.yaml
+get:
+  summary: 查看当前的积分策略
+  tags:
+    - credit-policy
+  operationId: get_api_v3_credit_policy
+  description: |-
+    每天赠送多少、每次提问多少钱、读经和编辑怎么换积分。`version` 是生效日（YYYYMMDD），
+    也记在每笔积分流水里。「一天」按 UTC 算。
+
+    实现：`V3\CreditPolicyController@__invoke`
+  security:
+    - {  }
+    -
+      bearerAuth: []
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  version:
+                    type: integer
+                  day_timezone:
+                    type: string
+                  daily_free:
+                    type: object
+                    properties:
+                      guest: { type: integer }
+                      user: { type: integer }
+                  cost:
+                    type: object
+                    properties:
+                      normal: { type: integer }
+                      deep: { type: integer }
+                  guest_ip_daily_cap:
+                    type: integer
+                    nullable: true
+                  earn:
+                    type: object
+                    properties:
+                      reading: { type: object, properties: { credits_per_minute: { type: integer }, daily_cap: { type: integer, nullable: true } } }
+                      editing: { type: object, properties: { credits_per_minute: { type: integer }, daily_cap: { type: integer, nullable: true } } }

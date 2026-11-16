@@ -66,7 +66,7 @@ const items = {
   "forms.fields.to.label": "连接到",
   "forms.fields.count.label": "计数",
   "forms.fields.owner.label": "拥有者",
-  "forms.message.res.remove": "将此资源从群中移除吗？",
+  "forms.message.res.remove": "将此资源从团队中移除吗？",
   "forms.fields.parent2.label": "衍生原型",
   "forms.fields.parent2.tooltip": "最长为 256个字符",
   "forms.fields.username.label": "用户名(登录名)",
@@ -98,10 +98,11 @@ const items = {
   "forms.fields.assignees.label": "指派给",
   "forms.fields.model.label": "模型",
   "forms.fields.key.label": "密钥",
-  group: "群组",
-  "group.fields.name.label": "群组名",
-  "group.files": "群文档",
-  "group.member": "群成员",
+  group: "团队",
+  "group.fields.name.label": "团队名",
+  "group.files": "团队文档",
+  "group.member": "团队成员",
+  "forms.message.group.leave": "确定退出这个团队吗？",
 };
 
 export default items;

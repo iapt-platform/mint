@@ -4,7 +4,10 @@ get:
   tags:
     - group
   operationId: get_api_v2_group
-  description: 实现：`GroupController@index`
+  description: |
+    `view=all` 已被 `GET /v3/groups?search=`（只搜公开团队）取代；
+    `view=studio`（含 `view2`）已被 `GET /v3/me/groups?owned=true|false` 取代。
+    保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
   parameters:
     -
       name: view
@@ -78,12 +81,14 @@ get:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
       $ref: '../../main.yaml#/components/responses/ValidationError'
+  deprecated: true
 post:
   summary: '新建 group'
   tags:
     - group
   operationId: post_api_v2_group
-  description: 实现：`GroupController@store`
+  description: |
+    已被 `POST /v3/groups` 取代。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
   requestBody:
     required: false
     content:
@@ -113,3 +118,4 @@ post:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
       $ref: '../../main.yaml#/components/responses/ValidationError'
+  deprecated: true

@@ -10,12 +10,17 @@ import {
   HomeOutlined,
   LogoutOutlined,
   SettingOutlined,
+  CheckOutlined,
+  SwapOutlined,
 } from "@ant-design/icons";
 
-import { useAppSelector } from "../../hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks";
 import {
   currentUser as _currentUser,
+  currentStudio,
+  setCurrStudio,
   studioList,
+  studioSignOut,
   TO_SIGN_IN,
 } from "../../reducers/current-user";
 import type { TooltipPlacement } from "antd/lib/tooltip";
@@ -27,6 +32,10 @@ import Studio from "./Studio";
 import LoginButton from "./LoginButton";
 
 const { Title, Paragraph, Text } = Typography;
+
+/** 账户列表里个人空间与各团队空间的菜单 key */
+const PERSONAL_KEY = "space:personal";
+const TEAMSPACE_PREFIX = "space:team:";
 
 interface IWidget {
   placement?: TooltipPlacement;
@@ -41,10 +50,12 @@ const SignInAvatar = ({
 }: IWidget) => {
   const intl = useIntl();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [settingOpen, setSettingOpen] = useState(false);
 
   const user = useAppSelector(_currentUser);
   const studios = useAppSelector(studioList);
+  const teamspace = useAppSelector(currentStudio);
 
   console.debug("user", user);
 
@@ -68,16 +79,27 @@ const SignInAvatar = ({
       </Paragraph>
     );
 
+    const current = <CheckOutlined style={{ marginLeft: 8 }} />;
     let userList = [
       {
-        key: user.realName,
-        label: <User {...user} />,
+        key: PERSONAL_KEY,
+        label: (
+          <>
+            <User {...user} />
+            {!teamspace && current}
+          </>
+        ),
       },
     ];
     const studioList = studios?.map((item) => {
       return {
-        key: item.realName ?? "",
-        label: <Studio data={item} />,
+        key: TEAMSPACE_PREFIX + item.id,
+        label: (
+          <>
+            <Studio data={item} />
+            {teamspace?.id === item.id && current}
+          </>
+        ),
       };
     });
     if (studioList) {
@@ -98,8 +120,10 @@ const SignInAvatar = ({
                   items={[
                     {
                       key: "account",
-                      label: "选择账户",
-                      icon: <UserOutlined />,
+                      label: intl.formatMessage({
+                        id: "buttons.teamspace.switch",
+                      }),
+                      icon: <SwapOutlined />,
                       children: userList,
                     },
                     {
@@ -131,6 +155,18 @@ const SignInAvatar = ({
                     },
                   ].filter((value) => !value.disabled)}
                   onClick={(info) => {
+                    if (info.key === PERSONAL_KEY) {
+                      dispatch(studioSignOut());
+                      return;
+                    }
+                    if (info.key.startsWith(TEAMSPACE_PREFIX)) {
+                      const id = info.key.slice(TEAMSPACE_PREFIX.length);
+                      const studio = studios?.find((item) => item.id === id);
+                      if (studio) {
+                        dispatch(setCurrStudio(studio));
+                      }
+                      return;
+                    }
                     switch (info.key) {
                       case "setting":
                         setSettingOpen(true);
@@ -147,6 +183,7 @@ const SignInAvatar = ({
                       case "logout":
                         sessionStorage.removeItem("token");
                         localStorage.removeItem("token");
+                        dispatch(studioSignOut());
                         navigate(TO_SIGN_IN);
                         break;
                     }

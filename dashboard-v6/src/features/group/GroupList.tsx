@@ -7,28 +7,18 @@ import {
   ExclamationCircleOutlined,
 } from "@ant-design/icons";
 
-import { delete_, get } from "../../request";
-
 import GroupCreate from "../../components/group/GroupCreate";
-import { RoleValueEnum } from "../../components/studio/table";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import StudioName from "../../components/auth/Studio";
 
-import { getSorterUrl } from "../../utils";
 import type { IStudio } from "../../api/Auth";
-import type { IDeleteResponse, IGroupListResponse } from "../../api/group";
+import { deleteGroup } from "../../api/group";
+import { fetchMyGroupsPage } from "../../api/group-member";
 import StatusBadge from "../../components/general/StatusBadge";
-
-interface IMyNumberResponse {
-  ok: boolean;
-  message: string;
-  data: {
-    my: number;
-    collaboration: number;
-  };
-}
+import { useAppDispatch } from "../../hooks";
+import { refreshMyGroups } from "../teamspace/refreshMyGroups";
 
 interface DataItem {
   sn: number;
@@ -41,31 +31,36 @@ interface DataItem {
 }
 
 interface IWidget {
-  studioName?: string;
   onSelect?: (id: string) => void;
   onSetting?: (id: string) => void;
 }
-const GroupList = ({ studioName, onSelect, onSetting }: IWidget) => {
+/** 我的团队：「我创建的」与「我参加的」两个标签页（v3 /me/groups 的 owned 过滤） */
+const GroupList = ({ onSelect, onSetting }: IWidget) => {
   const intl = useIntl(); //i18n
+  const dispatch = useAppDispatch();
 
   const [openCreate, setOpenCreate] = useState(false);
   const [activeKey, setActiveKey] = useState<React.Key | undefined>("my");
   const [myNumber, setMyNumber] = useState<number>(0);
   const [collaborationNumber, setCollaborationNumber] = useState<number>(0);
 
-  useEffect(() => {
-    /**
-     * 获取各种课程的数量
-     */
-    const url = `/api/v2/group-my-number?studio=${studioName}`;
-    console.log("url", url);
-    get<IMyNumberResponse>(url).then((json) => {
-      if (json.ok) {
-        setMyNumber(json.data.my);
-        setCollaborationNumber(json.data.collaboration);
-      }
-    });
-  }, [studioName]);
+  /** 两个标签页的数量：各取一条，读 meta.total */
+  const refreshNumbers = useCallback(() => {
+    fetchMyGroupsPage({ owned: true, per_page: 1 }).then((res) =>
+      setMyNumber(res.meta?.total ?? 0)
+    );
+    fetchMyGroupsPage({ owned: false, per_page: 1 }).then((res) =>
+      setCollaborationNumber(res.meta?.total ?? 0)
+    );
+  }, []);
+  useEffect(refreshNumbers, [refreshNumbers]);
+
+  /** 建、删团队后：刷新列表、数量，以及头像弹窗里的账户列表 */
+  const afterChange = () => {
+    ref.current?.reload();
+    refreshNumbers();
+    refreshMyGroups(dispatch).catch(() => undefined);
+  };
 
   const showDeleteConfirm = (id: string, title: string) => {
     Modal.confirm({
@@ -86,18 +81,11 @@ const GroupList = ({ studioName, onSelect, onSetting }: IWidget) => {
       cancelText: intl.formatMessage({
         id: "buttons.no",
       }),
-      onOk() {
-        console.log("delete", id);
-        return delete_<IDeleteResponse>(`/api/v2/group/${id}`)
-          .then((json) => {
-            if (json.ok) {
-              message.success("删除成功");
-              ref.current?.reload();
-            } else {
-              message.error(json.message);
-            }
-          })
-          .catch((e) => console.log("Oops errors!", e));
+      async onOk() {
+        // 只有 owner 能删；名下还有资源时后端 409，原因由 unwrap 弹出
+        await deleteGroup(id);
+        message.success(intl.formatMessage({ id: "flashes.success" }));
+        afterChange();
       },
     });
   };
@@ -164,7 +152,16 @@ const GroupList = ({ studioName, onSelect, onSetting }: IWidget) => {
             search: false,
             filters: true,
             onFilter: true,
-            valueEnum: RoleValueEnum(),
+            valueEnum: Object.fromEntries(
+              ["owner", "manager", "editor", "reader"].map((role) => [
+                role,
+                {
+                  text: intl.formatMessage({
+                    id: `labels.group.role.${role}`,
+                  }),
+                },
+              ])
+            ),
           },
           {
             title: intl.formatMessage({
@@ -175,7 +172,6 @@ const GroupList = ({ studioName, onSelect, onSetting }: IWidget) => {
             search: false,
             dataIndex: "created_at",
             valueType: "date",
-            sorter: true,
           },
           {
             title: intl.formatMessage({ id: "buttons.option" }),
@@ -219,35 +215,37 @@ const GroupList = ({ studioName, onSelect, onSetting }: IWidget) => {
             ],
           },
         ]}
-        request={async (params = {}, sorter, filter) => {
-          console.log(params, sorter, filter);
-          let url = `/api/v2/group?view=studio&name=${studioName}&view2=${activeKey}`;
-          const offset =
-            ((params.current ? params.current : 1) - 1) *
-            (params.pageSize ? params.pageSize : 20);
-          url += `&limit=${params.pageSize}&offset=${offset}`;
-          url += params.keyword ? "&search=" + params.keyword : "";
-          url += getSorterUrl(sorter);
-
-          console.log(url);
-          const res = await get<IGroupListResponse>(url);
-          const items: DataItem[] = res.data.rows.map((item, id) => {
-            return {
-              sn: id + 1,
-              id: item.uid,
-              name: item.name,
-              description: item.description,
-              role: item.role,
-              created_at: item.created_at,
-              studio: item.studio,
-            };
-          });
-          console.log(items);
-          return {
-            total: res.data.count,
-            succcess: true,
-            data: items,
-          };
+        request={async (params = {}) => {
+          const page = params.current ?? 1;
+          const perPage = params.pageSize ?? 20;
+          try {
+            const res = await fetchMyGroupsPage({
+              owned: activeKey === "my",
+              search: params.keyword || undefined,
+              page,
+              per_page: perPage,
+            });
+            const items: DataItem[] = (res.data ?? []).map((item, index) => ({
+              sn: (page - 1) * perPage + index + 1,
+              id: item.id ?? "",
+              name: item.name ?? "",
+              description: item.description ?? "",
+              role: item.role ?? "",
+              created_at: item.created_at ?? "",
+              studio: item.owner
+                ? {
+                    id: item.owner.id ?? "",
+                    nickName: item.owner.nickName,
+                    realName: item.owner.realName,
+                    studioName: item.owner.userName,
+                    avatar: item.owner.avatar ?? undefined,
+                  }
+                : undefined,
+            }));
+            return { total: res.meta?.total ?? 0, success: true, data: items };
+          } catch {
+            return { total: 0, success: false, data: [] };
+          }
         }}
         rowKey="id"
         bordered
@@ -263,10 +261,9 @@ const GroupList = ({ studioName, onSelect, onSetting }: IWidget) => {
           <Popover
             content={
               <GroupCreate
-                studio={studioName}
                 onCreate={() => {
                   setOpenCreate(false);
-                  ref.current?.reload();
+                  afterChange();
                 }}
               />
             }

@@ -117,6 +117,8 @@ const items = {
   "buttons.get_template": "Get Template",
   "buttons.duplicate": "Duplicate",
   "buttons.word_count": "Word Count",
+  "buttons.teamspace.switch": "Switch to teamspace",
+  "buttons.teamspace.leave": "Back to personal space",
 };
 
 export default items;

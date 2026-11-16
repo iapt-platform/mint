@@ -147,6 +147,23 @@ const items = {
   "labels.paragraph-count": "Paras",
   "labels.pagination.total": "Total: {total}",
   "labels.channel.select": "Select version",
+  "labels.teamspace": "Teamspaces",
+  "labels.teamspace.current": "Teamspace: {name}",
+  "labels.teamspace.personal-only": "Personal only — not available in a teamspace",
+  "labels.teamspace.unsupported": "This module does not support teamspaces yet",
+  "labels.group.role.owner": "Owner",
+  "labels.group.role.manager": "Manager",
+  "labels.group.role.editor": "Editor",
+  "labels.group.role.reader": "Reader",
+  "labels.group.role": "Role",
+  "labels.teamspace.members": "Members",
+  "labels.teamspace.only": "Only available in a teamspace",
+  "labels.group.visibility": "Visibility",
+  "labels.group.public": "Public (searchable)",
+  "labels.group.private": "Private (members only)",
+  "labels.group.share.missing": "(deleted)",
+  "labels.group.share.editor": "Can edit",
+  "labels.group.share.reader": "Read only",
 };
 
 export default items;

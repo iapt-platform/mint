@@ -10,6 +10,8 @@ import message from "./zh-Hans/message";
 import label from "./zh-Hans/label";
 import error from "./zh-Hans/error";
 import pages from "./zh-Hans/pages";
+import admin from "./zh-Hans/admin";
+import adminStats from "./zh-Hans/admin-stats";
 
 const items = {
   "columns.library.title": "藏经阁",
@@ -31,7 +33,7 @@ const items = {
   "columns.studio.palicanon.title": "圣典",
   "columns.studio.recent.title": "最近编辑",
   "columns.studio.channel.title": "版本风格",
-  "columns.studio.group.title": "群组",
+  "columns.studio.group.title": "团队",
   "columns.studio.userdict.title": "用户字典",
   "columns.studio.term.title": "术语",
   "columns.studio.course.title": "课程",
@@ -59,6 +61,8 @@ const items = {
   ...label,
   ...error,
   ...pages,
+  ...admin,
+  ...adminStats,
 };
 
 export default items;

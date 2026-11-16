@@ -1,12 +1,10 @@
 import { useIntl } from "react-intl";
-import { useAppSelector } from "../../../hooks";
-import { currentUser } from "../../../reducers/current-user";
 
 import List from "../../../components/course/List";
+import { useActiveStudio } from "../../../hooks/useActiveStudio";
 
 const Widget = () => {
-  const user = useAppSelector(currentUser);
-  const studioName = user?.realName;
+  const { studioName } = useActiveStudio();
   const intl = useIntl();
   return (
     <>

@@ -1,0 +1,119 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-admin-reading-stats.yaml
+get:
+  summary: 阅读统计
+  tags:
+    - admin
+  operationId: get_api_v3_admin_reading_stats
+  description: |-
+    一次返回整页：指标（含上一同长区间作对比）、日活 / 月活、每日序列、热门章节、
+    三藏与根本·义注·复注分布、读经时长分布、读经积分。结果缓存 10 分钟。
+    口径：活跃读者来自阅读记录（recents，只有登录用户）；读经时长只有 App；
+    章节浏览（views）含游客与搜索引擎爬虫。
+
+    实现：`V3\AdminReadingStatsController@__invoke`
+  security:
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: from
+      in: query
+      schema:
+        type: string
+        default: '今天往前 29 天'
+      description: 起始日（UTC，Y-m-d）
+    -
+      name: to
+      in: query
+      schema:
+        type: string
+        default: 今天
+      description: 结束日（UTC，Y-m-d，含当天）
+    -
+      name: client
+      in: query
+      schema:
+        type: string
+        enum:
+          - all
+          - web
+          - mobile
+        default: all
+      description: 客户端
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  range:
+                    type: object
+                    properties:
+                      from: { type: string }
+                      to: { type: string }
+                      client: { type: string }
+                  summary:
+                    type: object
+                    properties:
+                      active_readers: { type: integer }
+                      chapters_opened: { type: integer }
+                      reading_seconds: { type: integer, nullable: true }
+                      reading_users: { type: integer, nullable: true }
+                      page_views: { type: integer, nullable: true }
+                      dict_lookups: { type: integer }
+                  previous:
+                    type: object
+                    properties:
+                      active_readers: { type: integer }
+                      chapters_opened: { type: integer }
+                      reading_seconds: { type: integer, nullable: true }
+                      reading_users: { type: integer, nullable: true }
+                      page_views: { type: integer, nullable: true }
+                      dict_lookups: { type: integer }
+                  sticky:
+                    type: object
+                    properties:
+                      dau: { type: integer }
+                      mau: { type: integer }
+                  daily:
+                    type: array
+                    items:
+                      type: object
+                      properties: { date: { type: string }, readers_web: { type: integer }, readers_mobile: { type: integer }, reading_minutes: { type: integer }, page_views: { type: integer }, dict_lookups: { type: integer } }
+                  top_chapters:
+                    type: array
+                    items:
+                      type: object
+                      properties: { article_id: { type: string }, book: { type: integer }, paragraph: { type: integer }, title: { type: string }, collection: { type: string, nullable: true }, readers: { type: integer }, records: { type: integer } }
+                  pitaka_share:
+                    type: array
+                    items:
+                      type: object
+                      properties: { tag: { type: string }, records: { type: integer } }
+                  layer_share:
+                    type: array
+                    items:
+                      type: object
+                      properties: { tag: { type: string }, records: { type: integer } }
+                  duration_buckets:
+                    type: array
+                    items:
+                      type: object
+                      properties: { bucket: { type: string }, user_days: { type: integer } }
+                  reading_credits:
+                    type: object
+                    properties:
+                      credits: { type: integer }
+                      users: { type: integer }
+                      capped_user_days: { type: integer }
+                      clamped_ratio: { type: number }
+                    nullable: true
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

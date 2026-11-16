@@ -2,12 +2,11 @@ import { useMatches, useParams } from "react-router";
 import { useIntl } from "react-intl";
 
 import AnthologyTocEdit from "../../../components/anthology/AnthologyTocEdit";
-import { useAppSelector } from "../../../hooks";
-import { currentUser } from "../../../reducers/current-user";
+import { useActiveStudio } from "../../../hooks/useActiveStudio";
 
 const Widget = () => {
   const { anthologyId } = useParams(); //url 参数
-  const user = useAppSelector(currentUser);
+  const { studioName } = useActiveStudio();
   const intl = useIntl();
   const matches = useMatches() as {
     data?: { title?: string; name?: string; word?: string };
@@ -19,7 +18,7 @@ const Widget = () => {
   return (
     <>
       <title>{name ? `${prefix}-${name}` : prefix}</title>
-      <AnthologyTocEdit id={anthologyId} editorStudioName={user?.realName} />
+      <AnthologyTocEdit id={anthologyId} editorStudioName={studioName} />
     </>
   );
 };

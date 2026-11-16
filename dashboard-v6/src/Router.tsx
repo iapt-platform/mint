@@ -21,10 +21,12 @@ import dictionaryRoutes from "./routes/dictionaryRoutes";
 import courseRoutes from "./routes/courseRoutes";
 import nissayaRoutes from "./routes/nissayaRoutes";
 import discussionRoutes from "./routes/discussionRoutes";
+import adminRoutes from "./routes/adminRoutes";
 
 const RootLayout = lazy(() => import("./layouts/Root"));
 const AnonymousLayout = lazy(() => import("./layouts/anonymous"));
 const DashboardLayout = lazy(() => import("./layouts/dashboard"));
+const AdminLayout = lazy(() => import("./layouts/admin"));
 const WorkspaceLayout = lazy(() => import("./layouts/workspace"));
 const TestLayout = lazy(() => import("./layouts/test"));
 
@@ -82,6 +84,13 @@ const router = createBrowserRouter(
           path: "dashboard",
           Component: DashboardLayout,
           children: [{ index: true, Component: DashboardIndex }],
+        },
+        {
+          // 管理后台：只有 root / administrator（layouts/admin 里判断）
+          path: "admin",
+          Component: AdminLayout,
+          handle: { id: "admin.home", crumb: "admin" },
+          children: adminRoutes,
         },
         {
           path: "workspace",

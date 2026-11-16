@@ -1,0 +1,67 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-admin-agent-runs-digest.yaml
+get:
+  summary: 分析用的精简导出
+  tags:
+    - admin
+  operationId: get_api_v3_admin_agent_runs_digest
+  description: |-
+    区间内允许用于改进回答（improve=true）的提问，最早的在前。不带任何身份（账号、设备、IP）。
+    每条给：问题、路由与把握度、检索词、状态与耗时、工具调用序列、用户评价、隐式信号计数、
+    同一会话里下一次提问隔了几秒；`full=true` 时再带回答、证据全文与引用，供 agent 评估回答质量
+    （服务端不做质量评估）。给 wikipali 插件的 `admin digest` 与分析技能用。
+
+    实现：`V3\AdminAgentRunController@digest`
+  security:
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: full
+      in: query
+      schema:
+        type: boolean
+        default: false
+      description: '是否带回答、证据全文与引用（此时 limit 最大 200）'
+    -
+      name: limit
+      in: query
+      schema:
+        type: integer
+        default: '500（full 时 100）'
+      description: '最多多少条，最大 2000（full 时 200）'
+    -
+      name: from
+      in: query
+      schema:
+        type: string
+        default: '今天往前 29 天'
+      description: 起始日（UTC，Y-m-d）
+    -
+      name: to
+      in: query
+      schema:
+        type: string
+        default: 今天
+      description: 结束日（UTC，Y-m-d，含当天）
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+              meta:
+                type: object
+                properties:
+                  has_more:
+                    type: boolean
+                    description: '区间内是否还有更多（超出 limit）'
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

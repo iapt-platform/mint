@@ -3,12 +3,10 @@ import { useIntl } from "react-intl";
 
 import ChannelTable from "../../../components/channel/ChannelTable";
 import type { IChannel } from "../../../api/channel";
-import { useAppSelector } from "../../../hooks";
-import { currentUser } from "../../../reducers/current-user";
+import { useActiveStudio } from "../../../hooks/useActiveStudio";
 
 const Widget = () => {
-  const user = useAppSelector(currentUser);
-  const studioName = user?.realName;
+  const { studioName } = useActiveStudio();
   const navigate = useNavigate();
   const intl = useIntl();
   console.debug("channel list", studioName);

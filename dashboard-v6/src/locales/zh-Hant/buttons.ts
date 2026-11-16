@@ -21,7 +21,7 @@ const items = {
   "buttons.sign-out": "退出登入",
   "buttons.welcome": "歡迎遨遊法的海洋",
   "buttons.click.upload": "點選上傳",
-  "buttons.group.exit": "退群",
+  "buttons.group.exit": "退出團隊",
   "buttons.group.add.member": "加人",
   "buttons.lesson.add.lesson": "加入",
   "buttons.ok": "確定",
@@ -118,6 +118,8 @@ const items = {
   "buttons.get_template": "獲取引用模版",
   "buttons.duplicate": "建立副本",
   "buttons.word_count": "字數統計",
+  "buttons.teamspace.switch": "切換到團隊空間",
+  "buttons.teamspace.leave": "切回個人空間",
 };
 
 export default items;

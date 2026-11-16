@@ -7,7 +7,7 @@ info:
 
     由 `php openapi/scripts/generate.php` 依据 api-v13 的路由与控制器源码生成。
     响应统一封装为 `{ok, message, data}`；`ok=false` 时 `message` 为错误信息。
-  version: 2026.10.23
+  version: 1.0.0
 servers:
   -
     url: /api
@@ -681,8 +681,34 @@ paths:
     $ref: ./resources/auto/v2-webhook.yaml
   '/v2/webhook/{webhook}':
     $ref: ./resources/auto/v2-webhook-webhook.yaml
+  /v3/admin/agent-feedback:
+    $ref: ./resources/auto/v3-admin-agent-feedback.yaml
+  /v3/admin/agent-runs:
+    $ref: ./resources/auto/v3-admin-agent-runs.yaml
+  /v3/admin/agent-runs/digest:
+    $ref: ./resources/auto/v3-admin-agent-runs-digest.yaml
+  '/v3/admin/agent-runs/{run}':
+    $ref: ./resources/auto/v3-admin-agent-runs-run.yaml
+  /v3/admin/agent-stats:
+    $ref: ./resources/auto/v3-admin-agent-stats.yaml
+  /v3/admin/reading-stats:
+    $ref: ./resources/auto/v3-admin-reading-stats.yaml
+  /v3/agent-charges:
+    $ref: ./resources/auto/v3-agent-charges.yaml
+  /v3/agent-events:
+    $ref: ./resources/auto/v3-agent-events.yaml
+  /v3/agent-feedback:
+    $ref: ./resources/auto/v3-agent-feedback.yaml
+  '/v3/agent-feedback/{message}':
+    $ref: ./resources/auto/v3-agent-feedback-message.yaml
   /v3/agent-grants:
     $ref: ./resources/auto/v3-agent-grants.yaml
+  /v3/agent-quota:
+    $ref: ./resources/auto/v3-agent-quota.yaml
+  /v3/agent-traces:
+    $ref: ./resources/auto/v3-agent-traces.yaml
+  /v3/credit-policy:
+    $ref: ./resources/auto/v3-credit-policy.yaml
   /v3/discussions:
     $ref: ./resources/auto/v3-discussions.yaml
   /v3/discussions/batch-count:
@@ -695,6 +721,18 @@ paths:
     $ref: ./resources/auto/v3-discussions-discussion-replies.yaml
   /v3/email-certifications:
     $ref: ./resources/auto/v3-email-certifications.yaml
+  /v3/groups:
+    $ref: ./resources/auto/v3-groups.yaml
+  '/v3/groups/{group}':
+    $ref: ./resources/auto/v3-groups-group.yaml
+  '/v3/groups/{group}/members':
+    $ref: ./resources/auto/v3-groups-group-members.yaml
+  '/v3/groups/{group}/members/{member}':
+    $ref: ./resources/auto/v3-groups-group-members-member.yaml
+  '/v3/groups/{group}/shares':
+    $ref: ./resources/auto/v3-groups-group-shares.yaml
+  '/v3/groups/{group}/shares/{share}':
+    $ref: ./resources/auto/v3-groups-group-shares-share.yaml
   /v3/heartbeat:
     $ref: ./resources/auto/v3-heartbeat.yaml
   /v3/invites:
@@ -703,10 +741,20 @@ paths:
     $ref: ./resources/auto/v3-invites-invite.yaml
   /v3/me:
     $ref: ./resources/auto/v3-me.yaml
+  /v3/me/agent-threads:
+    $ref: ./resources/auto/v3-me-agent-threads.yaml
+  '/v3/me/agent-threads/{thread}':
+    $ref: ./resources/auto/v3-me-agent-threads-thread.yaml
+  '/v3/me/agent-threads/{thread}/archive':
+    $ref: ./resources/auto/v3-me-agent-threads-thread-archive.yaml
+  /v3/me/groups:
+    $ref: ./resources/auto/v3-me-groups.yaml
   /v3/me/reactions:
     $ref: ./resources/auto/v3-me-reactions.yaml
   '/v3/me/reactions/{reaction}':
     $ref: ./resources/auto/v3-me-reactions-reaction.yaml
+  /v3/me/reading-time:
+    $ref: ./resources/auto/v3-me-reading-time.yaml
   /v3/password-resets:
     $ref: ./resources/auto/v3-password-resets.yaml
   '/v3/password-resets/{token}':
@@ -727,6 +775,8 @@ paths:
     $ref: ./resources/auto/v3-sessions.yaml
   '/v3/tipitaka-chapter-channels/{book}/{para}':
     $ref: ./resources/auto/v3-tipitaka-chapter-channels-book-para.yaml
+  /v3/tipitaka-chapters:
+    $ref: ./resources/auto/v3-tipitaka-chapters.yaml
   '/v3/tipitaka-discussions/{channel}':
     $ref: ./resources/auto/v3-tipitaka-discussions-channel.yaml
   '/v3/tipitaka-reading/{channel}':

@@ -1,0 +1,132 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-admin-agent-stats.yaml
+get:
+  summary: 'AI 对话统计'
+  tags:
+    - admin
+  operationId: get_api_v3_admin_agent_stats
+  description: |-
+    一次返回整页：指标（含上一同长区间作对比）、每日按研究路径的提问数与耗时分位数、
+    客户端分布、工具调用 Top、积分流水。结果缓存 10 分钟。
+
+    实现：`V3\AdminAgentStatsController@__invoke`
+  security:
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: from
+      in: query
+      schema:
+        type: string
+        default: '今天往前 29 天'
+      description: 起始日（UTC，Y-m-d）
+    -
+      name: to
+      in: query
+      schema:
+        type: string
+        default: 今天
+      description: 结束日（UTC，Y-m-d，含当天）
+    -
+      name: account_type
+      in: query
+      schema:
+        type: string
+        enum:
+          - all
+          - user
+          - guest
+        default: all
+      description: 账号类型
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  range:
+                    type: object
+                    properties:
+                      from: { type: string }
+                      to: { type: string }
+                      account_type: { type: string }
+                  summary:
+                    type: object
+                    properties:
+                      runs: { type: integer }
+                      deep: { type: integer }
+                      passage: { type: integer }
+                      denied: { type: integer }
+                      errors: { type: integer }
+                      cancelled: { type: integer }
+                      unchecked: { type: integer }
+                      improve: { type: integer }
+                      askers: { type: integer }
+                      askers_user: { type: integer }
+                      askers_guest: { type: integer }
+                      latency_p50_ms: { type: integer, nullable: true }
+                      latency_p95_ms: { type: integer, nullable: true }
+                      tokens_in: { type: integer }
+                      tokens_out: { type: integer }
+                      feedback_up: { type: integer }
+                      feedback_down: { type: integer }
+                      feedback_asked: { type: integer }
+                  previous:
+                    type: object
+                    properties:
+                      runs: { type: integer }
+                      deep: { type: integer }
+                      passage: { type: integer }
+                      denied: { type: integer }
+                      errors: { type: integer }
+                      cancelled: { type: integer }
+                      unchecked: { type: integer }
+                      improve: { type: integer }
+                      askers: { type: integer }
+                      askers_user: { type: integer }
+                      askers_guest: { type: integer }
+                      latency_p50_ms: { type: integer, nullable: true }
+                      latency_p95_ms: { type: integer, nullable: true }
+                      tokens_in: { type: integer }
+                      tokens_out: { type: integer }
+                      feedback_up: { type: integer }
+                      feedback_down: { type: integer }
+                      feedback_asked: { type: integer }
+                  daily:
+                    type: array
+                    items:
+                      type: object
+                      properties: { date: { type: string }, question: { type: integer }, term: { type: integer }, passage: { type: integer }, chat: { type: integer }, none: { type: integer }, denied: { type: integer }, errors: { type: integer }, latency_p50_ms: { type: integer, nullable: true }, latency_p95_ms: { type: integer, nullable: true }, feedback_up: { type: integer }, feedback_down: { type: integer } }
+                  clients:
+                    type: array
+                    items:
+                      type: object
+                      properties: { client: { type: string }, runs: { type: integer } }
+                  tools:
+                    type: array
+                    items:
+                      type: object
+                      properties: { name: { type: string }, calls: { type: integer }, errors: { type: integer }, avg_ms: { type: integer } }
+                  feedback_reasons:
+                    type: array
+                    items:
+                      type: object
+                      properties: { reason: { type: string }, count: { type: integer } }
+                  credits:
+                    type: object
+                    properties:
+                      spent_free: { type: integer }
+                      spent_earned: { type: integer }
+                      refunded: { type: integer }
+                      earned_reading: { type: integer }
+                      earned_editing: { type: integer }
+                      adjusted: { type: integer }
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

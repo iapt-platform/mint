@@ -2,13 +2,11 @@ import { useMatches, useParams } from "react-router";
 import { useIntl } from "react-intl";
 
 import TagCreate from "../../../components/tag/TagCreate";
-import { useAppSelector } from "../../../hooks";
-import { currentUser } from "../../../reducers/current-user";
+import { useActiveStudio } from "../../../hooks/useActiveStudio";
 
 const Widget = () => {
   const { tagId } = useParams(); //url 参数
-  const user = useAppSelector(currentUser);
-  const studioName = user?.realName;
+  const { studioName } = useActiveStudio();
   const intl = useIntl();
   const matches = useMatches() as {
     data?: { title?: string; name?: string; word?: string };

@@ -1,0 +1,14 @@
+# 手写补充：v2 团队成员已被 v3 取代（2026-11-13）。
+put:
+  deprecated: true
+  description: |
+    空实现。改成员角色请用 `PATCH /v3/groups/{group}/members/{member}`。
+patch:
+  deprecated: true
+  description: |
+    空实现。改成员角色请用 `PATCH /v3/groups/{group}/members/{member}`。
+delete:
+  deprecated: true
+  description: |
+    已被 `DELETE /v3/groups/{group}/members/{member}` 取代（v3 允许本人退出团队）。
+    保留仅为 dashboard-v4 兼容，待 v4 下线后删除。

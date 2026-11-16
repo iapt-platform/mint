@@ -1,4 +1,4 @@
-import { Menu, type MenuProps } from "antd";
+import { Menu, Tooltip, type MenuProps } from "antd";
 import {
   SearchOutlined,
   HomeOutlined,
@@ -10,7 +10,7 @@ import {
   ToolOutlined,
   TeamOutlined,
 } from "@ant-design/icons";
-import { useNavigate, useMatches, type UIMatch } from "react-router";
+import { useNavigate, type UIMatch } from "react-router";
 import {
   ChannelIcon,
   CourseOutLinedIcon,
@@ -24,6 +24,12 @@ import RecentModal from "../recent/RecentModal.tsx";
 import SettingModal from "../setting/SettingModal.tsx";
 import { useIntl } from "react-intl";
 import { fullUrl } from "../../utils";
+import { useActiveStudio } from "../../hooks/useActiveStudio";
+import { useCurrentRouteId } from "../../hooks/useCurrentRouteId";
+import {
+  TEAMSPACE_HINT,
+  teamspaceAvailability,
+} from "../../features/teamspace/scope";
 
 /* ================= 类型 ================= */
 
@@ -38,17 +44,16 @@ interface MenuItem {
 
   /** ⭐ 用于高亮匹配 */
   activeId?: string | string[];
+
+  /** 判断团队空间下是否可用的路由 id；不写则取 activeId（打开弹窗、没有路由的菜单要写） */
+  scopeId?: string;
+
+  disabled?: boolean;
 }
 
 export interface RouteHandle {
   id?: string;
   crumb?: string | ((match: UIMatch) => string);
-}
-/* ================= 当前路由ID ================= */
-
-function useCurrentRouteId(): string | undefined {
-  const matches = useMatches() as UIMatch<number, RouteHandle>[];
-  return [...matches].reverse().find((match) => match.handle?.id)?.handle?.id;
 }
 
 /* ================= 匹配算法 ================= */
@@ -114,6 +119,60 @@ function findOpenKeys(
   return [];
 }
 
+/* ================= 团队空间置灰 ================= */
+
+/**
+ * 把当前空间（个人 / 团队）下不可用的菜单置灰并给出原因；有子菜单的，子项全灰才灰。
+ */
+function applyTeamspace(
+  items: MenuItem[],
+  isTeamspace: boolean,
+  hint: (id: string) => string
+): MenuItem[] {
+  return items.map((item) => {
+    if (item.children) {
+      const children = applyTeamspace(item.children, isTeamspace, hint);
+      return {
+        ...item,
+        children,
+        disabled: children.every((child) => child.disabled),
+      };
+    }
+    const scopeId =
+      item.scopeId ??
+      (typeof item.activeId === "string" ? item.activeId : undefined);
+    const availability = teamspaceAvailability(scopeId, isTeamspace);
+    if (item.type === "divider" || availability === "available") {
+      return item;
+    }
+    return {
+      ...item,
+      disabled: true,
+      extra: undefined,
+      label: (
+        <Tooltip title={hint(TEAMSPACE_HINT[availability])} placement="right">
+          <span>{item.label}</span>
+        </Tooltip>
+      ),
+    };
+  });
+}
+
+/* ================= 交给 antd 前去掉内部字段 ================= */
+
+/** activeId / scopeId 只给本文件用，透传给 antd 会落到 DOM 上并报警告 */
+function toAntdItems(items: MenuItem[]): MenuProps["items"] {
+  return items.map((item) => {
+    const rest: Partial<MenuItem> = { ...item };
+    delete rest.activeId;
+    delete rest.scopeId;
+    if (item.children) {
+      rest.children = toAntdItems(item.children) as MenuItem[];
+    }
+    return rest;
+  }) as MenuProps["items"];
+}
+
 /* ================= 组件 ================= */
 interface Props {
   onSearch?: () => void;
@@ -123,13 +182,14 @@ const Widget = ({ onSearch }: Props) => {
 
   const navigate = useNavigate();
   const routeId = useCurrentRouteId();
+  const { isTeamspace } = useActiveStudio();
 
   const [recentOpen, setRecentOpen] = useState(false);
   const [openSetting, setOpenSetting] = useState(false);
 
   /* ================= 菜单配置 ================= */
 
-  const items: MenuItem[] = [
+  const allItems: MenuItem[] = [
     {
       key: "search",
       icon: <SearchOutlined />,
@@ -173,6 +233,7 @@ const Widget = ({ onSearch }: Props) => {
         id: "columns.studio.setting.title",
       }),
       activeId: "workspace.setting",
+      scopeId: "workspace.settings",
     },
     { type: "divider", key: "d1" },
 
@@ -182,6 +243,7 @@ const Widget = ({ onSearch }: Props) => {
       label: intl.formatMessage({
         id: "columns.studio.recent.title",
       }),
+      scopeId: "workspace.recent",
     },
 
     {
@@ -232,6 +294,7 @@ const Widget = ({ onSearch }: Props) => {
       label: intl.formatMessage({
         id: "columns.library.course.title",
       }),
+      scopeId: "workspace.course",
     },
     {
       key: "/workspace/task",
@@ -324,9 +387,14 @@ const Widget = ({ onSearch }: Props) => {
         {
           key: "/workspace/team",
           label: intl.formatMessage({
-            id: "columns.studio.group.title",
+            id: "labels.teamspace",
           }),
           activeId: "workspace.team",
+        },
+        {
+          key: "/workspace/members",
+          label: intl.formatMessage({ id: "labels.teamspace.members" }),
+          activeId: "workspace.members",
         },
         {
           key: "/workspace/invite",
@@ -345,6 +413,10 @@ const Widget = ({ onSearch }: Props) => {
       ],
     },
   ];
+  const items = applyTeamspace(allItems, isTeamspace, (id) =>
+    intl.formatMessage({ id })
+  );
+
   /** 当前选中 */
   const selectedKey = findSelectedKey(items, routeId);
 
@@ -372,7 +444,7 @@ const Widget = ({ onSearch }: Props) => {
         mode="inline"
         selectedKeys={selectedKey ? [selectedKey] : []}
         defaultOpenKeys={openKeys}
-        items={items as MenuProps["items"]}
+        items={toAntdItems(items)}
         onClick={handleClick}
         style={{ borderRight: 0 }}
       />

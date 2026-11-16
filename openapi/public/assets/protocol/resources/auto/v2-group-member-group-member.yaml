@@ -35,7 +35,8 @@ put:
   tags:
     - group-member
   operationId: put_api_v2_group_member_group_member_
-  description: 实现：`GroupMemberController@update`
+  description: |
+    空实现。改成员角色请用 `PATCH /v3/groups/{group}/members/{member}`。
   parameters:
     -
       name: group_member
@@ -61,12 +62,14 @@ put:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
       $ref: '../../main.yaml#/components/responses/ValidationError'
+  deprecated: true
 patch:
   summary: '更新 group-member/{group_member}'
   tags:
     - group-member
   operationId: patch_api_v2_group_member_group_member_
-  description: 实现：`GroupMemberController@update`
+  description: |
+    空实现。改成员角色请用 `PATCH /v3/groups/{group}/members/{member}`。
   parameters:
     -
       name: group_member
@@ -92,12 +95,15 @@ patch:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
       $ref: '../../main.yaml#/components/responses/ValidationError'
+  deprecated: true
 delete:
   summary: '删除 group-member/{group_member}'
   tags:
     - group-member
   operationId: delete_api_v2_group_member_group_member_
-  description: 实现：`GroupMemberController@destroy`
+  description: |
+    已被 `DELETE /v3/groups/{group}/members/{member}` 取代（v3 允许本人退出团队）。
+    保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
   parameters:
     -
       name: group_member
@@ -123,3 +129,4 @@ delete:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
       $ref: '../../main.yaml#/components/responses/ValidationError'
+  deprecated: true

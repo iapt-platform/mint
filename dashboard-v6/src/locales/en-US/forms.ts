@@ -66,7 +66,7 @@ const items = {
   "forms.fields.to.label": "to",
   "forms.fields.count.label": "count",
   "forms.fields.owner.label": "owner",
-  "forms.message.res.remove": "将此此资源从群中移除吗？",
+  "forms.message.res.remove": "Remove this resource from the team?",
   "forms.fields.parent2.label": "parent of derivative",
   "forms.fields.parent2.tooltip": "up to 256 chars",
   "forms.fields.username.label": "username",
@@ -98,10 +98,11 @@ const items = {
   "forms.fields.assignees.label": "assignees",
   "forms.fields.model.label": "model",
   "forms.fields.key.label": "key",
-  group: "group",
-  "group.fields.name.label": "group name",
+  group: "team",
+  "group.fields.name.label": "team name",
   "group.files": "files",
   "group.member": "members",
+  "forms.message.group.leave": "Leave this team?",
 };
 
 export default items;

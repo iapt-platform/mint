@@ -1,0 +1,189 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-me-agent-threads-thread.yaml
+get:
+  summary: 查看一个会话
+  tags:
+    - agent-threads
+  operationId: get_api_v3_me_agent_threads_thread_
+  description: |-
+    带全部可见的问答轮次（runs），按提问先后排；被「重新生成」替换掉的轮次不返回。
+
+    实现：`V3\MeAgentThreadController@show`
+  security:
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: thread
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 'AG-UI threadId（uuid）'
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  thread_id:
+                    type: string
+                  title:
+                    type: string
+                  client:
+                    type: string
+                    nullable: true
+                  archived_at:
+                    type: string
+                    nullable: true
+                  last_run_at:
+                    type: string
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  deleted_at:
+                    type: string
+                    nullable: true
+                  runs:
+                    type: array
+                    items:
+                      type: object
+                      properties: { run_id: { type: string }, question: { type: string }, answer: { type: string, nullable: true }, citations: { type: array, items: { type: object }, nullable: true }, deep: { type: boolean }, status: { type: string }, user_message_id: { type: string, nullable: true }, assistant_message_id: { type: string, nullable: true }, created_at: { type: string } }
+                    description: 仅在部分查询口径下返回。
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'
+delete:
+  summary: 删除会话
+  tags:
+    - agent-threads
+  operationId: delete_api_v3_me_agent_threads_thread_
+  description: |-
+    软删：会话连同它的问答一起从我的历史里消失，之后任何接口都读不到；服务器上的数据永久保留（防滥用、改进回答）。
+    返回软删后的会话本身（200，`deleted_at` 非空），不是 204。
+
+    实现：`V3\MeAgentThreadController@destroy`
+  security:
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: thread
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 'AG-UI threadId（uuid）'
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  thread_id:
+                    type: string
+                  title:
+                    type: string
+                  client:
+                    type: string
+                    nullable: true
+                  archived_at:
+                    type: string
+                    nullable: true
+                  last_run_at:
+                    type: string
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  deleted_at:
+                    type: string
+                    nullable: true
+                  runs:
+                    type: array
+                    items:
+                      type: object
+                      properties: { run_id: { type: string }, question: { type: string }, answer: { type: string, nullable: true }, citations: { type: array, items: { type: object }, nullable: true }, deep: { type: boolean }, status: { type: string }, user_message_id: { type: string, nullable: true }, assistant_message_id: { type: string, nullable: true }, created_at: { type: string } }
+                    description: 仅在部分查询口径下返回。
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'
+patch:
+  summary: 修改会话（目前只有标题）
+  tags:
+    - agent-threads
+  operationId: patch_api_v3_me_agent_threads_thread_
+  description: 实现：`V3\MeAgentThreadController@update`
+  security:
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: thread
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 'AG-UI threadId（uuid）'
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            title:
+              type: string
+              description: '会话标题，1–255 字'
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  thread_id:
+                    type: string
+                  title:
+                    type: string
+                  client:
+                    type: string
+                    nullable: true
+                  archived_at:
+                    type: string
+                    nullable: true
+                  last_run_at:
+                    type: string
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  deleted_at:
+                    type: string
+                    nullable: true
+                  runs:
+                    type: array
+                    items:
+                      type: object
+                      properties: { run_id: { type: string }, question: { type: string }, answer: { type: string, nullable: true }, citations: { type: array, items: { type: object }, nullable: true }, deep: { type: boolean }, status: { type: string }, user_message_id: { type: string, nullable: true }, assistant_message_id: { type: string, nullable: true }, created_at: { type: string } }
+                    description: 仅在部分查询口径下返回。
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

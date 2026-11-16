@@ -1,0 +1,121 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-me-agent-threads-thread-archive.yaml
+put:
+  summary: 存档会话
+  tags:
+    - agent-threads
+  operationId: put_api_v3_me_agent_threads_thread_archive
+  description: |-
+    重复存档保留第一次的存档时间。返回更新后的会话。
+
+    实现：`V3\MeAgentThreadArchiveController@update`
+  security:
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: thread
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 'AG-UI threadId（uuid）'
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  thread_id:
+                    type: string
+                  title:
+                    type: string
+                  client:
+                    type: string
+                    nullable: true
+                  archived_at:
+                    type: string
+                    nullable: true
+                  last_run_at:
+                    type: string
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  deleted_at:
+                    type: string
+                    nullable: true
+                  runs:
+                    type: array
+                    items:
+                      type: object
+                      properties: { run_id: { type: string }, question: { type: string }, answer: { type: string, nullable: true }, citations: { type: array, items: { type: object }, nullable: true }, deep: { type: boolean }, status: { type: string }, user_message_id: { type: string, nullable: true }, assistant_message_id: { type: string, nullable: true }, created_at: { type: string } }
+                    description: 仅在部分查询口径下返回。
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'
+delete:
+  summary: 取消存档
+  tags:
+    - agent-threads
+  operationId: delete_api_v3_me_agent_threads_thread_archive
+  description: |-
+    返回更新后的会话（`archived_at` 为 null）。
+
+    实现：`V3\MeAgentThreadArchiveController@destroy`
+  security:
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: thread
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 'AG-UI threadId（uuid）'
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  thread_id:
+                    type: string
+                  title:
+                    type: string
+                  client:
+                    type: string
+                    nullable: true
+                  archived_at:
+                    type: string
+                    nullable: true
+                  last_run_at:
+                    type: string
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  deleted_at:
+                    type: string
+                    nullable: true
+                  runs:
+                    type: array
+                    items:
+                      type: object
+                      properties: { run_id: { type: string }, question: { type: string }, answer: { type: string, nullable: true }, citations: { type: array, items: { type: object }, nullable: true }, deep: { type: boolean }, status: { type: string }, user_message_id: { type: string, nullable: true }, assistant_message_id: { type: string, nullable: true }, created_at: { type: string } }
+                    description: 仅在部分查询口径下返回。
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

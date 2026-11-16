@@ -1,12 +1,10 @@
 import { useIntl } from "react-intl";
-import { useAppSelector } from "../../../hooks";
-import { currentUser } from "../../../reducers/current-user";
 import AnthologyList from "../../../components/anthology/AnthologyList";
 import { useNavigate, useSearchParams } from "react-router";
+import { useActiveStudio } from "../../../hooks/useActiveStudio";
 
 const Widget = () => {
-  const user = useAppSelector(currentUser);
-  const studioName = user?.realName;
+  const { studioName } = useActiveStudio();
   const navigate = useNavigate();
   const intl = useIntl();
 

@@ -77,32 +77,51 @@ get:
     422:
       $ref: '../../main.yaml#/components/responses/ValidationError'
 post:
-  summary: '新建 share'
+  summary: 为资源添加协作者。
   tags:
     - share
   operationId: post_api_v2_share
-  description: 实现：`ShareController@store`
+  description: |-
+    只有资源拥有者能调用（与 update / destroy 的「power > 20」同口径）。
+    资源归属按 res_type 到对应表里查，查不到即拒绝——客户端谎报 res_type
+    只会让自己被拒，不会绕过校验。
+
+    实现：`ShareController@store`
   requestBody:
-    required: false
+    required: true
     content:
       application/json:
         schema:
           type: object
           properties:
-            user_id:
-              type: string
             res_id:
               type: string
+              description: '资源 uid'
             res_type:
-              type: string
+              type: integer
+              description: '资源类型：2 channel、3 文章、4 文集、6 工作流、7 项目、8 AI 模型'
+            user_id:
+              type: array
+              description: '协作者 uid 列表（用户或群组）'
             user_type:
               type: string
+              description: 协作者类型
+              enum:
+                - user
+                - group
             role:
               type: string
+              description: 协作者角色
               enum:
                 - manager
                 - editor
                 - reader
+          required:
+            - res_id
+            - res_type
+            - user_id
+            - user_type
+            - role
   responses:
     200:
       description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'

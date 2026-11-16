@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>巴利三藏工作分配组织图</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f6f3ec; --paper:#fffdf8; --ink:#2a2622; --muted:#7a7166; --line:#d9d1c3;
+    --saffron:#c4761c; --saffron-soft:#f3e2c7; --blue:#3f5f78; --blue-soft:#dfe8ef;
+    --hit:#fff1a8;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#1b1916; --paper:#24211d; --ink:#ece6dc; --muted:#a39a8d; --line:#3d3830;
+      --saffron:#e39a45; --saffron-soft:#3b2d1c; --blue:#8fb1cc; --blue-soft:#24313b; --hit:#5a4d12; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans SC",system-ui,sans-serif;font-size:14px;line-height:1.5}
+  header{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:14px 20px 12px}
+  .hrow{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;max-width:1200px;margin:0 auto}
+  h1{font-family:"Noto Serif SC",serif;font-size:20px;margin:0;font-weight:700;letter-spacing:.02em}
+  .stats{color:var(--muted);font-size:13px}
+  .spacer{flex:1}
+  input.search{width:240px;max-width:100%;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);font:inherit}
+  button{font:inherit;padding:7px 12px;border-radius:8px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer}
+  button:hover{border-color:var(--saffron)}
+  button.primary{background:var(--saffron);border-color:var(--saffron);color:#fff}
+  main{max-width:1200px;margin:0 auto;padding:18px 20px 60px}
+  .tree ul{list-style:none;margin:0;padding-left:26px;position:relative}
+  .tree li{position:relative;margin:8px 0}
+  .tree ul > li::before{content:"";position:absolute;left:-16px;top:0;bottom:-8px;border-left:1px solid var(--line)}
+  .tree ul > li:last-child::before{bottom:auto;height:22px}
+  .tree ul > li::after{content:"";position:absolute;left:-16px;top:22px;width:14px;border-top:1px solid var(--line)}
+  .node{display:inline-flex;align-items:center;gap:10px;padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:var(--paper)}
+  .node .tg{width:22px;height:22px;padding:0;border:none;background:none;color:var(--muted);font-size:12px;cursor:pointer}
+  .node .t{font-weight:700}
+  .lvl0 > .node{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .lvl0 > .node .tg{color:var(--bg)}
+  .lvl1 > .node{background:var(--saffron-soft);border-color:var(--saffron)}
+  .lvl2 > .node{background:var(--blue-soft);border-color:var(--blue)}
+  .cnt{font-size:12px;color:var(--muted);font-weight:400}
+  .lvl0 > .node .cnt{color:inherit;opacity:.7}
+  input.name{width:120px;padding:3px 8px;border:1px dashed var(--muted);border-radius:6px;background:transparent;color:inherit;font:inherit;font-size:13px}
+  input.name:focus{outline:none;border-style:solid;border-color:var(--saffron)}
+  input.name::placeholder{color:inherit;opacity:.55}
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;padding:8px 0 4px 26px}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+  .card .top{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+  .key{font-size:11px;font-family:ui-monospace,monospace;color:var(--muted);background:var(--bg);padding:1px 6px;border-radius:4px}
+  .card ol{margin:0;padding-left:0;list-style:none}
+  .card li{font-size:13px;padding:2px 0;border-top:1px dotted var(--line);overflow-wrap:anywhere}
+  .card li:first-child{border-top:none}
+  mark{background:var(--hit);color:inherit;border-radius:2px}
+  .hidden{display:none !important}
+  .collapsed > ul, .collapsed > .cards{display:none}
+  .note{color:var(--muted);font-size:12px;margin:6px 0 0}
+  dialog{border:1px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);width:min(760px,92vw);padding:16px}
+  dialog textarea{width:100%;height:50vh;font-family:ui-monospace,monospace;font-size:12px;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px}
+  .drow{display:flex;gap:8px;justify-content:flex-end;margin-top:10px;align-items:center}
+  .toast{color:var(--saffron);font-size:13px;margin-right:auto}
+</style>
+</head>
+<body>
+<header>
+  <div class="hrow">
+    <h1>巴利三藏工作分配组织图</h1>
+    <span class="stats" id="stats"></span>
+    <span class="spacer"></span>
+    <input class="search" id="q" type="search" placeholder="搜索作品或分组键，如 Jātaka、mn1">
+    <button id="expand">全部展开</button>
+    <button id="collapse">折叠到各部</button>
+    <button class="primary" id="mm">导出 Mermaid</button>
+  </div>
+  <p class="note hrow">在每个框里直接填负责人姓名。姓名只保存在你这台浏览器里；要保存或分享，请用"导出 Mermaid"复制出来。</p>
+</header>
+<main><div class="tree" id="tree"></div></main>
+
+<dialog id="dlg">
+  <strong>Mermaid 代码（含已填写的负责人）</strong>
+  <textarea id="mmtext" readonly></textarea>
+  <div class="drow"><span class="toast" id="toast"></span><button id="copy" class="primary">复制</button><button id="close">关闭</button></div>
+</dialog>
+
+<script>
+const DATA = {"id": "ROOT", "title": "巴利三藏及藏外", "children": [{"id": "T_VIN", "title": "律藏 Vinayapiṭaka", "children": [{"id": "vin1", "key": "vin1", "works": ["(VN)Pārājikapāḷi", "Pārājikakaṇḍa-aṭṭhakathā", "Sāratthadīpanī-ṭīkā (paṭhamo bhāgo)", "(SAD) Pārājika-ṭīkā", "Vajirabuddhi-ṭīkā", "Vajirabuddhi · Pārājikavaṇṇanā", "Vimativinodanī · Bhikkhuvibhaṅgavaṇṇanā"]}, {"id": "vin2", "key": "vin2", "works": ["(VN)Pācittiyapāḷi", "(VN)Bhikkhunīvibhaṅgo", "(SP) Pācittiya-aṭṭhakathā", "(SP) Bhikkhunīvibhaṅgavaṇṇanā", "Pācityādiyojanā", "(SAD) Pācittiya-ṭīkā", "Vajirabuddhi · Pācittiyavaṇṇanā", "Vimativinodanī · Bhikkhunīvibhaṅgavaṇṇanā"]}, {"id": "vin3", "key": "vin3", "works": ["(VN)Mahāvaggapāḷi", "(SP) Mahāvagga-aṭṭhakathā", "(SAD) Mahāvagga-ṭīkā", "Vimativinodanī · Mahāvaggavaṇṇanā"]}, {"id": "vin4", "key": "vin4", "works": ["(VN)Cūḷavaggapāḷi", "(SP) Cūḷavagga-aṭṭhakathā", "(SAD) Cūḷavagga-ṭīkā", "Vajirabuddhi · Cūḷavaggavaṇṇanā", "Vimativinodanī · Cūḷavaggavaṇṇanā"]}, {"id": "vin5", "key": "vin5", "works": ["(VN)Parivārapāḷi", "(SP) Parivāra-aṭṭhakathā", "(SAD) Parivāra-ṭīkā", "Vajirabuddhi · Parivāravaṇṇanā", "Vimativinodanī · Parivāravaṇṇanā"]}, {"id": "vin6", "key": "vin6", "works": ["Bhikkhupātimokkhapāḷi", "Bhikkhunīpātimokkhapāḷi", "Kaṅkhāvitaraṇī-aṭṭhakathā", "Kaṅkhāvitaraṇīpurāṇa-ṭīkā", "Kaṅkhāvitaraṇī-abhinavaṭīkā"]}, {"id": "vin7", "key": "vin7", "works": ["Vinayasaṅgaha-aṭṭhakathā", "Vinayālaṅkāra-ṭīkā"]}, {"id": "vin8", "key": "vin8", "works": ["Vinayavinicchayo", "Vinayavinicchaya-ṭīkā"]}, {"id": "vin9", "key": "vin9", "works": ["Uttaravinicchayo", "Uttaravinicchaya-ṭīkā"]}, {"id": "vin10", "key": "vin10", "works": ["Khuddasikkhā", "Khuddasikkhā-purāṇaṭīkā"]}, {"id": "vin11", "key": "vin11", "works": ["Mūlasikkhā-ṭīkā"]}, {"id": "solo248", "key": "", "works": ["Khuddasikkhā-abhinavaṭīkā"]}, {"id": "solo249", "key": "", "works": ["Mūlasikkhā"]}, {"id": "solo264", "key": "", "works": ["Vajirabuddhi · Mahāvaggavaṇṇanā"]}]}, {"id": "T_SUT", "title": "经藏 Suttantapiṭaka", "children": [{"id": "N_DN", "title": "长部 Dīghanikāya", "children": [{"id": "dn1", "key": "dn1", "works": ["(DN) Sīlakkhandhavaggapāḷi", "(DN) Sīlakkhandhavaggaṭṭhakathā", "(DN)Sīlakkhandhavaggaṭīkā", "(DN)Sīlakkhandhavaggaabhinavaṭīkā", "(DN)Sīlakkhandhavaggaabhinavaṭīkā"]}, {"id": "dn2", "key": "dn2", "works": ["(DN) Mahāvaggapāḷi", "(DN) Mahāvaggaṭṭhakathā", "(DN)Mahāvaggaṭīkā"]}, {"id": "dn3", "key": "dn3", "works": ["(DN) Pāthikavaggapāḷi", "(DN) Pāthikavaggaṭṭhakathā", "(DN)Pāthikavaggaṭīkā"]}]}, {"id": "N_MN", "title": "中部 Majjhimanikāya", "children": [{"id": "mn1", "key": "mn1", "works": ["(MN)Mūlapaṇṇāsapāḷi", "(MN) Mūlapaṇṇāsa-aṭṭhakathā", "(MN)Mūlapaṇṇāsa-ṭīkā"]}, {"id": "mn2", "key": "mn2", "works": ["(MN)Majjhimapaṇṇāsapāḷi", "(MN) Majjhimapaṇṇāsa-aṭṭhakathā", "(MN)Majjhimapaṇṇāsa-ṭīkā"]}, {"id": "mn3", "key": "mn3", "works": ["(MN)Uparipaṇṇāsapāḷi", "(MN) Uparipaṇṇāsa-aṭṭhakathā", "(MN)Uparipaṇṇāsa-ṭīkā"]}]}, {"id": "N_SN", "title": "相应部 Saṃyuttanikāya", "children": [{"id": "sn1", "key": "sn1", "works": ["(SN)Sagāthāvaggo", "(SN) Sagāthāvagga-aṭṭhakathā", "(SN)Sagāthāvagga-ṭīkā"]}, {"id": "sn2", "key": "sn2", "works": ["(SN)Nidānavaggo", "(SN) Nidānavagga-aṭṭhakathā", "(SN)Nidānavagga-ṭīkā"]}, {"id": "sn3", "key": "sn3", "works": ["(SN)Khandhavaggo", "(SN) Khandhavagga-aṭṭhakathā", "(SN)Khandhavagga-ṭīkā"]}, {"id": "sn4", "key": "sn4", "works": ["(SN)Saḷāyatanavaggo", "(SN) Saḷāyatanavagga-aṭṭhakathā", "(SN)Saḷāyatanavagga-ṭīkā"]}, {"id": "sn5", "key": "sn5", "works": ["(SN)Mahāvaggo", "(SN) Mahāvagga-aṭṭhakathā", "(SN)Mahāvagga-ṭīkā"]}]}, {"id": "N_AN", "title": "增支部 Aṅguttaranikāya", "children": [{"id": "an1", "key": "an1", "works": ["Ekakanipātapāḷi", "Ekakanipāta-aṭṭhakathā", "Ekakanipāta-ṭīkā"]}, {"id": "an2", "key": "an2", "works": ["Dukanipātapāḷi", "Dukanipāta-aṭṭhakathā", "Dukanipāta-ṭīkā"]}, {"id": "an3", "key": "an3", "works": ["Tikanipātapāḷi", "Tikanipāta-aṭṭhakathā", "Tikanipāta-ṭīkā"]}, {"id": "an4", "key": "an4", "works": ["Catukkanipātapāḷi", "Catukkanipāta-aṭṭhakathā", "Catukkanipāta-ṭīkā"]}, {"id": "an5", "key": "an5", "works": ["Pañcakanipātapāḷi", "Pañcakanipāta-aṭṭhakathā", "Pañcakanipāta-ṭīkā"]}, {"id": "an6", "key": "an6", "works": ["Chakkanipātapāḷi", "Chakkanipāta-aṭṭhakathā", "Chakkanipāta-ṭīkā"]}, {"id": "an7", "key": "an7", "works": ["Sattakanipātapāḷi", "Sattakanipāta-aṭṭhakathā", "Sattakanipāta-ṭīkā"]}, {"id": "an8", "key": "an8", "works": ["Aṭṭhakanipātapāḷi", "Aṭṭhakanipāta-aṭṭhakathā", "Aṭṭhakanipāta-ṭīkā"]}, {"id": "an9", "key": "an9", "works": ["Navakanipātapāḷi", "Navakanipāta-aṭṭhakathā", "Navakanipāta-ṭīkā"]}, {"id": "an10", "key": "an10", "works": ["Dasakanipātapāḷi", "Dasakanipāta-aṭṭhakathā", "Dasakanipāta-ṭīkā"]}, {"id": "an11", "key": "an11", "works": ["Ekādasakanipātapāḷi", "Ekādasakanipāta-aṭṭhakathā", "Ekādasakanipāta-ṭīkā"]}]}, {"id": "N_KN", "title": "小部 Khuddakanikāya", "children": [{"id": "kn1", "key": "kn1", "works": ["Khuddakapāṭhapāḷi", "Khuddakapāṭha-aṭṭhakathā"]}, {"id": "kn2", "key": "kn2", "works": ["Dhammapadapāḷi", "Dhammapada-aṭṭhakathā"]}, {"id": "kn3", "key": "kn3", "works": ["Udānapāḷi", "Udāna-aṭṭhakathā"]}, {"id": "kn4", "key": "kn4", "works": ["Itivuttakapāḷi", "Itivuttaka-aṭṭhakathā"]}, {"id": "kn5", "key": "kn5", "works": ["Suttanipātapāḷi", "Suttanipāta-aṭṭhakathā"]}, {"id": "kn6", "key": "kn6", "works": ["Vimānavatthupāḷi", "Vimānavatthu-aṭṭhakathā"]}, {"id": "kn7", "key": "kn7", "works": ["Petavatthupāḷi", "Petavatthu-aṭṭhakathā"]}, {"id": "kn8", "key": "kn8", "works": ["Theragāthāpāḷi", "Theragāthā-aṭṭhakathā(Paṭhamo bhāgo)", "Theragāthā-aṭṭhakathā(Dutiyo bhāgo)"]}, {"id": "kn9", "key": "kn9", "works": ["Therīgāthāpāḷi", "Therīgāthā-aṭṭhakathā"]}, {"id": "kn10_A", "key": "kn10_A", "works": ["Therāpadānapāḷi(Paṭhamo bhāgo)", "Apadāna-aṭṭhakathā"]}, {"id": "kn10_B", "key": "kn10_B", "works": ["Therāpadānapāḷi(Dutiyo bhāgo)", "Therīapadānapāḷi"]}, {"id": "kn12", "key": "kn12", "works": ["Buddhavaṃsapāḷi", "Buddhavaṃsa-aṭṭhakathā"]}, {"id": "kn13", "key": "kn13", "works": ["Cariyāpiṭakapāḷi", "Cariyāpiṭaka-aṭṭhakathā"]}, {"id": "kn14", "key": "kn14", "works": ["Jātakapāḷi(Dutiyo bhāgo)", "Jātakapāḷi(Paṭhamo bhāgo)", "Jātaka-aṭṭhakathā(Paṭhamo bhāgo)", "Jātaka-aṭṭhakathā(Dutiyo bhāgo)", "Jātaka-aṭṭhakathā(Tatiyo bhāgo)", "Jātaka-aṭṭhakathā(Catuttho bhāgo)", "Jātaka-aṭṭhakathā(Pañcamo bhāgo 16)", "Jātaka-aṭṭhakathā(Pañcamo bhāgo 17-21)", "Jātaka-aṭṭhakathā(Chaṭṭho bhāgo)", "Jātaka-aṭṭhakathā(Sattamo bhāgo)"]}, {"id": "kn15", "key": "kn15", "works": ["Mahāniddesapāḷi", "Mahāniddesa-aṭṭhakathā"]}, {"id": "kn16", "key": "kn16", "works": ["Cūḷaniddesapāḷi", "Cūḷaniddesa-aṭṭhakathā"]}, {"id": "kn17", "key": "kn17", "works": ["Paṭisambhidāmaggapāḷi", "Paṭisambhidāmagga-aṭṭhakathā"]}, {"id": "kn18", "key": "kn18", "works": ["Milindapañhapāḷi", "Milidaṭīkā"]}, {"id": "kn19", "key": "kn19", "works": ["Nettippakaraṇapāḷi", "Nettippakaraṇa-aṭṭhakathā", "Nettippakaraṇa-ṭīkā", "Nettivibhāvinī"]}, {"id": "kn20", "key": "kn20", "works": ["Peṭakopadesapāḷi"]}]}]}, {"id": "T_ABH", "title": "论藏 Abhidhammapiṭaka", "children": [{"id": "abhi1", "key": "abhi1", "works": ["Dhammasaṅgaṇīpāḷi", "Dhammasaṅgaṇī-aṭṭhakathā", "Dhammasaṅgaṇī-mūlaṭīkā", "Dhammasaṅgaṇī-anuṭīkā"]}, {"id": "abhi2", "key": "abhi2", "works": ["Vibhaṅgapāḷi", "Vibhaṅga-aṭṭhakathā", "Vibhaṅga-mūlaṭīkā", "Vibhaṅga-anuṭīkā"]}, {"id": "abhi3", "key": "abhi3", "works": ["Dhātukathāpāḷi", "Dhātukathā-aṭṭhakathā", "Dhātukathāpakaraṇa-mūlaṭīkā", "Dhātukathāpakaraṇa-anuṭīkā"]}, {"id": "abhi4", "key": "abhi4", "works": ["Puggalapaññattipāḷi", "Puggalapaññatti-aṭṭhakathā", "Puggalapaññattipakaraṇa-mūlaṭīkā", "Puggalapaññattipakaraṇa-anuṭīkā"]}, {"id": "abhi5", "key": "abhi5", "works": ["Kathāvatthupāḷi", "Kathāvatthu-aṭṭhakathā", "Kathāvatthupakaraṇa-mūlaṭīkā", "Kathāvatthupakaraṇa-anuṭīkā"]}, {"id": "abhi6", "key": "abhi6", "works": ["Yamakapāḷi (paṭhamo bhāgo)", "Yamakapāḷi (dutiyo bhāgo)", "Yamakapāḷi (tatiyo bhāgo)", "Yamakappakaraṇa-aṭṭhakathā", "Yamakapakaraṇa-mūlaṭīkā", "Yamakapakaraṇa-anuṭīkā"]}, {"id": "abhi7", "key": "abhi7", "works": ["Paṭṭhānapāḷi(Dutiyo bhāgo)", "Paṭṭhānapāḷi(Tatiyo bhāgo)", "Paṭṭhānapāḷi(Catuttho bhāgo)", "Paṭṭhānapāḷi(Pañcamo bhāgo)", "Paṭṭhānapāḷi(Paṭhamo bhāgo)", "Paṭṭhānappakaraṇa-aṭṭhakathā", "Paṭṭhānapakaraṇa-mūlaṭīkā", "Paṭṭhānapakaraṇa-anuṭīkā"]}, {"id": "abhi8", "key": "abhi8", "works": ["Abhidhammāvatāro", "Abhidhammāvatāra-purāṇaṭīkā", "Abhidhammāvatāra-abhinavaṭīkā"]}, {"id": "abhi9", "key": "abhi9", "works": ["Abhidhammatthasaṅgaho", "Paramatthadīpanī", "Anudīpanīpāṭha", "Abhidhammatthavibhāvinīṭīkā"]}, {"id": "solo206", "key": "", "works": ["Nāmarūpaparicchedo"]}, {"id": "solo207", "key": "", "works": ["Paramatthavinicchayo"]}, {"id": "solo208", "key": "", "works": ["Saccasaṅkhepo"]}, {"id": "solo213", "key": "", "works": ["Abhidhammamātikāpāḷi"]}, {"id": "solo214", "key": "", "works": ["Mohavicchedanī"]}]}, {"id": "T_ANN", "title": "藏外 Añña", "children": [{"id": "C_0", "title": "清净道论", "children": [{"id": "solo74", "key": "", "works": ["Visuddhimagga nidānakathā"]}, {"id": "vism", "key": "vism", "works": ["Visuddhimaggo(Paṭhamo bhāgo)", "Visuddhimaggo(Dutiyo bhāgo)", "Visuddhimagga-mahāṭīkā(Paṭhamo bhāgo)", "Visuddhimagga-mahāṭīkā(Dutiyo bhāgo)"]}]}, {"id": "C_1", "title": "礼敬", "children": [{"id": "solo3", "key": "", "works": ["Mahāpaṇāmapāṭha"]}, {"id": "solo4", "key": "", "works": ["Tigumbacetiya thomanā"]}, {"id": "solo5", "key": "", "works": ["Vāsamālinīkya"]}, {"id": "solo6", "key": "", "works": ["Lakkhaṇāto"]}, {"id": "solo7", "key": "", "works": ["Suttavandanā"]}, {"id": "solo8", "key": "", "works": ["Jinālaṅkāra"]}, {"id": "solo9", "key": "", "works": ["Kamalāñjali"]}, {"id": "solo10", "key": "", "works": ["Pajjamadhu"]}, {"id": "solo11", "key": "", "works": ["Buddhaguṇagāthāvalī"]}, {"id": "NK", "key": "NK", "works": ["Namakkārapāḷi", "Namakkāraṭīkā"]}]}, {"id": "C_2", "title": "文法", "children": [{"id": "solo15", "key": "", "works": ["Bālāvatāra"]}, {"id": "solo16", "key": "", "works": ["Moggallānasuttapāṭho"]}, {"id": "solo17", "key": "", "works": ["Moggallānabyākaraṇaṃ"]}, {"id": "solo18", "key": "", "works": ["Kaccāyanabyākaraṇaṃ"]}, {"id": "solo19", "key": "", "works": ["Mahākaccāyanasaddāpāṭha"]}, {"id": "solo20", "key": "", "works": ["Saddanītippakaraṇaṃ (padamālā)"]}, {"id": "solo21", "key": "", "works": ["Saddanītippakaraṇaṃ (dhātumālā)"]}, {"id": "solo22", "key": "", "works": ["Padarūpasiddhi"]}, {"id": "solo23", "key": "", "works": ["Moggallāna pañcikā ṭīkā"]}, {"id": "solo24", "key": "", "works": ["Payogasiddhipāḷi"]}, {"id": "solo25", "key": "", "works": ["Vuttodayaṃ"]}, {"id": "dict", "key": "dict", "works": ["Abhidhānappadīpikā", "Abhidhānappadīpikāṭīkā"]}, {"id": "subo", "key": "subo", "works": ["Subodhālaṅkāro", "Subodhālaṅkāraṭīkā"]}]}, {"id": "C_3", "title": "雷迪大师", "children": [{"id": "solo27", "key": "", "works": ["Niruttidīpanīpāṭha"]}, {"id": "solo30", "key": "", "works": ["Paṭṭhānuddesa dīpanīpāṭha"]}]}, {"id": "C_4", "title": "格言", "children": [{"id": "solo31", "key": "", "works": ["Caturārakkhadīpanī"]}, {"id": "solo32", "key": "", "works": ["Kavidappaṇanīti"]}, {"id": "solo33", "key": "", "works": ["Nītimañjarī"]}, {"id": "solo34", "key": "", "works": ["Dhammanīti"]}, {"id": "solo35", "key": "", "works": ["Mahārahanīti"]}, {"id": "solo36", "key": "", "works": ["Lokanīti"]}, {"id": "solo37", "key": "", "works": ["Suttantanīti"]}, {"id": "solo38", "key": "", "works": ["Vasalasutta"]}, {"id": "solo39", "key": "", "works": ["Sūrassatīnīti"]}, {"id": "solo40", "key": "", "works": ["Cāṇakyanītipāḷi"]}, {"id": "solo41", "key": "", "works": ["Naradakkhadīpanī"]}]}, {"id": "C_5", "title": "杂集", "children": [{"id": "solo42", "key": "", "works": ["Rasavāhinī"]}, {"id": "solo43", "key": "", "works": ["Sīmavisodhanī"]}, {"id": "solo44", "key": "", "works": ["Vessantarāgīti"]}]}, {"id": "C_6", "title": "结集问答", "children": [{"id": "solo45", "key": "", "works": ["(saṅgayana-puccha vissajjanā) Dīghanikāye"]}, {"id": "solo46", "key": "", "works": ["(saṅgayana-puccha vissajjanā) Majjhimanikāya"]}, {"id": "solo47", "key": "", "works": ["(saṅgayana-puccha vissajjanā) Saṃyuttanikāye"]}, {"id": "solo48", "key": "", "works": ["(saṅgayana-puccha vissajjanā) Aṅguttaranikāye"]}, {"id": "solo49", "key": "", "works": ["(saṅgayana-puccha vissajjanā) Vinayapiṭaka"]}, {"id": "solo50", "key": "", "works": ["(saṅgayana-puccha vissajjanā) Abhidhammapiṭaka"]}, {"id": "solo51", "key": "", "works": ["(saṅgayana-puccha vissajjanā) Aṭṭhakathā"]}]}, {"id": "C_7", "title": "锡兰典籍", "children": [{"id": "solo53", "key": "", "works": ["Padamañjarī"]}, {"id": "solo54", "key": "", "works": ["Padasādhanaṃ"]}, {"id": "solo55", "key": "", "works": ["Saddabindu pakaraṇaṃ"]}, {"id": "solo56", "key": "", "works": ["Kaccāyana dhātu mañjūsā"]}, {"id": "solo57", "key": "", "works": ["Samantakūṭavaṇṇanā"]}, {"id": "solo58", "key": "", "works": ["Moggallāna vuttivivaraṇapañcikā"]}, {"id": "solo59", "key": "", "works": ["Thupavaṃso"]}, {"id": "solo60", "key": "", "works": ["Dāṭhāvaṃso"]}, {"id": "solo61", "key": "", "works": ["Dhātupāṭha vilāsiniyā"]}, {"id": "solo62", "key": "", "works": ["Dhātuvaṃso"]}, {"id": "solo63", "key": "", "works": ["Hatthavanagallavihāra vaṃso"]}, {"id": "solo64", "key": "", "works": ["Jinacaritaya"]}, {"id": "solo65", "key": "", "works": ["Jinavaṃsadīpaṃ"]}, {"id": "solo66", "key": "", "works": ["Telakaṭāhagāthā"]}]}, {"id": "C_8", "title": "史传", "children": [{"id": "solo67", "key": "", "works": ["Cūḷaganthavaṃsapāḷi"]}, {"id": "solo68", "key": "", "works": ["Sāsanavaṃsappadīpikā"]}, {"id": "solo69", "key": "", "works": ["Mahāvaṃsapāḷi"]}]}]}]};
+const STORE = 'tipitaka-org-names-v1';
+let names = {};
+try { names = JSON.parse(localStorage.getItem(STORE) || '{}') || {}; } catch(e) { names = {}; }
+function save(){ try { localStorage.setItem(STORE, JSON.stringify(names)); } catch(e) {} }
+
+const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function countWorks(n){ return n.works ? n.works.length : n.children.reduce((a,c)=>a+countWorks(c),0); }
+function countPersons(n){ return n.works ? 1 : 1 + n.children.reduce((a,c)=>a+countPersons(c),0); }
+
+function nameInput(id){
+  return `<input class="name" data-id="${id}" placeholder="负责人：待定" value="${esc(names[id]||'')}">`;
+}
+
+function render(n, lvl){
+  const isGroupOfCards = n.children.every(c => c.works);
+  let h = `<li class="lvl${lvl}" data-node="${n.id}"><span class="node">
+    <button class="tg" aria-label="展开/折叠">▾</button>
+    <span class="t">${esc(n.title)}</span>${nameInput(n.id)}
+    <span class="cnt">${countWorks(n)} 部</span></span>`;
+  if (isGroupOfCards){
+    h += `<div class="cards">` + n.children.map(card).join('') + `</div>`;
+  } else {
+    h += `<ul>` + n.children.map(c => render(c, lvl+1)).join('') + `</ul>`;
+  }
+  return h + `</li>`;
+}
+function card(p){
+  return `<div class="card" data-card="${p.id}"><div class="top">${nameInput(p.id)}
+    ${p.key ? `<span class="key">${esc(p.key)}</span>` : ''}</div>
+    <ol>${p.works.map(w => `<li data-w="${esc(w)}">${esc(w)}</li>`).join('')}</ol></div>`;
+}
+
+const treeEl = document.getElementById('tree');
+treeEl.innerHTML = `<ul style="padding-left:0">${render(DATA,0)}</ul>`;
+document.getElementById('stats').textContent =
+  `${countWorks(DATA)} 部作品 · ${DATA.children.flatMap(function f(n){return n.works?[n]:n.children.flatMap(f)}).length} 位册级负责人 · 共 ${countPersons(DATA)} 个岗位`;
+
+treeEl.addEventListener('click', e => {
+  const b = e.target.closest('.tg'); if (!b) return;
+  const li = b.closest('li'); li.classList.toggle('collapsed');
+  b.textContent = li.classList.contains('collapsed') ? '▸' : '▾';
+});
+treeEl.addEventListener('input', e => {
+  if (!e.target.matches('input.name')) return;
+  const v = e.target.value.trim();
+  if (v) names[e.target.dataset.id] = v; else delete names[e.target.dataset.id];
+  save();
+});
+
+function setCollapsed(li, c){ li.classList.toggle('collapsed', c); const b = li.querySelector(':scope > .node .tg'); if (b) b.textContent = c ? '▸' : '▾'; }
+document.getElementById('expand').onclick = () => treeEl.querySelectorAll('li').forEach(li => setCollapsed(li,false));
+document.getElementById('collapse').onclick = () => treeEl.querySelectorAll('li').forEach(li => {
+  setCollapsed(li, li.querySelector(':scope > .cards') !== null);
+});
+
+// search
+// strip diacritics char-by-char so positions stay aligned (ā→a, ṭ→t, ñ→n …)
+const fold = s => Array.from(s.toLowerCase()).map(c => c.normalize('NFD')[0]).join('');
+document.getElementById('q').addEventListener('input', e => {
+  const q = fold(e.target.value.trim());
+  treeEl.querySelectorAll('.card').forEach(c => {
+    const key = (c.querySelector('.key')?.textContent || '').toLowerCase();
+    let any = !q || key.includes(q);
+    c.querySelectorAll('li').forEach(li => {
+      const w = li.dataset.w; const i = fold(w).indexOf(q);
+      if (q && i >= 0){ any = true; li.innerHTML = esc(w.slice(0,i)) + '<mark>' + esc(w.slice(i,i+q.length)) + '</mark>' + esc(w.slice(i+q.length)); }
+      else li.innerHTML = esc(w);
+    });
+    c.classList.toggle('hidden', !any);
+  });
+  treeEl.querySelectorAll('li[data-node]').forEach(li => {
+    const vis = li.querySelectorAll('.card:not(.hidden)').length > 0;
+    li.classList.toggle('hidden', !!q && !vis);
+    if (q && vis) setCollapsed(li, false);
+  });
+});
+
+// mermaid export
+function mermaid(){
+  const L = ['flowchart LR',
+    '  classDef top fill:#2b2b2b,color:#fff,stroke:#000',
+    '  classDef pitaka fill:#f4d58d,stroke:#b8860b,color:#000',
+    '  classDef mgr fill:#bcd4e6,stroke:#4a6f8a,color:#000',
+    '  classDef person fill:#fff,stroke:#888,color:#000'];
+  const q = s => s.replace(/"/g,'#quot;');
+  const sid = id => 'n_' + id.replace(/\W/g,'_');
+  const who = id => q(names[id] || '待定');
+  (function walk(n, lvl, parent){
+    const cls = n.works ? 'person' : ['top','pitaka','mgr'][lvl] || 'mgr';
+    let label;
+    if (n.works) label = `<b>负责人：${who(n.id)}</b>${n.key?` [${n.key}]`:''}<br/>` + n.works.map(w=>'· '+q(w)).join('<br/>');
+    else label = `负责人：${who(n.id)}<br/><b>${q(n.title)}</b>`;
+    L.push(`  ${sid(n.id)}["${label}"]:::${cls}`);
+    if (parent) L.push(`  ${parent} --> ${sid(n.id)}`);
+    (n.children||[]).forEach(c => walk(c, lvl+1, sid(n.id)));
+  })(DATA, 0, null);
+  return L.join('\n');
+}
+const dlg = document.getElementById('dlg'), ta = document.getElementById('mmtext'), toast = document.getElementById('toast');
+document.getElementById('mm').onclick = () => { ta.value = mermaid(); toast.textContent=''; dlg.showModal(); };
+document.getElementById('close').onclick = () => dlg.close();
+document.getElementById('copy').onclick = async () => {
+  try { await navigator.clipboard.writeText(ta.value); toast.textContent = '已复制'; }
+  catch(e){ ta.focus(); ta.select(); toast.textContent = '浏览器不允许自动复制，已全选，请按 Ctrl/⌘+C'; }
+};
+</script>
+</body>
+</html>

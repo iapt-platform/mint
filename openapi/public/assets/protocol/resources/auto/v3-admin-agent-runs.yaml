@@ -1,0 +1,191 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-admin-agent-runs.yaml
+get:
+  summary: 列出提问
+  tags:
+    - admin
+  operationId: get_api_v3_admin_agent_runs
+  description: |-
+    最新的在前。提问原文对管理员可见；游客只显示设备匿名 id 与 IP。
+
+    实现：`V3\AdminAgentRunController@index`
+  security:
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: per_page
+      in: query
+      schema:
+        type: integer
+        default: 20
+      description: '每页数量，最大 100'
+    -
+      name: 'filter[status]'
+      in: query
+      schema:
+        type: string
+        enum:
+          - ok
+          - error
+          - cancelled
+          - denied
+      description: 运行结果
+    -
+      name: 'filter[route]'
+      in: query
+      schema:
+        type: string
+        enum:
+          - question
+          - term
+          - passage
+          - chat
+      description: '研究路径：question 一般问题 / term 术语与词 / passage 阅读页提问 / chat 闲聊'
+    -
+      name: 'filter[account_type]'
+      in: query
+      schema:
+        type: string
+        enum:
+          - user
+          - guest
+      description: 账号类型
+    -
+      name: 'filter[client]'
+      in: query
+      schema:
+        type: string
+        enum:
+          - mobile
+          - web
+      description: 客户端
+    -
+      name: 'filter[improve]'
+      in: query
+      schema:
+        type: boolean
+      description: 是否允许用于改进回答
+    -
+      name: 'filter[q]'
+      in: query
+      schema:
+        type: string
+      description: 按提问原文模糊搜索
+    -
+      name: page
+      in: query
+      schema:
+        type: integer
+        default: 1
+      description: 页码
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    run_id:
+                      type: string
+                    thread_id:
+                      type: string
+                      nullable: true
+                    thread_title:
+                      type: string
+                      nullable: true
+                    account_type:
+                      type: string
+                      enum: [user, guest]
+                    user:
+                      type: object
+                      properties: { id: { type: string }, nickName: { type: string }, userName: { type: string }, realName: { type: string }, sn: { type: integer }, avatar: { type: string }, roles: { type: array, items: { type: string } } }
+                      nullable: true
+                    device_id:
+                      type: string
+                      nullable: true
+                    client_ip:
+                      type: string
+                      nullable: true
+                    client:
+                      type: string
+                      nullable: true
+                    app_version:
+                      type: string
+                      nullable: true
+                    question:
+                      type: string
+                    route:
+                      type: string
+                      enum: [question, term, passage, chat]
+                      nullable: true
+                    deep:
+                      type: boolean
+                    improve:
+                      type: boolean
+                    status:
+                      type: string
+                    latency_ms:
+                      type: integer
+                      nullable: true
+                    tokens_in:
+                      type: integer
+                      nullable: true
+                    tokens_out:
+                      type: integer
+                      nullable: true
+                    llm_calls:
+                      type: integer
+                    tool_calls:
+                      type: integer
+                    started_at:
+                      type: string
+                      nullable: true
+                    answer:
+                      type: string
+                      nullable: true
+                      description: 仅在部分查询口径下返回。
+                    evidence:
+                      type: string
+                      nullable: true
+                      description: 仅在部分查询口径下返回。
+                    plan:
+                      type: object
+                      nullable: true
+                      description: 仅在部分查询口径下返回。
+                    passage:
+                      type: object
+                      nullable: true
+                      description: 仅在部分查询口径下返回。
+                    citations:
+                      type: array
+                      items: { type: object }
+                      nullable: true
+                      description: 仅在部分查询口径下返回。
+                    error:
+                      type: string
+                      nullable: true
+                      description: 仅在部分查询口径下返回。
+                    model:
+                      type: string
+                      nullable: true
+                      description: 仅在部分查询口径下返回。
+                    prompt_version:
+                      type: string
+                      nullable: true
+                      description: 仅在部分查询口径下返回。
+                    steps:
+                      type: array
+                      items: { type: object, properties: { seq: { type: integer }, kind: { type: string }, name: { type: string, nullable: true }, args: { type: object, nullable: true }, result: { type: string, nullable: true }, result_chars: { type: integer, nullable: true }, tokens_in: { type: integer, nullable: true }, tokens_out: { type: integer, nullable: true }, ms: { type: integer, nullable: true }, error: { type: string, nullable: true } } }
+                      description: 仅在部分查询口径下返回。
+              meta:
+                $ref: '../../main.yaml#/components/schemas/PaginationMeta'
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

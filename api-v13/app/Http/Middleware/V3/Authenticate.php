@@ -5,6 +5,7 @@ namespace App\Http\Middleware\V3;
 use App\Services\AuthService;
 use Closure;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -26,8 +27,11 @@ use Symfony\Component\HttpFoundation\Response;
  *    `$_COOKIE['user_uid']`，那是 v2 的旁路；v3 硬规范要求统一 bearer，所以这里
  *    先自己挡一道。不改 `AuthService`——它是 v2 也在用的共享代码。
  * 2. **解出来的用户存进 request attributes**，控制器直接取，不必再解一次 JWT。
+ * 3. **实现 `AuthenticatesRequests` 标记接口**，让框架的中间件优先级把它排在
+ *    `SubstituteBindings`（路由模型绑定）之前：否则未登录访问不存在的资源先得到 404
+ *    而不是 401，还顺带泄露了资源是否存在。
  */
-class Authenticate
+class Authenticate implements AuthenticatesRequests
 {
     /**
      * 解析出的用户存在 request attributes 的哪个键下。

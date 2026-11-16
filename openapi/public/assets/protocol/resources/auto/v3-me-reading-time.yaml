@@ -1,0 +1,51 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-me-reading-time.yaml
+post:
+  summary: 上报一段读经时长
+  tags:
+    - reading-time
+  operationId: post_api_v3_me_reading_time
+  description: |-
+    客户端在阅读器前台、且最近有滚动或翻页时计时，每 5 分钟或切后台时上报一次。
+    服务端按墙钟时间核减（当天计入的不超过距上次上报经过的时间），单日不超过 24 小时；
+    断网补报可带 `day`，最多 2 天前。返回这一天累计计入的秒数。
+
+    实现：`V3\MeReadingTimeController@store`
+  security:
+    -
+      bearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            seconds:
+              type: integer
+              description: 这段的读经秒数，1–900
+            day:
+              type: string
+              description: '归属的 UTC 日（Y-m-d），缺省为今天。断网补报用'
+          required:
+            - seconds
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  day:
+                    type: string
+                  seconds:
+                    type: integer
+                  updated_at:
+                    type: string
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

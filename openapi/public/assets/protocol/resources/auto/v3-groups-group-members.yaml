@@ -1,0 +1,180 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-groups-group-members.yaml
+get:
+  summary: 列出团队成员
+  tags:
+    - groups
+  operationId: get_api_v3_groups_group_members
+  description: |-
+    只有团队成员看得到。owner、manager 在前，其余按加入时间排序。
+
+    实现：`V3\GroupMemberController@index`
+  security:
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: group
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '团队 uid'
+    -
+      name: per_page
+      in: query
+      schema:
+        type: integer
+        default: 100
+      description: '每页数量，最大 200'
+    -
+      name: page
+      in: query
+      schema:
+        type: integer
+        default: 1
+      description: 页码
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    group_id:
+                      type: string
+                    role:
+                      type: string
+                    joined_at:
+                      type: string
+                    user:
+                      type: object
+                      properties: { id: { type: string }, nickName: { type: string }, userName: { type: string }, realName: { type: string }, sn: { type: integer }, avatar: { type: string }, roles: { type: array, items: { type: string } } }
+                      nullable: true
+              meta:
+                $ref: '../../main.yaml#/components/schemas/PaginationMeta'
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    403:
+      description: 不是这个团队的成员
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'
+post:
+  summary: 加一名成员
+  tags:
+    - groups
+  operationId: post_api_v3_groups_group_members
+  description: |-
+    团队的 owner / manager 才能调用。角色默认 reader（只读）。
+
+    实现：`V3\GroupMemberController@store`
+  security:
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: group
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '团队 uid'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            user_id:
+              type: string
+              description: '要加入的用户 uuid'
+            role:
+              type: string
+              description: '角色，默认 reader'
+              enum:
+                - manager
+                - editor
+                - reader
+          required:
+            - user_id
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  group_id:
+                    type: string
+                  role:
+                    type: string
+                  joined_at:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string }
+                      roles: { type: array, items: { type: string } }
+                    nullable: true
+    201:
+      description: 加入成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  group_id:
+                    type: string
+                  role:
+                    type: string
+                  joined_at:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string }
+                      roles: { type: array, items: { type: string } }
+                    nullable: true
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    403:
+      description: 不能管理这个团队的成员
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

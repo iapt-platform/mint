@@ -5,8 +5,7 @@ import {
   ProFormText,
 } from "@ant-design/pro-components";
 import { message } from "antd";
-import { post } from "../../request";
-import type { IGroupRequest, IGroupResponse } from "../../api/group";
+import { createGroup } from "../../api/group";
 import { useRef } from "react";
 
 interface IFormData {
@@ -14,10 +13,10 @@ interface IFormData {
 }
 
 interface IWidgetGroupCreate {
-  studio?: string;
   onCreate?: () => void;
 }
-const GroupCreateWidget = ({ studio, onCreate }: IWidgetGroupCreate) => {
+/** 建团队：建的人成为 owner（v3 由登录态决定，不再传 studio） */
+const GroupCreateWidget = ({ onCreate }: IWidgetGroupCreate) => {
   const intl = useIntl();
   const formRef = useRef<ProFormInstance | undefined>(undefined);
 
@@ -25,24 +24,11 @@ const GroupCreateWidget = ({ studio, onCreate }: IWidgetGroupCreate) => {
     <ProForm<IFormData>
       formRef={formRef}
       onFinish={async (values: IFormData) => {
-        if (typeof studio === "undefined") {
-          return;
-        }
-        console.log(values);
-        const res = await post<IGroupRequest, IGroupResponse>(`/api/v2/group`, {
-          name: values.name,
-          studio_name: studio,
-        });
-        console.log(res);
-        if (res.ok) {
-          message.success(intl.formatMessage({ id: "flashes.success" }));
-          if (typeof onCreate !== "undefined") {
-            onCreate();
-            formRef.current?.resetFields();
-          }
-        } else {
-          message.error(res.message);
-        }
+        // 失败（重名等）由 unwrap 统一弹提示
+        await createGroup({ name: values.name });
+        message.success(intl.formatMessage({ id: "flashes.success" }));
+        formRef.current?.resetFields();
+        onCreate?.();
       }}
     >
       <ProForm.Group>

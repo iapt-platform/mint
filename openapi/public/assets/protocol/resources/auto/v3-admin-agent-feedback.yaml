@@ -1,0 +1,118 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-admin-agent-feedback.yaml
+get:
+  summary: 列出评价
+  tags:
+    - admin
+  operationId: get_api_v3_admin_agent_feedback
+  description: |-
+    最新的在前，带对应提问的摘要与自动质量指标，便于判断问题在哪。不含账号身份。
+
+    实现：`V3\AdminAgentFeedbackController@index`
+  security:
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: per_page
+      in: query
+      schema:
+        type: integer
+        default: 20
+      description: '每页数量，最大 100'
+    -
+      name: 'filter[rating]'
+      in: query
+      schema:
+        type: string
+        enum:
+          - '1'
+          - '-1'
+      description: '1 赞 / -1 踩'
+    -
+      name: 'filter[tag]'
+      in: query
+      schema:
+        type: string
+      description: '按标签 / 原因筛'
+    -
+      name: 'filter[has_comment]'
+      in: query
+      schema:
+        type: boolean
+      description: 只看带文字说明的
+    -
+      name: from
+      in: query
+      schema:
+        type: string
+      description: 起始日（UTC，Y-m-d）
+    -
+      name: to
+      in: query
+      schema:
+        type: string
+      description: 结束日（UTC，Y-m-d，含当天）
+    -
+      name: page
+      in: query
+      schema:
+        type: integer
+        default: 1
+      description: 页码
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    message_id:
+                      type: string
+                    rating:
+                      type: integer
+                    tags:
+                      type: array
+                      items: { type: string }
+                    comment:
+                      type: string
+                      nullable: true
+                    asked:
+                      type: boolean
+                    client:
+                      type: string
+                      nullable: true
+                    account_type:
+                      type: string
+                    updated_at:
+                      type: string
+                    run_id:
+                      type: string
+                      nullable: true
+                    question:
+                      type: string
+                      nullable: true
+                    route:
+                      type: string
+                      enum: [question, term, passage, chat]
+                      nullable: true
+                    status:
+                      type: string
+                      nullable: true
+                    deep:
+                      type: boolean
+                      nullable: true
+                    latency_ms:
+                      type: integer
+                      nullable: true
+              meta:
+                $ref: '../../main.yaml#/components/schemas/PaginationMeta'
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

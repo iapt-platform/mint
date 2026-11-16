@@ -24,7 +24,7 @@ class SearchPlusController extends Controller
      * @unauthenticated
      *
      * @queryParam q string required 搜索关键词
-     * @queryParam search_mode string 检索模式。Enum: fuzzy,exact,semantic,hybrid Default: fuzzy
+     * @queryParam search_mode string 检索模式。Enum: fuzzy,exact,semantic,hybrid,definition Default: fuzzy
      * @queryParam resource_type string 资源类型。
      *             Enum: article,term,dictionary,translation,origin_text,nissaya
      * @queryParam resource_id string 限定某个资源 id
@@ -113,7 +113,7 @@ class SearchPlusController extends Controller
      * @unauthenticated
      *
      * @bodyParam q string required 搜索关键词
-     * @bodyParam search_mode string 检索模式。Enum: fuzzy,exact,semantic,hybrid Default: fuzzy
+     * @bodyParam search_mode string 检索模式。Enum: fuzzy,exact,semantic,hybrid,definition Default: fuzzy
      * @bodyParam resource_type string 资源类型
      * @bodyParam granularity string 文档颗粒度
      * @bodyParam language string 语言

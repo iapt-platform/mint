@@ -56,3 +56,15 @@
 - [x] "para"
 - [ ] "series"
 - [ ] "cs-para"
+
+### 5️⃣ Admin 模块（`/admin`，仅 root / administrator）
+
+- [x] `/admin/api/dashboard`=>`admin/api`
+- [x] `/admin/relation/list`=>`admin/relation`
+- [x] `/admin/nissaya-ending/list`（含 `/list/:relation`）=>`admin/nissaya-ending`（`/:relation`）
+- [x] `/admin/dictionary/list`=>`admin/dictionary`
+- [x] `/admin/dictionary/preference`=>`admin/dictionary/preference`
+- [x] `/admin/users/list`、`/admin/users/show/:id`=>`admin/users`、`admin/users/:id`
+- [x] `/admin/invite/list`=>`admin/invite`
+- [x] `/admin/ai/list`=>`admin/ai-models`
+- [x] 新增：`admin/stats/reading` 阅读统计、`admin/stats/ai` AI 对话统计

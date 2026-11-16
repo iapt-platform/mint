@@ -5,6 +5,10 @@ export interface IStudio {
   realName?: string;
   avatar?: string;
   roles?: string[];
+  /** 团队空间：我在这个团队里的角色（owner / manager / editor / reader） */
+  role?: string;
+  /** 团队空间：我自己那条成员记录的 id，退出团队时用 */
+  memberId?: string;
 }
 
 export interface IUser {

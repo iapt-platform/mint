@@ -4,7 +4,9 @@ get:
   tags:
     - search-title-index
   operationId: get_api_v2_search_title_index
-  description: 实现：`SearchTitleController@index`
+  description: |
+    已被 `GET /v3/tipitaka-chapters` 取代（带坐标、容错匹配、可按书列出全部标题），
+    保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
   parameters:
     -
       name: key
@@ -68,6 +70,7 @@ get:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
       $ref: '../../main.yaml#/components/responses/ValidationError'
+  deprecated: true
 post:
   summary: '新建 search-title-index'
   tags:

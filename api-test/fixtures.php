@@ -34,6 +34,11 @@ return [
     // agent 代写用例：归测试账号所有的 AI 模型 uid，按环境在 config.local.php 里配，没配则 SKIP
     'agent_model' => null,
 
+    // groups 用例：测试账号名下的团队名（不存在就经 v2 建一个，跑完保留）与要拉进团队的另一个账号。
+    // 第二个账号用户名按环境覆盖；留空则加人 / 改角色 / 移人那一轮 SKIP。
+    'group_name' => 'api-test 团队',
+    'group_member_username' => 'test162',
+
     // 一个已注册账号的邮箱（email-certifications 的「已注册」用例；只校验、不发信）。
     // 留空则该用例 SKIP。
     'registered_email' => getenv('API_TEST_REGISTERED_EMAIL') ?: null,

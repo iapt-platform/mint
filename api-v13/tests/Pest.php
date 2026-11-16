@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\Channel;
+use App\Models\GroupInfo;
+use App\Models\GroupMember;
 use App\Models\Sentence;
 use App\Models\UserInfo;
 use App\Services\AuthService;
@@ -175,4 +177,70 @@ function makeSentence(string $channelUid, int $book, int $para, int $wordStart, 
     ])->save();
 
     return $sentence;
+}
+
+/**
+ * 建一个团队（group），创建者以 owner（power 0）入团，返回 group uid。
+ *
+ * 与 v2 `GroupController@store` 写入的两行一致。
+ */
+function makeGroup(string $ownerUid, string $name = 'test team'): string
+{
+    $uid = (string) Str::uuid();
+    (new GroupInfo)->forceFill([
+        'id' => random_int(1, PHP_INT_MAX),
+        'uid' => $uid,
+        'name' => $name,
+        'owner' => $ownerUid,
+        'create_time' => time() * 1000,
+        'modify_time' => time() * 1000,
+    ])->save();
+    addGroupMember($uid, $ownerUid, 0);
+
+    return $uid;
+}
+
+/**
+ * 把用户加进团队。power：0 owner、1 manager、2 普通成员（v2 口径）。
+ */
+function addGroupMember(string $groupUid, string $userUid, int $power = 2, ?string $role = null): GroupMember
+{
+    $member = new GroupMember;
+    $member->forceFill(array_filter([
+        'id' => random_int(1, PHP_INT_MAX),
+        'user_id' => $userUid,
+        'group_id' => $groupUid,
+        'group_name' => GroupInfo::where('uid', $groupUid)->value('name'),
+        'power' => $power,
+        'role' => $role,
+    ], fn ($value) => $value !== null))->save();
+
+    return $member;
+}
+
+/**
+ * 建一个团队并按角色放好人，返回 [团队 uid, 角色 => 用户 uid]。
+ *
+ * owner 走 v2 口径（power 0、role 为空），manager 也是 v2 口径（power 1），
+ * editor / reader 是 v3 写入的（role 有值）——顺带覆盖 role 为空时按 power 推导。
+ *
+ * @return array{0: string, 1: array<string, string>}
+ */
+function makeTeam(): array
+{
+    $users = [];
+    foreach (['owner', 'manager', 'editor', 'reader', 'outsider'] as $role) {
+        $users[$role] = makeStudio($role.'-'.Str::random(6));
+    }
+    $team = makeGroup($users['owner']);
+    addGroupMember($team, $users['manager'], 1);
+    addGroupMember($team, $users['editor'], 2, 'editor');
+    addGroupMember($team, $users['reader'], 2, 'reader');
+
+    return [$team, $users];
+}
+
+function memberId(string $team, string $userUid): string
+{
+    return (string) GroupMember::where('group_id', $team)->where('user_id', $userUid)->value('id');
 }

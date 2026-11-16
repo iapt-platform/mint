@@ -1,0 +1,186 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-groups.yaml
+get:
+  summary: 搜公开团队
+  tags:
+    - groups
+  operationId: get_api_v3_groups
+  description: |-
+    共享资源时挑团队用。只列公开团队（status 30），按名字排序。
+
+    实现：`V3\GroupController@index`
+  security:
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: per_page
+      in: query
+      schema:
+        type: integer
+        default: 20
+      description: '每页数量，最大 200'
+    -
+      name: search
+      in: query
+      schema:
+        type: string
+      description: 按团队名模糊匹配
+    -
+      name: page
+      in: query
+      schema:
+        type: integer
+        default: 1
+      description: 页码
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    description:
+                      type: string
+                      nullable: true
+                    status:
+                      type: integer
+                    owner:
+                      type: object
+                      properties: { id: { type: string }, nickName: { type: string }, userName: { type: string }, realName: { type: string }, sn: { type: integer }, avatar: { type: string }, roles: { type: array, items: { type: string } } }
+                      nullable: true
+                    role:
+                      type: string
+                      nullable: true
+                      description: 仅在部分查询口径下返回。
+                    created_at:
+                      type: string
+                    updated_at:
+                      type: string
+              meta:
+                $ref: '../../main.yaml#/components/schemas/PaginationMeta'
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'
+post:
+  summary: 建团队
+  tags:
+    - groups
+  operationId: post_api_v3_groups
+  description: |-
+    建的人成为 owner。同一个人名下不能重名。
+
+    实现：`V3\GroupController@store`
+  security:
+    -
+      bearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+              description: '团队名，最长 64'
+            description:
+              type: string
+              description: '简介，最长 1024'
+            status:
+              type: integer
+              description: '10 私有、30 公开'
+              default: 30
+          required:
+            - name
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  description:
+                    type: string
+                    nullable: true
+                  status:
+                    type: integer
+                  owner:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string }
+                      roles: { type: array, items: { type: string } }
+                    nullable: true
+                  role:
+                    type: string
+                    nullable: true
+                    description: 仅在部分查询口径下返回。
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+    201:
+      description: 建好了
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  description:
+                    type: string
+                    nullable: true
+                  status:
+                    type: integer
+                  owner:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string }
+                      roles: { type: array, items: { type: string } }
+                    nullable: true
+                  role:
+                    type: string
+                    nullable: true
+                    description: 仅在部分查询口径下返回。
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

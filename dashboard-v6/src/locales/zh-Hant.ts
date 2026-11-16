@@ -10,6 +10,8 @@ import message from "./zh-Hant/message";
 import label from "./zh-Hant/label";
 import error from "./zh-Hant/error";
 import pages from "./zh-Hant/pages";
+import admin from "./zh-Hant/admin";
+import adminStats from "./zh-Hant/admin-stats";
 
 const items = {
   "columns.library.title": "藏經閣",
@@ -31,7 +33,7 @@ const items = {
   "columns.studio.palicanon.title": "聖典",
   "columns.studio.recent.title": "最近編輯",
   "columns.studio.channel.title": "版本風格",
-  "columns.studio.group.title": "群組",
+  "columns.studio.group.title": "團隊",
   "columns.studio.userdict.title": "使用者字典",
   "columns.studio.term.title": "術語",
   "columns.studio.course.title": "課程",
@@ -59,6 +61,8 @@ const items = {
   ...label,
   ...error,
   ...pages,
+  ...admin,
+  ...adminStats,
 };
 
 export default items;

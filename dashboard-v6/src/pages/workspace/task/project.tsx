@@ -2,11 +2,10 @@ import { useMatches, useNavigate, useParams } from "react-router";
 import { useIntl } from "react-intl";
 
 import ProjectWithTasks from "../../../components/task/ProjectWithTasks";
-import { useAppSelector } from "../../../hooks";
-import { currentUser } from "../../../reducers/current-user";
+import { useActiveStudio } from "../../../hooks/useActiveStudio";
 
 const Widget = () => {
-  const currUser = useAppSelector(currentUser);
+  const { studioName } = useActiveStudio();
 
   const { projectId } = useParams();
   const navigate = useNavigate();
@@ -22,7 +21,7 @@ const Widget = () => {
     <>
       <title>{name ? `${prefix}-${name}` : prefix}</title>
       <ProjectWithTasks
-        studioName={currUser?.realName}
+        studioName={studioName}
         projectId={projectId}
         onChange={(id: string) => {
           navigate(`/workspace/task/project/${id}`);

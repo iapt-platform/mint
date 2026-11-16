@@ -1,8 +1,7 @@
 import { ProFormSelect } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
 
-import { get } from "../../request";
-import type { IGroupListResponse } from "../../api/group";
+import { searchGroups } from "../../api/group";
 
 interface IWidget {
   name?: string;
@@ -29,17 +28,12 @@ const GroupSelectWidget = ({
         mode: multiple ? "multiple" : undefined,
       }}
       request={async ({ keyWords }) => {
-        const url = `/api/v2/group?view=all&search=${keyWords}`;
-        console.log("group keyWord", url);
-        const json = await get<IGroupListResponse>(url);
-        const userList = json.data.rows.map((item) => {
-          return {
-            value: item.uid,
-            label: `${item.studio.studioName}/${item.name}`,
-          };
-        });
-
-        return userList;
+        // 只搜得到公开团队
+        const groups = await searchGroups(keyWords ?? "");
+        return groups.map((item) => ({
+          value: item.id,
+          label: `${item.owner?.userName ?? ""}/${item.name}`,
+        }));
       }}
       rules={[
         {

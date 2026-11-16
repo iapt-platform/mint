@@ -19,6 +19,7 @@
 */
 
 use App\Http\Controllers\V3\TipitakaChapterChannelController;
+use App\Http\Controllers\V3\TipitakaChapterController;
 use App\Http\Controllers\V3\TipitakaDiscussionController;
 use App\Http\Controllers\V3\TipitakaReadingController;
 use App\Http\Controllers\V3\TipitakaRelatedParagraphAggregateController;
@@ -38,6 +39,10 @@ Route::get('tipitaka-discussions/{channel}', TipitakaDiscussionController::class
 // 一章有哪些 channel 及其完成度（原 v2 progress?view=chapter_channels）。book、para 都必填，进路径。
 Route::get('tipitaka-chapter-channels/{book}/{para}', TipitakaChapterChannelController::class)
     ->whereNumber(['book', 'para']);
+
+// 章节标题：按名字找章节（容错），或列出一本书的全部标题（原 v2 search-title-index）。q / book 至少给一个，都是过滤条件。
+Route::get('tipitaka-chapters', TipitakaChapterController::class)
+    ->name('tipitaka-chapters.index');
 
 // 段落关联关系：查询（原 v2 related-paragraph）+ 聚合（book_name 列表 / 某 book_name 的 cs_para）。
 Route::get('tipitaka-related-paragraphs/aggregate', [TipitakaRelatedParagraphAggregateController::class, 'index'])

@@ -2,157 +2,124 @@ import { useIntl } from "react-intl";
 import { useRef, useState } from "react";
 import { type ActionType, ProList } from "@ant-design/pro-components";
 import { Space, Tag, Button, Layout, Popconfirm } from "antd";
-import { delete_, get } from "../../request";
-import type { IShareListResponse } from "../../api/Share";
-import type { IDeleteResponse } from "../../api/group";
+
+import {
+  fetchGroupShares,
+  removeGroupShare,
+  type GroupShare,
+} from "../../api/group";
+import { canManageMembers } from "../../api/group-member";
+import { useAppSelector } from "../../hooks";
+import { currentUser, studioList } from "../../reducers/current-user";
 
 const { Content } = Layout;
 
-interface IRoleTag {
-  title: string;
-  color: string;
-}
-interface DataItem {
-  id?: string;
-  name?: string;
-  tag: IRoleTag[];
-  image: string;
-  description?: string;
-}
+/** 资源类型 → 界面上的名字（沿用各模块的栏目名） */
+const TYPE_LABEL: Record<string, string> = {
+  channel: "columns.studio.channel.title",
+  article: "columns.studio.article.title",
+  collection: "columns.studio.anthology.title",
+};
+
 interface IWidget {
   groupId?: string;
 }
+/**
+ * 团队文档：共享给这个团队的资源（v3 /groups/{group}/shares）。
+ * 团队的 owner / manager，或资源的拥有者，可以把资源移出团队。
+ */
 const GroupFileWidget = ({ groupId }: IWidget) => {
   const intl = useIntl(); //i18n
-  const [canDelete, setCanDelete] = useState(false);
   const [resCount, setResCount] = useState(0);
+  const user = useAppSelector(currentUser);
+  const studios = useAppSelector(studioList);
+  // 管理成员与管理团队文档是同一组角色（owner / manager）
+  const canManage = canManageMembers(
+    studios?.find((item) => item.id === groupId)?.role
+  );
+
   const ref = useRef<ActionType | null>(null);
   return (
     <Content>
-      <ProList<DataItem>
+      <ProList<GroupShare>
         rowKey="id"
         actionRef={ref}
+        // groupId 放进 params：切换团队（团队空间或团队详情页）时 ProList 才会重新请求
+        params={{ groupId }}
         headerTitle={
           intl.formatMessage({ id: "group.files" }) + "-" + resCount.toString()
         }
         metas={{
           title: {
-            dataIndex: "name",
-          },
-          avatar: {
-            dataIndex: "image",
-            editable: false,
+            render: (_dom, row) =>
+              row.resource?.title ??
+              intl.formatMessage({ id: "labels.group.share.missing" }),
           },
           description: {
-            dataIndex: "description",
-          },
-          content: {
-            dataIndex: "content",
-            editable: false,
+            render: (_dom, row) => row.resource?.owner?.nickName,
           },
           subTitle: {
-            render: (_text, row, index) => {
-              const showtag = row.tag.map((item, id) => {
-                return (
-                  <Tag color={item.color} key={id}>
-                    {item.title}
-                  </Tag>
-                );
-              });
+            render: (_dom, row) => {
+              const type = row.resource?.type ?? "";
               return (
-                <Space size={0} key={index}>
-                  {showtag}
+                <Space size={0}>
+                  <Tag>
+                    {TYPE_LABEL[type]
+                      ? intl.formatMessage({ id: TYPE_LABEL[type] })
+                      : type}
+                  </Tag>
+                  <Tag color={row.role === "editor" ? "blue" : "default"}>
+                    {intl.formatMessage({
+                      id: `labels.group.share.${row.role ?? "reader"}`,
+                    })}
+                  </Tag>
                 </Space>
               );
             },
           },
           actions: {
-            render: (_text, row, index) => [
-              canDelete ? (
+            render: (_dom, row) =>
+              canManage ||
+              (user?.id && row.resource?.owner_id === user.id) ? (
                 <Popconfirm
-                  key={index}
                   title={intl.formatMessage({
                     id: "forms.message.res.remove",
                   })}
                   onConfirm={() => {
-                    console.log("delete", row.id);
-                    delete_<IDeleteResponse>("/api/v2/share/" + row.id).then(
-                      (json) => {
-                        if (json.ok) {
-                          console.log("delete ok");
-                          ref.current?.reload();
-                        }
-                      }
-                    );
+                    if (groupId && row.id) {
+                      removeGroupShare(groupId, row.id).then(() =>
+                        ref.current?.reload()
+                      );
+                    }
                   }}
                   okText={intl.formatMessage({ id: "buttons.ok" })}
                   cancelText={intl.formatMessage({ id: "buttons.cancel" })}
                 >
-                  <Button size="small" type="link" danger key="link">
+                  <Button size="small" type="link" danger>
                     {intl.formatMessage({ id: "buttons.remove" })}
                   </Button>
                 </Popconfirm>
-              ) : (
-                <></>
-              ),
-            ],
+              ) : null,
           },
         }}
-        request={async (params = {}, sorter, filter) => {
-          console.log(params, sorter, filter);
-
-          let url = `/api/v2/share?view=group&id=${groupId}`;
-          const offset =
-            ((params.current ? params.current : 1) - 1) *
-            (params.pageSize ? params.pageSize : 20);
-          url += `&limit=${params.pageSize}&offset=${offset}`;
-          if (typeof params.keyword !== "undefined") {
-            url += "&search=" + (params.keyword ? params.keyword : "");
+        request={async (params = {}) => {
+          if (!groupId) {
+            return { total: 0, success: false, data: [] };
           }
-          const res = await get<IShareListResponse>(url);
-          if (res.ok) {
-            console.log(res.data.rows);
-            setResCount(res.data.count);
-            switch (res.data.role) {
-              case "owner":
-                setCanDelete(true);
-                break;
-              case "manager":
-                setCanDelete(true);
-                break;
-            }
-            const items: DataItem[] = res.data.rows.map((item) => {
-              const member: DataItem = {
-                id: item.id,
-                name: item.res_name,
-                tag: [],
-                image: "",
-                description: item.owner?.nickName,
-              };
-              switch (item.power) {
-                case 0:
-                  member.tag.push({ title: "拥有者", color: "success" });
-                  break;
-                case 1:
-                  member.tag.push({ title: "管理员", color: "default" });
-                  break;
-              }
-
-              return member;
-            });
-            console.log(items);
+          try {
+            const res = await fetchGroupShares(
+              groupId,
+              params.current ?? 1,
+              params.pageSize ?? 20
+            );
+            setResCount(res.meta?.total ?? 0);
             return {
-              total: res.data.count,
-              succcess: true,
-              data: items,
+              total: res.meta?.total ?? 0,
+              success: true,
+              data: res.data ?? [],
             };
-          } else {
-            console.error(res.message);
-            return {
-              total: 0,
-              succcess: false,
-              data: [],
-            };
+          } catch {
+            return { total: 0, success: false, data: [] };
           }
         }}
         pagination={{

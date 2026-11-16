@@ -46,6 +46,7 @@ get:
           - exact
           - semantic
           - hybrid
+          - definition
         default: fuzzy
       description: 检索模式
     -
@@ -181,6 +182,7 @@ post:
                 - exact
                 - semantic
                 - hybrid
+                - definition
               default: fuzzy
             resource_type:
               type: string

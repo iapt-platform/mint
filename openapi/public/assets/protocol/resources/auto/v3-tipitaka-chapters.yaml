@@ -1,0 +1,125 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-tipitaka-chapters.yaml
+get:
+  summary: 找章节
+  tags:
+    - tipitaka-chapters
+  operationId: get_api_v3_tipitaka_chapters
+  description: |-
+    两种用法，可以叠加：
+    - **按名字找**（给 `q`）：巴利名不分大小写、变音符号可有可无（`mahaparinibbana`），可以只写
+    名字的一部分，拼错一两个字母也能找到；也能用公开译本里的章节译名（如「大般涅槃经」）。
+    按匹配度排序，带 `score`（相等 1、开头相同 0.95、包含 0.9，拼错的按相似度最高 0.85）；同一档里根本典在前，再按与整个标题的接近度、大章在前。
+    - **列出一本书的标题**（给 `book`，不给 `q`）：按经文顺序。再给 `para` 只列那一章下面的；
+    `max_level` 限制层级深浅。
+    `layer` 是这本书属于根本典（mula）、义注（atthakatha）、复注（tika）还是其他（anna）；
+    `paragraphs` / `chars` 是这一章的段数与字符数；`parent` / `prev` / `next` 是同一本书里的段号，
+    没有为 null；`path` 是从丛书到上一级的路径（不含本章）。
+
+    实现：`V3\TipitakaChapterController@__invoke`
+  security:
+    - {  }
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: page
+      in: query
+      schema:
+        type: integer
+        default: 1
+      description: 页码
+    -
+      name: per_page
+      in: query
+      schema:
+        type: integer
+        default: 50
+      description: '每页数量，最大 1000'
+    -
+      name: q
+      in: query
+      schema:
+        type: string
+      description: '章节名：巴利名或译名，不给 book 时必填'
+      example: mahaparinibbana
+    -
+      name: book
+      in: query
+      schema:
+        type: integer
+      description: '书号，不给 q 时必填'
+      example: 94
+    -
+      name: para
+      in: query
+      schema:
+        type: integer
+      description: '只列 book 里这一章下面的标题（含它自己），要和 book 一起给'
+      example: 287
+    -
+      name: layer
+      in: query
+      schema:
+        type: string
+        enum:
+          - mula
+          - atthakatha
+          - tika
+          - anna
+      description: 只要某几层，逗号分隔
+    -
+      name: max_level
+      in: query
+      schema:
+        type: integer
+      description: '只要层级不深于它的标题（1 是书名）'
+      example: 3
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    book:
+                      type: integer
+                    para:
+                      type: integer
+                    level:
+                      type: integer
+                    title:
+                      type: string
+                    translations:
+                      type: array
+                      items: { type: object, properties: { lang: { type: string }, title: { type: string } } }
+                    layer:
+                      type: string
+                    paragraphs:
+                      type: integer
+                    chars:
+                      type: integer
+                    parent:
+                      type: integer
+                      nullable: true
+                    prev:
+                      type: integer
+                      nullable: true
+                    next:
+                      type: integer
+                      nullable: true
+                    path:
+                      type: array
+                      items: { type: object, properties: { book: { type: integer }, para: { type: integer }, title: { type: string }, level: { type: integer } } }
+                    score:
+                      type: number
+                      description: 仅在部分查询口径下返回。
+              meta:
+                $ref: '../../main.yaml#/components/schemas/PaginationMeta'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

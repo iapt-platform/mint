@@ -2,11 +2,10 @@ import { useMatches, useParams } from "react-router";
 import { useIntl } from "react-intl";
 
 import ProjectEdit from "../../../components/task/ProjectEdit";
-import { useAppSelector } from "../../../hooks";
-import { currentUser } from "../../../reducers/current-user";
+import { useActiveStudio } from "../../../hooks/useActiveStudio";
 
 const Widget = () => {
-  const currUser = useAppSelector(currentUser);
+  const { studioName } = useActiveStudio();
 
   const { projectId } = useParams();
   const intl = useIntl();
@@ -20,7 +19,7 @@ const Widget = () => {
   return (
     <>
       <title>{name ? `${prefix}-${name}` : prefix}</title>
-      <ProjectEdit studioName={currUser?.realName} projectId={projectId} />
+      <ProjectEdit studioName={studioName} projectId={projectId} />
     </>
   );
 };

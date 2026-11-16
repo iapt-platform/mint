@@ -75,17 +75,31 @@ class GroupMemberController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * 往团队里加一名普通成员。
+     *
+     * 只有该团队的 owner / manager 能调用（与 destroy 同口径）。
+     *
+     * @bodyParam user_id string required 要加入的用户 uid
+     * @bodyParam group_id string required 团队 uid
      *
      * @return Response
      */
     public function store(Request $request)
     {
-        //
+        $currUser = AuthService::current($request);
+        if (! $currUser) {
+            return $this->error(__('auth.failed'), null, 401);
+        }
         $validated = $request->validate([
             'user_id' => 'required',
             'group_id' => 'required',
         ]);
+        $callerPower = GroupMember::where('group_id', $validated['group_id'])
+            ->where('user_id', $currUser['user_uid'])
+            ->value('power');
+        if ($callerPower === null || $callerPower >= 2) {
+            return $this->error(__('auth.failed'), null, 403);
+        }
         // 查找重复的项目
         if (GroupMember::where('group_id', $validated['group_id'])->where('user_id', $validated['user_id'])->exists()) {
             return $this->error('member exists');

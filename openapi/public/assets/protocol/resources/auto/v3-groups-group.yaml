@@ -1,0 +1,194 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-groups-group.yaml
+get:
+  summary: 团队详情
+  tags:
+    - groups
+  operationId: get_api_v3_groups_group_
+  description: |-
+    公开团队谁都能看（可不登录），私有团队只有成员能看。带查看者在团队里的角色。
+
+    实现：`V3\GroupController@show`
+  security:
+    - {  }
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: group
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '团队 uid'
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  description:
+                    type: string
+                    nullable: true
+                  status:
+                    type: integer
+                  owner:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string }
+                      roles: { type: array, items: { type: string } }
+                    nullable: true
+                  role:
+                    type: string
+                    nullable: true
+                    description: 仅在部分查询口径下返回。
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+    403:
+      description: 私有团队，且不是成员
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'
+delete:
+  summary: 删团队
+  tags:
+    - groups
+  operationId: delete_api_v3_groups_group_
+  description: |-
+    只有 owner 能删。团队名下还有资源（channel、文章等）时拒绝，`resources` 里给出各类的条数；
+    否则连同成员与共享给团队的记录一起硬删，返回 204 空体。
+
+    实现：`V3\GroupController@destroy`
+  security:
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: group
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '团队 uid'
+  responses:
+    204:
+      description: 已删除，无响应体
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    403:
+      description: '只有 owner 能删'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+    409:
+      description: 团队名下还有资源
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'
+patch:
+  summary: 改团队信息
+  tags:
+    - groups
+  operationId: patch_api_v3_groups_group_
+  description: |-
+    团队的 owner / manager 才能调用，只改传了的字段。
+
+    实现：`V3\GroupController@update`
+  security:
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: group
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '团队 uid'
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+              description: '团队名，最长 64'
+            description:
+              type: string
+              description: '简介，最长 1024'
+            status:
+              type: integer
+              description: '10 私有、30 公开'
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  description:
+                    type: string
+                    nullable: true
+                  status:
+                    type: integer
+                  owner:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string }
+                      roles: { type: array, items: { type: string } }
+                    nullable: true
+                  role:
+                    type: string
+                    nullable: true
+                    description: 仅在部分查询口径下返回。
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    403:
+      description: 不能修改这个团队
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

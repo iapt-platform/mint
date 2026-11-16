@@ -2,19 +2,23 @@ import { useState } from "react";
 import { useIntl } from "react-intl";
 import {
   ProForm,
+  ProFormRadio,
   ProFormText,
   ProFormTextArea,
 } from "@ant-design/pro-components";
 import { message, Card } from "antd";
 
-import { get, put } from "../../request";
-
-import type { IGroupRequest, IGroupResponse } from "../../api/group";
+import {
+  fetchGroup,
+  GROUP_STATUS_PRIVATE,
+  GROUP_STATUS_PUBLIC,
+  updateGroup,
+} from "../../api/group";
 
 interface IFormData {
-  id: string;
   name: string;
   description: string;
+  status: number;
 }
 
 interface IWidget {
@@ -29,24 +33,23 @@ const GroupEdit = ({ groupId }: IWidget) => {
     <Card title={title}>
       <ProForm<IFormData>
         onFinish={async (values: IFormData) => {
-          console.log(values);
-          const res = await put<IGroupRequest, IGroupResponse>(
-            `/api/v2/group/${groupId}`,
-            values
-          );
-          if (res.ok) {
-            message.success(intl.formatMessage({ id: "flashes.success" }));
+          if (!groupId) {
+            return;
           }
+          // owner / manager 才能改；失败由 unwrap 统一弹提示
+          const group = await updateGroup(groupId, values);
+          setTitle(group?.name ?? values.name);
+          message.success(intl.formatMessage({ id: "flashes.success" }));
         }}
         formKey="group_edit"
         request={async () => {
-          const res = await get<IGroupResponse>(`/api/v2/group/${groupId}`);
-          setTitle(res.data.name);
-          document.title = `${res.data.name}`;
+          const group = await fetchGroup(groupId ?? "");
+          setTitle(group.name ?? "");
+          document.title = `${group.name}`;
           return {
-            id: res.data.uid,
-            name: res.data.name,
-            description: res.data.description,
+            name: group.name ?? "",
+            description: group.description ?? "",
+            status: group.status ?? GROUP_STATUS_PUBLIC,
           };
         }}
       >
@@ -59,6 +62,23 @@ const GroupEdit = ({ groupId }: IWidget) => {
             rules={[
               {
                 required: true,
+              },
+            ]}
+          />
+        </ProForm.Group>
+
+        <ProForm.Group>
+          <ProFormRadio.Group
+            name="status"
+            label={intl.formatMessage({ id: "labels.group.visibility" })}
+            options={[
+              {
+                value: GROUP_STATUS_PUBLIC,
+                label: intl.formatMessage({ id: "labels.group.public" }),
+              },
+              {
+                value: GROUP_STATUS_PRIVATE,
+                label: intl.formatMessage({ id: "labels.group.private" }),
               },
             ]}
           />

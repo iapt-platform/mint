@@ -11,6 +11,14 @@ return [
         |--------------------------------------------------------------------------
         */
         'ops_token' => env('APP_OPS_TOKEN', ''),
+        /*
+        |--------------------------------------------------------------------------
+        | AI 对话服务（agent-poc backend）的服务密钥，通过 X-Agent-Service-Key 传递。
+        | 提问前扣费（POST /api/v3/agent-charges）与研究过程入库（POST /api/v3/agent-traces）只认它；
+        | 为空则这两个接口一律拒绝。
+        |--------------------------------------------------------------------------
+        */
+        'agent_service_key' => env('AGENT_SERVICE_KEY', ''),
 
     ],
     'languages' => [
@@ -24,6 +32,35 @@ return [
         'lo' => 'ພາສາລາວ',
     ],
     'default_language' => 'en',
+
+    /*
+    |--------------------------------------------------------------------------
+    | AI 对话积分策略（公开：GET /v3/credit-policy）
+    |--------------------------------------------------------------------------
+    |
+    | 只放当前生效的一版，历史看 git。改规则就改这里，并把 version 改成生效日
+    | （UTC，YYYYMMDD）——它会记进每笔积分流水（credit_ledger.policy_version）。
+    | 「一天」一律按 UTC 算，每天 0 点（UTC）重置赠送额度。字段说明见 agent-poc 仓库 docs/credits.md。
+    |
+    */
+    'credits' => [
+        // 积分功能上线日（UTC）：从这天起的读经 / 编辑时长才换积分；结算任务补发漏掉的日子时也从这天查起
+        'earn_since' => '2026-10-23',
+        'policy' => [
+            'version' => 20261023,
+            // 每天赠送的额度（不累积到第二天）
+            'daily_free' => ['guest' => 100, 'user' => 500],
+            // 每次提问的价格：普通 / 深度思考
+            'cost' => ['normal' => 10, 'deep' => 30],
+            // 同一 IP 下所有游客每天合计最多消耗多少（防刷），null 为不限
+            'guest_ip_daily_cap' => 500,
+            // 登录用户读经、编辑时长换积分；daily_cap 为 null 不设上限。积分不过期
+            'earn' => [
+                'reading' => ['credits_per_minute' => 1, 'daily_cap' => 100],
+                'editing' => ['credits_per_minute' => 5, 'daily_cap' => null],
+            ],
+        ],
+    ],
     'library' => [
         'list_min_progress' => env('LIBRARY_LIST_MIN_PROGRESS', 0.5),
     ],
@@ -165,7 +202,9 @@ return [
         ],
     ],
     'opensearch' => [
-        'index' => 'wikipali_20260813',
+        'index' => 'wikipali_global_20260813',
+        // 索引 settings + mappings 定义文件所在目录，文件名为「{index}.json」
+        'index_definition_path' => env('OPENSEARCH_INDEX_DEFINITION_PATH', base_path('../opensearch/indices')),
         'config' => [
             'scheme' => env('OPENSEARCH_SCHEME', 'http'),
             'host' => env('OPENSEARCH_HOST', '127.0.0.1'),

@@ -1,0 +1,76 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-me-agent-threads.yaml
+get:
+  summary: 列出我的会话
+  tags:
+    - agent-threads
+  operationId: get_api_v3_me_agent_threads
+  description: |-
+    最近提问的在前，不含已删除的。
+
+    实现：`V3\MeAgentThreadController@index`
+  security:
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: per_page
+      in: query
+      schema:
+        type: integer
+        default: 30
+      description: '每页数量，最大 100'
+    -
+      name: 'filter[archived]'
+      in: query
+      schema:
+        type: boolean
+      description: 只看已存档（true）或未存档（false）的；不传则全部
+    -
+      name: page
+      in: query
+      schema:
+        type: integer
+        default: 1
+      description: 页码
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    thread_id:
+                      type: string
+                    title:
+                      type: string
+                    client:
+                      type: string
+                      nullable: true
+                    archived_at:
+                      type: string
+                      nullable: true
+                    last_run_at:
+                      type: string
+                    created_at:
+                      type: string
+                    updated_at:
+                      type: string
+                    deleted_at:
+                      type: string
+                      nullable: true
+                    runs:
+                      type: array
+                      items: { type: object, properties: { run_id: { type: string }, question: { type: string }, answer: { type: string, nullable: true }, citations: { type: array, items: { type: object }, nullable: true }, deep: { type: boolean }, status: { type: string }, user_message_id: { type: string, nullable: true }, assistant_message_id: { type: string, nullable: true }, created_at: { type: string } } }
+                      description: 仅在部分查询口径下返回。
+              meta:
+                $ref: '../../main.yaml#/components/schemas/PaginationMeta'
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

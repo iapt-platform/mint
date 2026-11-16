@@ -59,6 +59,10 @@ php artisan upgrade:community.term zh-Hans
 # 导出离线数据
 php artisan export:offline lzma
 
+# AI 对话积分：把读经、编辑时长结算成积分。补齐上线以来所有漏结算的日子，
+# 漏跑几天都没关系，下次跑会补上；可重复执行，不会重复入账
+php artisan credits:settle-activity
+
 ```
 
 ## weekly

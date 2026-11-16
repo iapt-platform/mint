@@ -2,16 +2,18 @@ import { useIntl } from "react-intl";
 import { ProForm, ProFormSelect } from "@ant-design/pro-components";
 import { Button, message, Popover } from "antd";
 import { UserAddOutlined } from "@ant-design/icons";
-import { get, post } from "../../request";
+import { get } from "../../request";
 import type { IUserListResponse } from "../../api/Auth";
-import type {
-  IGroupMemberRequest,
-  IGroupMemberResponse,
-} from "../../api/group";
+import {
+  ASSIGNABLE_GROUP_ROLES,
+  addGroupMember,
+  type AssignableGroupRole,
+} from "../../api/group-member";
 import { useState } from "react";
 
 interface IFormData {
   userId: string;
+  role: AssignableGroupRole;
 }
 
 interface IWidget {
@@ -24,26 +26,16 @@ const AddMemberWidget = ({ groupId, onCreated }: IWidget) => {
 
   const form = (
     <ProForm<IFormData>
+      initialValues={{ role: "reader" }}
       onFinish={async (values: IFormData) => {
-        console.log(values);
-        if (typeof groupId !== "undefined") {
-          post<IGroupMemberRequest, IGroupMemberResponse>(
-            "/api/v2/group-member",
-            {
-              user_id: values.userId,
-              group_id: groupId,
-            }
-          ).then((json) => {
-            console.log("add member", json);
-            if (json.ok) {
-              message.success(intl.formatMessage({ id: "flashes.success" }));
-              setOpen(false);
-              if (typeof onCreated !== "undefined") {
-                onCreated();
-              }
-            }
-          });
+        if (typeof groupId === "undefined") {
+          return;
         }
+        // 失败（不是管理者、已是成员等）由 unwrap 统一弹提示
+        await addGroupMember(groupId, values.userId, values.role);
+        message.success(intl.formatMessage({ id: "flashes.success" }));
+        setOpen(false);
+        onCreated?.();
       }}
     >
       <ProForm.Group>
@@ -74,6 +66,15 @@ const AddMemberWidget = ({ groupId, onCreated }: IWidget) => {
               required: true,
             },
           ]}
+        />
+        <ProFormSelect
+          name="role"
+          label={intl.formatMessage({ id: "labels.group.role" })}
+          allowClear={false}
+          options={ASSIGNABLE_GROUP_ROLES.map((role) => ({
+            value: role,
+            label: intl.formatMessage({ id: `labels.group.role.${role}` }),
+          }))}
         />
       </ProForm.Group>
     </ProForm>

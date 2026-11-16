@@ -154,6 +154,23 @@ const items = {
   "labels.paragraph-count": "段落",
   "labels.pagination.total": "結果: {total}",
   "labels.channel.select": "版本選擇",
+  "labels.teamspace": "團隊空間",
+  "labels.teamspace.current": "團隊空間：{name}",
+  "labels.teamspace.personal-only": "個人專屬功能，團隊空間下不可用",
+  "labels.teamspace.unsupported": "該模組暫不支援團隊空間",
+  "labels.group.role.owner": "擁有者",
+  "labels.group.role.manager": "管理員",
+  "labels.group.role.editor": "編輯",
+  "labels.group.role.reader": "唯讀成員",
+  "labels.group.role": "角色",
+  "labels.teamspace.members": "成員管理",
+  "labels.teamspace.only": "僅在團隊空間中可用",
+  "labels.group.visibility": "可見性",
+  "labels.group.public": "公開（能被搜到）",
+  "labels.group.private": "私有（只有成員看得到）",
+  "labels.group.share.missing": "（資源已刪除）",
+  "labels.group.share.editor": "可編輯",
+  "labels.group.share.reader": "唯讀",
 };
 
 export default items;

@@ -8,14 +8,12 @@ import CourseMemberList, {
   type ICourseMember,
 } from "../../../components/course/CourseMemberList";
 import CourseMemberTimeLine from "../../../components/course/CourseMemberTimeLine";
-import { useAppSelector } from "../../../hooks";
-import { currentUser } from "../../../reducers/current-user";
+import { useActiveStudio } from "../../../hooks/useActiveStudio";
 
 const Widget = () => {
   const intl = useIntl();
   const { courseId } = useParams(); //url 参数
-  const user = useAppSelector(currentUser);
-  const studioName = user?.realName;
+  const { studioName } = useActiveStudio();
   const [title, setTitle] = useState("loading");
   const [selected, setSelected] = useState<string>();
   const courseTitle = intl.formatMessage({

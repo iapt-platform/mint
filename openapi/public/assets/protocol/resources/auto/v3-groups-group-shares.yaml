@@ -1,0 +1,69 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-groups-group-shares.yaml
+get:
+  summary: 列出团队文档
+  tags:
+    - groups
+  operationId: get_api_v3_groups_group_shares
+  description: |-
+    只有团队成员看得到。每条带资源类型、标题与拥有者，以及团队对它的权限（reader / editor）。
+
+    实现：`V3\GroupShareController@index`
+  security:
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: group
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '团队 uid'
+    -
+      name: per_page
+      in: query
+      schema:
+        type: integer
+        default: 20
+      description: '每页数量，最大 200'
+    -
+      name: page
+      in: query
+      schema:
+        type: integer
+        default: 1
+      description: 页码
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    role:
+                      type: string
+                    resource:
+                      type: object
+                      properties: { type: { type: string }, id: { type: string }, title: { type: string, nullable: true }, owner_id: { type: string, nullable: true }, owner: { type: object, properties: { id: { type: string }, nickName: { type: string }, userName: { type: string }, realName: { type: string }, sn: { type: integer }, avatar: { type: string }, roles: { type: array, items: { type: string } } }, nullable: true } }
+                    created_at:
+                      type: string
+              meta:
+                $ref: '../../main.yaml#/components/schemas/PaginationMeta'
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    403:
+      description: 不是这个团队的成员
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

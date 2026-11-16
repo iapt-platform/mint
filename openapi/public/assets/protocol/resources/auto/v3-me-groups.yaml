@@ -1,0 +1,82 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-me-groups.yaml
+get:
+  summary: 列出我加入的团队
+  tags:
+    - groups
+  operationId: get_api_v3_me_groups
+  description: |-
+    每条带我在团队里的角色（owner / manager / editor / reader），按加入时间排序。
+
+    实现：`V3\MeGroupController@__invoke`
+  security:
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: owned
+      in: query
+      schema:
+        type: boolean
+      description: 'true 只列我创建的，false 只列我参加的别人的团队；不传列全部'
+    -
+      name: per_page
+      in: query
+      schema:
+        type: integer
+        default: 100
+      description: '每页数量，最大 200'
+    -
+      name: search
+      in: query
+      schema:
+        type: string
+      description: 按团队名模糊匹配
+    -
+      name: page
+      in: query
+      schema:
+        type: integer
+        default: 1
+      description: 页码
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    description:
+                      type: string
+                      nullable: true
+                    owner_id:
+                      type: string
+                    owner:
+                      type: object
+                      properties: { id: { type: string }, nickName: { type: string }, userName: { type: string }, realName: { type: string }, sn: { type: integer }, avatar: { type: string }, roles: { type: array, items: { type: string } } }
+                      nullable: true
+                    status:
+                      type: integer
+                    role:
+                      type: string
+                    member_id:
+                      type: string
+                    created_at:
+                      type: string
+                    joined_at:
+                      type: string
+              meta:
+                $ref: '../../main.yaml#/components/schemas/PaginationMeta'
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

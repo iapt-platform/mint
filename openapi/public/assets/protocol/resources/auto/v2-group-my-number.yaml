@@ -4,7 +4,8 @@ get:
   tags:
     - group-my-number
   operationId: get_api_v2_group_my_number
-  description: 实现：`GroupController@showMyNumber`
+  description: |
+    改读 `GET /v3/me/groups?owned=true|false` 的 `meta.total`。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
   parameters:
     -
       name: studio
@@ -29,3 +30,4 @@ get:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
       $ref: '../../main.yaml#/components/responses/ValidationError'
+  deprecated: true

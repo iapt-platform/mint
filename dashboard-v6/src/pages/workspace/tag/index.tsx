@@ -2,13 +2,11 @@ import { useNavigate } from "react-router";
 import { useIntl } from "react-intl";
 
 import TagList from "../../../components/tag/TagList";
+import { useActiveStudio } from "../../../hooks/useActiveStudio";
 
-import { useAppSelector } from "../../../hooks";
-import { currentUser } from "../../../reducers/current-user";
 
 const Widget = () => {
-  const user = useAppSelector(currentUser);
-  const studioName = user?.realName;
+  const { studioName } = useActiveStudio();
   const navigate = useNavigate();
   const intl = useIntl();
   return (

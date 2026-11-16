@@ -1,0 +1,11 @@
+# 手写补充：v2 团队已被 v3 取代（2026-11-13）。
+get:
+  deprecated: true
+  description: |
+    `view=all` 已被 `GET /v3/groups?search=`（只搜公开团队）取代；
+    `view=studio`（含 `view2`）已被 `GET /v3/me/groups?owned=true|false` 取代。
+    保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
+post:
+  deprecated: true
+  description: |
+    已被 `POST /v3/groups` 取代。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。

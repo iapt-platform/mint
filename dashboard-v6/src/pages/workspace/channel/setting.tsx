@@ -11,8 +11,7 @@ import WebhookList from "../../../components/webhook/WebhookList";
 import WebhookEdit from "../../../components/webhook/WebhookEdit";
 import { EResType } from "../../../components/share/utils";
 import type { IApiResponseChannelData } from "../../../api/channel";
-import { useAppSelector } from "../../../hooks";
-import { currentUser } from "../../../reducers/current-user";
+import { useActiveStudio } from "../../../hooks/useActiveStudio";
 
 const Widget = () => {
   const intl = useIntl();
@@ -24,8 +23,7 @@ const Widget = () => {
     id: "columns.studio.channel.title",
   });
   const navigate = useNavigate();
-  const user = useAppSelector(currentUser);
-  const studioName = user?.realName;
+  const { studioName } = useActiveStudio();
 
   return (
     <>

@@ -6,6 +6,8 @@ use App\Http\Middleware\OpsToken;
 use App\Http\Middleware\SetLocale;
 use App\Http\Middleware\UserOperation;
 use App\Http\Middleware\V3\Authenticate as V3Authenticate;
+use App\Http\Middleware\V3\AuthenticateAdmin;
+use App\Http\Middleware\V3\AuthenticateAgentService;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -43,6 +45,10 @@ return Application::configure(basePath: dirname(__DIR__))
             // v3 的登录闸。只认 bearer，未登录在进控制器前就 401——
             // 所以「未登录 + 参数非法」得到的是 401 而不是 422
             'auth.v3' => V3Authenticate::class,
+            // 服务间鉴权：只放行 AI 对话服务（X-Agent-Service-Key）
+            'auth.agent-service' => AuthenticateAgentService::class,
+            // 管理员闸：排在 auth.v3 之后，非 root / administrator 一律 403
+            'auth.v3.admin' => AuthenticateAdmin::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

@@ -2982,13 +2982,17 @@ export interface paths {
         };
         /**
          * 列出 group
-         * @description 实现：`GroupController@index`
+         * @deprecated
+         * @description `view=all` 已被 `GET /v3/groups?search=`（只搜公开团队）取代；
+         *     `view=studio`（含 `view2`）已被 `GET /v3/me/groups?owned=true|false` 取代。
+         *     保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         get: operations["get_api_v2_group"];
         put?: never;
         /**
          * 新建 group
-         * @description 实现：`GroupController@store`
+         * @deprecated
+         * @description 已被 `POST /v3/groups` 取代。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         post: operations["post_api_v2_group"];
         delete?: never;
@@ -3006,13 +3010,17 @@ export interface paths {
         };
         /**
          * 列出 group-member
-         * @description 实现：`GroupMemberController@index`
+         * @deprecated
+         * @description `view=user` 已被 `GET /v3/me/groups` 取代，`view=group` 已被 `GET /v3/groups/{group}/members` 取代。
+         *     保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         get: operations["get_api_v2_group_member"];
         put?: never;
         /**
-         * 新建 group-member
-         * @description 实现：`GroupMemberController@store`
+         * 往团队里加一名普通成员。
+         * @deprecated
+         * @description 已被 `POST /v3/groups/{group}/members` 取代（v3 可指定角色，默认 reader）。
+         *     2026-11-13 起要求调用者是该团队的 owner / manager。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         post: operations["post_api_v2_group_member"];
         delete?: never;
@@ -3035,20 +3043,24 @@ export interface paths {
         get: operations["get_api_v2_group_member_group_member_"];
         /**
          * 更新 group-member/{group_member}
-         * @description 实现：`GroupMemberController@update`
+         * @deprecated
+         * @description 空实现。改成员角色请用 `PATCH /v3/groups/{group}/members/{member}`。
          */
         put: operations["put_api_v2_group_member_group_member_"];
         post?: never;
         /**
          * 删除 group-member/{group_member}
-         * @description 实现：`GroupMemberController@destroy`
+         * @deprecated
+         * @description 已被 `DELETE /v3/groups/{group}/members/{member}` 取代（v3 允许本人退出团队）。
+         *     保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         delete: operations["delete_api_v2_group_member_group_member_"];
         options?: never;
         head?: never;
         /**
          * 更新 group-member/{group_member}
-         * @description 实现：`GroupMemberController@update`
+         * @deprecated
+         * @description 空实现。改成员角色请用 `PATCH /v3/groups/{group}/members/{member}`。
          */
         patch: operations["patch_api_v2_group_member_group_member_"];
         trace?: never;
@@ -3062,7 +3074,8 @@ export interface paths {
         };
         /**
          * 获取我的，和协作channel数量
-         * @description 实现：`GroupController@showMyNumber`
+         * @deprecated
+         * @description 改读 `GET /v3/me/groups?owned=true|false` 的 `meta.total`。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         get: operations["get_api_v2_group_my_number"];
         put?: never;
@@ -3082,25 +3095,29 @@ export interface paths {
         };
         /**
          * 获取单个 group/{group}
-         * @description 实现：`GroupController@show`
+         * @deprecated
+         * @description 已被 `GET /v3/groups/{group}` 取代。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         get: operations["get_api_v2_group_group_"];
         /**
          * 更新 group/{group}
-         * @description 实现：`GroupController@update`
+         * @deprecated
+         * @description 已被 `PATCH /v3/groups/{group}`（局部更新，owner / manager 可改）取代。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         put: operations["put_api_v2_group_group_"];
         post?: never;
         /**
          * 删除 group/{group}
-         * @description 实现：`GroupController@destroy`
+         * @deprecated
+         * @description 已被 `DELETE /v3/groups/{group}` 取代（名下还有资源时 409）。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         delete: operations["delete_api_v2_group_group_"];
         options?: never;
         head?: never;
         /**
          * 更新 group/{group}
-         * @description 实现：`GroupController@update`
+         * @deprecated
+         * @description 已被 `PATCH /v3/groups/{group}`（局部更新，owner / manager 可改）取代。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         patch: operations["patch_api_v2_group_group_"];
         trace?: never;
@@ -5120,7 +5137,9 @@ export interface paths {
         };
         /**
          * 列出 search-title-index
-         * @description 实现：`SearchTitleController@index`
+         * @deprecated
+         * @description 已被 `GET /v3/tipitaka-chapters` 取代（带坐标、容错匹配、可按书列出全部标题），
+         *     保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         get: operations["get_api_v2_search_title_index"];
         put?: never;
@@ -5839,8 +5858,12 @@ export interface paths {
         get: operations["get_api_v2_share"];
         put?: never;
         /**
-         * 新建 share
-         * @description 实现：`ShareController@store`
+         * 为资源添加协作者。
+         * @description 只有资源拥有者能调用（与 update / destroy 的「power > 20」同口径）。
+         *     资源归属按 res_type 到对应表里查，查不到即拒绝——客户端谎报 res_type
+         *     只会让自己被拒，不会绕过校验。
+         *
+         *     实现：`ShareController@store`
          */
         post: operations["post_api_v2_share"];
         delete?: never;
@@ -7690,6 +7713,238 @@ export interface paths {
         patch: operations["patch_api_v2_webhook_webhook_"];
         trace?: never;
     };
+    "/v3/admin/agent-feedback": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 列出评价
+         * @description 最新的在前，带对应提问的摘要与自动质量指标，便于判断问题在哪。不含账号身份。
+         *
+         *     实现：`V3\AdminAgentFeedbackController@index`
+         */
+        get: operations["get_api_v3_admin_agent_feedback"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/admin/agent-runs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 列出提问
+         * @description 最新的在前。提问原文对管理员可见；游客只显示设备匿名 id 与 IP。
+         *
+         *     实现：`V3\AdminAgentRunController@index`
+         */
+        get: operations["get_api_v3_admin_agent_runs"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/admin/agent-runs/digest": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 分析用的精简导出
+         * @description 区间内允许用于改进回答（improve=true）的提问，最早的在前。不带任何身份（账号、设备、IP）。
+         *     每条给：问题、路由与把握度、检索词、状态与耗时、工具调用序列、用户评价、隐式信号计数、
+         *     同一会话里下一次提问隔了几秒；`full=true` 时再带回答、证据全文与引用，供 agent 评估回答质量
+         *     （服务端不做质量评估）。给 wikipali 插件的 `admin digest` 与分析技能用。
+         *
+         *     实现：`V3\AdminAgentRunController@digest`
+         */
+        get: operations["get_api_v3_admin_agent_runs_digest"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/admin/agent-runs/{run}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 查看一次提问的研究过程
+         * @description 带回答、给作答 LLM 的证据全文、计划、引用与全部步骤（LLM / 工具调用、节点事件）。
+         *
+         *     实现：`V3\AdminAgentRunController@show`
+         */
+        get: operations["get_api_v3_admin_agent_runs_run_"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/admin/agent-stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * AI 对话统计
+         * @description 一次返回整页：指标（含上一同长区间作对比）、每日按研究路径的提问数与耗时分位数、
+         *     客户端分布、工具调用 Top、积分流水。结果缓存 10 分钟。
+         *
+         *     实现：`V3\AdminAgentStatsController@__invoke`
+         */
+        get: operations["get_api_v3_admin_agent_stats"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/admin/reading-stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 阅读统计
+         * @description 一次返回整页：指标（含上一同长区间作对比）、日活 / 月活、每日序列、热门章节、
+         *     三藏与根本·义注·复注分布、读经时长分布、读经积分。结果缓存 10 分钟。
+         *     口径：活跃读者来自阅读记录（recents，只有登录用户）；读经时长只有 App；
+         *     章节浏览（views）含游客与搜索引擎爬虫。
+         *
+         *     实现：`V3\AdminReadingStatsController@__invoke`
+         */
+        get: operations["get_api_v3_admin_reading_stats"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/agent-charges": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 为一次提问扣费（幂等）
+         * @description 一次提问开始前由 agent 服务调用。先扣今日赠送，不够再扣积分余额；合计不够返回 402
+         *     （`type` 为 quota-exceeded，扩展字段 `reason`：insufficient 积分不足 / ip_cap 游客同 IP 超上限，
+         *     另带 `cost`、`free_remaining`、`earned_balance`）。
+         *     账号口径与 `POST /v3/agent-traces` 相同：Bearer 是透传的终端用户 token，
+         *     无效或缺省按游客算，此时 `device_id` 必填。按 run_id 幂等：首次 201，重复 200。
+         *     服务端出错、回答没生成时，写研究过程那一步会自动退回。
+         *
+         *     实现：`V3\AgentChargeController@store`
+         */
+        post: operations["post_api_v3_agent_charges"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/agent-events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 上报一条隐式信号
+         * @description 实现：`V3\AgentEventController@store`
+         */
+        post: operations["post_api_v3_agent_events"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/agent-feedback": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 评价一条回答（再次提交即更新）
+         * @description 一人对一条回答只留一条：首次 201，更新 200。点赞的 tags 取 accurate / useful_citations / clear / inspiring，
+         *     点踩的 tags 是原因：citation_wrong / missed / off_topic / incorrect / too_long / too_academic / slow / other；
+         *     只有选了 other 时 comment 才会保存。asked＝这条是被主动询问问出来的。
+         *
+         *     实现：`V3\AgentFeedbackController@store`
+         */
+        post: operations["post_api_v3_agent_feedback"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/agent-feedback/{message}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * 撤回评价
+         * @description 没评价过也返回 204（幂等）。
+         *
+         *     实现：`V3\AgentFeedbackController@destroy`
+         */
+        delete: operations["delete_api_v3_agent_feedback_message_"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v3/agent-grants": {
         parameters: {
             query?: never;
@@ -7710,6 +7965,78 @@ export interface paths {
          *     实现：`V3\AgentGrantController@store`
          */
         post: operations["post_api_v3_agent_grants"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/agent-quota": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 查看我的 AI 对话额度
+         * @description 可选登录：带 Bearer 看自己账号；游客带 `device_id`。登录用户读取时会顺带把今天（和昨天）
+         *     的读经、编辑时长结算成积分，所以读完马上就能看到到账。
+         *
+         *     实现：`V3\AgentQuotaController@__invoke`
+         */
+        get: operations["get_api_v3_agent_quota"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/agent-traces": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 写入一次提问的研究过程（幂等）
+         * @description 请求头 `X-Agent-Service-Key` 证明调用方是 agent 服务；`Authorization: Bearer`
+         *     是 agent 透传的终端用户 token（可选）：有效的人类 token 记到账号下，
+         *     没有 / 失效 / 是模型 token 都记为游客——此时 `device_id` 必填，并记 `client_ip`。
+         *     token 失效不拒绝，照样入库。
+         *     按 run_id 幂等：首次写入 201，重复提交返回已有记录 200，步骤不会重复写。
+         *
+         *     实现：`V3\AgentTraceController@store`
+         */
+        post: operations["post_api_v3_agent_traces"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/credit-policy": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 查看当前的积分策略
+         * @description 每天赠送多少、每次提问多少钱、读经和编辑怎么换积分。`version` 是生效日（YYYYMMDD），
+         *     也记在每笔积分流水里。「一天」按 UTC 算。
+         *
+         *     实现：`V3\CreditPolicyController@__invoke`
+         */
+        get: operations["get_api_v3_credit_policy"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -7908,6 +8235,170 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v3/groups": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 搜公开团队
+         * @description 共享资源时挑团队用。只列公开团队（status 30），按名字排序。
+         *
+         *     实现：`V3\GroupController@index`
+         */
+        get: operations["get_api_v3_groups"];
+        put?: never;
+        /**
+         * 建团队
+         * @description 建的人成为 owner。同一个人名下不能重名。
+         *
+         *     实现：`V3\GroupController@store`
+         */
+        post: operations["post_api_v3_groups"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/groups/{group}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 团队详情
+         * @description 公开团队谁都能看（可不登录），私有团队只有成员能看。带查看者在团队里的角色。
+         *
+         *     实现：`V3\GroupController@show`
+         */
+        get: operations["get_api_v3_groups_group_"];
+        put?: never;
+        post?: never;
+        /**
+         * 删团队
+         * @description 只有 owner 能删。团队名下还有资源（channel、文章等）时拒绝，`resources` 里给出各类的条数；
+         *     否则连同成员与共享给团队的记录一起硬删，返回 204 空体。
+         *
+         *     实现：`V3\GroupController@destroy`
+         */
+        delete: operations["delete_api_v3_groups_group_"];
+        options?: never;
+        head?: never;
+        /**
+         * 改团队信息
+         * @description 团队的 owner / manager 才能调用，只改传了的字段。
+         *
+         *     实现：`V3\GroupController@update`
+         */
+        patch: operations["patch_api_v3_groups_group_"];
+        trace?: never;
+    };
+    "/v3/groups/{group}/members": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 列出团队成员
+         * @description 只有团队成员看得到。owner、manager 在前，其余按加入时间排序。
+         *
+         *     实现：`V3\GroupMemberController@index`
+         */
+        get: operations["get_api_v3_groups_group_members"];
+        put?: never;
+        /**
+         * 加一名成员
+         * @description 团队的 owner / manager 才能调用。角色默认 reader（只读）。
+         *
+         *     实现：`V3\GroupMemberController@store`
+         */
+        post: operations["post_api_v3_groups_group_members"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/groups/{group}/members/{member}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * 移除成员 / 退出团队
+         * @description 移除别人要 owner / manager；移除自己就是退出团队。owner 不能被移除、也不能退出。
+         *     硬删，成功返回 204 空体。
+         *
+         *     实现：`V3\GroupMemberController@destroy`
+         */
+        delete: operations["delete_api_v3_groups_group_members_member_"];
+        options?: never;
+        head?: never;
+        /**
+         * 改成员角色
+         * @description 团队的 owner / manager 才能调用；owner 那一行不能改。
+         *
+         *     实现：`V3\GroupMemberController@update`
+         */
+        patch: operations["patch_api_v3_groups_group_members_member_"];
+        trace?: never;
+    };
+    "/v3/groups/{group}/shares": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 列出团队文档
+         * @description 只有团队成员看得到。每条带资源类型、标题与拥有者，以及团队对它的权限（reader / editor）。
+         *
+         *     实现：`V3\GroupShareController@index`
+         */
+        get: operations["get_api_v3_groups_group_shares"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/groups/{group}/shares/{share}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * 把资源移出团队
+         * @description 团队的 owner / manager，或资源的拥有者才能调用。只删这条共享，资源本身不动。
+         *
+         *     实现：`V3\GroupShareController@destroy`
+         */
+        delete: operations["delete_api_v3_groups_group_shares_share_"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v3/heartbeat": {
         parameters: {
             query?: never;
@@ -8006,6 +8497,111 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v3/me/agent-threads": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 列出我的会话
+         * @description 最近提问的在前，不含已删除的。
+         *
+         *     实现：`V3\MeAgentThreadController@index`
+         */
+        get: operations["get_api_v3_me_agent_threads"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/me/agent-threads/{thread}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 查看一个会话
+         * @description 带全部可见的问答轮次（runs），按提问先后排；被「重新生成」替换掉的轮次不返回。
+         *
+         *     实现：`V3\MeAgentThreadController@show`
+         */
+        get: operations["get_api_v3_me_agent_threads_thread_"];
+        put?: never;
+        post?: never;
+        /**
+         * 删除会话
+         * @description 软删：会话连同它的问答一起从我的历史里消失，之后任何接口都读不到；服务器上的数据永久保留（防滥用、改进回答）。
+         *     返回软删后的会话本身（200，`deleted_at` 非空），不是 204。
+         *
+         *     实现：`V3\MeAgentThreadController@destroy`
+         */
+        delete: operations["delete_api_v3_me_agent_threads_thread_"];
+        options?: never;
+        head?: never;
+        /**
+         * 修改会话（目前只有标题）
+         * @description 实现：`V3\MeAgentThreadController@update`
+         */
+        patch: operations["patch_api_v3_me_agent_threads_thread_"];
+        trace?: never;
+    };
+    "/v3/me/agent-threads/{thread}/archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * 存档会话
+         * @description 重复存档保留第一次的存档时间。返回更新后的会话。
+         *
+         *     实现：`V3\MeAgentThreadArchiveController@update`
+         */
+        put: operations["put_api_v3_me_agent_threads_thread_archive"];
+        post?: never;
+        /**
+         * 取消存档
+         * @description 返回更新后的会话（`archived_at` 为 null）。
+         *
+         *     实现：`V3\MeAgentThreadArchiveController@destroy`
+         */
+        delete: operations["delete_api_v3_me_agent_threads_thread_archive"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/me/groups": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 列出我加入的团队
+         * @description 每条带我在团队里的角色（owner / manager / editor / reader），按加入时间排序。
+         *
+         *     实现：`V3\MeGroupController@__invoke`
+         */
+        get: operations["get_api_v3_me_groups"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v3/me/reactions": {
         parameters: {
             query?: never;
@@ -8058,6 +8654,30 @@ export interface paths {
          *     实现：`V3\MeReactionController@destroy`
          */
         delete: operations["delete_api_v3_me_reactions_reaction_"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/me/reading-time": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 上报一段读经时长
+         * @description 客户端在阅读器前台、且最近有滚动或翻页时计时，每 5 分钟或切后台时上报一次。
+         *     服务端按墙钟时间核减（当天计入的不超过距上次上报经过的时间），单日不超过 24 小时；
+         *     断网补报可带 `day`，最多 2 天前。返回这一天累计计入的秒数。
+         *
+         *     实现：`V3\MeReadingTimeController@store`
+         */
+        post: operations["post_api_v3_me_reading_time"];
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -8301,6 +8921,36 @@ export interface paths {
          *     实现：`V3\TipitakaChapterChannelController@__invoke`
          */
         get: operations["get_api_v3_tipitaka_chapter_channels_book_para_"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/tipitaka-chapters": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 找章节
+         * @description 两种用法，可以叠加：
+         *     - **按名字找**（给 `q`）：巴利名不分大小写、变音符号可有可无（`mahaparinibbana`），可以只写
+         *     名字的一部分，拼错一两个字母也能找到；也能用公开译本里的章节译名（如「大般涅槃经」）。
+         *     按匹配度排序，带 `score`（相等 1、开头相同 0.95、包含 0.9，拼错的按相似度最高 0.85）；同一档里根本典在前，再按与整个标题的接近度、大章在前。
+         *     - **列出一本书的标题**（给 `book`，不给 `q`）：按经文顺序。再给 `para` 只列那一章下面的；
+         *     `max_level` 限制层级深浅。
+         *     `layer` 是这本书属于根本典（mula）、义注（atthakatha）、复注（tika）还是其他（anna）；
+         *     `paragraphs` / `chars` 是这一章的段数与字符数；`parent` / `prev` / `next` 是同一本书里的段号，
+         *     没有为 null；`path` 是从丛书到上一级的路径（不含本章）。
+         *
+         *     实现：`V3\TipitakaChapterController@__invoke`
+         */
+        get: operations["get_api_v3_tipitaka_chapters"];
         put?: never;
         post?: never;
         delete?: never;
@@ -18562,9 +19212,9 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": {
-                    /** @description 规则：required */
+                    /** @description 要加入的用户 uid */
                     user_id: string;
-                    /** @description 规则：required */
+                    /** @description 团队 uid */
                     group_id: string;
                 };
             };
@@ -27859,15 +28509,25 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        requestBody?: {
+        requestBody: {
             content: {
                 "application/json": {
-                    user_id?: string;
-                    res_id?: string;
-                    res_type?: string;
-                    user_type?: string;
-                    /** @enum {string} */
-                    role?: "manager" | "editor" | "reader";
+                    /** @description 资源 uid */
+                    res_id: string;
+                    /** @description 资源类型：2 channel、3 文章、4 文集、6 工作流、7 项目、8 AI 模型 */
+                    res_type: number;
+                    /** @description 协作者 uid 列表（用户或群组） */
+                    user_id: unknown[];
+                    /**
+                     * @description 协作者类型
+                     * @enum {string}
+                     */
+                    user_type: "user" | "group";
+                    /**
+                     * @description 协作者角色
+                     * @enum {string}
+                     */
+                    role: "manager" | "editor" | "reader";
                 };
             };
         };
@@ -34464,6 +35124,723 @@ export interface operations {
             422: components["responses"]["ValidationError"];
         };
     };
+    get_api_v3_admin_agent_feedback: {
+        parameters: {
+            query?: {
+                /** @description 每页数量，最大 100 */
+                per_page?: number;
+                /** @description 1 赞 / -1 踩 */
+                "filter[rating]"?: "1" | "-1";
+                /** @description 按标签 / 原因筛 */
+                "filter[tag]"?: string;
+                /** @description 只看带文字说明的 */
+                "filter[has_comment]"?: boolean;
+                /** @description 起始日（UTC，Y-m-d） */
+                from?: string;
+                /** @description 结束日（UTC，Y-m-d，含当天） */
+                to?: string;
+                /** @description 页码 */
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            message_id?: string;
+                            rating?: number;
+                            tags?: string[];
+                            comment?: string | null;
+                            asked?: boolean;
+                            client?: string | null;
+                            account_type?: string;
+                            updated_at?: string;
+                            run_id?: string | null;
+                            question?: string | null;
+                            /** @enum {string|null} */
+                            route?: "question" | "term" | "passage" | "chat" | null;
+                            status?: string | null;
+                            deep?: boolean | null;
+                            latency_ms?: number | null;
+                        }[];
+                        meta?: components["schemas"]["PaginationMeta"];
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    get_api_v3_admin_agent_runs: {
+        parameters: {
+            query?: {
+                /** @description 每页数量，最大 100 */
+                per_page?: number;
+                /** @description 运行结果 */
+                "filter[status]"?: "ok" | "error" | "cancelled" | "denied";
+                /** @description 研究路径：question 一般问题 / term 术语与词 / passage 阅读页提问 / chat 闲聊 */
+                "filter[route]"?: "question" | "term" | "passage" | "chat";
+                /** @description 账号类型 */
+                "filter[account_type]"?: "user" | "guest";
+                /** @description 客户端 */
+                "filter[client]"?: "mobile" | "web";
+                /** @description 是否允许用于改进回答 */
+                "filter[improve]"?: boolean;
+                /** @description 按提问原文模糊搜索 */
+                "filter[q]"?: string;
+                /** @description 页码 */
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            run_id?: string;
+                            thread_id?: string | null;
+                            thread_title?: string | null;
+                            /** @enum {string} */
+                            account_type?: "user" | "guest";
+                            user?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            device_id?: string | null;
+                            client_ip?: string | null;
+                            client?: string | null;
+                            app_version?: string | null;
+                            question?: string;
+                            /** @enum {string|null} */
+                            route?: "question" | "term" | "passage" | "chat" | null;
+                            deep?: boolean;
+                            improve?: boolean;
+                            status?: string;
+                            latency_ms?: number | null;
+                            tokens_in?: number | null;
+                            tokens_out?: number | null;
+                            llm_calls?: number;
+                            tool_calls?: number;
+                            started_at?: string | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            answer?: string | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            evidence?: string | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            plan?: Record<string, never> | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            passage?: Record<string, never> | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            citations?: Record<string, never>[] | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            error?: string | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            model?: string | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            prompt_version?: string | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            steps?: {
+                                seq?: number;
+                                kind?: string;
+                                name?: string | null;
+                                args?: Record<string, never> | null;
+                                result?: string | null;
+                                result_chars?: number | null;
+                                tokens_in?: number | null;
+                                tokens_out?: number | null;
+                                ms?: number | null;
+                                error?: string | null;
+                            }[];
+                        }[];
+                        meta?: components["schemas"]["PaginationMeta"];
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    get_api_v3_admin_agent_runs_digest: {
+        parameters: {
+            query?: {
+                /** @description 是否带回答、证据全文与引用（此时 limit 最大 200） */
+                full?: boolean;
+                /** @description 最多多少条，最大 2000（full 时 200） */
+                limit?: number;
+                /** @description 起始日（UTC，Y-m-d） */
+                from?: string;
+                /** @description 结束日（UTC，Y-m-d，含当天） */
+                to?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: Record<string, never>[];
+                        meta?: {
+                            /** @description 区间内是否还有更多（超出 limit） */
+                            has_more?: boolean;
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    get_api_v3_admin_agent_runs_run_: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description AG-UI runId（uuid） */
+                run: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            run_id?: string;
+                            thread_id?: string | null;
+                            thread_title?: string | null;
+                            /** @enum {string} */
+                            account_type?: "user" | "guest";
+                            user?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            device_id?: string | null;
+                            client_ip?: string | null;
+                            client?: string | null;
+                            app_version?: string | null;
+                            question?: string;
+                            /** @enum {string|null} */
+                            route?: "question" | "term" | "passage" | "chat" | null;
+                            deep?: boolean;
+                            improve?: boolean;
+                            status?: string;
+                            latency_ms?: number | null;
+                            tokens_in?: number | null;
+                            tokens_out?: number | null;
+                            llm_calls?: number;
+                            tool_calls?: number;
+                            started_at?: string | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            answer?: string | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            evidence?: string | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            plan?: Record<string, never> | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            passage?: Record<string, never> | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            citations?: Record<string, never>[] | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            error?: string | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            model?: string | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            prompt_version?: string | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            steps?: {
+                                seq?: number;
+                                kind?: string;
+                                name?: string | null;
+                                args?: Record<string, never> | null;
+                                result?: string | null;
+                                result_chars?: number | null;
+                                tokens_in?: number | null;
+                                tokens_out?: number | null;
+                                ms?: number | null;
+                                error?: string | null;
+                            }[];
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    get_api_v3_admin_agent_stats: {
+        parameters: {
+            query?: {
+                /** @description 起始日（UTC，Y-m-d） */
+                from?: string;
+                /** @description 结束日（UTC，Y-m-d，含当天） */
+                to?: string;
+                /** @description 账号类型 */
+                account_type?: "all" | "user" | "guest";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            range?: {
+                                from?: string;
+                                to?: string;
+                                account_type?: string;
+                            };
+                            summary?: {
+                                runs?: number;
+                                deep?: number;
+                                passage?: number;
+                                denied?: number;
+                                errors?: number;
+                                cancelled?: number;
+                                unchecked?: number;
+                                improve?: number;
+                                askers?: number;
+                                askers_user?: number;
+                                askers_guest?: number;
+                                latency_p50_ms?: number | null;
+                                latency_p95_ms?: number | null;
+                                tokens_in?: number;
+                                tokens_out?: number;
+                                feedback_up?: number;
+                                feedback_down?: number;
+                                feedback_asked?: number;
+                            };
+                            previous?: {
+                                runs?: number;
+                                deep?: number;
+                                passage?: number;
+                                denied?: number;
+                                errors?: number;
+                                cancelled?: number;
+                                unchecked?: number;
+                                improve?: number;
+                                askers?: number;
+                                askers_user?: number;
+                                askers_guest?: number;
+                                latency_p50_ms?: number | null;
+                                latency_p95_ms?: number | null;
+                                tokens_in?: number;
+                                tokens_out?: number;
+                                feedback_up?: number;
+                                feedback_down?: number;
+                                feedback_asked?: number;
+                            };
+                            daily?: {
+                                date?: string;
+                                question?: number;
+                                term?: number;
+                                passage?: number;
+                                chat?: number;
+                                none?: number;
+                                denied?: number;
+                                errors?: number;
+                                latency_p50_ms?: number | null;
+                                latency_p95_ms?: number | null;
+                                feedback_up?: number;
+                                feedback_down?: number;
+                            }[];
+                            clients?: {
+                                client?: string;
+                                runs?: number;
+                            }[];
+                            tools?: {
+                                name?: string;
+                                calls?: number;
+                                errors?: number;
+                                avg_ms?: number;
+                            }[];
+                            feedback_reasons?: {
+                                reason?: string;
+                                count?: number;
+                            }[];
+                            credits?: {
+                                spent_free?: number;
+                                spent_earned?: number;
+                                refunded?: number;
+                                earned_reading?: number;
+                                earned_editing?: number;
+                                adjusted?: number;
+                            };
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    get_api_v3_admin_reading_stats: {
+        parameters: {
+            query?: {
+                /** @description 起始日（UTC，Y-m-d） */
+                from?: string;
+                /** @description 结束日（UTC，Y-m-d，含当天） */
+                to?: string;
+                /** @description 客户端 */
+                client?: "all" | "web" | "mobile";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            range?: {
+                                from?: string;
+                                to?: string;
+                                client?: string;
+                            };
+                            summary?: {
+                                active_readers?: number;
+                                chapters_opened?: number;
+                                reading_seconds?: number | null;
+                                reading_users?: number | null;
+                                page_views?: number | null;
+                                dict_lookups?: number;
+                            };
+                            previous?: {
+                                active_readers?: number;
+                                chapters_opened?: number;
+                                reading_seconds?: number | null;
+                                reading_users?: number | null;
+                                page_views?: number | null;
+                                dict_lookups?: number;
+                            };
+                            sticky?: {
+                                dau?: number;
+                                mau?: number;
+                            };
+                            daily?: {
+                                date?: string;
+                                readers_web?: number;
+                                readers_mobile?: number;
+                                reading_minutes?: number;
+                                page_views?: number;
+                                dict_lookups?: number;
+                            }[];
+                            top_chapters?: {
+                                article_id?: string;
+                                book?: number;
+                                paragraph?: number;
+                                title?: string;
+                                collection?: string | null;
+                                readers?: number;
+                                records?: number;
+                            }[];
+                            pitaka_share?: {
+                                tag?: string;
+                                records?: number;
+                            }[];
+                            layer_share?: {
+                                tag?: string;
+                                records?: number;
+                            }[];
+                            duration_buckets?: {
+                                bucket?: string;
+                                user_days?: number;
+                            }[];
+                            reading_credits?: {
+                                credits?: number;
+                                users?: number;
+                                capped_user_days?: number;
+                                clamped_ratio?: number;
+                            } | null;
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    post_api_v3_agent_charges: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description AG-UI runId（uuid） */
+                    run_id: string;
+                    /** @description AG-UI threadId（uuid）。已经属于别的账号时 403，不扣费 */
+                    thread_id?: string;
+                    /**
+                     * @description 是否深度思考（价格不同）
+                     * @default false
+                     */
+                    deep?: boolean;
+                    /** @description 设备匿名 id（uuid）。游客必填 */
+                    device_id?: string;
+                    /** @description 客户端 IP（runtime 写入）。游客必填，没有就 422；只对游客用于同 IP 上限 */
+                    client_ip?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            run_id?: string;
+                            cost?: number;
+                            charged_free?: number;
+                            charged_earned?: number;
+                            free_remaining?: number;
+                            earned_balance?: number;
+                            policy_version?: number;
+                        };
+                    };
+                };
+            };
+            /** @description 首次扣费。响应体与 200 同形 */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            run_id?: string;
+                            cost?: number;
+                            charged_free?: number;
+                            charged_earned?: number;
+                            free_remaining?: number;
+                            earned_balance?: number;
+                            policy_version?: number;
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            /** @description 额度不足或游客同 IP 超上限 */
+            402: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description thread_id 已经属于别的账号 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    post_api_v3_agent_events: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description AG-UI 回答消息 id */
+                    message_id: string;
+                    /**
+                     * @description 信号
+                     * @enum {string}
+                     */
+                    kind: "copy" | "citation_open" | "regenerate" | "ask_shown";
+                    /** @description 设备匿名 id（uuid）。未登录时必填 */
+                    device_id?: string;
+                    /**
+                     * @description 客户端
+                     * @enum {string}
+                     */
+                    client?: "mobile" | "web";
+                };
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            message_id?: string;
+                            kind?: string;
+                            created_at?: string;
+                        };
+                    };
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    post_api_v3_agent_feedback: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description AG-UI 回答消息 id */
+                    message_id: string;
+                    /** @description 会话 id（uuid） */
+                    thread_id?: string;
+                    /** @description 1 赞 / -1 踩（只能是这两个值） */
+                    rating: number;
+                    /** @description 点赞标签或点踩原因 */
+                    tags?: unknown[];
+                    /** @description 选了 other 时的文字说明，最长 1000 字 */
+                    comment?: string;
+                    /** @description 是否主动询问问出来的 */
+                    asked?: boolean;
+                    /** @description 设备匿名 id（uuid）。未登录时必填 */
+                    device_id?: string;
+                    /**
+                     * @description 客户端
+                     * @enum {string}
+                     */
+                    client?: "mobile" | "web";
+                };
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            message_id?: string;
+                            rating?: number;
+                            tags?: string[];
+                            comment?: string | null;
+                            asked?: boolean;
+                            updated_at?: string;
+                        };
+                    };
+                };
+            };
+            /** @description 首次评价。响应体与 200 同形 */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            message_id?: string;
+                            rating?: number;
+                            tags?: string[];
+                            comment?: string | null;
+                            asked?: boolean;
+                            updated_at?: string;
+                        };
+                    };
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    delete_api_v3_agent_feedback_message_: {
+        parameters: {
+            query?: {
+                /** @description 设备匿名 id（uuid）。未登录时必填 */
+                device_id?: string;
+            };
+            header?: never;
+            path: {
+                /** @description AG-UI 回答消息 id */
+                message: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 已撤回，无响应体 */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
     post_api_v3_agent_grants: {
         parameters: {
             query?: never;
@@ -34541,6 +35918,182 @@ export interface operations {
                 };
             };
             422: components["responses"]["ProblemValidation"];
+        };
+    };
+    get_api_v3_agent_quota: {
+        parameters: {
+            query?: {
+                /** @description 设备匿名 id（uuid）。未登录时必填 */
+                device_id?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            account_type?: string;
+                            day?: string;
+                            resets_at?: string;
+                            policy_version?: number;
+                            daily_free?: number;
+                            free_used?: number;
+                            free_remaining?: number;
+                            earned_balance?: number;
+                            cost?: {
+                                normal?: number;
+                                deep?: number;
+                            };
+                            earned_today?: {
+                                reading?: number;
+                                editing?: number;
+                            };
+                            earn?: Record<string, never>;
+                        };
+                    };
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    post_api_v3_agent_traces: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description AG-UI runId（uuid） */
+                    run_id: string;
+                    /** @description AG-UI threadId（uuid） */
+                    thread_id: string;
+                    /** @description 设备匿名 id（uuid）。游客必填，登录用户忽略 */
+                    device_id?: string;
+                    /** @description 客户端 IP。只对游客记录 */
+                    client_ip?: string;
+                    /**
+                     * @description 客户端
+                     * @enum {string}
+                     */
+                    client?: "mobile" | "web";
+                    /** @description 用户的提问 */
+                    question: string;
+                    /**
+                     * @description 运行结果（denied＝额度不足被拦下）
+                     * @enum {string}
+                     */
+                    status: "ok" | "error" | "cancelled" | "denied";
+                    /**
+                     * @description 用户是否允许用于改进回答（提问那一刻的开关）
+                     * @default true
+                     */
+                    improve?: boolean;
+                    /** @description 每一步（LLM 调用、工具调用、节点事件），最多 500 条 */
+                    steps?: unknown[];
+                };
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            run_id?: string;
+                            thread_id?: string;
+                            /** @enum {string} */
+                            account_type?: "user" | "guest";
+                            created_at?: string;
+                        };
+                    };
+                };
+            };
+            /** @description 首次写入。响应体与 200 同形 */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            run_id?: string;
+                            thread_id?: string;
+                            /** @enum {string} */
+                            account_type?: "user" | "guest";
+                            created_at?: string;
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            /** @description thread_id 已经属于别的账号 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    get_api_v3_credit_policy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            version?: number;
+                            day_timezone?: string;
+                            daily_free?: {
+                                guest?: number;
+                                user?: number;
+                            };
+                            cost?: {
+                                normal?: number;
+                                deep?: number;
+                            };
+                            guest_ip_daily_cap?: number | null;
+                            earn?: {
+                                reading?: {
+                                    credits_per_minute?: number;
+                                    daily_cap?: number | null;
+                                };
+                                editing?: {
+                                    credits_per_minute?: number;
+                                    daily_cap?: number | null;
+                                };
+                            };
+                        };
+                    };
+                };
+            };
         };
     };
     get_api_v3_discussions: {
@@ -35571,6 +37124,634 @@ export interface operations {
             };
         };
     };
+    get_api_v3_groups: {
+        parameters: {
+            query?: {
+                /** @description 每页数量，最大 200 */
+                per_page?: number;
+                /** @description 按团队名模糊匹配 */
+                search?: string;
+                /** @description 页码 */
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            name?: string;
+                            description?: string | null;
+                            status?: number;
+                            owner?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            role?: string | null;
+                            created_at?: string;
+                            updated_at?: string;
+                        }[];
+                        meta?: components["schemas"]["PaginationMeta"];
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    post_api_v3_groups: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description 团队名，最长 64 */
+                    name: string;
+                    /** @description 简介，最长 1024 */
+                    description?: string;
+                    /**
+                     * @description 10 私有、30 公开
+                     * @default 30
+                     */
+                    status?: number;
+                };
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            name?: string;
+                            description?: string | null;
+                            status?: number;
+                            owner?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            role?: string | null;
+                            created_at?: string;
+                            updated_at?: string;
+                        };
+                    };
+                };
+            };
+            /** @description 建好了 */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            name?: string;
+                            description?: string | null;
+                            status?: number;
+                            owner?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            role?: string | null;
+                            created_at?: string;
+                            updated_at?: string;
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    get_api_v3_groups_group_: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 团队 uid */
+                group: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            name?: string;
+                            description?: string | null;
+                            status?: number;
+                            owner?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            role?: string | null;
+                            created_at?: string;
+                            updated_at?: string;
+                        };
+                    };
+                };
+            };
+            /** @description 私有团队，且不是成员 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    delete_api_v3_groups_group_: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 团队 uid */
+                group: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 已删除，无响应体 */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            /** @description 只有 owner 能删 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description 团队名下还有资源 */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    patch_api_v3_groups_group_: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 团队 uid */
+                group: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    /** @description 团队名，最长 64 */
+                    name?: string;
+                    /** @description 简介，最长 1024 */
+                    description?: string;
+                    /** @description 10 私有、30 公开 */
+                    status?: number;
+                };
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            name?: string;
+                            description?: string | null;
+                            status?: number;
+                            owner?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            role?: string | null;
+                            created_at?: string;
+                            updated_at?: string;
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            /** @description 不能修改这个团队 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    get_api_v3_groups_group_members: {
+        parameters: {
+            query?: {
+                /** @description 每页数量，最大 200 */
+                per_page?: number;
+                /** @description 页码 */
+                page?: number;
+            };
+            header?: never;
+            path: {
+                /** @description 团队 uid */
+                group: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            group_id?: string;
+                            role?: string;
+                            joined_at?: string;
+                            user?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                        }[];
+                        meta?: components["schemas"]["PaginationMeta"];
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            /** @description 不是这个团队的成员 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    post_api_v3_groups_group_members: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 团队 uid */
+                group: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description 要加入的用户 uuid */
+                    user_id: string;
+                    /**
+                     * @description 角色，默认 reader
+                     * @enum {string}
+                     */
+                    role?: "manager" | "editor" | "reader";
+                };
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            group_id?: string;
+                            role?: string;
+                            joined_at?: string;
+                            user?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                        };
+                    };
+                };
+            };
+            /** @description 加入成功 */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            group_id?: string;
+                            role?: string;
+                            joined_at?: string;
+                            user?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            /** @description 不能管理这个团队的成员 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    delete_api_v3_groups_group_members_member_: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 团队 uid */
+                group: string;
+                /** @description 成员记录 id */
+                member: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 已移除，无响应体 */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            /** @description 不能移除这名成员 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    patch_api_v3_groups_group_members_member_: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 团队 uid */
+                group: string;
+                /** @description 成员记录 id */
+                member: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    /**
+                     * @description 角色
+                     * @enum {string}
+                     */
+                    role?: "manager" | "editor" | "reader";
+                };
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            group_id?: string;
+                            role?: string;
+                            joined_at?: string;
+                            user?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            /** @description 不能管理这个团队的成员，或目标是团队拥有者 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    get_api_v3_groups_group_shares: {
+        parameters: {
+            query?: {
+                /** @description 每页数量，最大 200 */
+                per_page?: number;
+                /** @description 页码 */
+                page?: number;
+            };
+            header?: never;
+            path: {
+                /** @description 团队 uid */
+                group: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            role?: string;
+                            resource?: {
+                                type?: string;
+                                id?: string;
+                                title?: string | null;
+                                owner_id?: string | null;
+                                owner?: {
+                                    id?: string;
+                                    nickName?: string;
+                                    userName?: string;
+                                    realName?: string;
+                                    sn?: number;
+                                    avatar?: string;
+                                    roles?: string[];
+                                } | null;
+                            };
+                            created_at?: string;
+                        }[];
+                        meta?: components["schemas"]["PaginationMeta"];
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            /** @description 不是这个团队的成员 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    delete_api_v3_groups_group_shares_share_: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 团队 uid */
+                group: string;
+                /** @description 共享记录 id */
+                share: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 已移出，无响应体 */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            /** @description 不能移出这项资源 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
     get_api_v3_heartbeat: {
         parameters: {
             query?: never;
@@ -35742,6 +37923,359 @@ export interface operations {
             401: components["responses"]["ProblemUnauthorized"];
         };
     };
+    get_api_v3_me_agent_threads: {
+        parameters: {
+            query?: {
+                /** @description 每页数量，最大 100 */
+                per_page?: number;
+                /** @description 只看已存档（true）或未存档（false）的；不传则全部 */
+                "filter[archived]"?: boolean;
+                /** @description 页码 */
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            thread_id?: string;
+                            title?: string;
+                            client?: string | null;
+                            archived_at?: string | null;
+                            last_run_at?: string;
+                            created_at?: string;
+                            updated_at?: string;
+                            deleted_at?: string | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            runs?: {
+                                run_id?: string;
+                                question?: string;
+                                answer?: string | null;
+                                citations?: Record<string, never>[] | null;
+                                deep?: boolean;
+                                status?: string;
+                                user_message_id?: string | null;
+                                assistant_message_id?: string | null;
+                                created_at?: string;
+                            }[];
+                        }[];
+                        meta?: components["schemas"]["PaginationMeta"];
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    get_api_v3_me_agent_threads_thread_: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description AG-UI threadId（uuid） */
+                thread: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            thread_id?: string;
+                            title?: string;
+                            client?: string | null;
+                            archived_at?: string | null;
+                            last_run_at?: string;
+                            created_at?: string;
+                            updated_at?: string;
+                            deleted_at?: string | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            runs?: {
+                                run_id?: string;
+                                question?: string;
+                                answer?: string | null;
+                                citations?: Record<string, never>[] | null;
+                                deep?: boolean;
+                                status?: string;
+                                user_message_id?: string | null;
+                                assistant_message_id?: string | null;
+                                created_at?: string;
+                            }[];
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    delete_api_v3_me_agent_threads_thread_: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description AG-UI threadId（uuid） */
+                thread: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            thread_id?: string;
+                            title?: string;
+                            client?: string | null;
+                            archived_at?: string | null;
+                            last_run_at?: string;
+                            created_at?: string;
+                            updated_at?: string;
+                            deleted_at?: string | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            runs?: {
+                                run_id?: string;
+                                question?: string;
+                                answer?: string | null;
+                                citations?: Record<string, never>[] | null;
+                                deep?: boolean;
+                                status?: string;
+                                user_message_id?: string | null;
+                                assistant_message_id?: string | null;
+                                created_at?: string;
+                            }[];
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    patch_api_v3_me_agent_threads_thread_: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description AG-UI threadId（uuid） */
+                thread: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    /** @description 会话标题，1–255 字 */
+                    title?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            thread_id?: string;
+                            title?: string;
+                            client?: string | null;
+                            archived_at?: string | null;
+                            last_run_at?: string;
+                            created_at?: string;
+                            updated_at?: string;
+                            deleted_at?: string | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            runs?: {
+                                run_id?: string;
+                                question?: string;
+                                answer?: string | null;
+                                citations?: Record<string, never>[] | null;
+                                deep?: boolean;
+                                status?: string;
+                                user_message_id?: string | null;
+                                assistant_message_id?: string | null;
+                                created_at?: string;
+                            }[];
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    put_api_v3_me_agent_threads_thread_archive: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description AG-UI threadId（uuid） */
+                thread: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            thread_id?: string;
+                            title?: string;
+                            client?: string | null;
+                            archived_at?: string | null;
+                            last_run_at?: string;
+                            created_at?: string;
+                            updated_at?: string;
+                            deleted_at?: string | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            runs?: {
+                                run_id?: string;
+                                question?: string;
+                                answer?: string | null;
+                                citations?: Record<string, never>[] | null;
+                                deep?: boolean;
+                                status?: string;
+                                user_message_id?: string | null;
+                                assistant_message_id?: string | null;
+                                created_at?: string;
+                            }[];
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    delete_api_v3_me_agent_threads_thread_archive: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description AG-UI threadId（uuid） */
+                thread: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            thread_id?: string;
+                            title?: string;
+                            client?: string | null;
+                            archived_at?: string | null;
+                            last_run_at?: string;
+                            created_at?: string;
+                            updated_at?: string;
+                            deleted_at?: string | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            runs?: {
+                                run_id?: string;
+                                question?: string;
+                                answer?: string | null;
+                                citations?: Record<string, never>[] | null;
+                                deep?: boolean;
+                                status?: string;
+                                user_message_id?: string | null;
+                                assistant_message_id?: string | null;
+                                created_at?: string;
+                            }[];
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    get_api_v3_me_groups: {
+        parameters: {
+            query?: {
+                /** @description true 只列我创建的，false 只列我参加的别人的团队；不传列全部 */
+                owned?: boolean;
+                /** @description 每页数量，最大 200 */
+                per_page?: number;
+                /** @description 按团队名模糊匹配 */
+                search?: string;
+                /** @description 页码 */
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            name?: string;
+                            description?: string | null;
+                            owner_id?: string;
+                            owner?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            status?: number;
+                            role?: string;
+                            member_id?: string;
+                            created_at?: string;
+                            joined_at?: string;
+                        }[];
+                        meta?: components["schemas"]["PaginationMeta"];
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
     get_api_v3_me_reactions: {
         parameters: {
             query?: {
@@ -35910,6 +38444,43 @@ export interface operations {
                     "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
             };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    post_api_v3_me_reading_time: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description 这段的读经秒数，1–900 */
+                    seconds: number;
+                    /** @description 归属的 UTC 日（Y-m-d），缺省为今天。断网补报用 */
+                    day?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            day?: string;
+                            seconds?: number;
+                            updated_at?: string;
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
             422: components["responses"]["ProblemValidation"];
         };
     };
@@ -36195,7 +38766,7 @@ export interface operations {
                 /** @description 每页数量，上限 100 */
                 page_size?: number;
                 /** @description 检索模式 */
-                search_mode?: "fuzzy" | "exact" | "semantic" | "hybrid";
+                search_mode?: "fuzzy" | "exact" | "semantic" | "hybrid" | "definition";
                 /** @description 资源类型 */
                 resource_type?: "article" | "term" | "dictionary" | "translation" | "origin_text" | "nissaya";
                 /** @description 限定某个资源 id */
@@ -36270,7 +38841,7 @@ export interface operations {
                      * @default fuzzy
                      * @enum {string}
                      */
-                    search_mode?: "fuzzy" | "exact" | "semantic" | "hybrid";
+                    search_mode?: "fuzzy" | "exact" | "semantic" | "hybrid" | "definition";
                     /** @description 资源类型 */
                     resource_type?: string;
                     /** @description 文档颗粒度 */
@@ -36508,6 +39079,80 @@ export interface operations {
                                 /** @description 仅在部分查询口径下返回。 */
                                 avatar?: string;
                             } | null;
+                        }[];
+                        meta?: components["schemas"]["PaginationMeta"];
+                    };
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    get_api_v3_tipitaka_chapters: {
+        parameters: {
+            query?: {
+                /** @description 页码 */
+                page?: number;
+                /** @description 每页数量，最大 1000 */
+                per_page?: number;
+                /**
+                 * @description 章节名：巴利名或译名，不给 book 时必填
+                 * @example mahaparinibbana
+                 */
+                q?: string;
+                /**
+                 * @description 书号，不给 q 时必填
+                 * @example 94
+                 */
+                book?: number;
+                /**
+                 * @description 只列 book 里这一章下面的标题（含它自己），要和 book 一起给
+                 * @example 287
+                 */
+                para?: number;
+                /** @description 只要某几层，逗号分隔 */
+                layer?: "mula" | "atthakatha" | "tika" | "anna";
+                /**
+                 * @description 只要层级不深于它的标题（1 是书名）
+                 * @example 3
+                 */
+                max_level?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            book?: number;
+                            para?: number;
+                            level?: number;
+                            title?: string;
+                            translations?: {
+                                lang?: string;
+                                title?: string;
+                            }[];
+                            layer?: string;
+                            paragraphs?: number;
+                            chars?: number;
+                            parent?: number | null;
+                            prev?: number | null;
+                            next?: number | null;
+                            path?: {
+                                book?: number;
+                                para?: number;
+                                title?: string;
+                                level?: number;
+                            }[];
+                            /** @description 仅在部分查询口径下返回。 */
+                            score?: number;
                         }[];
                         meta?: components["schemas"]["PaginationMeta"];
                     };

@@ -1,0 +1,123 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-groups-group-members-member.yaml
+delete:
+  summary: '移除成员 / 退出团队'
+  tags:
+    - groups
+  operationId: delete_api_v3_groups_group_members_member_
+  description: |-
+    移除别人要 owner / manager；移除自己就是退出团队。owner 不能被移除、也不能退出。
+    硬删，成功返回 204 空体。
+
+    实现：`V3\GroupMemberController@destroy`
+  security:
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: group
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '团队 uid'
+    -
+      name: member
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '成员记录 id'
+  responses:
+    204:
+      description: 已移除，无响应体
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    403:
+      description: 不能移除这名成员
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'
+patch:
+  summary: 改成员角色
+  tags:
+    - groups
+  operationId: patch_api_v3_groups_group_members_member_
+  description: |-
+    团队的 owner / manager 才能调用；owner 那一行不能改。
+
+    实现：`V3\GroupMemberController@update`
+  security:
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: group
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '团队 uid'
+    -
+      name: member
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '成员记录 id'
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            role:
+              type: string
+              description: 角色
+              enum:
+                - manager
+                - editor
+                - reader
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  group_id:
+                    type: string
+                  role:
+                    type: string
+                  joined_at:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string }
+                      roles: { type: array, items: { type: string } }
+                    nullable: true
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    403:
+      description: 不能管理这个团队的成员，或目标是团队拥有者
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

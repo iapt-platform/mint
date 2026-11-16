@@ -42,6 +42,7 @@ npm test                    # 跑全部
 npm run test:channel        # 只跑 channel 路由
 npm run test:users          # 只跑匿名账号页面（登录 / 注册 / 找回密码 / 重置密码）
 npm run test:discussion     # 只跑讨论：话题页、对象的全部讨论页（/workspace/discussion/*）、文章底部问答区、讨论角标
+npm run test:course         # 只跑课程：老师 / 学生 / 助教全流程 + /library/course（测试项目一览在 spec 文件开头）
 npm run test:ui             # UI Mode，可视化单步调试
 npm run test:headed         # 显示浏览器窗口
 npm run report              # 打开上次的 HTML 报告
@@ -70,6 +71,10 @@ E2E_SHOT=testlog/assets/channel_20260907_034904 npm run test:channel
 | `E2E_DESTRUCTIVE`         | 未设置（执行）                            | 设为 `0` 跳过增删改用例                         |
 | `E2E_DISCUSSION_SENTENCE` | `ee5259be-…`（本地开发库）                | 讨论用例挂的句子：须在测试账号自己的 channel 里 |
 | `E2E_ARTICLE`             | `f24cfd88-…`（本地开发库）                | 测试账号自己的文章：文章底部问答区、讨论角标请求 |
+| `E2E_STUDENT_USER` / `_PASS`   | （可选）                             | 课程测试的学生账号；没配则跳过学生相关用例      |
+| `E2E_ASSISTANT_USER` / `_PASS` | （可选）                             | 课程测试的助教账号；没配则跳过助教相关用例      |
+| `E2E_LIBRARY`             | 按 `E2E_BASE` 推出 `/library/`            | Laravel 端 library 根地址；本机 dev 要设成 `http://127.0.0.1:8000/library/` |
+| `E2E_COURSE_*`            | 本地开发库「初级班课本范例」              | 课程教材、课文、标准答案 channel、做作业点的词   |
 
 ---
 
@@ -85,6 +90,7 @@ dashboard-test/
 │   ├── tests/
 │   │   ├── auth.setup.ts      登录一次，存 storageState
 │   │   ├── channel.spec.ts    /workspace/channel 及子路由
+│   │   ├── course.spec.ts     课程：/workspace/course/*（老师 / 学生 / 助教）与 /library/course
 │   │   ├── discussion.spec.ts 讨论话题页、/discussion/show、文章底部问答区、讨论角标（数据经 v3 API 建删）
 │   │   └── users.spec.ts      /anonymous 下的登录、注册、邀请注册、找回密码、重置密码
 │   └── lib/
@@ -131,6 +137,10 @@ dashboard-test/
 所以 `npm test` 现在是 **22 通过 / 2 失败**（含 setup；channel 3/2、users 7/0、discussion 11/0），
 两个失败即上述待修项。
 
+`src/tests/course.spec.ts`（`npm run test:course`）另有 6 条缺陷断言，2026-11-03 本地跑为 **20 通过 / 6 失败**，
+失败的正好是这 6 条：BUG-C1 不存在的课程白屏、BUG-C2 课文顶部课程链接指向 v4 路由、BUG-C3 非成员打开课文一直 loading、
+BUG-C4 学生能把自己改成「已录取」、BUG-C5 学生能「邀请」别人进课程、BUG-C6 未登录能导出成员名单。
+
 修复后的缺陷断言保留作回归保护：`src/tests/users.spec.ts` 的「回归」组里有
 BUG-5（中文界面下 v3 错误文案应为中文，2026-10-08 修复）。
 
@@ -146,6 +156,8 @@ setup 与 `users.spec.ts` 都用 `E2E_USER` 登录，api-test 也用同一个账
 
 - 只操作脚本自建的临时数据，命名 `e2e-tmp-<timestamp>`
 - 测试结束必须清理干净，日志中声明无残留
+  （例外：`course.spec.ts` 在本地开发库上建的课程与作业 channel **不删**，留给人到页面上看结果，
+  运行时以 `[data]` 行打印出来；只有「删除课程」那条用例会删掉它自己建的课）
 - 涉及第三方的操作（转让、分享授权）只验证弹窗渲染，不提交
 - `E2E_DESTRUCTIVE=0` 可整体跳过
 

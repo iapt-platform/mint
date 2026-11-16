@@ -1,16 +1,15 @@
 import { useIntl } from "react-intl";
 import Workflow from "../../../components/task/Workflow";
-import { useAppSelector } from "../../../hooks";
-import { currentUser } from "../../../reducers/current-user";
+import { useActiveStudio } from "../../../hooks/useActiveStudio";
 
 const Widget = () => {
-  const currUser = useAppSelector(currentUser);
+  const { studioName } = useActiveStudio();
   const intl = useIntl();
 
   return (
     <>
       <title>{intl.formatMessage({ id: "labels.task.workflows" })}</title>
-      <Workflow studioName={currUser?.realName} />
+      <Workflow studioName={studioName} />
     </>
   );
 };

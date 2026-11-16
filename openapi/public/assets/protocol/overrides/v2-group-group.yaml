@@ -1,0 +1,17 @@
+# 手写补充：v2 团队已被 v3 取代（2026-11-13）。
+get:
+  deprecated: true
+  description: |
+    已被 `GET /v3/groups/{group}` 取代。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
+put:
+  deprecated: true
+  description: |
+    已被 `PATCH /v3/groups/{group}`（局部更新，owner / manager 可改）取代。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
+patch:
+  deprecated: true
+  description: |
+    已被 `PATCH /v3/groups/{group}`（局部更新，owner / manager 可改）取代。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
+delete:
+  deprecated: true
+  description: |
+    已被 `DELETE /v3/groups/{group}` 取代（名下还有资源时 409）。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。

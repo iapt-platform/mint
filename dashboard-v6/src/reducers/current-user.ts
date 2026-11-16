@@ -12,7 +12,8 @@ export const TO_HOME = "/";
 export const TO_WORKSPACE = "/workspace";
 
 const KEY = "token";
-const STUDIO_KEY = "studio";
+/** 当前团队空间（一个 group）。只存在 localStorage，user token 不变 */
+const TEAMSPACE_KEY = "teamspace";
 export const DURATION = 60 * 60 * 24;
 
 export const get = (): string | null => {
@@ -38,12 +39,27 @@ const remove = () => {
   localStorage.removeItem(KEY);
 };
 
-const removeStudio = () => {
-  localStorage.removeItem(STUDIO_KEY);
+const removeTeamspace = () => {
+  localStorage.removeItem(TEAMSPACE_KEY);
 };
 
-const setStudio = (id: string) => {
-  localStorage.setItem(STUDIO_KEY, id);
+const saveTeamspace = (studio: IStudio) => {
+  localStorage.setItem(TEAMSPACE_KEY, JSON.stringify(studio));
+};
+
+/**
+ * 启动时先按 localStorage 恢复团队空间，避免页面先以个人身份取一次数据；
+ * 成员资格等 group 列表回来后由 recallCurrStudio 校验。
+ */
+const loadTeamspace = (): IStudio | undefined => {
+  try {
+    const raw = localStorage.getItem(TEAMSPACE_KEY);
+    const studio = raw ? (JSON.parse(raw) as IStudio) : undefined;
+    return studio?.id ? studio : undefined;
+  } catch {
+    removeTeamspace();
+    return undefined;
+  }
 };
 
 export interface IUser {
@@ -58,10 +74,11 @@ interface IState {
   payload?: IUser;
   studio?: IStudio[];
   guest?: boolean;
+  /** 当前团队空间；undefined 表示个人空间 */
   currStudio?: IStudio;
 }
 
-const initialState: IState = {};
+const initialState: IState = { currStudio: loadTeamspace() };
 
 export const slice = createSlice({
   name: "current-user",
@@ -75,7 +92,9 @@ export const slice = createSlice({
     signOut: (state) => {
       state.payload = undefined;
       state.guest = undefined;
+      state.currStudio = undefined;
       remove();
+      removeTeamspace();
     },
     guest: (state, action: PayloadAction<boolean>) => {
       state.guest = action.payload;
@@ -83,18 +102,29 @@ export const slice = createSlice({
     studioSignIn: (state, action: PayloadAction<IStudio[]>) => {
       state.studio = action.payload;
     },
+    /** 切换到团队空间 */
     setCurrStudio: (state, action: PayloadAction<IStudio>) => {
       state.currStudio = action.payload;
-      setStudio(action.payload.id);
+      saveTeamspace(action.payload);
     },
+    /** 切回个人空间 */
     studioSignOut: (state) => {
       state.currStudio = undefined;
-      removeStudio();
+      removeTeamspace();
     },
+    /** group 列表到手后校验：已不在该 group 里就回到个人空间，否则用最新的 group 信息 */
     recallCurrStudio: (state) => {
-      const id = localStorage.getItem(STUDIO_KEY);
-      if (id && state.studio) {
-        state.currStudio = state.studio.find((value) => value.id);
+      const id = state.currStudio?.id;
+      if (!id || !state.studio) {
+        return;
+      }
+      const studio = state.studio.find((value) => value.id === id);
+      if (studio) {
+        state.currStudio = studio;
+        saveTeamspace(studio);
+      } else {
+        state.currStudio = undefined;
+        removeTeamspace();
       }
     },
   },

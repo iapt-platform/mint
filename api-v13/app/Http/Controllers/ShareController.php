@@ -4,7 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Api\ShareApi;
 use App\Http\Resources\ShareResource;
+use App\Models\AiModel;
+use App\Models\Article;
+use App\Models\Channel;
+use App\Models\Collection;
 use App\Models\GroupInfo;
+use App\Models\Project;
 use App\Models\Share;
 use App\Services\AuthService;
 use Illuminate\Http\Request;
@@ -80,13 +85,32 @@ class ShareController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * 为资源添加协作者。
+     *
+     * 只有资源拥有者能调用（与 update / destroy 的「power > 20」同口径）。
+     * 资源归属按 res_type 到对应表里查，查不到即拒绝——客户端谎报 res_type
+     * 只会让自己被拒，不会绕过校验。
+     *
+     * @bodyParam res_id string required 资源 uid
+     * @bodyParam res_type integer required 资源类型：2 channel、3 文章、4 文集、6 工作流、7 项目、8 AI 模型
+     * @bodyParam user_id string[] required 协作者 uid 列表（用户或群组）
+     * @bodyParam user_type string required 协作者类型。Enum: user,group
+     * @bodyParam role string required 协作者角色。Enum: manager,editor,reader
      *
      * @return Response
      */
     public function store(Request $request)
     {
-        //
+        $currUser = AuthService::current($request);
+        if (! $currUser) {
+            return $this->error(__('auth.failed'), null, 401);
+        }
+        $resId = (string) $request->input('res_id');
+        $owner = $this->resourceOwner((int) $request->input('res_type'), $resId);
+        if ($owner !== $currUser['user_uid']) {
+            return $this->error(__('auth.failed'), null, 403);
+        }
+
         foreach ($request->input('user_id') as $key => $value) {
             if (! Str::isUuid($value)) {
                 continue;
@@ -117,6 +141,27 @@ class ShareController extends Controller
         }
 
         return $this->ok(count($request->input('user_id')));
+    }
+
+    /**
+     * 按资源类型查资源拥有者的 uid，类型不认识或资源不存在时返回 null。
+     *
+     * 类型编号见 ShareApi::getResList() 的注释与前端 EResType。
+     */
+    private function resourceOwner(int $resType, string $resId): ?string
+    {
+        if ($resId === '') {
+            return null;
+        }
+
+        return match ($resType) {
+            2 => Channel::where('uid', $resId)->value('owner_uid'),
+            3 => Article::where('uid', $resId)->value('owner'),
+            4 => Collection::where('uid', $resId)->value('owner'),
+            6, 7 => Project::where('uid', $resId)->value('owner_id'),
+            8 => AiModel::where('uid', $resId)->value('owner_id'),
+            default => null,
+        };
     }
 
     /**

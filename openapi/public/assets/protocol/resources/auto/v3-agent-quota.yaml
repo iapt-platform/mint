@@ -1,0 +1,63 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-agent-quota.yaml
+get:
+  summary: '查看我的 AI 对话额度'
+  tags:
+    - agent-quota
+  operationId: get_api_v3_agent_quota
+  description: |-
+    可选登录：带 Bearer 看自己账号；游客带 `device_id`。登录用户读取时会顺带把今天（和昨天）
+    的读经、编辑时长结算成积分，所以读完马上就能看到到账。
+
+    实现：`V3\AgentQuotaController@__invoke`
+  security:
+    - {  }
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: device_id
+      in: query
+      schema:
+        type: string
+      description: '设备匿名 id（uuid）。未登录时必填'
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  account_type:
+                    type: string
+                  day:
+                    type: string
+                  resets_at:
+                    type: string
+                  policy_version:
+                    type: integer
+                  daily_free:
+                    type: integer
+                  free_used:
+                    type: integer
+                  free_remaining:
+                    type: integer
+                  earned_balance:
+                    type: integer
+                  cost:
+                    type: object
+                    properties:
+                      normal: { type: integer }
+                      deep: { type: integer }
+                  earned_today:
+                    type: object
+                    properties:
+                      reading: { type: integer }
+                      editing: { type: integer }
+                  earn:
+                    type: object
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

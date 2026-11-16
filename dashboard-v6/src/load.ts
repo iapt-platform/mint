@@ -5,7 +5,6 @@ import {
   get as getToken,
   guest,
   signIn,
-  studioSignIn,
 } from "./reducers/current-user";
 import { remove as removeToken } from "./reducers/session";
 import { fetchMe } from "./api/session";
@@ -25,10 +24,9 @@ import { grammar, type ITerm, update } from "./reducers/term-vocabulary";
 import { push as nissayaEndingPush } from "./reducers/nissaya-ending-vocabulary";
 
 import { pushRelation } from "./reducers/relation";
-import type { IGroupMemberListResponse } from "./api/group";
 
 import type { IAiModel } from "./api/ai";
-import type { IStudio } from "./api/Auth";
+import { refreshMyGroups } from "./features/teamspace/refreshMyGroups";
 import type { IRelation, IRelationListResponse } from "./api/relation";
 
 export interface ISettingModels {
@@ -93,16 +91,9 @@ const init = () => {
         store.dispatch(guest(true));
       });
 
-    get<IGroupMemberListResponse>("/api/v2/group-member?view=user").then(
-      (response) => {
-        console.log("auth", response);
-        if (response.ok) {
-          const it: IStudio[] = response.data.rows.map((item) => {
-            return item.group;
-          });
-          store.dispatch(studioSignIn(it));
-        }
-      }
+    // 团队列表取不到不影响使用：账户列表里只剩个人，团队空间沿用 localStorage 里的，下次启动再校验
+    refreshMyGroups(store.dispatch).catch((e: unknown) =>
+      console.warn("fetch my groups failed", e)
     );
   } else {
     console.log("no token");

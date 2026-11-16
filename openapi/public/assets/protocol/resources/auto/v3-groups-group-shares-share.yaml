@@ -1,0 +1,41 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-groups-group-shares-share.yaml
+delete:
+  summary: 把资源移出团队
+  tags:
+    - groups
+  operationId: delete_api_v3_groups_group_shares_share_
+  description: |-
+    团队的 owner / manager，或资源的拥有者才能调用。只删这条共享，资源本身不动。
+
+    实现：`V3\GroupShareController@destroy`
+  security:
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: group
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '团队 uid'
+    -
+      name: share
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '共享记录 id'
+  responses:
+    204:
+      description: 已移出，无响应体
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    403:
+      description: 不能移出这项资源
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

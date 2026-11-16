@@ -66,7 +66,7 @@ const items = {
   "forms.fields.to.label": "連線到",
   "forms.fields.count.label": "計數",
   "forms.fields.owner.label": "擁有者",
-  "forms.message.res.remove": "將此資源從群中移除嗎？",
+  "forms.message.res.remove": "將此資源從團隊中移除嗎？",
   "forms.fields.parent2.label": "衍生原型",
   "forms.fields.parent2.tooltip": "最長為 256個字元",
   "forms.fields.username.label": "使用者名稱(登入名)",
@@ -98,10 +98,11 @@ const items = {
   "forms.fields.assignees.label": "指派給",
   "forms.fields.model.label": "模型",
   "forms.fields.key.label": "金鑰",
-  group: "群組",
-  "group.fields.name.label": "群組名",
-  "group.files": "群文件",
-  "group.member": "群成員",
+  group: "團隊",
+  "group.fields.name.label": "團隊名",
+  "group.files": "團隊文件",
+  "group.member": "團隊成員",
+  "forms.message.group.leave": "確定退出這個團隊嗎？",
 };
 
 export default items;

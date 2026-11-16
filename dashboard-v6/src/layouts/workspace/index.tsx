@@ -11,6 +11,8 @@ import { useAuth } from "../../hooks/useAuth";
 import UiLangSelect from "../../components/general/UiLangSelect";
 import SentCart from "../../components/sentence/SentCart";
 import NotificationIcon from "../../components/notification/NotificationIcon";
+import TeamspaceBadge from "../../features/teamspace/TeamspaceBadge";
+import TeamspaceGuard from "../../features/teamspace/TeamspaceGuard";
 
 const { Sider, Content } = Layout;
 const Widget = () => {
@@ -57,6 +59,7 @@ const Widget = () => {
         >
           <HeaderBreadcrumb />
           <Space size="middle">
+            <TeamspaceBadge />
             <SentCart />
             <NotificationIcon />
             <NetworkStatus />
@@ -66,7 +69,9 @@ const Widget = () => {
         </div>
 
         <Content style={{ padding: 12 }}>
-          <Outlet />
+          <TeamspaceGuard>
+            <Outlet />
+          </TeamspaceGuard>
         </Content>
       </Layout>
     </Layout>
