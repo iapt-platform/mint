@@ -1,15 +1,11 @@
 import { type ActionType, ProTable } from "@ant-design/pro-components";
 import { useIntl } from "react-intl";
 import { Link } from "react-router";
-import { Button, message, Modal, Popover } from "antd";
+import { Button, Popover } from "antd";
 import { Dropdown } from "antd";
-import {
-  ExclamationCircleOutlined,
-  DeleteOutlined,
-  PlusOutlined,
-} from "@ant-design/icons";
+import { PlusOutlined } from "@ant-design/icons";
 
-import { delete_, get } from "../../request";
+import { get } from "../../request";
 import { PublicityValueEnum } from "../studio/table";
 
 import { useEffect, useRef, useState } from "react";
@@ -19,7 +15,6 @@ import { TransferOutLinedIcon } from "../../assets/icon";
 import type { IProjectData, IProjectListResponse } from "../../api/task";
 import ProjectCreate from "./ProjectCreate";
 import ShareModal from "../share/ShareModal";
-import type { IDeleteResponse } from "../../api/article";
 import { EResType } from "../share/utils";
 
 export interface IResNumberResponse {
@@ -47,43 +42,6 @@ const ProjectTableWidget = ({ studioName, disableChannels }: IWidget) => {
   useEffect(() => {
     ref.current?.reload();
   }, [disableChannels]);
-
-  const showDeleteConfirm = (id: string, title: string) => {
-    Modal.confirm({
-      icon: <ExclamationCircleOutlined />,
-      title:
-        intl.formatMessage({
-          id: "message.delete.confirm",
-        }) +
-        intl.formatMessage({
-          id: "message.irrevocable",
-        }),
-
-      content: title,
-      okText: intl.formatMessage({
-        id: "buttons.delete",
-      }),
-      okType: "danger",
-      cancelText: intl.formatMessage({
-        id: "buttons.no",
-      }),
-      onOk() {
-        const url = `/api/v2/channel/${id}`;
-        console.log("delete api request", url);
-        return delete_<IDeleteResponse>(url)
-          .then((json) => {
-            console.info("api response", json);
-            if (json.ok) {
-              message.success("删除成功");
-              ref.current?.reload();
-            } else {
-              message.error(json.message);
-            }
-          })
-          .catch((e) => console.log("Oops errors!", e));
-      },
-    });
-  };
 
   const ref = useRef<ActionType | null>(null);
 
@@ -185,20 +143,13 @@ const ProjectTableWidget = ({ studioName, disableChannels }: IWidget) => {
                           id: "buttons.share",
                         }),
                       },
-                      {
-                        key: "remove",
-                        label: intl.formatMessage({
-                          id: "buttons.delete",
-                        }),
-                        icon: <DeleteOutlined />,
-                        danger: true,
-                      },
+                      // FIXME: 删除项目暂时隐藏。原来从 ChannelTable 复制来没改，删项目调的是
+                      // DELETE /api/v2/channel/{项目 id}，永远删不掉；而 v2 的 ProjectController@destroy
+                      // 是空方法，改调它也删不了。迁任务 / 项目到 v3 时补上删除（含软删除，projects
+                      // 表缺 deleted_at 列；子项目与任务怎么处理也要定），再把这一项加回来。
                     ],
                     onClick: (e) => {
                       switch (e.key) {
-                        case "remove":
-                          showDeleteConfirm(row.id, row.title);
-                          break;
                         case "share":
                           setShareId(row.id);
                           setShareOpen(true);
@@ -209,6 +160,8 @@ const ProjectTableWidget = ({ studioName, disableChannels }: IWidget) => {
                     },
                   }}
                 >
+                  {/* FIXME: 同样是从 ChannelTable 复制来没改——指向 channel 设置页的旧路由（v6 没有），
+                      应改成项目的设置页；迁任务 / 项目到 v3 时一并处理 */}
                   <Link to={`/studio/${studioName}/channel/${row.id}/setting`}>
                     {intl.formatMessage({
                       id: "buttons.setting",

@@ -2,7 +2,6 @@
 
 namespace App\Services\V3;
 
-use App\Http\Api\ChannelApi;
 use App\Models\AiModel;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
@@ -35,6 +34,8 @@ class AgentGrantService
 
     private const TYPE = 'agent-grant';
 
+    public function __construct(private readonly ChannelAbilityService $channels) {}
+
     /**
      * 人类为自己名下的模型签发 channel 写入授权。
      *
@@ -55,7 +56,8 @@ class AgentGrantService
         if ($model->owner_id !== $userUid) {
             throw new AuthorizationException(__('messages.agent_grant_not_owner'));
         }
-        if (! ChannelApi::userCanEdit($userUid, $data['target_id'])) {
+        // 认团队角色：团队 editor 及以上可以为团队名下的 channel 签授权
+        if (! $this->channels->canWrite($data['target_id'], $userUid)) {
             throw new AuthorizationException(__('messages.agent_grant_no_power'));
         }
 
@@ -139,6 +141,18 @@ class AgentGrantService
         }
 
         return $channelUid === $scope['channel'] && ($scope['book'] === 0 || $book === $scope['book']);
+    }
+
+    /**
+     * 只许人类操作的写入（channel、团队这类「权限本身」的资源不支持 agent 代写）：模型 token 一律 403。
+     *
+     * @throws AuthorizationException
+     */
+    public function assertHuman(string $uid): void
+    {
+        if ($this->isModel($uid)) {
+            throw new AuthorizationException(__('messages.agent_not_allowed'));
+        }
     }
 
     private function isModel(string $uid): bool

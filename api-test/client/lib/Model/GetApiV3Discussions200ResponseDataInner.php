@@ -68,7 +68,7 @@ class GetApiV3Discussions200ResponseDataInner implements ModelInterface, ArrayAc
         'title' => 'string',
         'content' => 'string',
         'content_type' => 'string',
-        'html' => 'string',
+        'body' => '\WikipaliApi\Model\MarkupNode[]',
         'summary' => 'string',
         'tpl_id' => 'string',
         'pos_start' => 'int',
@@ -105,7 +105,7 @@ class GetApiV3Discussions200ResponseDataInner implements ModelInterface, ArrayAc
         'title' => null,
         'content' => null,
         'content_type' => null,
-        'html' => null,
+        'body' => null,
         'summary' => null,
         'tpl_id' => null,
         'pos_start' => null,
@@ -140,7 +140,7 @@ class GetApiV3Discussions200ResponseDataInner implements ModelInterface, ArrayAc
         'title' => true,
         'content' => true,
         'content_type' => false,
-        'html' => false,
+        'body' => false,
         'summary' => false,
         'tpl_id' => true,
         'pos_start' => true,
@@ -255,7 +255,7 @@ class GetApiV3Discussions200ResponseDataInner implements ModelInterface, ArrayAc
         'title' => 'title',
         'content' => 'content',
         'content_type' => 'content_type',
-        'html' => 'html',
+        'body' => 'body',
         'summary' => 'summary',
         'tpl_id' => 'tpl_id',
         'pos_start' => 'pos_start',
@@ -290,7 +290,7 @@ class GetApiV3Discussions200ResponseDataInner implements ModelInterface, ArrayAc
         'title' => 'setTitle',
         'content' => 'setContent',
         'content_type' => 'setContentType',
-        'html' => 'setHtml',
+        'body' => 'setBody',
         'summary' => 'setSummary',
         'tpl_id' => 'setTplId',
         'pos_start' => 'setPosStart',
@@ -325,7 +325,7 @@ class GetApiV3Discussions200ResponseDataInner implements ModelInterface, ArrayAc
         'title' => 'getTitle',
         'content' => 'getContent',
         'content_type' => 'getContentType',
-        'html' => 'getHtml',
+        'body' => 'getBody',
         'summary' => 'getSummary',
         'tpl_id' => 'getTplId',
         'pos_start' => 'getPosStart',
@@ -411,7 +411,7 @@ class GetApiV3Discussions200ResponseDataInner implements ModelInterface, ArrayAc
         $this->setIfExists('title', $data ?? [], null);
         $this->setIfExists('content', $data ?? [], null);
         $this->setIfExists('content_type', $data ?? [], null);
-        $this->setIfExists('html', $data ?? [], null);
+        $this->setIfExists('body', $data ?? [], null);
         $this->setIfExists('summary', $data ?? [], null);
         $this->setIfExists('tpl_id', $data ?? [], null);
         $this->setIfExists('pos_start', $data ?? [], null);
@@ -804,28 +804,28 @@ class GetApiV3Discussions200ResponseDataInner implements ModelInterface, ArrayAc
     }
 
     /**
-     * Gets html
+     * Gets body
      *
-     * @return string|null
+     * @return \WikipaliApi\Model\MarkupNode[]|null
      */
-    public function getHtml()
+    public function getBody()
     {
-        return $this->container['html'];
+        return $this->container['body'];
     }
 
     /**
-     * Sets html
+     * Sets body
      *
-     * @param string|null $html 仅在部分查询口径下返回。
+     * @param \WikipaliApi\Model\MarkupNode[]|null $body 仅在部分查询口径下返回。
      *
      * @return self
      */
-    public function setHtml($html)
+    public function setBody($body)
     {
-        if (is_null($html)) {
-            throw new \InvalidArgumentException('non-nullable html cannot be null');
+        if (is_null($body)) {
+            throw new \InvalidArgumentException('non-nullable body cannot be null');
         }
-        $this->container['html'] = $html;
+        $this->container['body'] = $body;
 
         return $this;
     }

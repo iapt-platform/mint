@@ -65,6 +65,74 @@ components:
               message: { type: string }
               errors: { type: object, additionalProperties: { type: array, items: { type: string } } }
   schemas:
+    MarkupNode:
+      description: |-
+        正文（markdown + 模板）渲染后的节点树，由 App\Services\Markup 生成。
+        三种节点：text 纯文本（前端作为 React 文本节点，自动转义）；el HTML 元素（tag 与 attrs 已过白名单）；
+        tpl 模板（name 是前端组件名，props 随模板而定，props 里嵌套的内容也是节点数组）。
+      oneOf:
+        -
+          $ref: '#/components/schemas/MarkupText'
+        -
+          $ref: '#/components/schemas/MarkupElement'
+        -
+          $ref: '#/components/schemas/MarkupTemplate'
+    MarkupText:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - text
+        value:
+          type: string
+      required:
+        - type
+        - value
+    MarkupElement:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - el
+        tag:
+          type: string
+          description: '白名单内的 HTML 标签名（小写）'
+        attrs:
+          type: object
+          additionalProperties:
+            type: string
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/MarkupNode'
+      required:
+        - type
+        - tag
+        - children
+    MarkupTemplate:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - tpl
+        name:
+          type: string
+          description: 前端组件名：term、note、sentread、sentedit、quote、quote-link、mermaid…
+        props:
+          type: object
+          additionalProperties: true
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/MarkupNode'
+      required:
+        - type
+        - name
+        - props
+        - children
     ProblemDetails:
       type: object
       description: |-
@@ -707,6 +775,20 @@ paths:
     $ref: ./resources/auto/v3-agent-quota.yaml
   /v3/agent-traces:
     $ref: ./resources/auto/v3-agent-traces.yaml
+  /v3/channels:
+    $ref: ./resources/auto/v3-channels.yaml
+  /v3/channels/batch-progress:
+    $ref: ./resources/auto/v3-channels-batch-progress.yaml
+  /v3/channels/editable:
+    $ref: ./resources/auto/v3-channels-editable.yaml
+  '/v3/channels/{channel}':
+    $ref: ./resources/auto/v3-channels-channel.yaml
+  '/v3/channels/{channel}/links':
+    $ref: ./resources/auto/v3-channels-channel-links.yaml
+  '/v3/channels/{channel}/terms':
+    $ref: ./resources/auto/v3-channels-channel-terms.yaml
+  '/v3/channels/{channel}/terms/imports':
+    $ref: ./resources/auto/v3-channels-channel-terms-imports.yaml
   /v3/credit-policy:
     $ref: ./resources/auto/v3-credit-policy.yaml
   /v3/discussions:
@@ -721,6 +803,8 @@ paths:
     $ref: ./resources/auto/v3-discussions-discussion-replies.yaml
   /v3/email-certifications:
     $ref: ./resources/auto/v3-email-certifications.yaml
+  '/v3/glossaries/{kind}':
+    $ref: ./resources/auto/v3-glossaries-kind.yaml
   /v3/groups:
     $ref: ./resources/auto/v3-groups.yaml
   '/v3/groups/{group}':
@@ -755,6 +839,8 @@ paths:
     $ref: ./resources/auto/v3-me-reactions-reaction.yaml
   /v3/me/reading-time:
     $ref: ./resources/auto/v3-me-reading-time.yaml
+  '/v3/nissaya-cards/{ending}':
+    $ref: ./resources/auto/v3-nissaya-cards-ending.yaml
   /v3/password-resets:
     $ref: ./resources/auto/v3-password-resets.yaml
   '/v3/password-resets/{token}':
@@ -773,12 +859,26 @@ paths:
     $ref: ./resources/auto/v3-search-search.yaml
   /v3/sessions:
     $ref: ./resources/auto/v3-sessions.yaml
+  '/v3/studios/{studio}/channels':
+    $ref: ./resources/auto/v3-studios-studio-channels.yaml
+  '/v3/studios/{studio}/terms':
+    $ref: ./resources/auto/v3-studios-studio-terms.yaml
+  '/v3/studios/{studio}/terms/imports':
+    $ref: ./resources/auto/v3-studios-studio-terms-imports.yaml
+  /v3/terms:
+    $ref: ./resources/auto/v3-terms.yaml
+  '/v3/terms/{term}':
+    $ref: ./resources/auto/v3-terms-term.yaml
+  /v3/tipitaka-channels:
+    $ref: ./resources/auto/v3-tipitaka-channels.yaml
   '/v3/tipitaka-chapter-channels/{book}/{para}':
     $ref: ./resources/auto/v3-tipitaka-chapter-channels-book-para.yaml
   /v3/tipitaka-chapters:
     $ref: ./resources/auto/v3-tipitaka-chapters.yaml
   '/v3/tipitaka-discussions/{channel}':
     $ref: ./resources/auto/v3-tipitaka-discussions-channel.yaml
+  '/v3/tipitaka-paragraph-channels/{book}/{para}':
+    $ref: ./resources/auto/v3-tipitaka-paragraph-channels-book-para.yaml
   '/v3/tipitaka-reading/{channel}':
     $ref: ./resources/auto/v3-tipitaka-reading-channel.yaml
   /v3/tipitaka-related-paragraphs:

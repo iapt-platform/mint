@@ -354,6 +354,8 @@ Route::prefix('v3')->as('v3.')->middleware(NegotiateLocale::class)->group(functi
     require __DIR__.'/v3/search.php';
     require __DIR__.'/v3/tipitaka.php';
     require __DIR__.'/v3/channel.php';
+    require __DIR__.'/v3/term.php';
+    require __DIR__.'/v3/nissaya.php';
     require __DIR__.'/v3/group.php';
     require __DIR__.'/v3/interaction.php';
     require __DIR__.'/v3/auth.php';

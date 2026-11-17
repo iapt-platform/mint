@@ -3,41 +3,37 @@
 namespace App\Http\Api;
 
 use App\Models\Channel;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
+use App\Services\ChannelService;
+use App\Services\V3\ChannelAbilityService;
 
+/**
+ * **v2 专用，v3 代码一律不准引用本类。**
+ *
+ * 两部分：
+ * - 纯能力（取 channel 摘要、系统 channel、自定义书 channel）：**冻结的转发壳**，实现全在
+ *   {@see ChannelService}，新代码直接注入它。保留这些方法只为 v2 的几十个调用点不必改。
+ * - 权限判定（`getCanReadByUser` … `canManageByUser`）：v2 的旧口径——只认拥有者本人 + 共享，
+ *   不认团队角色、不排除软删以外的状态。**不转发到 v3**：v3 的口径（团队角色、status 20 公开不列出）
+ *   在 {@see ChannelAbilityService}，把 v2 转过去等于改 v2 权限（铁律 1）。
+ *   原地留着，随 v4 下线删除。
+ *
+ * @deprecated 纯能力用 App\Services\ChannelService；权限用 App\Services\V3\ChannelAbilityService
+ */
 class ChannelApi
 {
+    /** @deprecated 用 ChannelService::summary() */
     public static function getById(?string $id)
     {
-        if (! Str::isUuid($id)) {
-            return false;
-        }
-        $channel = Channel::where('uid', $id)->first();
-        if ($channel) {
-            return [
-                'id' => $id,
-                'name' => $channel['name'],
-                'type' => $channel['type'],
-                'lang' => $channel['lang'],
-                'studio_id' => $channel['owner_uid'],
-                'status' => $channel['status'],
-            ];
-        } else {
-            return false;
-        }
+        return self::service()->summary($id);
     }
 
+    /** @deprecated 用 ChannelService::summaries() */
     public static function getByIds(array $ids)
     {
-        $channels = [];
-        foreach ($ids as $id) {
-            $channels[] = self::getById($id);
-        }
-
-        return $channels;
+        return self::service()->summaries($ids);
     }
 
+    /** v2 口径，v3 用 ChannelAbilityService::scopeListable() / abilities() */
     public static function getCanReadByUser($userUuid = null)
     {
         // 获取 user 在某章节 所有有权限的 channel 列表
@@ -70,6 +66,7 @@ class ChannelApi
         return $output;
     }
 
+    /** v2 口径，v3 用 ChannelAbilityService::writableUids() */
     public static function getCanEditByUser($userUuid = null)
     {
         // 获取 user 在某章节 所有有权限的 channel 列表
@@ -107,6 +104,7 @@ class ChannelApi
         return in_array($channelUid, $channels);
     }
 
+    /** v2 口径，v3 用 ChannelAbilityService::canWrite() */
     public static function userCanEdit($userUid, $channelUid)
     {
         $channels = ChannelApi::getCanEditByUser($userUid);
@@ -122,74 +120,31 @@ class ChannelApi
         return $isOwner;
     }
 
+    /** @deprecated 用 ChannelService::systemUid() */
     public static function getSysChannel($channel_name, $fallback = '')
     {
-        $channel = Channel::where('name', $channel_name)
-            ->where('owner_uid', config('mint.admin.root_uuid'))
-            ->first();
-        if (! $channel) {
-            if (! empty($fallback)) {
-                $channel = Channel::where('name', $fallback)
-                    ->where('owner_uid', config('mint.admin.root_uuid'))
-                    ->first();
-                if (! $channel) {
-                    return false;
-                } else {
-                    return $channel->uid;
-                }
-            }
-
-            return false;
-        } else {
-            return $channel->uid;
-        }
+        return self::service()->systemUid((string) $channel_name, (string) $fallback);
     }
 
+    /** @deprecated 用 ChannelService::byNameOrFail() */
     public static function getChannelByName($name)
     {
-        $channel = Channel::where('name', $name)
-            ->first();
-        if (! $channel) {
-            throw new \Exception('channel is invalid');
-        }
-
-        return $channel;
+        return self::service()->byNameOrFail((string) $name);
     }
 
     /**
      * 获取某个studio 的某个语言的自定义书的channel
      * 如果没有，建立
+     *
+     * @deprecated 用 ChannelService::userBookUid()
      */
     public static function userBookGetOrCreate($studioId, $lang, $status)
     {
-        $channelName = '_user_book_'.$lang;
-        $channel = Channel::where('owner_uid', $studioId)
-            ->where('name', $channelName)->first();
-        if ($channel) {
-            return $channel->uid;
-        }
-        $channelUuid = Str::uuid();
-        $channel = new Channel;
-        $channel->id = app('snowflake')->id();
-        $channel->uid = $channelUuid;
-        $channel->owner_uid = $studioId;
-        $channel->name = $channelName;
-        $channel->type = 'original';
-        $channel->lang = $lang;
-        $channel->editor_id = 0;
-        $channel->is_system = true;
-        $channel->create_time = time() * 1000;
-        $channel->modify_time = time() * 1000;
-        $channel->status = $status;
-        $saveOk = $channel->save();
-        if ($saveOk) {
-            Log::debug('copy user book : create channel success name='.$channelName);
+        return self::service()->userBookUid((string) $studioId, (string) $lang, (int) $status);
+    }
 
-            return $channel->uid;
-        } else {
-            Log::error('copy user book : create channel fail.', ['channel' => $channelName, 'studioId' => $studioId]);
-
-            return false;
-        }
+    private static function service(): ChannelService
+    {
+        return app(ChannelService::class);
     }
 }

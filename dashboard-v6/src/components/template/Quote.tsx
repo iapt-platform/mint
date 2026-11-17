@@ -14,7 +14,7 @@ interface IWidgetQuoteCtl {
   error?: boolean;
   message?: string;
 }
-const QuoteCtl = ({ paraId, pali, error, message }: IWidgetQuoteCtl) => {
+export const QuoteCtl = ({ paraId, pali, error, message }: IWidgetQuoteCtl) => {
   const intl = useIntl();
   const show = pali ? pali : paraId;
   let textShow = <></>;

@@ -1,13 +1,7 @@
 import { useEffect, useState } from "react";
 import { Col, Row, Skeleton, Typography } from "antd";
 
-import { get } from "../../request";
-import type {
-  ITerm,
-  ITermDataResponse,
-  ITermListResponse,
-  ITermResponse,
-} from "../../api/Term";
+import { fetchTerm, lookupTerms, type ITerm, type Term } from "../../api/Term";
 import TermItem from "./TermItem";
 
 const { Title } = Typography;
@@ -25,7 +19,7 @@ const TermSearchWidget = ({
   compact = false,
   onIdChange,
 }: IWidget) => {
-  const [tableData, setTableData] = useState<ITermDataResponse[]>([]);
+  const [tableData, setTableData] = useState<Term[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -38,22 +32,18 @@ const TermSearchWidget = ({
 
       try {
         if (word && word.length > 0) {
-          const url = `/api/v2/terms?view=word&word=${word}`;
-          console.info("term url", url);
-
-          const json = await get<ITermListResponse>(url);
-
+          const json = await lookupTerms({
+            word,
+            with_body: true,
+            per_page: 100,
+          });
           if (!cancelled) {
-            setTableData(json.data.rows);
+            setTableData(json.data ?? []);
           }
         } else if (wordId && wordId.length > 0) {
-          const url = `/api/v2/terms/${wordId}`;
-          console.info("term url", url);
-
-          const json = await get<ITermResponse>(url);
-
-          if (!cancelled) {
-            setTableData([json.data]);
+          const term = await fetchTerm(wordId);
+          if (!cancelled && term) {
+            setTableData([term]);
           }
         }
       } catch (error) {
@@ -80,8 +70,10 @@ const TermSearchWidget = ({
       (async () => {
         setLoading(true);
         try {
-          const json = await get<ITermResponse>(`/api/v2/terms/${value.id}`);
-          setTableData([json.data]);
+          const term = await fetchTerm(value.id ?? "");
+          if (term) {
+            setTableData([term]);
+          }
         } finally {
           setLoading(false);
         }

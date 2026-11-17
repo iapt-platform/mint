@@ -29,14 +29,7 @@
         {!! $entry['content'] !!}
     </div>
 
-    {{-- 标签 --}}
-    <div class="wiki-tags">
-        @foreach ($entry['tags'] as $tag)
-        <a class="wiki-tag" href="{{ route('library.wiki.index',[$lang]) }}?tag={{ $tag }}">
-            {{ $tag }}
-        </a>
-        @endforeach
-    </div>
+    {{-- 分类标签在正文里（{{category|…}}，可点击），这里不再重复列出 --}}
 
     {{-- 其他版本 --}}
     @if(isset($entry['other_versions']) && count($entry['other_versions']) > 0)

@@ -8,7 +8,7 @@ interface IWidget extends IDisplayWrapperProps {
   id?: string;
   channel?: string;
 }
-const ParaCtl = (props: IWidget) => {
+export const ParaCtl = (props: IWidget) => {
   return (
     <DisplayWrapper {...props}>
       <TypePali

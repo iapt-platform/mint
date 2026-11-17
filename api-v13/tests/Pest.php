@@ -1,9 +1,11 @@
 <?php
 
+use App\Models\AiModel;
 use App\Models\Channel;
 use App\Models\GroupInfo;
 use App\Models\GroupMember;
 use App\Models\Sentence;
+use App\Models\Share;
 use App\Models\UserInfo;
 use App\Services\AuthService;
 use Firebase\JWT\JWT;
@@ -243,4 +245,40 @@ function makeTeam(): array
 function memberId(string $team, string $userUid): string
 {
     return (string) GroupMember::where('group_id', $team)->where('user_id', $userUid)->value('id');
+}
+
+/**
+ * 把 channel 共享给某人或某团队。power：10 读、20 写内容、30 改信息。
+ */
+function grantChannelShare(string $channelUid, string $cooperatorUid, int $power, bool $toTeam = false): void
+{
+    (new Share)->forceFill([
+        'id' => random_int(1, PHP_INT_MAX),
+        'res_id' => $channelUid,
+        'res_type' => 2,
+        'cooperator_id' => $cooperatorUid,
+        'cooperator_type' => $toTeam ? 1 : 0,
+        'power' => $power,
+        'create_time' => time() * 1000,
+        'modify_time' => time() * 1000,
+    ])->save();
+}
+
+/**
+ * 建一个 AI 模型账号（ai_models 一行就是一个身份），返回它的 uid；用它的 token 测「只给人类」的写入。
+ */
+function makeModelAccount(string $ownerUid): string
+{
+    $uid = (string) Str::uuid();
+    (new AiModel)->forceFill([
+        'id' => random_int(1, PHP_INT_MAX),
+        'uid' => $uid,
+        'name' => 'model',
+        'real_name' => 'model-'.Str::random(6),
+        'model' => 'gpt-4',
+        'owner_id' => $ownerUid,
+        'editor_id' => $ownerUid,
+    ])->save();
+
+    return $uid;
 }

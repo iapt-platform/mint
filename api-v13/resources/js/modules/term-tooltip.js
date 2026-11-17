@@ -15,13 +15,41 @@ import * as bootstrap from "bootstrap";
     // ── 缓存层 ────────────────────────────────────────────────────────
     const cache = {};
 
+    // 下面的模板用 innerHTML 拼接，取回的文字先转义
+    const escapeHtml = (text) =>
+        String(text ?? "").replace(/[&<>"']/g, (c) => ({
+            "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+        })[c]);
+
+    // 百科页上点术语直接跳转；其它页面（阅读页）不跳走，「查看完整条目」在新标签页打开
+    const onWikiPage = /^\/library\/wiki\//.test(window.location.pathname);
+
+    // 词条的百科页地址：语言取当前百科页的，其它页面取 <html lang>
+    function wikiUrl(id) {
+        const m = window.location.pathname.match(/^\/library\/wiki\/([^/]+)/);
+        const lang = m
+            ? decodeURIComponent(m[1])
+            : document.documentElement.lang || "zh-Hans";
+        return `/library/wiki/${encodeURIComponent(lang)}/${encodeURIComponent(id)}`;
+    }
+
+    const linkTarget = onWikiPage ? "" : ' target="_blank" rel="noopener"';
+
+    // v3：summary_text 是纯文本摘要（有摘要用摘要，没有取正文第一段）
     async function fetchTerm(id) {
         if (cache[id]) return cache[id];
-        const res = await fetch(`/api/v2/terms/${id}`);
+        const res = await fetch(`/api/v3/terms/${id}`, {
+            headers: { Accept: "application/json" },
+        });
         if (!res.ok) throw new Error(`fetchTerm ${id} failed: ${res.status}`);
-        const json = await res.json();
-        cache[id] = json.data;
-        return json.data;
+        const { data } = await res.json();
+        cache[id] = {
+            word: escapeHtml(data.word),
+            meaning: escapeHtml(data.meaning),
+            summary: escapeHtml(data.summary_text),
+            url: wikiUrl(id),
+        };
+        return cache[id];
     }
 
     // ── 设备判断 ──────────────────────────────────────────────────────
@@ -58,7 +86,7 @@ import * as bootstrap from "bootstrap";
                         : ""
                 }
             </div>
-            <div><a>查看完整条目</a></div>
+            <div><a href="${data.url}"${linkTarget}>查看完整条目</a></div>
         `;
     }
 
@@ -173,6 +201,15 @@ import * as bootstrap from "bootstrap";
         document.getElementById("wikiTermCardSlot").innerHTML = showSummary
             ? `<div class="wiki-term-card-summary">${summary}</div>`
             : "";
+        const link = document.getElementById("wikiTermDrawerLink");
+        if (link && data.url) {
+            link.href = data.url;
+            if (!onWikiPage) {
+                link.target = "_blank";
+                link.rel = "noopener";
+            }
+            link.style.display = "";
+        }
     }
 
     // ── 入口：扫描所有 .term-ref ──────────────────────────────────────
@@ -204,9 +241,16 @@ import * as bootstrap from "bootstrap";
                 el.removeEventListener("mouseenter", onFirstEnter);
             });
 
-            // 移动端：点击立即弹出 skeleton，数据回来后填充
+            // 移动端：点击立即弹出 skeleton，数据回来后填充（抽屉里有「查看完整条目」）
+            // 桌面端：百科页上点击直接跳到那条术语
             el.addEventListener("click", async (e) => {
-                if (!isMobile()) return;
+                if (!isMobile()) {
+                    if (onWikiPage) {
+                        e.preventDefault();
+                        window.location.href = wikiUrl(el.dataset.id);
+                    }
+                    return;
+                }
                 e.preventDefault();
 
                 showMobileDrawerSkeleton();

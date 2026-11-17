@@ -4,7 +4,7 @@ import { Children } from "react";
 interface IToggleCtlWidget {
   children?: React.ReactNode | React.ReactNode[];
 }
-const ToggleCtl = ({ children }: IToggleCtlWidget) => {
+export const ToggleCtl = ({ children }: IToggleCtlWidget) => {
   const arrayChildren = Children.toArray(children);
   if (arrayChildren.length === 0) {
     return <></>;

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\V3;
 
+use App\Http\Controllers\Concerns\ResolvesCurrentUser;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V3\TipitakaReadingRequest;
 use App\Http\Resources\V3\ReadParagraphResource;
+use App\Services\V3\ChannelAbilityService;
 use App\Services\V3\TipitakaReadingService;
 
 /**
@@ -23,7 +25,12 @@ use App\Services\V3\TipitakaReadingService;
  */
 class TipitakaReadingController extends Controller
 {
-    public function __construct(private readonly TipitakaReadingService $reading) {}
+    use ResolvesCurrentUser;
+
+    public function __construct(
+        private readonly TipitakaReadingService $reading,
+        private readonly ChannelAbilityService $abilities,
+    ) {}
 
     /**
      * 读取译文
@@ -38,6 +45,8 @@ class TipitakaReadingController extends Controller
      * `total` / `remaining` 只在带了 `book` 过滤时才给：不带过滤时结果集是整个
      * channel（实测最大的有 52 万段、跨 217 本书），每翻一页都去 count 一次不划算。
      * 无过滤时用 `next_cursor` 是否为 null 判断结束，不要指望百分比。
+     *
+     * 私有 channel 只有拥有者、团队成员、被共享的人能读（要带 token）；公开与「公开不列出」不用登录。
      *
      * @unauthenticated
      *
@@ -54,12 +63,13 @@ class TipitakaReadingController extends Controller
      *             Default: 10
      * @queryParam unit string 每块大小的单位：para 按段落数，byte 按段落长度累加。
      *             两种单位下每块都至少一段、至多 200 段。Enum: para,byte Default: para
-     * @queryParam format string 内容格式。Enum: html,markdown,react,text Default: html
+     * @queryParam format string 内容格式。Enum: html,markdown,text Default: html
      * @queryParam include string 输出口径：display 整段合并，sentences 逐句，all 两者都给。
      *             不叫 view 是因为 v2 的 `view=` 是必填互斥的业务路径开关，名字撞上会误导。
      *             Enum: display,sentences,all Default: display
      *
-     * @responseStatus 404 指定的 chapter 在 pali_texts 里不存在
+     * @responseStatus 403 私有 channel，且当前身份看不见
+     * @responseStatus 404 channel 不存在，或指定的 chapter 在 pali_texts 里不存在
      *
      * @meta page_size integer 每块大小（按 unit 计）
      * @meta page_size_unit string 每块大小的单位：para 或 byte
@@ -69,6 +79,7 @@ class TipitakaReadingController extends Controller
      */
     public function __invoke(TipitakaReadingRequest $request, string $channel)
     {
+        $this->abilities->assertReadable($channel, $this->currentUserUid($request));
         $page = $this->reading->page($channel, $request->validated());
 
         return ReadParagraphResource::collection($page['items'])

@@ -5,7 +5,7 @@ import { GlobalOutlined } from "@ant-design/icons";
 import { useAppSelector } from "../../hooks";
 import { currentUser as _currentUser } from "../../reducers/current-user";
 
-import { get, put } from "../../request";
+import { put } from "../../request";
 
 import { LockIcon } from "../../assets/icon";
 import type {
@@ -13,7 +13,7 @@ import type {
   ICourseMemberResponse,
 } from "../../api/course";
 import { useIntl } from "react-intl";
-import type { IApiResponseChannelList } from "../../api/channel";
+import { fetchStudioChannels } from "../../api/channel";
 
 interface IWidget {
   courseId?: string | null;
@@ -64,7 +64,7 @@ const SelectChannelWidget = ({
               console.info("course select channel api request", url, data);
               const json = await put<ICourseMemberData, ICourseMemberResponse>(
                 url,
-                data
+                data,
               );
               console.info("course select channel api response", json);
               if (json.ok) {
@@ -96,14 +96,19 @@ const SelectChannelWidget = ({
                 },
               ]}
               request={async () => {
-                const channelData = await get<IApiResponseChannelList>(
-                  `/api/v2/channel?view=studio&name=${user?.realName}`
-                );
-                const channel = channelData.data.rows.map((item) => {
+                if (!user?.id) {
+                  return [];
+                }
+                // 学生交作业用的版本：只列本人名下的
+                const channelData = await fetchStudioChannels(user.id, {
+                  relation: "own",
+                  per_page: 200,
+                });
+                const channel = (channelData.data ?? []).map((item) => {
                   const icon =
                     item.status === 30 ? <GlobalOutlined /> : <LockIcon />;
                   return {
-                    value: item.uid,
+                    value: item.id ?? "",
                     label: (
                       <>
                         {icon} {item.name}

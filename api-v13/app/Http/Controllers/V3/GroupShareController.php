@@ -58,6 +58,9 @@ class GroupShareController extends Controller
      */
     public function destroy(Request $request, GroupInfo $group, Share $share)
     {
+        // FIXME: {share} 是 shares.id（雪花 id），应改成被共享资源的 uuid：一项资源在一个团队下只共享一次
+        //   （唯一索引 res_id + res_type + cooperator_id + cooperator_type），路由改为 groups/{group}/shares/{res_id}。
+        //   见 routes/v3/group.php。
         $this->shares->remove($group, $share, $this->currentUser($request)['user_uid']);
 
         return response()->noContent();

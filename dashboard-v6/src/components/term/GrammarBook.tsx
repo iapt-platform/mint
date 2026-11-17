@@ -20,11 +20,7 @@ import store from "../../store";
 import GrammarRecent, { type IGrammarRecent } from "./GrammarRecent";
 import { useIntl } from "react-intl";
 
-import { get } from "../../request";
-import type {
-  IApiResponseChannelData,
-  IApiResponseChannelList,
-} from "../../api/channel";
+import { fetchPublicChannels, type Channel } from "../../api/channel";
 import { grammarTermFetch } from "../../load";
 import TermModal from "./TermModal";
 import { popRecent, pushRecent } from "./utils";
@@ -43,8 +39,7 @@ const GrammarBookWidget = () => {
   const [localTermSearch, setLocalTermSearch] = useState<string>();
   const [showRecent, setShowRecent] = useState(false);
   const [create, setCreate] = useState(false);
-  const [grammarChannel, setGrammarChannel] =
-    useState<IApiResponseChannelData>();
+  const [grammarChannel, setGrammarChannel] = useState<Channel>();
   const sysGrammar = useAppSelector(getGrammar);
   const searchWord = useAppSelector(grammarWord);
   const searchWordId = useAppSelector(grammarWordId);
@@ -53,15 +48,11 @@ const GrammarBookWidget = () => {
   const termSearch = searchWord || localTermSearch;
 
   useEffect(() => {
-    const url = `/api/v2/channel?view=system`;
-    get<IApiResponseChannelList>(url).then((json) => {
-      if (json.ok) {
-        const channel = json.data.rows.find(
-          (value) => value.name === "_System_Grammar_Term_zh-hans_"
-        );
-        setGrammarChannel(channel);
-      }
-    });
+    const name = "_System_Grammar_Term_zh-hans_";
+    fetchPublicChannels({ system: true, search: name, per_page: 20 }).then(
+      (res) =>
+        setGrammarChannel(res.data?.find((value) => value.name === name)),
+    );
   }, []);
 
   useEffect(() => {
@@ -239,7 +230,7 @@ const GrammarBookWidget = () => {
         )}
       </div>
       <TermModal
-        parentChannelId={grammarChannel?.uid}
+        parentChannelId={grammarChannel?.id}
         tags={[":collection:"]}
         open={create}
         onClose={() => setCreate(false)}

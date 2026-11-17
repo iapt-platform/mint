@@ -4,7 +4,10 @@ get:
   tags:
     - terms-import
   operationId: get_api_v2_terms_import
-  description: 实现：`TermExportController@import`
+  description: |
+    已被取代：`view=channel` → `POST /v3/channels/{channel}/terms/imports`，`view=studio` → `POST /v3/studios/{studio}/terms/imports`，
+    直接上传 xlsx（multipart，不再经附件临时区、不再用 GET 写入）。按列名读取（v2 导出的表格也能用），部分成功、逐行给出跳过原因；
+    word / tag 不能改，带 etag 列时校验；「有 id、word 为空就删除」不再支持。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
   parameters:
     -
       name: view
@@ -47,3 +50,4 @@ get:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
       $ref: '../../main.yaml#/components/responses/ValidationError'
+  deprecated: true

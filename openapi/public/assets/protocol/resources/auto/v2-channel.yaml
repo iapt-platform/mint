@@ -4,11 +4,14 @@ get:
   tags:
     - channel
   operationId: get_api_v2_channel
-  description: |-
-    按 view 指定的口径返回 channel 列表，支持关键字搜索、分页、排序。
-    需要登录的口径：studio、studio-all、user-edit、user-in-chapter。
-
-    实现：`ChannelController@index`
+  description: |
+    各 view 的去向：
+    - `public` / `system` → `GET /v3/channels`（`system=true`）
+    - `studio`（含 `view2`、`collaborator`）/ `studio-all` → `GET /v3/studios/{studio}/channels?relation=own|shared|all`
+    - `user-edit` → `GET /v3/channels/editable`（搜索参数是 `search`）
+    - `paragraphs` → `GET /v3/tipitaka-paragraph-channels/{book}/{para}`
+    - `id`、`user-in-chapter` 没有消费者，不迁
+    保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
   parameters:
     -
       name: book
@@ -153,16 +156,14 @@ get:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
       $ref: '../../main.yaml#/components/responses/ValidationError'
+  deprecated: true
 post:
   summary: '新建 channel'
   tags:
     - channel
   operationId: post_api_v2_channel
-  description: |-
-    在指定 studio 下新建译文集。同一 studio 内不允许重名。
-    调用者必须对该 studio 有管理权限。
-
-    实现：`ChannelController@store`
+  description: |
+    已被 `POST /v3/studios/{studio}/channels` 取代。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
   requestBody:
     required: true
     content:
@@ -206,6 +207,7 @@ post:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
       $ref: '../../main.yaml#/components/responses/ValidationError'
+  deprecated: true
 patch:
   summary: '局部更新 channel'
   tags:

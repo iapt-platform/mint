@@ -22,7 +22,6 @@ import type { TResType } from "../../api/discussion";
 const { Title } = Typography;
 
 interface IWidget {
-  studioName?: string;
   channelId?: string;
   id?: string;
   res_type?: TResType;
@@ -30,7 +29,6 @@ interface IWidget {
   onSuccess?: () => void;
 }
 const WebhookEditWidget = ({
-  studioName,
   channelId,
   id,
   res_type = "channel",
@@ -44,9 +42,7 @@ const WebhookEditWidget = ({
   return (
     <Space orientation="vertical">
       <Title level={4}>
-        <Link
-          to={`/studio/${studioName}/channel/${channelId}/setting/webhooks`}
-        >
+        <Link to={`/workspace/channel/${channelId}/setting/webhooks`}>
           List
         </Link>{" "}
         / {id ? "Manage webhook" : "New"}
@@ -64,12 +60,12 @@ const WebhookEditWidget = ({
           if (typeof id === "undefined") {
             res = await post<IWebhookRequest, IWebhookResponse>(
               `/api/v2/webhook`,
-              data
+              data,
             );
           } else {
             res = await put<IWebhookRequest, IWebhookResponse>(
               `/api/v2/webhook/${id}`,
-              data
+              data,
             );
           }
           console.log(res);

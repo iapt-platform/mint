@@ -37,11 +37,12 @@ export async function call(
   path: string,
   data?: object,
   who: Account = 'user',
+  headers: Record<string, string> = {},
 ) {
   const res = await request.fetch(`${API}${path}`, {
     method,
     data,
-    headers: { Authorization: `Bearer ${token(who)}`, Accept: 'application/json' },
+    headers: { Authorization: `Bearer ${token(who)}`, Accept: 'application/json', ...headers },
   });
   return { status: res.status(), body: await res.json().catch(() => null) };
 }

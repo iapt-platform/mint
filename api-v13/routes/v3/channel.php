@@ -2,18 +2,58 @@
 
 /*
 |--------------------------------------------------------------------------
-| v3 · channel —— 译本与翻译进度
+| v3 · channel —— 译文集（界面叫「版本风格」）与翻译进度
 |--------------------------------------------------------------------------
 |
 | 由 routes/api.php 的 v3 组 require 进来，前缀已在那边加好。
 |
-| channel 本身还没迁（见 CLAUDE.md 的 v3 重构一节），这里先只有 progress。
+| 阅读领域的 channel 查询（某章 / 某段有哪些 channel、有译文的 channel 目录）在 tipitaka.php。
 |
 */
 
+use App\Http\Controllers\V3\ChannelBatchProgressController;
+use App\Http\Controllers\V3\ChannelController;
+use App\Http\Controllers\V3\ChannelLinkController;
+use App\Http\Controllers\V3\EditableChannelController;
 use App\Http\Controllers\V3\ProgressController;
+use App\Http\Controllers\V3\StudioChannelController;
 use Illuminate\Support\Facades\Route;
 
-// FIXME: ProgressController@index 还带着 switch($request->input('view'))，
-// 不符合 v3 规范（v3 端点不准有 view 开关）。迁 channel 时一并处理。
 Route::apiResource('progress', ProgressController::class)->only(['index']);
+
+// 字面量段必须注册在 apiResource 之前，否则 {channel} 会把它们当成 uuid 吃掉
+Route::get('channels/editable', EditableChannelController::class)
+    ->name('channels.editable')
+    ->middleware('auth.v3');
+// 一批句子在各 channel 的完成度。POST：一章几百个句子 id 放不进查询串
+Route::post('channels/batch-progress', ChannelBatchProgressController::class)
+    ->name('channels.batch-progress');
+
+// 读公开（可选登录），写要登录。只注册 PATCH，不注册 PUT（v3-resource skill 硬规范第 10 条）
+Route::apiResource('channels', ChannelController::class)
+    ->only(['index', 'show', 'destroy'])
+    ->middlewareFor(['destroy'], 'auth.v3')
+    ->whereUuid('channel');
+Route::patch('channels/{channel}', [ChannelController::class, 'update'])
+    ->name('channels.update')
+    ->middleware('auth.v3')
+    ->whereUuid('channel');
+
+// 某个 studio（用户或团队，一律 uuid）的工作区列表与新建
+Route::get('studios/{studio}/channels', [StudioChannelController::class, 'index'])
+    ->name('studios.channels.index')
+    ->middleware('auth.v3')
+    ->whereUuid('studio');
+Route::post('studios/{studio}/channels', [StudioChannelController::class, 'store'])
+    ->name('studios.channels.store')
+    ->middleware('auth.v3')
+    ->whereUuid('studio');
+
+// channel 之间的关系设置（单例：每个 channel 一份）。读公开（可选登录），写要登录；只有 PATCH
+Route::get('channels/{channel}/links', [ChannelLinkController::class, 'show'])
+    ->name('channels.links.show')
+    ->whereUuid('channel');
+Route::patch('channels/{channel}/links', [ChannelLinkController::class, 'update'])
+    ->name('channels.links.update')
+    ->middleware('auth.v3')
+    ->whereUuid('channel');

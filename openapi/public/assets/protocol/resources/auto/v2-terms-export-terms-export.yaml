@@ -4,7 +4,8 @@ get:
   tags:
     - terms-export
   operationId: get_api_v2_terms_export_terms_export_
-  description: 实现：`TermExportController@show`
+  description: |
+    v3 导出直接返回 xlsx（见 `GET /v3/channels/{channel}/terms` 的说明），没有这一步。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
   parameters:
     -
       name: terms_export
@@ -30,6 +31,7 @@ get:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
       $ref: '../../main.yaml#/components/responses/ValidationError'
+  deprecated: true
 put:
   summary: '更新 terms-export/{terms_export}'
   tags:

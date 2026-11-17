@@ -28,9 +28,10 @@ import type { DefaultOptionType } from "antd/lib/select";
 import type { UploadFile } from "antd/es/upload/interface";
 import type { IAttachmentResponse } from "../../api/Attachments";
 import type { IAnthologyListResponse } from "../../api/article";
-import type {
-  IApiResponseChannelData,
-  IApiResponseChannelList,
+import {
+  fetchPublicChannels,
+  fetchStudioChannels,
+  type Channel,
 } from "../../api/channel";
 
 interface IFormData {
@@ -52,12 +53,13 @@ interface IFormData {
 }
 
 interface IWidget {
-  studioName?: string;
+  /** v3：本人或团队 uuid，列「标准答案」可选的 channel 用 */
+  studioId?: string;
   courseId?: string;
   onTitleChange?: (title: string) => void;
 }
 const CourseInfoEditWidget = ({
-  studioName,
+  studioId,
   courseId,
   onTitleChange,
 }: IWidget) => {
@@ -115,7 +117,7 @@ const CourseInfoEditWidget = ({
           console.debug("course info edit put", url, postData);
           const res = await put<ICourseDataRequest, ICourseResponse>(
             url,
-            postData
+            postData,
           );
           console.debug("course info edit put", res);
           if (res.ok) {
@@ -245,7 +247,7 @@ const CourseInfoEditWidget = ({
                 return currTeacher ? [currTeacher] : [];
               }
               const json = await get<IUserListResponse>(
-                `/api/v2/user?view=key&key=${keyWords}`
+                `/api/v2/user?view=key&key=${keyWords}`,
               );
               const userList = json.data.rows.map((item) => {
                 return {
@@ -284,7 +286,7 @@ const CourseInfoEditWidget = ({
                 return currTextbook ? [currTextbook] : [];
               }
               const json = await get<IAnthologyListResponse>(
-                `/api/v2/anthology?view=public`
+                `/api/v2/anthology?view=public`,
               );
               const textbookList = json.data.rows.map((item) => {
                 return {
@@ -308,38 +310,31 @@ const CourseInfoEditWidget = ({
               if (typeof keyWords === "undefined" || keyWords === " ") {
                 return currChannel ? [currChannel] : [];
               }
-              let urlMy = `/api/v2/channel?view=studio-all&name=${studioName}`;
-              if (typeof keyWords !== "undefined" && keyWords !== "") {
-                urlMy += "&search=" + keyWords;
-              }
-              console.info("api request", urlMy);
-              const json = await get<IApiResponseChannelList>(urlMy);
-              console.info("api response", json);
-
-              let urlPublic = `/api/v2/channel?view=public`;
-              if (typeof keyWords !== "undefined" && keyWords !== "") {
-                urlPublic += "&search=" + keyWords;
-              }
-              console.info("api request", urlPublic);
-              const jsonPublic = await get<IApiResponseChannelList>(urlPublic);
-              console.info("api response", jsonPublic);
-
-              //查重
-              const channels1: IApiResponseChannelData[] = [];
-              const channels = [...json.data.rows, ...jsonPublic.data.rows];
-              channels.forEach((value) => {
-                const has = channels1.findIndex(
-                  (value1) => value1.uid === value.uid
-                );
-                if (has === -1) {
-                  channels1.push(value);
-                }
-              });
+              const search = keyWords || undefined;
+              // 本 studio 的（自己的 + 共享来的）与公开的，合并去重
+              const [mine, publicOnes] = await Promise.all([
+                studioId
+                  ? fetchStudioChannels(studioId, {
+                      relation: "all",
+                      search,
+                      per_page: 100,
+                    })
+                  : Promise.resolve({ data: [] as Channel[] }),
+                fetchPublicChannels({ search, per_page: 100 }),
+              ]);
+              const channels1: Channel[] = [];
+              [...(mine.data ?? []), ...(publicOnes.data ?? [])].forEach(
+                (value) => {
+                  if (!channels1.some((value1) => value1.id === value.id)) {
+                    channels1.push(value);
+                  }
+                },
+              );
 
               const channelList = channels1.map((item) => {
                 return {
-                  value: item.uid,
-                  label: `${item.studio.nickName}/${item.name}`,
+                  value: item.id ?? "",
+                  label: `${item.owner?.nickName}/${item.name}`,
                 };
               });
               console.debug("channelList", channelList);

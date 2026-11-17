@@ -27,7 +27,8 @@ const channelRoutes: RouteObject[] = [
         path: ":teamId",
         loader: groupLoader,
         handle: {
-          crumb: (match: { data: { name: string } }) => match.data.name,
+          crumb: (match: { data?: { name?: string } }) =>
+            match.data?.name ?? "",
         },
         children: [
           {

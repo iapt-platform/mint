@@ -1,0 +1,137 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-channels-editable.yaml
+get:
+  summary: '列出我能写的 channel'
+  tags:
+    - channels
+  operationId: get_api_v3_channels_editable
+  description: 实现：`V3\EditableChannelController@__invoke`
+  security:
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: per_page
+      in: query
+      schema:
+        type: integer
+        default: 20
+      description: '每页数量，最大 200'
+    -
+      name: search
+      in: query
+      schema:
+        type: string
+      description: 按名字模糊匹配
+    -
+      name: type
+      in: query
+      schema:
+        type: string
+        enum:
+          - translation
+          - nissaya
+          - original
+          - wbw
+          - commentary
+          - similar
+      description: 'channel 类型'
+    -
+      name: lang
+      in: query
+      schema:
+        type: string
+      description: 语言
+    -
+      name: book
+      in: query
+      schema:
+        type: integer
+      description: '章节所在的书（与 para 同时给）'
+    -
+      name: para
+      in: query
+      schema:
+        type: integer
+      description: '章节起始段（与 book 同时给）'
+    -
+      name: order
+      in: query
+      schema:
+        type: string
+        enum:
+          - updated_at
+          - created_at
+          - name
+          - progress
+        default: updated_at
+      description: 排序字段
+    -
+      name: dir
+      in: query
+      schema:
+        type: string
+        enum:
+          - asc
+          - desc
+        default: desc
+      description: 排序方向
+    -
+      name: page
+      in: query
+      schema:
+        type: integer
+        default: 1
+      description: 页码
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    summary:
+                      type: string
+                      nullable: true
+                    type:
+                      type: string
+                    lang:
+                      type: string
+                    status:
+                      type: integer
+                    is_system:
+                      type: boolean
+                    source_type:
+                      type: string
+                    source_id:
+                      type: string
+                      nullable: true
+                    owner:
+                      type: object
+                      properties: { kind: { type: string }, id: { type: string }, nickName: { type: string }, realName: { type: string }, avatar: { type: string, nullable: true } }
+                    abilities:
+                      type: object
+                      properties: { read: { type: boolean }, write: { type: boolean }, update: { type: boolean }, delete: { type: boolean } }
+                    progress:
+                      type: number
+                      nullable: true
+                      description: 仅在部分查询口径下返回。
+                    created_at:
+                      type: string
+                    updated_at:
+                      type: string
+              meta:
+                $ref: '../../main.yaml#/components/schemas/PaginationMeta'
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

@@ -253,7 +253,8 @@ function castToType(string $value, string $type): mixed
  *
  * 支持（Scribe 风格，位置固定）：
  *   @queryParam  name type [required] 描述。可在描述里写 Enum: a,b,c / Default: x / Example: y
- *   @bodyParam   name type [required] 描述
+ *   @bodyParam   name type [required] 描述。type 写成 `string|null` / `?string` 表示可传 null；
+ *                写成 `file` 表示上传文件，整个请求体按 multipart/form-data 生成
  *   @urlParam    name type [required] 描述
  *   @deprecated  弃用说明
  *   @unauthenticated       该端点无需登录，不挂 401
@@ -304,6 +305,9 @@ function parseDocTags(array $tagLines): array
             $required = true;
             $rest = trim(preg_replace('/^required\b\.?\s*/u', '', $rest));
         }
+        // 类型写成 `string|null`（或 `?string`）表示可以显式传 null，生成 nullable: true
+        $nullable = (bool) preg_match('/(^\?|\|null$|^null\|)/i', $type);
+        $type = preg_replace('/(^\?|\|null$|^null\|)/i', '', $type);
         $entry = [
             'in' => match ($tag) {
                 'queryParam' => 'query',
@@ -313,11 +317,15 @@ function parseDocTags(array $tagLines): array
             'type' => normalizeType($type),
             'required' => $required,
         ];
+        if ($nullable) {
+            $entry['nullable'] = true;
+        }
         if (preg_match('/\bEnum:\s*((?:(?!\bDefault:|\bExample:)[^.。\n])+)/u', $rest, $e)) {
             $entry['enum'] = array_values(array_filter(array_map('trim', explode(',', $e[1]))));
             $rest = trim(str_replace($e[0], '', $rest));
         }
-        if (preg_match('/\bDefault:\s*((?:(?!\bExample:)[^.。\n])+)/u', $rest, $d)) {
+        // 「.」后面紧跟数字时是小数点不是句号（Default: 0.8），不能在那里截断
+        if (preg_match('/\bDefault:\s*((?:(?!\bExample:)(?:[^.。\n]|\.(?=\d)))+)/u', $rest, $d)) {
             $entry['default'] = castToType(trim($d[1]), $entry['type']);
             $rest = trim(str_replace($d[0], '', $rest));
         }
@@ -350,6 +358,8 @@ function normalizeType(string $type): string
         'bool', 'boolean' => 'boolean',
         'array', 'string[]', 'int[]' => 'array',
         'object' => 'object',
+        // 上传的文件：请求体按 multipart/form-data 生成（见下方 requestBody）
+        'file' => 'file',
         default => 'string',
     };
 }
@@ -585,6 +595,54 @@ function shapeToProperties(string $inner): array
 }
 
 /** PHPDoc 类型 → OpenAPI schema */
+/**
+ * Resource 的 `@return array{...}` 里可以直接写的命名类型 → components.schemas 里的定义。
+ *
+ * 用于写不成 array{...} 的形状（递归的节点树）。名字就是 schema 名，前端从
+ * `components["schemas"]["名字"]` 取类型。
+ */
+const NAMED_SCHEMAS = [
+    // App\Services\Markup\Render\TreeRenderer 的输出：正文渲染后的节点树
+    'MarkupNode' => [
+        'description' => "正文（markdown + 模板）渲染后的节点树，由 App\\Services\\Markup 生成。\n" .
+            "三种节点：text 纯文本（前端作为 React 文本节点，自动转义）；el HTML 元素（tag 与 attrs 已过白名单）；\n" .
+            'tpl 模板（name 是前端组件名，props 随模板而定，props 里嵌套的内容也是节点数组）。',
+        'oneOf' => [
+            ['$ref' => '#/components/schemas/MarkupText'],
+            ['$ref' => '#/components/schemas/MarkupElement'],
+            ['$ref' => '#/components/schemas/MarkupTemplate'],
+        ],
+    ],
+    'MarkupText' => [
+        'type' => 'object',
+        'properties' => [
+            'type' => ['type' => 'string', 'enum' => ['text']],
+            'value' => ['type' => 'string'],
+        ],
+        'required' => ['type', 'value'],
+    ],
+    'MarkupElement' => [
+        'type' => 'object',
+        'properties' => [
+            'type' => ['type' => 'string', 'enum' => ['el']],
+            'tag' => ['type' => 'string', 'description' => '白名单内的 HTML 标签名（小写）'],
+            'attrs' => ['type' => 'object', 'additionalProperties' => ['type' => 'string']],
+            'children' => ['type' => 'array', 'items' => ['$ref' => '#/components/schemas/MarkupNode']],
+        ],
+        'required' => ['type', 'tag', 'children'],
+    ],
+    'MarkupTemplate' => [
+        'type' => 'object',
+        'properties' => [
+            'type' => ['type' => 'string', 'enum' => ['tpl']],
+            'name' => ['type' => 'string', 'description' => '前端组件名：term、note、sentread、sentedit、quote、quote-link、mermaid…'],
+            'props' => ['type' => 'object', 'additionalProperties' => true],
+            'children' => ['type' => 'array', 'items' => ['$ref' => '#/components/schemas/MarkupNode']],
+        ],
+        'required' => ['type', 'name', 'props', 'children'],
+    ],
+];
+
 function phpTypeToSchema(string $type): array
 {
     $type = trim($type);
@@ -619,6 +677,13 @@ function phpTypeToSchema(string $type): array
         $type = $concrete ? $concrete[0] : 'mixed';
     }
     $type = trim($type);
+
+    // 在 main.yaml components.schemas 里定义的命名 schema（如递归的 MarkupNode）
+    if (isset(NAMED_SCHEMAS[$type])) {
+        $schema = ['$ref' => '../../main.yaml#/components/schemas/' . $type];
+
+        return $nullable ? ['allOf' => [$schema], 'nullable' => true] : $schema;
+    }
 
     // 嵌套 array{...}
     if (preg_match('/^array\s*\{(.*)$/s', $type, $m)) {
@@ -855,11 +920,20 @@ function buildOperation(array $route, string $httpMethod): array
             $props[$name] = $schema;
         }
         // 文档注释里写明的字段最权威，覆盖推断结果
+        $multipart = false;
         foreach ($documented as $name => $doc) {
             if ($doc['in'] === 'path') {
                 continue;
             }
             $schema = ['type' => $doc['type']];
+            if ($doc['type'] === 'file') {
+                // `@bodyParam file file required …`：OpenAPI 3 里文件是 binary 字符串，整个请求体改成 multipart
+                $schema = ['type' => 'string', 'format' => 'binary'];
+                $multipart = true;
+            }
+            if (! empty($doc['nullable'])) {
+                $schema['nullable'] = true;
+            }
             if (! empty($doc['description'])) {
                 $schema['description'] = $doc['description'];
             }
@@ -885,7 +959,7 @@ function buildOperation(array $route, string $httpMethod): array
             }
             $op['requestBody'] = [
                 'required' => (bool) $required,
-                'content' => ['application/json' => ['schema' => $body]],
+                'content' => [($multipart ? 'multipart/form-data' : 'application/json') => ['schema' => $body]],
             ];
         }
     }
@@ -1156,7 +1230,7 @@ $main = [
                 ]]],
             ],
         ],
-        'schemas' => [
+        'schemas' => NAMED_SCHEMAS + [
             'ProblemDetails' => [
                 'type' => 'object',
                 'description' => "RFC 9457 Problem Details，v3 端点的错误响应体。\n" .

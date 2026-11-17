@@ -9,7 +9,7 @@ use Illuminate\Validation\Rule;
 /**
  * `POST /v3/discussions` 的入参：发起话题，或新建一条批注。
  *
- * 不收 content_type：v3 只写 markdown（v6 已没有 html 编辑器）。
+ * 不收 content_type：v3 一律按 markdown-e2 写（存 content_type_v2，见 Discussion::markWrittenByV3()）。
  * severity 的取值随 type 而定，见 {@see Discussion::SEVERITIES}；不收 severity 的类型传了就 422。
  *
  * 批注（note / commentary）与评论线程的规则不同：只能挂在句子上、标题可省、正文必填，

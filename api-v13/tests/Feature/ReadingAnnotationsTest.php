@@ -124,7 +124,7 @@ it('replaces a glossary anchor with a term reference', function () {
     makeAnchored($sentence->uid, 'glossary', ['title' => 'paṭhama', 'pos_start' => 0, 'pos_end' => 5, 'quote_exact' => 'first']);
 
     expect(readFirstParagraph($channel))
-        ->toContain("data-term='paṭhama'")
+        ->toContain('data-term="paṭhama"')   // 属性改为双引号（App\Services\Markup 的 html 输出）；阅读器按 DOM 读，不受影响
         ->toContain('>first</span> sentence');
 });
 

@@ -3,13 +3,13 @@ import TermList from "../../../components/term/TermList";
 import { useActiveStudio } from "../../../hooks/useActiveStudio";
 
 const Widget = () => {
-  const { studioName } = useActiveStudio();
+  const { studioId, studioName } = useActiveStudio();
   const intl = useIntl();
 
   return (
     <>
       <title>{intl.formatMessage({ id: "columns.studio.term.title" })}</title>
-      <TermList studioName={studioName} />
+      <TermList key={studioId} studioId={studioId} studioName={studioName} />
     </>
   );
 };

@@ -1,24 +1,16 @@
 import { useEffect, useState, type JSX } from "react";
-import {
-  App,
-  Button,
-  Modal,
-  Popover,
-  Skeleton,
-  Typography,
-  theme,
-} from "antd";
+import { Button, Modal, Popover, Skeleton, Typography, theme } from "antd";
 import { EditOutlined, ReloadOutlined } from "@ant-design/icons";
 import { Link } from "react-router";
 import { useIntl } from "react-intl";
 
-import { get } from "../../request";
 import { get as getLang } from "../../locales";
 
-import NissayaCardTable, { type INissayaRelation } from "./NissayaCardTable";
+import NissayaCardTable from "./NissayaCardTable";
 
-import type { ITerm } from "../../api/Term";
-import MdView from "../general/MdView";
+import { fetchNissayaCard, type NissayaCard } from "../../api/nissaya";
+import MarkupView from "../markup/MarkupView";
+import type { MarkupNode } from "../markup/types";
 import TermModal from "../term/TermModal";
 
 const { Paragraph, Title } = Typography;
@@ -26,17 +18,6 @@ const { Paragraph, Title } = Typography;
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
-
-interface INissayaCardData {
-  row: INissayaRelation[];
-  ending: ITerm;
-}
-
-interface INissayaCardResponse {
-  ok: boolean;
-  message: string;
-  data: INissayaCardData;
-}
 
 // ---------------------------------------------------------------------------
 // Public wrappers
@@ -59,7 +40,7 @@ export const NissayaCardPop = ({ text, trigger }: INissayaCardModal) => {
           <Link to={`/workspace/nissaya/ending/${text}`} target="_blank">
             {intl.formatMessage(
               { id: "buttons.open.in.new.tab" },
-              { item: "" }
+              { item: "" },
             )}
           </Link>
         </div>
@@ -118,11 +99,8 @@ const NissayaCardWidget = ({
   cache = false,
   hideEditButton = false,
 }: IWidgetProps) => {
-  // antd v6: use App.useApp() instead of static message/notification
-  const { message } = App.useApp();
-
-  const [cardData, setCardData] = useState<INissayaRelation[]>();
-  const [term, setTerm] = useState<ITerm>();
+  // v3 /nissaya-cards（取代 v2 nissaya-card）：失败由 unwrap 统一提示
+  const [card, setCard] = useState<NissayaCard>();
   const [loading, setLoading] = useState(false);
   // Incrementing this counter triggers a manual reload
   const [reloadTick, setReloadTick] = useState(0);
@@ -131,43 +109,30 @@ const NissayaCardWidget = ({
     if (!text) return;
 
     const uiLang = getLang();
-    const cacheKey = `nissaya-ending/${uiLang}/${text}`;
+    const cacheKey = `nissaya-card/${uiLang}/${text}`;
 
     // ── Cache hit (synchronous path) ────────────────────────────────────────
     if (cache) {
       const cached = sessionStorage.getItem(cacheKey);
       if (cached) {
-        const parsed: INissayaCardData = JSON.parse(cached);
-        setCardData(parsed.row);
-        setTerm(parsed.ending);
+        // 读缓存后在 effect 里同步 setState 是原有写法（改成惰性初始化要连同 text 变化一起处理）
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setCard(JSON.parse(cached) as NissayaCard);
         return; // no network request needed
       }
     }
 
     // ── Network request ─────────────────────────────────────────────────────
-    const url = `/api/v2/nissaya-card/${text}?lang=${uiLang}&content_type=json`;
-    console.debug("api request", url);
-
     let cancelled = false;
     setLoading(true);
 
-    get<INissayaCardResponse>(url)
-      .then((json) => {
-        if (cancelled) return;
-        console.debug("api response", json);
-
-        if (json.ok) {
-          setCardData(json.data.row);
-          setTerm(json.data.ending);
-          if (cache) {
-            sessionStorage.setItem(cacheKey, JSON.stringify(json.data));
-          }
-        } else {
-          message.error(json.message);
+    fetchNissayaCard(text, uiLang)
+      .then((data) => {
+        if (cancelled || !data) return;
+        setCard(data);
+        if (cache) {
+          sessionStorage.setItem(cacheKey, JSON.stringify(data));
         }
-      })
-      .catch((e: INissayaCardResponse) => {
-        if (!cancelled) message.error(e.message);
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
@@ -177,12 +142,11 @@ const NissayaCardWidget = ({
     return () => {
       cancelled = true;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cache, text, reloadTick]);
 
   const handleReload = () => {
     const uiLang = getLang();
-    sessionStorage.removeItem(`nissaya-ending/${uiLang}/${text}`);
+    sessionStorage.removeItem(`nissaya-card/${uiLang}/${text}`);
     setReloadTick((t) => t + 1);
   };
 
@@ -195,10 +159,10 @@ const NissayaCardWidget = ({
       {/* Header row */}
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <Title level={4}>
-          {term?.word}
-          {!hideEditButton && (
+          {card?.term?.word ?? card?.ending}
+          {!hideEditButton && card?.term?.id && (
             <TermModal
-              id={term?.id}
+              id={card.term.id}
               trigger={<Button type="link" icon={<EditOutlined />} />}
             />
           )}
@@ -207,9 +171,12 @@ const NissayaCardWidget = ({
         <Button type="link" icon={<ReloadOutlined />} onClick={handleReload} />
       </div>
 
-      <Paragraph>{term?.meaning}</Paragraph>
-      <MdView html={term?.html} />
-      {cardData && <NissayaCardTable data={cardData} />}
+      <Paragraph>{card?.term?.meaning}</Paragraph>
+      <MarkupView
+        className="pcd_article"
+        nodes={card?.term?.body as MarkupNode[] | undefined}
+      />
+      {card?.relations && <NissayaCardTable data={card.relations} />}
     </div>
   );
 };

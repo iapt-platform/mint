@@ -9,7 +9,7 @@ interface IQaCtl {
   resId?: string;
   resType?: TResType;
 }
-const QaCtl = ({ id, title, resType }: IQaCtl) => {
+export const QaCtl = ({ id, title, resType }: IQaCtl) => {
   return (
     <Collapse bordered={false}>
       <Collapse.Panel header={title} key="1">

@@ -144,7 +144,7 @@ class TipitakaReadingApi
      *
      * @throws \WikipaliApi\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \WikipaliApi\Model\GetApiV3TipitakaReadingChannel200Response|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails
+     * @return \WikipaliApi\Model\GetApiV3TipitakaReadingChannel200Response|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails
      */
     public function getApiV3TipitakaReadingChannel($channel, $book = null, $chapter = null, $para = null, $to = null, $after = null, $page_size = 10, $unit = 'para', $format = 'html', $include = 'display', string $contentType = self::contentTypes['getApiV3TipitakaReadingChannel'][0])
     {
@@ -171,7 +171,7 @@ class TipitakaReadingApi
      *
      * @throws \WikipaliApi\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \WikipaliApi\Model\GetApiV3TipitakaReadingChannel200Response|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \WikipaliApi\Model\GetApiV3TipitakaReadingChannel200Response|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails, HTTP status code, HTTP response headers (array of strings)
      */
     public function getApiV3TipitakaReadingChannelWithHttpInfo($channel, $book = null, $chapter = null, $para = null, $to = null, $after = null, $page_size = 10, $unit = 'para', $format = 'html', $include = 'display', string $contentType = self::contentTypes['getApiV3TipitakaReadingChannel'][0])
     {
@@ -204,6 +204,12 @@ class TipitakaReadingApi
                 case 200:
                     return $this->handleResponseWithDataType(
                         '\WikipaliApi\Model\GetApiV3TipitakaReadingChannel200Response',
+                        $request,
+                        $response,
+                    );
+                case 403:
+                    return $this->handleResponseWithDataType(
+                        '\WikipaliApi\Model\ProblemDetails',
                         $request,
                         $response,
                     );
@@ -247,6 +253,14 @@ class TipitakaReadingApi
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
                         '\WikipaliApi\Model\GetApiV3TipitakaReadingChannel200Response',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\WikipaliApi\Model\ProblemDetails',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);

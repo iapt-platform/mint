@@ -1,0 +1,7 @@
+# 手写补充：v2 术语词汇表已被 v3 取代（2026-11-17）。
+get:
+  deprecated: true
+  description: |
+    已被 `GET /v3/glossaries/{kind}` 取代：`view=grammar` → `/v3/glossaries/grammar`，`view=community` → `/v3/glossaries/community`，
+    `lang` 仍是查询参数（缺省按 `Accept-Language`，没有该语言的表时回退到 en，`meta.lang` 是实际用到的语言）。
+    `view=studio` / `user` 从未实现，不迁。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。

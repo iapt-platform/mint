@@ -11,13 +11,13 @@ import {
   ReloadOutlined,
 } from "@ant-design/icons";
 
-import type {
-  IApiResponseChannelList,
-  IChannel,
-  IChannelItem,
-  IProgressRequest,
+import {
+  fetchChannelProgress,
+  toChannelItem,
+  type IChannel,
+  type IChannelItem,
 } from "../../api/channel";
-import { post } from "../../../src/request";
+import { useActiveStudio } from "../../hooks/useActiveStudio";
 import { LockIcon } from "../../../src/assets/icon";
 
 import ProgressSvg from "./ProgressSvg";
@@ -58,6 +58,7 @@ const ChannelPickerTableWidget = ({
   const [copyChannel, setCopyChannel] = useState<IChannel>();
   const [copyOpen, setCopyOpen] = useState<boolean>(false);
   const [ownerChanged, setOwnerChanged] = useState<boolean>(false);
+  const { studioId } = useActiveStudio();
 
   const ref = useRef<ActionType | null>(null);
 
@@ -143,7 +144,7 @@ const ChannelPickerTableWidget = ({
                                 id: item.uid,
                                 name: item.title,
                               };
-                            })
+                            }),
                           );
                           setShowCheckBox(false);
                           ref.current?.reload();
@@ -183,58 +184,39 @@ const ChannelPickerTableWidget = ({
             setOwnerChanged(true);
           }
           console.log("owner", currOwner);
-          const res = await post<IProgressRequest, IApiResponseChannelList>(
-            `/api/v2/channel-progress`,
-            {
-              sentence: sentList,
-              owner: currOwner,
-            }
+          // 「我的」交给后端按 studio 过滤（团队空间里是团队）；「协作」「公开」在前端筛
+          const rows = await fetchChannelProgress(
+            sentList,
+            currOwner === "my" ? studioId : undefined,
           );
-          console.debug("progress data", res.data.rows);
-          const items: IChannelItem[] = res.data.rows
-            .filter((value) => value.name.substring(0, 4) !== "_Sys")
-            .map((item, id) => {
-              const date = new Date(item.created_at);
-              let all: number = 0;
-              let finished: number = 0;
-              item.final?.forEach((value) => {
-                all += value[0];
-                finished += value[1] ? value[0] : 0;
-              });
-              const progress = finished / all;
-              return {
-                id: id,
-                uid: item.uid,
-                title: item.name,
-                summary: item.summary,
-                studio: item.studio,
-                shareType: "my",
-                role: item.role,
-                type: item.type,
-                publicity: item.status,
-                createdAt: date.getTime(),
-                final: item.final,
-                progress: progress,
-              };
-            });
+          const items: IChannelItem[] = rows
+            .filter((row) =>
+              currOwner === "collaborator"
+                ? row.owner?.id !== studioId && row.abilities?.write
+                : currOwner === "public"
+                  ? (row.status ?? 0) >= 30
+                  : true,
+            )
+            .map(toChannelItem)
+            .filter((item): item is IChannelItem => item !== undefined);
           //当前被选择的
           const currChannel = items.filter((value) =>
-            selectedRowKeys.includes(value.uid)
+            selectedRowKeys.includes(value.uid),
           );
           let show = selectedRowKeys;
           //有进度的
           const progressing = items.filter(
-            (value) => value.progress > 0 && !show.includes(value.uid)
+            (value) => value.progress > 0 && !show.includes(value.uid),
           );
           show = [...show, ...progressing.map((item) => item.uid)];
           //我自己的
           const myChannel = items.filter(
-            (value) => value.role === "owner" && !show.includes(value.uid)
+            (value) => value.role === "owner" && !show.includes(value.uid),
           );
           show = [...show, ...myChannel.map((item) => item.uid)];
           //其他的
           const others = items.filter(
-            (value) => !show.includes(value.uid) && value.role !== "member"
+            (value) => !show.includes(value.uid) && value.role !== "member",
           );
           setSelectedRowKeys(selectedRowKeys);
           const channelData = [
@@ -244,8 +226,8 @@ const ChannelPickerTableWidget = ({
             ...others,
           ];
           return {
-            total: res.data.count,
-            succcess: true,
+            total: channelData.length,
+            success: true,
             data: channelData,
           };
         }}

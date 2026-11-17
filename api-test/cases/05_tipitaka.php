@@ -18,6 +18,24 @@ test('GET /v3/tipitaka-reading/{channel}?book=… → 200（带 total）', funct
     assert_has_key('total', $res['body']['meta'] ?? [], 'tipitaka-reading.meta.total');
 });
 
+test('GET /v3/tipitaka-reading/{channel}?format=react → 422（v2 的 react 格式不再提供）', function () {
+    $res = raw('GET', '/v3/tipitaka-reading/' . fixtures()['channel'], ['format' => 'react']);
+    assert_status(422, $res, 'tipitaka-reading format=react');
+    assert_field_error('format', $res, 'tipitaka-reading format=react');
+});
+
+test('GET /v3/tipitaka-reading/{channel}?book=…&format=text&include=sentences → 200，逐句纯文本不含 HTML', function () {
+    $res = raw('GET', '/v3/tipitaka-reading/' . fixtures()['channel'], ['book' => 65, 'page_size' => 2, 'format' => 'text', 'include' => 'sentences']);
+    assert_status(200, $res, 'tipitaka-reading text');
+    foreach ($res['body']['data'] ?? [] as $paragraph) {
+        foreach ($paragraph['sentences'] ?? [] as $sentence) {
+            if (preg_match('/<[a-z][^>]*>/i', (string) ($sentence['html'] ?? ''))) {
+                fail('tipitaka-reading text：句子里不应有 HTML 标签，html=' . $sentence['html']);
+            }
+        }
+    }
+});
+
 test('GET /v3/tipitaka-reading/{非 uuid} → 404', function () {
     $res = raw('GET', '/v3/tipitaka-reading/not-a-uuid');
     assert_status(404, $res, 'tipitaka-reading 非 uuid');

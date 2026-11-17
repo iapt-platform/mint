@@ -4,7 +4,10 @@ get:
   tags:
     - nissaya-card
   operationId: get_api_v2_nissaya_card_nissaya_card_
-  description: 实现：`NissayaCardController@show`
+  description: |
+    已被 `GET /v3/nissaya-cards/{ending}` 取代：只给结构化数据（不再有 mustache 渲染的 markdown 分支、写死的表头文字、拼好的 dashboard 链接），
+    术语批量查（v2 逐个格位查），词尾说明是新渲染器的节点树。字段：`row`→`relations`，`case`→`cases`，`local_relation`→`relation_label`，
+    `local_ending`（分号拼接）→`local_endings`（数组）。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
   parameters:
     -
       name: nissaya_card
@@ -41,6 +44,7 @@ get:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
       $ref: '../../main.yaml#/components/responses/ValidationError'
+  deprecated: true
 put:
   summary: '更新 nissaya-card/{nissaya_card}'
   tags:

@@ -19,7 +19,7 @@ interface IWidgetQuoteLinkCtl {
   chapter?: string;
   found: boolean;
 }
-const QuoteLinkCtl = ({
+export const QuoteLinkCtl = ({
   type,
   bookName,
   volume,

@@ -18,6 +18,8 @@ export interface IFirstAnthology {
   count: number;
 }
 export interface IArticleLayout {
+  /** 显示在标题上方（如术语的质量标签） */
+  preTitle?: ReactNode;
   title?: string;
   subTitle?: string;
   summary?: string | null;
@@ -39,6 +41,7 @@ export interface IArticleLayout {
 }
 
 const ArticleLayout = ({
+  preTitle,
   title = "",
   subTitle,
   summary,
@@ -70,6 +73,7 @@ const ArticleLayout = ({
             orientation="vertical"
             gap="middle"
           >
+            {preTitle}
             {!hideTitle && (
               <Title level={4}>
                 <div

@@ -21,7 +21,7 @@ import {
 // ─── 导入被测试的真实组件 ──────────────────────────────────────────────────────
 import TermModal from "./TermModal";
 import TermEdit from "./TermEdit";
-import type { ITermDataResponse } from "../../api/Term";
+import type { ITermDataResponse, Term } from "../../api/Term";
 import type { IChannel } from "../../api/channel";
 
 const { Title, Text, Paragraph } = Typography;
@@ -121,7 +121,7 @@ interface ILogEntry {
   time: string;
   scene: string;
   type: "onUpdate" | "onClose";
-  data?: ITermDataResponse;
+  data?: Term;
 }
 
 // ─── TermTest ─────────────────────────────────────────────────────────────────
@@ -134,11 +134,7 @@ const TermTest: React.FC = () => {
   // 日志
   const [logs, setLogs] = useState<ILogEntry[]>([]);
 
-  const pushLog = (
-    scene: string,
-    type: ILogEntry["type"],
-    data?: ITermDataResponse
-  ) => {
+  const pushLog = (scene: string, type: ILogEntry["type"], data?: Term) => {
     setLogs((prev) => [
       { time: new Date().toLocaleTimeString("zh-CN"), scene, type, data },
       ...prev.slice(0, 19),
@@ -148,17 +144,20 @@ const TermTest: React.FC = () => {
   // 场景三：词条列表（onUpdate 同步更新本地数据）
   const [terms, setTerms] = useState<ITermDataResponse[]>(MOCK_TERMS);
 
-  const handleTermUpdate = (scene: string) => (value: ITermDataResponse) => {
+  // 保存后返回的是 v3 的 Term，这里只把释义同步回演示用的假数据
+  const handleTermUpdate = (scene: string) => (value: Term) => {
     pushLog(scene, "onUpdate", value);
-    setTerms((prev) => {
-      const idx = prev.findIndex((t) => t.id === value.id);
-      if (idx >= 0) {
-        const next = [...prev];
-        next[idx] = value;
-        return next;
-      }
-      return [value, ...prev];
-    });
+    setTerms((prev) =>
+      prev.map((t) =>
+        t.guid === value.id
+          ? {
+              ...t,
+              meaning: value.meaning ?? t.meaning,
+              other_meaning: value.other_meaning ?? "",
+            }
+          : t,
+      ),
+    );
   };
 
   // 场景三：表格列

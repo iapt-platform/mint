@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\V3;
 
 use App\DTO\Search\HitItemDTO;
+use App\Http\Controllers\Concerns\ResolvesCurrentUser;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\V3\BaseResource;
 use App\Services\OpenSearchService;
+use App\Services\V3\ChannelAbilityService;
 use Illuminate\Http\Request;
 
 class SearchPlusController extends Controller
@@ -13,7 +15,15 @@ class SearchPlusController extends Controller
     /**
      * 构造函数，注入 OpenSearchService
      */
-    public function __construct(protected OpenSearchService $searchService) {}
+    use ResolvesCurrentUser;
+
+    /** 整章正文文档的 id：tipitaka_chapter_{book}-{para}_{channel uuid}，见 IndexTipitaka */
+    private const CHAPTER_DOC = '/^tipitaka_chapter_\d+-\d+_([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/i';
+
+    public function __construct(
+        protected OpenSearchService $searchService,
+        private readonly ChannelAbilityService $abilities,
+    ) {}
 
     /**
      * 全文检索
@@ -137,13 +147,21 @@ class SearchPlusController extends Controller
      *
      * 直接从 OpenSearch 按文档 id 取回，不走检索。取不到返回 404。
      *
+     * 整章正文文档（`tipitaka_chapter_{book}-{para}_{channel}`）按它所属 channel 判权限：
+     * 私有 channel 只有拥有者、团队成员、被共享的人能读（要带 token）。索引里收了所有 channel，
+     * 不在这里挡的话拼出 id 就能读到私有正文。
+     *
      * @unauthenticated
      *
      * @urlParam search string required OpenSearch 文档 id
+     *
+     * @responseStatus 403 整章正文所属的 channel 是私有的，且当前身份看不见
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        //
+        if (preg_match(self::CHAPTER_DOC, (string) $id, $m)) {
+            $this->abilities->assertReadable($m[1], $this->currentUserUid($request));
+        }
         try {
             return BaseResource::make(HitItemDTO::fromArray($this->searchService->get($id)));
         } catch (\Throwable $th) {

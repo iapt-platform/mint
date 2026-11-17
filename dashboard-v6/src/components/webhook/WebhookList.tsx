@@ -21,10 +21,9 @@ const { Text } = Typography;
 
 interface IWidget {
   channelId?: string;
-  studioName?: string;
 }
 
-const WebhookListWidget = ({ channelId, studioName }: IWidget) => {
+const WebhookListWidget = ({ channelId }: IWidget) => {
   const intl = useIntl();
   const navigate = useNavigate();
 
@@ -175,7 +174,7 @@ const WebhookListWidget = ({ channelId, studioName }: IWidget) => {
                   }}
                 >
                   <Link
-                    to={`/studio/${studioName}/channel/${channelId}/setting/webhooks/${row.id}`}
+                    to={`/workspace/channel/${channelId}/setting/webhooks/${row.id}`}
                   >
                     {intl.formatMessage({
                       id: "buttons.edit",
@@ -220,9 +219,7 @@ const WebhookListWidget = ({ channelId, studioName }: IWidget) => {
             icon={<PlusOutlined />}
             type="primary"
             onClick={() =>
-              navigate(
-                `/studio/${studioName}/channel/${channelId}/setting/webhooks/new`
-              )
+              navigate(`/workspace/channel/${channelId}/setting/webhooks/new`)
             }
           >
             {intl.formatMessage({ id: "buttons.create" })}

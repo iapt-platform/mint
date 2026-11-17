@@ -1,0 +1,475 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-terms-term.yaml
+get:
+  summary: 术语详情
+  tags:
+    - terms
+  operationId: get_api_v3_terms_term_
+  description: |-
+    带渲染后的「摘要 + 正文」（`body`）。channel 里的术语跟 channel 的可见性，studio 级的谁都能看。
+    响应带 `ETag` 头（与 `etag` 字段相同），修改时放进 `If-Match`。
+
+    实现：`V3\TermController@show`
+  security:
+    - {  }
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: term
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '术语 id（guid）'
+    -
+      name: channels
+      in: query
+      schema:
+        type: string
+      description: '正文按这些 channel 解析（句子、术语），逗号分隔，最多 20 个；只认你看得见的，不给就用术语所在 channel'
+    -
+      name: mode
+      in: query
+      schema:
+        type: string
+        enum:
+          - read
+          - edit
+        default: read
+      description: 正文模式
+    -
+      name: format
+      in: query
+      schema:
+        type: string
+        enum:
+          - tree
+          - html
+        default: tree
+      description: '正文格式：tree 给节点树 `body`，html 给 HTML 字符串 `html`（WebView 显示用）'
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  word:
+                    type: string
+                  tag:
+                    type: string
+                    nullable: true
+                  meaning:
+                    type: string
+                  other_meaning:
+                    type: string
+                    nullable: true
+                  language:
+                    type: string
+                  channel_id:
+                    type: string
+                    nullable: true
+                  channel:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      name: { type: string }
+                    nullable: true
+                  owner_id:
+                    type: string
+                  quality:
+                    type: string
+                    nullable: true
+                  content_type:
+                    type: string
+                  summary:
+                    type: string
+                    nullable: true
+                  note:
+                    type: string
+                    nullable: true
+                  redirect:
+                    type: string
+                    nullable: true
+                  categories:
+                    type: array
+                    items:
+                      type: string
+                  summary_text:
+                    type: string
+                  body:
+                    type: array
+                    items:
+                      $ref: '../../main.yaml#/components/schemas/MarkupNode'
+                    description: 仅在部分查询口径下返回。
+                  html:
+                    type: string
+                    description: 仅在部分查询口径下返回。
+                  editor:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string }
+                      roles: { type: array, items: { type: string } }
+                    nullable: true
+                  co_editor:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string }
+                      roles: { type: array, items: { type: string } }
+                    nullable: true
+                  etag:
+                    type: string
+                  abilities:
+                    type: object
+                    properties:
+                      update: { type: boolean }
+                      delete: { type: boolean }
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  deleted_at:
+                    type: string
+                    nullable: true
+    403:
+      description: '所在 channel 看不见'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'
+patch:
+  summary: 改术语
+  tags:
+    - terms
+  operationId: patch_api_v3_terms_term_
+  description: |-
+    只改传了的字段；word / tag 不能改（要改就新建一条，把旧的 redirect 过去）。必须带请求头
+    `If-Match`（取自详情的 `etag` / `ETag`）：不带 428，这条在你编辑期间被改过 412（响应里给出最新的 `etag`）。
+    分类从 note 的 `{{category|…}}` 重新抽取。channel 里的术语跟 channel 的写权限，studio 级的要团队 editor 以上。
+
+    实现：`V3\TermController@update`
+  security:
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: term
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '术语 id（guid）'
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            meaning:
+              type: string
+              description: 释义
+            other_meaning:
+              type: string
+              nullable: true
+              description: 其它释义
+            note:
+              type: string
+              nullable: true
+              description: 正文
+            summary:
+              type: string
+              nullable: true
+              description: '摘要，格式与 note 相同'
+            quality:
+              type: string
+              nullable: true
+              description: 质量
+              enum:
+                - featured
+                - standard
+                - draft
+                - pending
+            content_type:
+              type: string
+              description: 正文方言
+              enum:
+                - markdown
+                - markdown-e2
+            redirect:
+              type: string
+              nullable: true
+              description: '重定向到 word 或 word@tag'
+            language:
+              type: string
+              description: '语言（只有 studio 级术语能改）'
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  word:
+                    type: string
+                  tag:
+                    type: string
+                    nullable: true
+                  meaning:
+                    type: string
+                  other_meaning:
+                    type: string
+                    nullable: true
+                  language:
+                    type: string
+                  channel_id:
+                    type: string
+                    nullable: true
+                  channel:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      name: { type: string }
+                    nullable: true
+                  owner_id:
+                    type: string
+                  quality:
+                    type: string
+                    nullable: true
+                  content_type:
+                    type: string
+                  summary:
+                    type: string
+                    nullable: true
+                  note:
+                    type: string
+                    nullable: true
+                  redirect:
+                    type: string
+                    nullable: true
+                  categories:
+                    type: array
+                    items:
+                      type: string
+                  summary_text:
+                    type: string
+                  body:
+                    type: array
+                    items:
+                      $ref: '../../main.yaml#/components/schemas/MarkupNode'
+                    description: 仅在部分查询口径下返回。
+                  html:
+                    type: string
+                    description: 仅在部分查询口径下返回。
+                  editor:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string }
+                      roles: { type: array, items: { type: string } }
+                    nullable: true
+                  co_editor:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string }
+                      roles: { type: array, items: { type: string } }
+                    nullable: true
+                  etag:
+                    type: string
+                  abilities:
+                    type: object
+                    properties:
+                      update: { type: boolean }
+                      delete: { type: boolean }
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  deleted_at:
+                    type: string
+                    nullable: true
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    403:
+      description: 不能修改
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+    412:
+      description: 这条在你编辑期间被改过
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'
+    428:
+      description: '没带 If-Match'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+delete:
+  summary: 删术语
+  tags:
+    - terms
+  operationId: delete_api_v3_terms_term_
+  description: |-
+    软删除，返回被删的术语。拥有者本人或团队 owner 能删；AI 模型不能删。
+
+    实现：`V3\TermController@destroy`
+  security:
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: term
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '术语 id（guid）'
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  word:
+                    type: string
+                  tag:
+                    type: string
+                    nullable: true
+                  meaning:
+                    type: string
+                  other_meaning:
+                    type: string
+                    nullable: true
+                  language:
+                    type: string
+                  channel_id:
+                    type: string
+                    nullable: true
+                  channel:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      name: { type: string }
+                    nullable: true
+                  owner_id:
+                    type: string
+                  quality:
+                    type: string
+                    nullable: true
+                  content_type:
+                    type: string
+                  summary:
+                    type: string
+                    nullable: true
+                  note:
+                    type: string
+                    nullable: true
+                  redirect:
+                    type: string
+                    nullable: true
+                  categories:
+                    type: array
+                    items:
+                      type: string
+                  summary_text:
+                    type: string
+                  body:
+                    type: array
+                    items:
+                      $ref: '../../main.yaml#/components/schemas/MarkupNode'
+                    description: 仅在部分查询口径下返回。
+                  html:
+                    type: string
+                    description: 仅在部分查询口径下返回。
+                  editor:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string }
+                      roles: { type: array, items: { type: string } }
+                    nullable: true
+                  co_editor:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string }
+                      roles: { type: array, items: { type: string } }
+                    nullable: true
+                  etag:
+                    type: string
+                  abilities:
+                    type: object
+                    properties:
+                      update: { type: boolean }
+                      delete: { type: boolean }
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  deleted_at:
+                    type: string
+                    nullable: true
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    403:
+      description: 不能删除
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

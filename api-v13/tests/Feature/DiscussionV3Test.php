@@ -233,7 +233,8 @@ it('creates a topic', function () {
         ->assertJsonPath('data.severity', 'error')
         ->assertJsonPath('data.parent_id', null)
         ->assertJsonPath('data.reply_count', 0)
-        ->assertJsonPath('data.content_type', 'markdown');
+        // v3 写入一律是 markdown-e2（存 content_type_v2；content_type 列仍是 markdown）
+        ->assertJsonPath('data.content_type', 'markdown-e2');
 
     expect(Discussion::where('editor_uid', $user)->value('res_id'))->toBe($target);
 });
@@ -491,6 +492,21 @@ it('lets only the sentence manager create annotations, without notifying', funct
         ->assertJsonPath('data.title', null)
         ->assertJsonPath('data.pos_end', 4);
     Log::shouldNotHaveReceived('debug', fn (string $message) => $message === 'mq publish');
+});
+
+it('lets team editors and above, but not readers, annotate sentences in a team channel', function () {
+    [$team, $users] = makeTeam();
+    $target = makeTargetSentence($team);
+    $payload = ['target_type' => 'sentence', 'target_id' => $target, 'type' => 'note', 'content' => 'team note'];
+
+    foreach (['owner', 'manager', 'editor'] as $role) {
+        $this->postJson('/api/v3/discussions', $payload, authHeader($users[$role]))->assertCreated();
+    }
+    foreach (['reader', 'outsider'] as $role) {
+        $this->postJson('/api/v3/discussions', $payload, authHeader($users[$role]))->assertForbidden();
+    }
+    $this->getJson("/api/v3/discussions/summary?target_type=sentence&target_id={$target}", authHeader($users['editor']))
+        ->assertJsonPath('data.creatable_types', ['discussion', 'issue', 'glossary', 'note', 'commentary', 'assessment']);
 });
 
 it('validates annotation input', function () {

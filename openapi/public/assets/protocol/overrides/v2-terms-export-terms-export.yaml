@@ -1,0 +1,5 @@
+# 手写补充：v2 术语导出的下载步骤已不需要（v3 导出直接返回文件，2026-11-17）。
+get:
+  deprecated: true
+  description: |
+    v3 导出直接返回 xlsx（见 `GET /v3/channels/{channel}/terms` 的说明），没有这一步。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。

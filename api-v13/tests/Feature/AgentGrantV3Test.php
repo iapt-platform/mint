@@ -66,6 +66,26 @@ it('refuses to issue a grant without the right to do so', function () {
         ->assertStatus(422)->assertJsonValidationErrors('target_type');
 });
 
+it('lets a team editor grant a model on a team channel, but not a reader', function () {
+    [$team, $users] = makeTeam();
+    $channel = makeChannel($team);
+    $sentence = makeSentence($channel, 1, 1, 1, 'text')->uid;
+
+    $model = AiModel::factory()->ownedBy($users['editor'])->create();
+    $grant = grantFor($users['editor'], $model, $channel);
+    $this->postJson('/api/v3/discussions', [
+        'target_type' => 'sentence', 'target_id' => $sentence, 'type' => 'note', 'content' => 'by agent',
+    ], modelHeader($model, $grant))
+        ->assertCreated()
+        ->assertJsonPath('data.editor.id', $users['editor'])
+        ->assertJsonPath('data.co_editor.id', $model->uid);
+
+    $readerModel = AiModel::factory()->ownedBy($users['reader'])->create();
+    $this->postJson('/api/v3/agent-grants', [
+        'ai_model' => $readerModel->uid, 'target_type' => 'channel', 'target_id' => $channel,
+    ], authHeader($users['reader']))->assertForbidden();
+});
+
 /* ------------------------------------------------------------------ 代写 */
 
 it('records the grantor as editor and the model as co-editor', function () {

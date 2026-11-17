@@ -111,6 +111,13 @@ it('validates new teams', function (array $payload, string $field) {
     'bad status' => [['name' => 'x', 'status' => 20], 'status'],
 ]);
 
+it('does not let AI models create a team', function () {
+    $model = makeModelAccount(makeStudio('owner'));
+
+    $this->postJson('/api/v3/groups', ['name' => 'model team'], authHeader($model))->assertForbidden();
+    expect(GroupInfo::where('owner', $model)->exists())->toBeFalse();
+});
+
 it('requires login to create a team', function () {
     $this->postJson('/api/v3/groups', ['name' => 'x'])->assertUnauthorized();
 });

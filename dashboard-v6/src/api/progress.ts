@@ -1,31 +1,5 @@
 import type { IStudio } from "./Auth";
-import type { TChannelType } from "./channel";
 import type { TagNode } from "./tag";
-
-export interface IApiResponseChannelListData {
-  channel_id: string;
-  count: number;
-  channel: {
-    id: number;
-    type: TChannelType;
-    owner_uid: string;
-    editor_id: number;
-    name: string;
-    summary: string;
-    lang: string;
-    status: number;
-    setting: string;
-    created_at: string;
-    updated_at: string;
-    uid: string;
-  };
-  studio: IStudio;
-}
-export interface IApiResponseChannelList {
-  ok: boolean;
-  message: string;
-  data: { rows: IApiResponseChannelListData[]; count: number };
-}
 
 //=========
 

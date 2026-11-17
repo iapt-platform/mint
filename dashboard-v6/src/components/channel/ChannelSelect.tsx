@@ -1,10 +1,8 @@
 import { ProFormCascader } from "@ant-design/pro-components";
-import { message } from "antd";
 import { useAppSelector } from "../../../src/hooks";
 import { currentUser } from "../../../src/reducers/current-user";
 
-import { get } from "../../../src/request";
-import type { IApiResponseChannelList } from "../../api/channel";
+import { fetchEditableChannels } from "../../api/channel";
 
 import { useIntl } from "react-intl";
 import type { IStudio } from "../../../src/api/Auth";
@@ -50,17 +48,21 @@ const ChannelSelectWidget = ({
       placeholder={placeholder}
       request={async ({ keyWords }) => {
         console.debug("keyWord", keyWords);
-        const url = `/api/v2/channel?view=user-edit&key=${keyWords}`;
-        console.info("ChannelSelect api request", url);
-        const json = await get<IApiResponseChannelList>(url);
-        console.debug("ChannelSelect api response", json);
-        if (json.ok) {
+        // 我能写的 channel（本人的、团队的、共享权限 ≥20 的）。v2 这里传 key、后端读 search，搜索一直没生效
+        const rows =
+          (
+            await fetchEditableChannels({
+              search: keyWords || undefined,
+              per_page: 200,
+            })
+          ).data ?? [];
+        {
           //获取studio list
           const studio = new Map<string, string>();
-          for (const iterator of json.data.rows) {
+          for (const iterator of rows) {
             studio.set(
-              iterator.studio.id,
-              iterator.studio.nickName ? iterator.studio.nickName : ""
+              iterator.owner?.id ?? "",
+              iterator.owner?.nickName ?? "",
             );
           }
           let channels: IOption[] = [];
@@ -85,10 +87,14 @@ const ChannelSelectWidget = ({
             channels.push({
               value: user.id,
               label: user.realName,
-              children: json.data.rows
-                .filter((value) => value.studio.id === user.id)
+              children: rows
+                .filter((value) => value.owner?.id === user.id)
                 .map((item) => {
-                  return { value: item.uid, label: item.name, lang: item.lang };
+                  return {
+                    value: item.id ?? "",
+                    label: item.name ?? "",
+                    lang: item.lang,
+                  };
                 }),
             });
           }
@@ -100,19 +106,19 @@ const ChannelSelectWidget = ({
 
           const others: IOption[] = arrStudio
             .sort((a, b) =>
-              a.nickName && b.nickName ? (a.nickName > b.nickName ? 1 : -1) : 0
+              a.nickName && b.nickName ? (a.nickName > b.nickName ? 1 : -1) : 0,
             )
             .filter((value) => value.id !== user?.id)
             .map((item) => {
               const node = {
                 value: item.id,
                 label: item.nickName,
-                children: json.data.rows
-                  .filter((value) => value.studio.id === item.id)
+                children: rows
+                  .filter((value) => value.owner?.id === item.id)
                   .map((item) => {
                     return {
-                      value: item.uid,
-                      label: item.name,
+                      value: item.id ?? "",
+                      label: item.name ?? "",
                       lang: item.lang,
                     };
                   }),
@@ -121,11 +127,7 @@ const ChannelSelectWidget = ({
             });
           channels = [...channels, ...others];
 
-          console.debug("ChannelSelect json", channels);
           return channels;
-        } else {
-          message.error(json.message);
-          return [];
         }
       }}
       fieldProps={{}}

@@ -4,15 +4,12 @@ namespace App\Services\V3;
 
 use App\Facades\RedisCache;
 use App\Models\GroupInfo;
-use App\Models\GroupMember;
 use App\Models\ProgressChapter;
-use App\Models\Share;
 use App\Models\View;
 use App\Services\UserService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 
 /**
  * 某一章有哪些 channel（译本 / 逐词 / 原文……）及各自的完成度。
@@ -21,19 +18,16 @@ use Illuminate\Support\Str;
  * 原样保留、不共用（CLAUDE.md 铁律 2）。v3 端点用 {@see self::list()}，Laravel library 的
  * 作品版本页用 {@see self::all()}（经 `TipitakaCatalogService::workChannels()`）。与 v2 的差别：
  *
- * - **只列看得见的 channel**：公开的（status=30），加上登录用户自己的、共享给他（或他所在
- *   群组）的。v2 不判断可见性，私有 channel 的名字与进度对所有人可见。
+ * - **只列看得见的 channel**：判定见 {@see ChannelAbilityService::scopeListable()}（公开的，加上登录用户
+ *   自己的、所在团队名下的、共享给他或他所在团队的）。v2 不判断可见性，私有 channel 的名字与进度对所有人可见。
  * - 不再返回 likes（前端没用）；views、studio 改成整页批量取，查询数与行数无关。
  */
 class TipitakaChapterChannelService
 {
-    /** channels.status：全网公开 */
-    private const STATUS_PUBLIC = 30;
-
-    /** shares.res_type：channel */
-    private const SHARE_CHANNEL = 2;
-
-    public function __construct(private readonly UserService $users) {}
+    public function __construct(
+        private readonly UserService $users,
+        private readonly ChannelAbilityService $abilities,
+    ) {}
 
     /**
      * 列出一章的 channel，按完成度从高到低（分页，给 v3 端点）。
@@ -92,7 +86,12 @@ class TipitakaChapterChannelService
             ->join('channels', 'progress_chapters.channel_id', '=', 'channels.uid')
             ->where('progress_chapters.book', $book)
             ->where('progress_chapters.para', $para)
-            ->where(fn (Builder $q) => $this->readableBy($q, $viewerUid))
+            // 软删的 channel 不列（join 绕过了模型的软删作用域）
+            ->whereNull('channels.deleted_at')
+            // 版本列表不列系统 channel（巴利原文、系统逐词，每章都有）：它们对谁都可读，
+            // 不排除的话每章都会多出这两行；与 2026-11 迁移后 v3 一直以来的输出保持一致
+            ->where('channels.is_system', false)
+            ->where(fn (Builder $q) => $this->abilities->scopeListable($q, $viewerUid))
             ->orderByDesc('progress_chapters.progress')
             // 完成度相同时要稳定的 tiebreaker，否则跨页会漂移
             ->orderBy('progress_chapters.channel_id');
@@ -114,31 +113,6 @@ class TipitakaChapterChannelService
             $row->setAttribute('progress_line', RedisCache::get(
                 "/chapter_dynamic/{$row->book}/{$row->para}/ch_{$row->channel_id}"
             ));
-        }
-    }
-
-    /**
-     * 可见性：公开的，或（登录时）自己的、共享给自己或自己所在群组的。
-     */
-    private function readableBy(Builder $query, ?string $viewerUid): void
-    {
-        $query->where('channels.status', self::STATUS_PUBLIC);
-        if ($viewerUid === null) {
-            return;
-        }
-
-        $query->orWhere('channels.owner_uid', $viewerUid);
-
-        $cooperators = GroupMember::where('user_id', $viewerUid)->pluck('group_id')->push($viewerUid);
-        $shared = Share::whereIn('cooperator_id', $cooperators)
-            ->where('res_type', self::SHARE_CHANNEL)
-            ->pluck('res_id')
-            // shares.res_id 是 varchar，channels.uid 是 uuid；非法值进了 where 会让 pgsql 报错
-            ->filter(fn ($id) => Str::isUuid($id))
-            ->unique()
-            ->values();
-        if ($shared->isNotEmpty()) {
-            $query->orWhereIn('channels.uid', $shared);
         }
     }
 

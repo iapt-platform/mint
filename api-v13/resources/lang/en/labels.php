@@ -7,6 +7,8 @@ return [
     'nissaya' => 'Nissaya',
     'commentary' => 'Commentary',
     'similar' => 'Parallels',
+    'toc' => 'Contents',
+    'references' => 'References',
 
     'script_convertor' => 'Pāli Script Converter',
     'input_script' => 'Input Script',

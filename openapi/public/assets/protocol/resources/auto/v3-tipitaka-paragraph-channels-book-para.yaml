@@ -1,0 +1,94 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-tipitaka-paragraph-channels-book-para.yaml
+get:
+  summary: '列出某段有内容的 channel'
+  tags:
+    - tipitaka-paragraph-channels
+  operationId: get_api_v3_tipitaka_paragraph_channels_book_para_
+  description: |-
+    最近更新的在前。不登录只看得到公开的。
+
+    实现：`V3\TipitakaParagraphChannelController@__invoke`
+  security:
+    - {  }
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: book
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: 书
+    -
+      name: para
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: 段
+    -
+      name: per_page
+      in: query
+      schema:
+        type: integer
+        default: 100
+      description: '每页数量，最大 200'
+    -
+      name: page
+      in: query
+      schema:
+        type: integer
+        default: 1
+      description: 页码
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    summary:
+                      type: string
+                      nullable: true
+                    type:
+                      type: string
+                    lang:
+                      type: string
+                    status:
+                      type: integer
+                    is_system:
+                      type: boolean
+                    source_type:
+                      type: string
+                    source_id:
+                      type: string
+                      nullable: true
+                    owner:
+                      type: object
+                      properties: { kind: { type: string }, id: { type: string }, nickName: { type: string }, realName: { type: string }, avatar: { type: string, nullable: true } }
+                    abilities:
+                      type: object
+                      properties: { read: { type: boolean }, write: { type: boolean }, update: { type: boolean }, delete: { type: boolean } }
+                    progress:
+                      type: number
+                      nullable: true
+                      description: 仅在部分查询口径下返回。
+                    created_at:
+                      type: string
+                    updated_at:
+                      type: string
+              meta:
+                $ref: '../../main.yaml#/components/schemas/PaginationMeta'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

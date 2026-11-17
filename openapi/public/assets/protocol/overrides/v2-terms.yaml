@@ -1,0 +1,16 @@
+# 手写补充：v2 术语列表与新建已被 v3 取代（2026-11-17）。
+get:
+  deprecated: true
+  description: |
+    各 view 的去向：
+    - `channel` → `GET /v3/channels/{channel}/terms`
+    - `studio` / `user` → `GET /v3/studios/{studio}/terms`（`{studio}` 一律 uuid；`general=true` 只要 studio 级术语）
+    - `word` → `GET /v3/terms?word=`（只列看得见的；`with_body=true` 带渲染后的正文）
+    - `create-by-channel` 不迁：v6 改为「按词查 + channel 详情」两次调用
+    - `show`、`tag`、`hot-meaning` 没有消费者，不迁
+    保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
+post:
+  deprecated: true
+  description: |
+    已被取代：带 channel 的 → `POST /v3/channels/{channel}/terms`；studio 级（不带 channel）→ `POST /v3/studios/{studio}/terms`。
+    v3 的 AI 代写走 `X-Agent-Grant` 请求头，不再收 body 里的 `access_token`。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。

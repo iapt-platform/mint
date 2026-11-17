@@ -16,15 +16,17 @@ const QUALITY_COLORS: Record<string, string> = {
 
 interface IQualityCtl {
   value?: string;
+  /** 显示的文字，默认显示取值本身 */
+  label?: string;
 }
 
 /**
  * 渲染单个质量标签
  * 非法取值回退为默认的 pending，保证样式始终可预期
  */
-const QualityCtl = ({ value = "pending" }: IQualityCtl) => {
+export const QualityCtl = ({ value = "pending", label }: IQualityCtl) => {
   const color = QUALITY_COLORS[value] ?? QUALITY_COLORS.pending;
-  return <Tag color={color}>{value}</Tag>;
+  return <Tag color={color}>{label ?? value}</Tag>;
 };
 
 interface IWidget {

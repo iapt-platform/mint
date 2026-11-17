@@ -5,12 +5,11 @@ import {
   TranslationOutlined,
 } from "@ant-design/icons";
 
-import type { ITerm, ITermDataResponse } from "../../api/Term";
+import type { ITerm, Term } from "../../api/Term";
 
 import TimeShow from "../general/TimeShow";
 import TermModal from "./TermModal";
 import { useEffect, useState } from "react";
-import StudioName from "../auth/Studio";
 import { Link, useNavigate } from "react-router";
 import { useAppSelector } from "../../hooks";
 import { click, clickedTerm } from "../../reducers/term-click";
@@ -19,13 +18,14 @@ import "../article/article.css";
 import Discussion from "../discussion/Discussion";
 import { useIntl } from "react-intl";
 import User from "../auth/User";
-import MdView from "../general/MdView";
+import MarkupView from "../markup/MarkupView";
+import type { MarkupNode } from "../markup/types";
 import { articlePath } from "../../utils";
 
 const { Text } = Typography;
 
 interface IWidget {
-  data?: ITermDataResponse;
+  data?: Term;
   onTermClick?: (clicked: ITerm) => void;
 }
 const TermItemWidget = ({ data, onTermClick }: IWidget) => {
@@ -40,7 +40,7 @@ const TermItemWidget = ({ data, onTermClick }: IWidget) => {
     if (!termClicked) {
       return;
     }
-    if (termClicked?.channelId === data?.channel?.id) {
+    if (termClicked?.channelId === (data?.channel_id ?? undefined)) {
       store.dispatch(click(null));
       onTermClick?.(termClicked);
     }
@@ -53,20 +53,19 @@ const TermItemWidget = ({ data, onTermClick }: IWidget) => {
         title={
           <Space orientation="vertical" size={3}>
             <Space>
-              <Link to={`/term/show/${data?.guid}`}>
+              <Link to={`/term/show/${data?.id}`}>
                 <Text strong>{data?.meaning}</Text>
               </Link>
               <Text type="secondary">{data?.other_meaning}</Text>
             </Space>
             <Space style={{ fontSize: "80%" }}>
-              <StudioName data={data?.studio} />
               {data?.channel
                 ? data.channel.name
                 : intl.formatMessage({
                     id: "term.general-in-studio",
                   })}
               <Text type="secondary">
-                <User {...data?.editor} showAvatar={false} />
+                <User {...(data?.editor ?? {})} showAvatar={false} />
               </Text>
               <TimeShow type="secondary" updatedAt={data?.updated_at} />
             </Space>
@@ -96,7 +95,7 @@ const TermItemWidget = ({ data, onTermClick }: IWidget) => {
                     setOpenTermModal(true);
                     break;
                   case "translate":
-                    navigate(articlePath("term", data?.guid ?? ""));
+                    navigate(articlePath("term", data?.id ?? ""));
                     break;
                   default:
                     break;
@@ -114,10 +113,10 @@ const TermItemWidget = ({ data, onTermClick }: IWidget) => {
         }
       >
         <div className="pcd_article">
-          <MdView html={data?.html} />
+          <MarkupView nodes={data?.body as MarkupNode[] | undefined} />
         </div>
         {showDiscussion ? (
-          <Discussion resType="term" resId={data?.guid} />
+          <Discussion resType="term" resId={data?.id} />
         ) : (
           <div style={{ textAlign: "right" }}>
             <Button type="link" onClick={() => setShowDiscussion(true)}>
@@ -127,7 +126,7 @@ const TermItemWidget = ({ data, onTermClick }: IWidget) => {
         )}
       </Card>
       <TermModal
-        id={data?.guid}
+        id={data?.id}
         open={openTermModal}
         onClose={() => setOpenTermModal(false)}
       />

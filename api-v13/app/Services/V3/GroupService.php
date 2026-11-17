@@ -64,7 +64,10 @@ class GroupService
         'sent_block' => [SentBlock::class, 'owner_uid'],
     ];
 
-    public function __construct(private readonly GroupAbilityService $abilities) {}
+    public function __construct(
+        private readonly GroupAbilityService $abilities,
+        private readonly AgentGrantService $agents,
+    ) {}
 
     /**
      * 按名字搜公开团队（共享资源时挑团队用）。私有团队不出现。
@@ -105,6 +108,8 @@ class GroupService
      */
     public function create(string $userUid, array $data): GroupInfo
     {
+        // 团队是权限本身，不支持 AI 模型代建（模型从来不是任何团队的成员，改、删本来就过不了）
+        $this->agents->assertHuman($userUid);
         $this->guardUniqueName($userUid, $data['name']);
 
         $group = DB::transaction(function () use ($userUid, $data) {

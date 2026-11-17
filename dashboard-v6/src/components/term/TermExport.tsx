@@ -1,65 +1,39 @@
 import { useState } from "react";
 import { useIntl } from "react-intl";
-import { Button, message } from "antd";
+import { Button } from "antd";
 import { ExportOutlined } from "@ant-design/icons";
-import modal from "antd/lib/modal";
 
-import { get } from "../../request";
+import { exportTerms, type TermExchangeTarget } from "../../api/Term";
 
-interface IExportResponse {
-  ok: boolean;
-  message: string;
-  data: {
-    uuid: string;
-    filename: string;
-    type: string;
-  };
-}
 interface IWidget {
-  channelId?: string;
-  studioName?: string;
+  target?: TermExchangeTarget;
 }
-const TermExportWidget = ({ channelId, studioName }: IWidget) => {
+
+/** 导出术语为 xlsx（v3：列表接口带 Accept: xlsx，直接下载，取代 v2 terms-export 的两步下载） */
+const TermExportWidget = ({ target }: IWidget) => {
   const intl = useIntl();
   const [loading, setLoading] = useState(false);
   return (
     <Button
       loading={loading}
+      disabled={!target}
       icon={<ExportOutlined />}
-      onClick={() => {
-        let url = `/api/v2/terms-export?view=`;
-        if (typeof channelId !== "undefined") {
-          url += `channel&id=${channelId}`;
-        } else if (typeof studioName !== "undefined") {
-          url += `studio&name=${studioName}`;
+      onClick={async () => {
+        if (!target) {
+          return;
         }
         setLoading(true);
-        get<IExportResponse>(url)
-          .then((json) => {
-            if (json.ok) {
-              const link = `${import.meta.env.BASE_URL}/api/api/v2/terms-export/${json.data.uuid}`;
-              modal.info({
-                title: intl.formatMessage({ id: "buttons.download" }),
-                content: (
-                  <>
-                    <a
-                      href={link}
-                      target="_blank"
-                      key="export"
-                      rel="noreferrer"
-                    >
-                      {intl.formatMessage({ id: "buttons.download.link" })}
-                    </a>
-                  </>
-                ),
-              });
-            } else {
-              message.error(json.message);
-            }
-          })
-          .finally(() => {
-            setLoading(false);
-          });
+        try {
+          const blob = await exportTerms(target);
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = "terms.xlsx";
+          link.click();
+          URL.revokeObjectURL(url);
+        } finally {
+          setLoading(false);
+        }
       }}
     >
       {intl.formatMessage({ id: "buttons.export" })}
