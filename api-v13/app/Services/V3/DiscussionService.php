@@ -3,7 +3,6 @@
 namespace App\Services\V3;
 
 use App\Exceptions\BusinessException;
-use App\Http\Api\ChannelApi;
 use App\Http\Api\MdRender;
 use App\Http\Api\Mq;
 use App\Http\Api\ShareApi;
@@ -89,6 +88,7 @@ class DiscussionService
         private readonly UserService $users,
         private readonly AgentGrantService $grants,
         private readonly TipitakaReadingService $reading,
+        private readonly ChannelAbilityService $channels,
     ) {}
 
     /**
@@ -874,11 +874,13 @@ class DiscussionService
     }
 
     /**
+     * 能写内容的 channel：本人的、本人是团队 editor 及以上的团队名下的、共享权限 ≥20 的。
+     *
      * @return array<int, string>
      */
     private function editableChannels(string $userUid): array
     {
-        return $this->editableChannels[$userUid] ??= ChannelApi::getCanEditByUser($userUid);
+        return $this->editableChannels[$userUid] ??= $this->channels->writableUids($userUid);
     }
 
     /**

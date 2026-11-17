@@ -120,6 +120,31 @@ class ChannelAbilityService
     }
 
     /**
+     * 能不能往某个 channel 写内容（句子、批注等）。channel 不存在或已软删按不能写。
+     */
+    public function canWrite(string $channelUid, string $userUid): bool
+    {
+        $channel = Channel::query()
+            ->where('uid', $channelUid)
+            ->first(['uid', 'owner_uid', 'status', 'is_system']);
+
+        return $channel !== null && $this->abilities($channel, $userUid)['write'];
+    }
+
+    /**
+     * 本人能写内容的全部 channel uid（{@see self::scopeWritable()} 的结果）。
+     *
+     * @return list<string>
+     */
+    public function writableUids(string $userUid): array
+    {
+        $query = Channel::query();
+        $this->scopeWritable($query, $userUid);
+
+        return $query->pluck('uid')->map(fn ($uid) => (string) $uid)->all();
+    }
+
+    /**
      * 能不能在某个 studio（本人或团队）名下新建 channel。
      */
     public function canCreateIn(string $userUid, string $studioUid): bool

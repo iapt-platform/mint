@@ -493,6 +493,21 @@ it('lets only the sentence manager create annotations, without notifying', funct
     Log::shouldNotHaveReceived('debug', fn (string $message) => $message === 'mq publish');
 });
 
+it('lets team editors and above, but not readers, annotate sentences in a team channel', function () {
+    [$team, $users] = makeTeam();
+    $target = makeTargetSentence($team);
+    $payload = ['target_type' => 'sentence', 'target_id' => $target, 'type' => 'note', 'content' => 'team note'];
+
+    foreach (['owner', 'manager', 'editor'] as $role) {
+        $this->postJson('/api/v3/discussions', $payload, authHeader($users[$role]))->assertCreated();
+    }
+    foreach (['reader', 'outsider'] as $role) {
+        $this->postJson('/api/v3/discussions', $payload, authHeader($users[$role]))->assertForbidden();
+    }
+    $this->getJson("/api/v3/discussions/summary?target_type=sentence&target_id={$target}", authHeader($users['editor']))
+        ->assertJsonPath('data.creatable_types', ['discussion', 'issue', 'glossary', 'note', 'commentary', 'assessment']);
+});
+
 it('validates annotation input', function () {
     $owner = makeStudio('owner');
     $target = makeTargetSentence($owner);
