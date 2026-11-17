@@ -9,13 +9,14 @@ use App\Services\Markup\Ir\Element;
 use App\Services\Markup\Ir\Node;
 use App\Services\Markup\Render\HtmlRenderer;
 use App\Services\Markup\Render\RenderContext;
+use App\Services\Markup\Templates\Concerns\OwnsBlockTitle;
 
 /**
  * 目录：`{{toc}}`，从本篇内容的标题自动生成，每项链接到对应标题（`#h-…`，IR 构建时生成的稳定 id）。
  *
  * - 层级：缺省收二、三级标题；`{{toc|2-4}}`、`{{toc|2}}` 指定
- * - 标题：目录自带一行标题（不是 `<h2>`，不算正文的一节），文字随内容语言（labels.toc）；
- *   `{{toc|title=本条目录}}` 改文字，`{{toc|title=}}` 不显示
+ * - 标题：目录自带一行标题，规则见 {@see OwnsBlockTitle}（labels.toc；`title=` 改文字或隐藏；
+ *   紧跟在手写标题后面时不显示）
  * - 兼容旧写法：紧挨在 `{{toc}}` 前面的标题（手写的「## 目录」）不进目录
  * - 遍历整篇内容，写在哪里都能列全；标题里的术语、格式在目录里照常显示
  *
@@ -23,6 +24,8 @@ use App\Services\Markup\Render\RenderContext;
  */
 final class TocTemplate extends Template
 {
+    use OwnsBlockTitle;
+
     protected string $component = 'toc';
 
     public function block(): bool
@@ -49,17 +52,9 @@ final class TocTemplate extends Template
         return [min($from, $to), max($from, $to)];
     }
 
-    /**
-     * 目录标题；写了 `title=`（哪怕为空）就用写的，否则按内容语言取默认文字。
-     */
     private function title(Call $call, RenderContext $ctx): string
     {
-        if (array_key_exists('title', $call->params->named)) {
-            return trim($call->params->named['title']);
-        }
-
-        // 语言目录与 channel 的语言代码同名（zh-Hans、en…），没有对应文件时回退 en
-        return (string) __('labels.toc', [], $ctx->lang($call->scope));
+        return $this->blockTitle($call, $ctx, 'labels.toc');
     }
 
     /**

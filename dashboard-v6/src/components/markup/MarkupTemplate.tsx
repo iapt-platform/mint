@@ -50,7 +50,15 @@ const TEMPLATES: Record<string, TemplateRenderer> = {
   grammar: (p) => (
     <GrammarTermLookupCtl {...as<typeof GrammarTermLookupCtl>(p)} />
   ),
-  reference: (p) => <ReferenceCtl {...as<typeof ReferenceCtl>(p)} />,
+  // 参考文献：与目录一样自带一行标题（紧跟在手写标题后面时后端不给 title）
+  reference: (p) => (
+    <div className="markup-references">
+      {typeof p.title === "string" && p.title !== "" ? (
+        <Text strong>{p.title}</Text>
+      ) : null}
+      <ReferenceCtl {...as<typeof ReferenceCtl>(p)} />
+    </div>
+  ),
   para: (p) => <ParaCtl {...as<typeof ParaCtl>(p)} />,
   quality: (p) => <QualityCtl {...as<typeof QualityCtl>(p)} />,
   article: (p) => <ArticleCtl {...as<typeof ArticleCtl>(p)} />,

@@ -660,6 +660,9 @@ describe('toc', function () {
     it('skips a hand-written heading right before it', function () use ($toc, $items) {
         $tree = markupTree("## 目录\n\n{{toc}}\n\n## 甲\n\n## 乙");
         expect(array_column($items($toc($tree)['children'][0]), 2))->toBe(['甲', '乙']);
+        // 已经有手写标题，不再显示第二个
+        expect($toc($tree)['props'])->toBe([]);
+        expect(markupRender("## 目录\n\n{{toc}}\n\n## 甲", Format::Html))->not->toContain('toc-title');
     });
 
     it('accepts a level range or a single level', function () use ($source, $toc, $items) {

@@ -367,6 +367,28 @@ describe('ref', function () {
         expect($titles(markupDataTree("{{ref}}\n\n{{para|id=997-5}}\n\n{{998-12-1-2}}")))->toBe(['third work', 'second work']);
     });
 
+    it('gives the list its own title, like {{toc}}', function () {
+        $ref = fn (string $source) => collect(markupDataTree($source))->firstWhere('name', 'reference')
+            ?? collect(markupDataTree($source))->pluck('children')->flatten(1)->firstWhere('name', 'reference');
+
+        expect($ref('{{para|id=997-5}}{{ref}}')['props'])->toMatchArray(['title' => '参考文献']);
+        expect($ref('{{para|id=997-5}}{{ref|title=引用书目}}')['props']['title'])->toBe('引用书目');
+        expect($ref('{{para|id=997-5}}{{ref|title=}}')['props'])->not->toHaveKey('title');
+        // 紧跟在手写的「## 参考文献」后面：不再显示第二个标题
+        expect($ref("{{para|id=997-5}}\n\n## 参考文献\n\n{{ref}}")['props'])->not->toHaveKey('title');
+        // 没有引用：整块不输出，也没有标题
+        expect($ref('{{ref}}')['props'])->toBe(['pali' => []]);
+        expect(markupDataRender('{{ref}}', Format::Html))->toBe('');
+    });
+
+    it('renders the title in html, text and markdown', function () {
+        expect(markupDataRender('{{para|id=997-5}}{{ref}}', Format::Text))->toBe("参考文献\n[1] Third work CSCD V4 VRI 2008\n");
+        expect(markupDataRender('{{para|id=997-5}}{{ref}}', Format::Markdown))->toBe("参考文献\n\n[1] **Third work** CSCD V4 VRI 2008\n\n");
+        // html 的具体结构由页面决定（百科页另有写法），这里只看标题与条目都在、标题在前
+        expect(markupDataRender('{{para|id=997-5}}{{ref}}', Format::Html))
+            ->toMatch('/参考文献.*\[1\] Third work CSCD V4 VRI 2008/s');
+    });
+
     it('counts references inside template parameters such as footnotes, once per title', function () use ($titles) {
         expect($titles(markupDataTree('{{n|见 {{quote|998-3}}}} {{para|id=998-4}} {{ref}}')))->toBe(['first work']);
     });
