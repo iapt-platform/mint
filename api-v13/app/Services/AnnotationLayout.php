@@ -6,10 +6,12 @@ namespace App\Services;
  * 阅读页批注排版：把锚定在一句译文上的几种批注一次性排进句子的原始 content（markdown）。
  *
  * 纯计算，不查库、不渲染——输入 content 与已解析好的批注，输出改写后的 content。
- * 调用方是 {@see PaliContentService::injectAnnotationNotes()}，改写后的 content 再交给 MdRender。
+ * 调用方是 {@see PaliContentService::injectAnnotationNotes()}，改写后的 content 再交给 App\Services\Markup 渲染。
+ * 插入点写什么由 {@see AnnotationMarkup} 策略决定：阅读页写结构化标记（{@see Markup\Annotation\AnnotationSet}），
+ * 能渲染成任意格式；缺省写 HTML。
  *
  * 三种东西，排法各不相同：
- * - glossary：区间 [start, end) 的原文换成 `[[title#原文]]`，MdRender 渲染成术语；
+ * - glossary：区间 [start, end) 的原文换成 `[[title#原文]]`，渲染成术语；
  * - issue：区间外包一层 `<span class="anno-issue …" data-discussion-ids="…">`（高亮，点击看内容）；
  *   没有位置的 issue 合成一个三角叹号图标，放在句尾；
  * - note / commentary：在插入点插入调用方预先渲染好的 `{{note|…}}` 模板；
@@ -105,13 +107,15 @@ class AnnotationLayout
      * @param  list<array{id: string, at: int, order: array<int, int>, html: string}>  $notes  at 是插入点，order 是同一插入点上的先后
      * @param  bool  $withIssues  是否输出 issue 的高亮与图标、评估的对勾（只有 html 格式需要）
      * @param  array{id: string, score: int}|null  $assessment  这句的评估，没有为 null
+     * @param  AnnotationMarkup|null  $markup  插入点写什么，缺省写 HTML（{@see HtmlAnnotationMarkup}）
      * @return array{content: string, notes: list<string>, glossaries: list<string>, issues: list<array{ids: list<string>, severity: string|null, start: int|null, end: int|null}>}
      *
      * 返回值里 notes 是 note id 的阅读顺序，glossaries 是实际替换了的术语 id，
      * issues 是合并后的高亮（没有位置的合成一条，start / end 为 null）。
      */
-    public static function apply(string $content, array $glossaries, array $issues, array $notes, bool $withIssues = true, ?array $assessment = null): array
+    public static function apply(string $content, array $glossaries, array $issues, array $notes, bool $withIssues = true, ?array $assessment = null, ?AnnotationMarkup $markup = null): array
     {
+        $markup ??= new HtmlAnnotationMarkup;
         $len = mb_strlen($content, 'UTF-8');
         $protected = self::protectedRanges($content);
 
@@ -208,13 +212,13 @@ class AnnotationLayout
             $cursor = $x;
             // 合并后 issue 之间互不交叠，同一点上至多一个收尾、一个开头
             foreach ($closes[$x] ?? [] as $span) {
-                $out .= '</span>';
+                $out .= $markup->issueClose($span);
             }
             foreach ($notesAt[$x] ?? [] as $html) {
                 $out .= $html;
             }
             foreach ($opens[$x] ?? [] as $span) {
-                $out .= self::issueOpenTag($span['ids'], $span['severity']);
+                $out .= $markup->issueOpen($span);
             }
             if (isset($glossaryAt[$x])) {
                 $g = $glossaryAt[$x];
@@ -226,13 +230,13 @@ class AnnotationLayout
         $out .= mb_substr($content, $cursor, null, 'UTF-8');
 
         if ($withIssues && $unanchored !== []) {
-            $out .= self::issueMark(
+            $out .= $markup->issueMark(
                 array_column($unanchored, 'id'),
                 self::maxSeverity(array_column($unanchored, 'severity')),
             );
         }
         if ($withIssues && $assessment !== null) {
-            $out .= self::assessmentMark($assessment['id'], $assessment['score']);
+            $out .= $markup->assessmentMark($assessment['id'], $assessment['score']);
         }
 
         $report = array_map(fn ($s) => [
@@ -341,16 +345,6 @@ class AnnotationLayout
     }
 
     /**
-     * @param  list<string>  $ids
-     */
-    private static function issueOpenTag(array $ids, ?string $severity): string
-    {
-        return '<span class="anno-issue anno-issue-'.($severity ?? 'none').'"'
-            .' data-discussion-ids="'.e(implode(',', $ids)).'"'
-            .' data-severity="'.e($severity ?? '').'">';
-    }
-
-    /**
      * 评估分数的档位：high（≥80）/ medium（≥60）/ low。阅读器按档位着色（绿 / 橙 / 红）。
      */
     public static function assessmentLevel(int $score): string
@@ -365,38 +359,10 @@ class AnnotationLayout
     }
 
     /**
-     * 没有评估的句子：灰色对勾，不能点（没有 discussion id）。只在同段有别的句子评估过时由
-     * {@see PaliContentService::renderReadSentences()} 补上，标出句子的边界。
+     * 没有评估的句子的灰色对勾（HTML）。只在同段有别的句子评估过时补上，标出句子的边界。
      */
     public static function unassessedMark(): string
     {
-        return '<span class="anno-assessment-mark anno-assessment-none" data-level="none" aria-hidden="true">'
-            .'<i class="ti ti-circle-check"></i></span>';
-    }
-
-    /**
-     * 评估：句尾一个对勾图标，颜色按分数档位，点击看分数与理由。
-     */
-    private static function assessmentMark(string $id, int $score): string
-    {
-        $level = self::assessmentLevel($score);
-
-        return '<span class="anno-assessment-mark anno-assessment-'.$level.'"'
-            .' data-discussion-ids="'.e($id).'"'
-            .' data-score="'.$score.'" data-level="'.$level.'" role="button" tabindex="0">'
-            .'<i class="ti ti-circle-check"></i></span>';
-    }
-
-    /**
-     * 没有位置的 issue：句尾一个三角叹号图标，颜色取最重的 severity。
-     *
-     * @param  list<string>  $ids
-     */
-    private static function issueMark(array $ids, ?string $severity): string
-    {
-        return '<span class="anno-issue-mark anno-issue-'.($severity ?? 'none').'"'
-            .' data-discussion-ids="'.e(implode(',', $ids)).'"'
-            .' data-severity="'.e($severity ?? '').'" role="button" tabindex="0">'
-            .'<i class="ti ti-alert-triangle"></i></span>';
+        return HtmlAnnotationMarkup::unassessedMark();
     }
 }
