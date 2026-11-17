@@ -324,3 +324,50 @@ describe('templates reading other tables', function () {
             ->toBe('<span><span lang="pi-Mymr">evaṃ</span>၊ <span lang="my">ဤသို့</span></span>');
     });
 });
+
+describe('ref', function () {
+    beforeEach(function () {
+        // book 998 收了两部作品：第 1 段起是 first work，第 10 段起是 second work；book 997 一部
+        BookTitle::forceCreate(['book' => 998, 'paragraph' => 1, 'title' => 'first work', 'sn' => 1]);
+        BookTitle::forceCreate(['book' => 998, 'paragraph' => 10, 'title' => 'second work', 'sn' => 2]);
+        BookTitle::forceCreate(['book' => 997, 'paragraph' => 1, 'title' => 'third work', 'sn' => 3]);
+    });
+
+    $titles = function (array $tree): array {
+        $find = function (array $nodes) use (&$find): ?array {
+            foreach ($nodes as $node) {
+                if (($node['name'] ?? null) === 'reference') {
+                    return $node;
+                }
+                if (($found = $find($node['children'] ?? [])) !== null) {
+                    return $found;
+                }
+            }
+
+            return null;
+        };
+
+        return array_column($find($tree)['props']['pali'] ?? [], 'title');
+    };
+
+    it('collects references from para, quote, ql with book and para, and chapter articles', function () use ($titles) {
+        $source = '{{para|id=998-12|title=t}} {{quote|997-3}} {{ql|type=m|book=998|para=2}} '
+            .'{{article|type=chapter|book=998|paragraphs=15}} {{ql|type=m|bookname=x|volume=1|page=2}}{{ref}}';
+
+        expect($titles(markupDataTree($source)))->toBe(['second work', 'third work', 'first work']);
+    });
+
+    it('picks the nearest title, counting a reference to the first paragraph of a work', function () use ($titles) {
+        expect($titles(markupDataTree('{{para|id=998-10}}{{ref}}')))->toBe(['second work']);
+        expect($titles(markupDataTree('{{para|id=998-9}}{{ref}}')))->toBe(['first work']);
+        expect($titles(markupDataTree('{{para|id=998-0}}{{ref}}')))->toBe([]);
+    });
+
+    it('lists every reference wherever {{ref}} is placed', function () use ($titles) {
+        expect($titles(markupDataTree("{{ref}}\n\n{{para|id=997-5}}\n\n{{998-12-1-2}}")))->toBe(['third work', 'second work']);
+    });
+
+    it('counts references inside template parameters such as footnotes, once per title', function () use ($titles) {
+        expect($titles(markupDataTree('{{n|见 {{quote|998-3}}}} {{para|id=998-4}} {{ref}}')))->toBe(['first work']);
+    });
+});

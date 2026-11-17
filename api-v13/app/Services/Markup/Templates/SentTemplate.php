@@ -59,6 +59,13 @@ final class SentTemplate extends Template
         return in_array($show, ['origin', 'translation'], true) ? $show : 'both';
     }
 
+    public function references(Call $call): array
+    {
+        [$id] = $this->target($call);
+
+        return self::paragraphRef($id);
+    }
+
     public function collect(Call $call, Resolver $resolver): void
     {
         [$id, $channels] = $this->target($call);
@@ -71,13 +78,7 @@ final class SentTemplate extends Template
      */
     private function sentence(Call $call, RenderContext $ctx): ?array
     {
-        $sentence = $ctx->loader(SentenceLoader::class)->result((string) ($call->data['sentence'] ?? ''));
-        if ($sentence !== null) {
-            // 以调用为键：同一个调用在一次渲染里可能被取多次（props、纯文本…），只记一次
-            $ctx->sentenceRefs[spl_object_id($call)] = [$sentence['book'], $sentence['para']];
-        }
-
-        return $sentence;
+        return $ctx->loader(SentenceLoader::class)->result((string) ($call->data['sentence'] ?? ''));
     }
 
     public function component(Call $call, RenderContext $ctx): string

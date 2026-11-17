@@ -4,10 +4,20 @@ namespace App\Services\Markup\Templates;
 
 use App\Models\BookTitle;
 use App\Services\Markup\Ir\Call;
+use App\Services\Markup\Ir\Document;
+use App\Services\Markup\Ir\Element;
+use App\Services\Markup\Ir\Node;
 use App\Services\Markup\Render\RenderContext;
 
 /**
- * 参考文献：`{{ref}}`，列出本文前面句子模板引用到的巴利文献（按书名去重）。要放在文末。
+ * 参考文献：`{{ref}}`，列出本文引用到的巴利文献（按书名去重，按首次出现的顺序编号）。
+ *
+ * 引用来自整篇内容里各模板的 {@see Template::references()}：句子、para、quote、
+ * 带 book + para 的 ql、章节 / 段落 article。遍历整篇内容而不是边渲染边记，所以 `{{ref}}` 写在哪里都能列全
+ * （v2 只统计句子模板，且必须放在文末）。
+ *
+ * 一段引用对应的书名：`book_titles` 里同一本书、起始段号 ≤ 该段的最近一条（一个 book 里可能收了几部作品；
+ * v2 把排在前面的作品全列了进来，且用 < 漏掉了恰好引用作品首段的情况）。
  */
 final class ReferenceTemplate extends Template
 {
@@ -18,25 +28,50 @@ final class ReferenceTemplate extends Template
     /**
      * @return list<array{sn: int, title: string, copyright: string}>
      */
-    private function references(RenderContext $ctx): array
+    private function bibliography(RenderContext $ctx): array
     {
-        if ($ctx->sentenceRefs === []) {
+        $refs = $ctx->document === null ? [] : $this->gather($ctx->document->nodes);
+        if ($refs === []) {
             return [];
         }
-        $books = BookTitle::orderByDesc('sn')->get(['book', 'paragraph', 'title']);
+        $books = array_values(array_unique(array_map(fn (array $ref) => $ref[0], $refs)));
+        $titles = BookTitle::whereIn('book', $books)->orderByDesc('paragraph')->get(['book', 'paragraph', 'title']);
+
         $seen = [];
         $references = [];
-        foreach ($ctx->sentenceRefs as [$book, $para]) {
-            foreach ($books as $title) {
-                if ((int) $title->book !== $book || (int) $title->paragraph >= $para || isset($seen[$title->title])) {
-                    continue;
-                }
-                $seen[$title->title] = true;
-                $references[] = ['sn' => count($references) + 1, 'title' => (string) $title->title, 'copyright' => self::COPYRIGHT];
+        foreach ($refs as [$book, $para]) {
+            $title = $titles->first(fn (BookTitle $row) => (int) $row->book === $book && (int) $row->paragraph <= $para);
+            if ($title === null || isset($seen[$title->title])) {
+                continue;
             }
+            $seen[$title->title] = true;
+            $references[] = ['sn' => count($references) + 1, 'title' => (string) $title->title, 'copyright' => self::COPYRIGHT];
         }
 
         return $references;
+    }
+
+    /**
+     * 按文档顺序收集引用的 [book, para]（含模板参数里的内容，如脚注正文）。
+     *
+     * @param  list<Node>  $nodes
+     * @return list<array{0: int, 1: int}>
+     */
+    private function gather(array $nodes): array
+    {
+        $refs = [];
+        foreach ($nodes as $node) {
+            if ($node instanceof Element) {
+                array_push($refs, ...$this->gather($node->children));
+            } elseif ($node instanceof Call) {
+                array_push($refs, ...$node->template->references($node));
+                foreach ($node->slots as $slot) {
+                    array_push($refs, ...$this->gather($slot instanceof Document ? $slot->nodes : []));
+                }
+            }
+        }
+
+        return $refs;
     }
 
     /**
@@ -44,13 +79,13 @@ final class ReferenceTemplate extends Template
      */
     public function props(Call $call, RenderContext $ctx): array
     {
-        return ['pali' => $this->references($ctx)];
+        return ['pali' => $this->bibliography($ctx)];
     }
 
     public function text(Call $call, RenderContext $ctx): string
     {
         $text = '';
-        foreach ($this->references($ctx) as $reference) {
+        foreach ($this->bibliography($ctx) as $reference) {
             $text .= '['.$reference['sn'].'] '.ucfirst($reference['title']).' '.$reference['copyright']."\n";
         }
 
@@ -60,7 +95,7 @@ final class ReferenceTemplate extends Template
     public function markdown(Call $call, RenderContext $ctx): string
     {
         $markdown = '';
-        foreach ($this->references($ctx) as $reference) {
+        foreach ($this->bibliography($ctx) as $reference) {
             $markdown .= '['.$reference['sn'].'] **'.ucfirst($reference['title']).'** '.$reference['copyright']."\n\n";
         }
 

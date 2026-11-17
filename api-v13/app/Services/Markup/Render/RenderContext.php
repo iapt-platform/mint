@@ -21,8 +21,8 @@ final class RenderContext
     /** @var list<array{sn: int, trigger: string, content: string}> 脚注（html / markdown 输出末尾的列表） */
     public array $footnotes = [];
 
-    /** @var array<int, array{0: int, 1: int}> 句子模板引用到的 [book, para]（按调用去重），ref 模板据此列参考文献 */
-    public array $sentenceRefs = [];
+    /** 正在渲染的顶层内容（ref 模板遍历它收集引用的经文段落） */
+    public ?Document $document = null;
 
     /** @var array<string, int> 术语出现次数（markdown 输出只有第一次带巴利原词与脚注） */
     public array $termSeen = [];

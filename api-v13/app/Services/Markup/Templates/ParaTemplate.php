@@ -34,6 +34,11 @@ final class ParaTemplate extends Template
         return $props;
     }
 
+    public function references(Call $call): array
+    {
+        return self::paragraphRef((string) $call->param('id'));
+    }
+
     public function text(Call $call, RenderContext $ctx): string
     {
         return (string) $call->param('title');

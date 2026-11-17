@@ -69,6 +69,31 @@ abstract class Template
 
     public function collect(Call $call, Resolver $resolver): void {}
 
+    /**
+     * 这次调用引用到的经文段落（`{{ref}}` 据此列参考文献）。只从参数里解析，不查库。
+     *
+     * @return list<array{0: int, 1: int}> [book, para]
+     */
+    public function references(Call $call): array
+    {
+        return [];
+    }
+
+    /**
+     * `book-para` 或 `book-para-start-end` 形式的坐标 → [[book, para]]；不合法返回 []。
+     *
+     * @return list<array{0: int, 1: int}>
+     */
+    protected static function paragraphRef(string $id): array
+    {
+        $parts = explode('-', trim($id));
+        if (count($parts) < 2 || ! ctype_digit($parts[0]) || ! ctype_digit($parts[1])) {
+            return [];
+        }
+
+        return [[(int) $parts[0], (int) $parts[1]]];
+    }
+
     public function component(Call $call, RenderContext $ctx): string
     {
         return $this->component;

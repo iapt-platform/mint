@@ -59,6 +59,23 @@ final class ArticleTemplate extends Template
         return $props;
     }
 
+    /**
+     * 章节 / 段落（type=chapter|para）引用了经文段落；文章、文集不算。
+     */
+    public function references(Call $call): array
+    {
+        $type = (string) $call->param('type');
+        if (! in_array($type, ['chapter', 'para'], true)) {
+            return [];
+        }
+        $id = (string) $call->param('id');
+        if ($id === '') {
+            $id = $call->param('book').'-'.$call->param('paragraphs');
+        }
+
+        return self::paragraphRef($id);
+    }
+
     public function plain(Call $call, RenderContext $ctx, Format $format): string
     {
         return $format === Format::Prompt ? '' : (string) $call->param('title');

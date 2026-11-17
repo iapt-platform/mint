@@ -28,6 +28,14 @@ final class QuoteLinkTemplate extends Template
         ];
     }
 
+    /**
+     * 只有给了 book + para 的才算引用了经文段落（按书名册页引用的不知道是哪一段）。
+     */
+    public function references(Call $call): array
+    {
+        return self::paragraphRef($call->param('book').'-'.$call->param('para'));
+    }
+
     public function collect(Call $call, Resolver $resolver): void
     {
         $call->data['quoteLink'] = $resolver->loader(QuoteLinkLoader::class)->request($call);

@@ -19,6 +19,11 @@ final class QuoteTemplate extends Template
         return ['para' => ParamSpec::at(1)];
     }
 
+    public function references(Call $call): array
+    {
+        return self::paragraphRef((string) $call->param('para'));
+    }
+
     public function collect(Call $call, Resolver $resolver): void
     {
         $resolver->loader(QuoteLoader::class)->request((string) $call->param('para'));

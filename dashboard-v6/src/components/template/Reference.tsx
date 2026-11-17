@@ -21,7 +21,7 @@ interface IReferenceCtl {
 export const ReferenceCtl = ({ pali }: IReferenceCtl) => {
   const Reference = (ref: IReference) => {
     return (
-      <Paragraph>{`[${ref.sn}] ${ucFirst(ref.title)} ${
+      <Paragraph key={ref.sn}>{`[${ref.sn}] ${ucFirst(ref.title)} ${
         ref.copyright
       }`}</Paragraph>
     );

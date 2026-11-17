@@ -109,6 +109,7 @@ final class MarkupService
         foreach ($documents as $key => $document) {
             $idPrefix = $idPrefixes[$key] ?? substr(md5($key.'|'.$document->source), 0, 8);
             $ctx = new RenderContext($options, $resolver, $renderer, $idPrefix);
+            $ctx->document = $document;
             $rendered = $renderer->document($document, $ctx);
             if (is_string($rendered) && $options->footnote) {
                 $rendered .= match (true) {
