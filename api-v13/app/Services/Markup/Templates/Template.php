@@ -70,6 +70,14 @@ abstract class Template
     public function collect(Call $call, Resolver $resolver): void {}
 
     /**
+     * html 输出是块级元素（目录的 nav、mermaid 的 pre）：段落里只有它时不包 `<p>`。
+     */
+    public function block(): bool
+    {
+        return false;
+    }
+
+    /**
      * 这次调用引用到的经文段落（`{{ref}}` 据此列参考文献）。只从参数里解析，不查库。
      *
      * @return list<array{0: int, 1: int}> [book, para]

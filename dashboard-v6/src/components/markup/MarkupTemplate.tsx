@@ -56,6 +56,15 @@ const TEMPLATES: Record<string, TemplateRenderer> = {
   article: (p) => <ArticleCtl {...as<typeof ArticleCtl>(p)} />,
   category: (p) => <Tag>{p.name as string}</Tag>,
   toggle: (_, children) => <ToggleCtl>{children}</ToggleCtl>,
+  // 目录：自带一行标题（不是正文的一节），children 是链到各标题的嵌套列表
+  toc: (p, children) => (
+    <nav className="markup-toc">
+      {typeof p.title === "string" && p.title !== "" ? (
+        <Text strong>{p.title}</Text>
+      ) : null}
+      {children}
+    </nav>
+  ),
   // 用户自定义模板：正文已由后端渲染成 children
   tpl: (_, children) => <>{children}</>,
 };

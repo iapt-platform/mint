@@ -121,6 +121,7 @@ const BLOCK_TEMPLATES = new Set([
   "reference",
   // VideoCtl 外层是 antd Space（div）
   "video",
+  "toc",
 ]);
 
 const hasBlockTemplate = (node: MarkupElementNode) =>

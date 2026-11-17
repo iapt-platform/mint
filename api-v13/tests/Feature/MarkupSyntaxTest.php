@@ -603,3 +603,86 @@ describe('emphasis next to CJK punctuation (markdown-cjk-friendly)', function ()
         }
     });
 });
+
+describe('toc', function () {
+    $source = "{{toc}}\n\n# 一级\n\n## 甲 [[dhamma]]\n\n### 甲一\n\n#### 甲一a\n\n## 乙\n\n正文";
+
+    /** 树里的目录节点 */
+    $toc = function (array $tree): array {
+        foreach ($tree as $node) {
+            if (($node['name'] ?? null) === 'toc') {
+                return $node;
+            }
+            foreach ($node['children'] ?? [] as $child) {
+                if (($child['name'] ?? null) === 'toc') {
+                    return $child;
+                }
+            }
+        }
+
+        return [];
+    };
+
+    /** 列表 → [[层级, 链接 href, 文字], …] */
+    $items = function (array $list, int $depth = 1) use (&$items): array {
+        $out = [];
+        foreach ($list['children'] as $li) {
+            foreach ($li['children'] as $child) {
+                if ($child['tag'] === 'a') {
+                    $out[] = [$depth, $child['attrs']['href'], markupText($child['children'])];
+                } elseif ($child['tag'] === 'ul') {
+                    array_push($out, ...$items($child, $depth + 1));
+                }
+            }
+        }
+
+        return $out;
+    };
+
+    it('lists h2 and h3 by default, nested, linking to the heading ids', function () use ($source, $toc, $items) {
+        $tree = markupTree($source);
+        $node = $toc($tree);
+        expect($node['props'])->toBe(['title' => '目录']);
+
+        $h2 = collect($tree)->where('tag', 'h2')->values();
+        expect($items($node['children'][0]))->toBe([
+            [1, '#'.$h2[0]['attrs']['id'], '甲 dhamma'],
+            [2, '#'.collect($tree)->firstWhere('tag', 'h3')['attrs']['id'], '甲一'],
+            [1, '#'.$h2[1]['attrs']['id'], '乙'],
+        ]);
+    });
+
+    it('keeps templates inside heading text', function () use ($source, $toc) {
+        $link = $toc(markupTree($source))['children'][0]['children'][0]['children'][0];
+        expect(collect($link['children'])->firstWhere('name', 'term')['props']['word'])->toBe('dhamma');
+    });
+
+    it('skips a hand-written heading right before it', function () use ($toc, $items) {
+        $tree = markupTree("## 目录\n\n{{toc}}\n\n## 甲\n\n## 乙");
+        expect(array_column($items($toc($tree)['children'][0]), 2))->toBe(['甲', '乙']);
+    });
+
+    it('accepts a level range or a single level', function () use ($source, $toc, $items) {
+        expect(array_column($items($toc(markupTree(str_replace('{{toc}}', '{{toc|2-4}}', $source)))['children'][0]), 2))
+            ->toBe(['甲 dhamma', '甲一', '甲一a', '乙']);
+        expect(array_column($items($toc(markupTree(str_replace('{{toc}}', '{{toc|2}}', $source)))['children'][0]), 2))
+            ->toBe(['甲 dhamma', '乙']);
+    });
+
+    it('takes a custom title, or none', function () use ($source, $toc) {
+        expect($toc(markupTree(str_replace('{{toc}}', '{{toc|title=本条目录}}', $source)))['props'])->toBe(['title' => '本条目录']);
+        expect($toc(markupTree(str_replace('{{toc}}', '{{toc|title=}}', $source)))['props'])->toBe([]);
+    });
+
+    it('renders html, text and markdown', function () use ($source) {
+        expect(markupRender($source, Format::Html))
+            ->toMatch('/^<nav class="toc"><div class="toc-title">目录<\/div><ul><li><a href="#(h-[0-9a-f]{8}-2)">甲 .*<\/a><ul><li><a href="#h-[0-9a-f]{8}-3">甲一<\/a><\/li><\/ul><\/li><li><a href="#h-[0-9a-f]{8}-5">乙<\/a><\/li><\/ul><\/nav><h1 id="h-[0-9a-f]{8}-1">一级<\/h1><h2 id="\1">/');
+        expect(markupRender($source, Format::Text))->toStartWith("目录\n甲 dhamma\n  甲一\n乙\n");
+        expect(markupRender($source, Format::Markdown))->toMatch('/^目录\n- \[甲 dhamma\]\(#h-[0-9a-f]{8}-2\)\n  - \[甲一\]\(#h-[0-9a-f]{8}-3\)\n- \[乙\]\(#h-[0-9a-f]{8}-5\)\n/');
+    });
+
+    it('renders nothing when there are no headings', function () {
+        expect(markupTree('{{toc}} 正文')[0])->toMatchArray(['name' => 'toc', 'children' => []]);
+        expect(markupRender('{{toc}}', Format::Html))->toBe('');
+    });
+});

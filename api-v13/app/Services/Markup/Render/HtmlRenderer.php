@@ -93,8 +93,31 @@ final class HtmlRenderer implements Renderer
         if (in_array($element->tag, [...HtmlPolicy::VOID, 'input'], true)) {
             return "<{$element->tag}{$attrs} />";
         }
+        // 段落里只有块级模板（目录、mermaid）：不包 <p>，否则 <p><nav> 会被浏览器提前闭合
+        if ($element->tag === 'p' && $this->onlyBlockTemplates($element->children)) {
+            return $this->nodes($element->children, $ctx);
+        }
 
         return "<{$element->tag}{$attrs}>".$this->nodes($element->children, $ctx)."</{$element->tag}>";
+    }
+
+    /**
+     * @param  list<Node>  $nodes
+     */
+    private function onlyBlockTemplates(array $nodes): bool
+    {
+        $found = false;
+        foreach ($nodes as $node) {
+            if ($node instanceof Text && trim($node->value) === '') {
+                continue;
+            }
+            if (! $node instanceof Call || ! $node->template->block()) {
+                return false;
+            }
+            $found = true;
+        }
+
+        return $found;
     }
 
     /**

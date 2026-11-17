@@ -1,5 +1,6 @@
 <?php
 return [
+    'toc' => '目錄',
     'home' => '首页',
     'translation' => '譯文',
     'original' => '原文',

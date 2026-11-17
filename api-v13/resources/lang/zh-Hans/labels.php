@@ -7,6 +7,7 @@ return [
     'nissaya' => '缅文逐词',
     'commentary' => '义注',
     'similar' => '相似段落',
+    'toc' => '目录',
 
     'script_convertor' => '巴利文字转换器',
     'input_script' => '输入文字',

@@ -31,6 +31,7 @@ final class TemplateRegistry
         'category' => CategoryTemplate::class,
         'quality' => QualityTemplate::class,
         'toggle' => ToggleTemplate::class,
+        'toc' => TocTemplate::class,
     ];
 
     /**

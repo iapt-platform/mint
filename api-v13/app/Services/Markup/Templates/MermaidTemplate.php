@@ -15,6 +15,11 @@ final class MermaidTemplate extends Template
 {
     protected string $component = 'mermaid';
 
+    public function block(): bool
+    {
+        return true;
+    }
+
     public function params(): array
     {
         return ['text' => ParamSpec::at(1)];
