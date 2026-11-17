@@ -839,6 +839,8 @@ paths:
     $ref: ./resources/auto/v3-me-reactions-reaction.yaml
   /v3/me/reading-time:
     $ref: ./resources/auto/v3-me-reading-time.yaml
+  '/v3/nissaya-cards/{ending}':
+    $ref: ./resources/auto/v3-nissaya-cards-ending.yaml
   /v3/password-resets:
     $ref: ./resources/auto/v3-password-resets.yaml
   '/v3/password-resets/{token}':

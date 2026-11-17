@@ -1,3 +1,5 @@
+import type { NissayaRelation, NissayaRelationSide } from "../../api/nissaya";
+import { fullUrl } from "../../utils";
 import { Button, Space, Table, Tag, Typography } from "antd";
 import lodash from "lodash";
 
@@ -49,36 +51,21 @@ const getCaseTags = (input: string[]): ITags[] => {
 const randomString = () =>
   lodash.times(20, () => lodash.random(35).toString(36)).join("");
 
-interface ICaseItem {
-  label: string;
-  case: string;
-  link: string;
-}
-interface IRelationNode {
-  case?: ICaseItem[];
-  spell?: string;
-}
+/** 关系的一端（来源 / 目标）：格位（带本地译名）与拼写，取自 v3 /nissaya-cards */
+type IRelationNode = NissayaRelationSide;
 interface DataType {
   key: string;
   relation: string;
   localRelation?: string;
   tags?: ITags[];
-  to?: IRelationNode;
-  from?: IRelationNode;
-  category?: { name: string; note: string; meaning: string };
+  to?: IRelationNode | null;
+  from?: IRelationNode | null;
+  category?: NissayaRelation["category"];
   translation?: string;
   isChildren?: boolean;
   children?: DataType[];
 }
-export interface INissayaRelation {
-  from?: IRelationNode;
-  to?: IRelationNode;
-  category?: { name: string; note: string; meaning: string };
-  local_ending: string;
-  relation: string;
-  local_relation?: string;
-  relation_link: string;
-}
+export type INissayaRelation = NissayaRelation;
 interface IWidget {
   data?: INissayaRelation[];
 }
@@ -94,8 +81,8 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
     const newData: DataType[] = [];
     data.forEach((item) => {
       if (item.category && item.category.name) {
-        const key = `${item.from?.spell}-${item.from?.case
-          ?.map((item) => item.label)
+        const key = `${item.from?.spell}-${item.from?.cases
+          ?.map((item) => item.label ?? item.case)
           .join()}-${item.relation}-${item.category}`;
         if (!category.includes(key)) {
           category.push(key);
@@ -104,51 +91,51 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
           const children = data
             .filter(
               (value) =>
-                `${value.from?.spell}-${value.from?.case
-                  ?.map((item) => item.label)
-                  .join()}-${value.relation}-${value.category}` === key
+                `${value.from?.spell}-${value.from?.cases
+                  ?.map((item) => item.label ?? item.case)
+                  .join()}-${value.relation}-${value.category}` === key,
             )
             .map((item) => {
               return {
                 key: randomString(),
-                relation: item.relation,
-                localRelation: item.local_relation,
+                relation: item.relation ?? "",
+                localRelation: item.relation_label ?? undefined,
                 from: item.from,
                 to: item.to,
                 category: item.category,
-                translation: item.local_ending,
+                translation: item.local_endings?.join(";"),
                 isChildren: true,
               };
             });
           console.log("children", children);
           const caseList: string[] = [];
           children.forEach((value) => {
-            value.to?.case?.forEach((value1) => {
-              caseList.push(value1.case);
+            value.to?.cases?.forEach((value1) => {
+              caseList.push(value1.case ?? "");
             });
           });
           const tags = getCaseTags(caseList);
           newData.push({
             key: randomString(),
-            relation: item.relation,
-            localRelation: item.local_relation,
+            relation: item.relation ?? "",
+            localRelation: item.relation_label ?? undefined,
             from: item.from,
             to: item.to,
             tags: tags,
             category: item.category,
-            translation: item.local_ending,
+            translation: item.local_endings?.join(";"),
             children: children.length > 1 ? [...children] : undefined,
           });
         }
       } else {
         newData.push({
           key: randomString(),
-          relation: item.relation,
-          localRelation: item.local_relation,
+          relation: item.relation ?? "",
+          localRelation: item.relation_label ?? undefined,
           from: item.from,
           to: item.to,
           category: item.category,
-          translation: item.local_ending,
+          translation: item.local_endings?.join(";"),
         });
       }
     });
@@ -168,11 +155,11 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
           render: (_value, record) => {
             return (
               <Space>
-                {record.from?.case?.map((item, id) => {
+                {record.from?.cases?.map((item, id) => {
                   return (
                     <GrammarLookup key={id} word={item.case}>
                       <Link>
-                        <Tag>{item.label}</Tag>
+                        <Tag>{item.label ?? item.case}</Tag>
                       </Link>
                     </GrammarLookup>
                   );
@@ -208,15 +195,20 @@ const NissayaCardTableWidget = ({ data }: IWidget) => {
               return (
                 <Space>
                   <ArrowRightOutlined />
-                  {record.to?.case?.map((item, id) => {
+                  {record.to?.cases?.map((item, id) => {
                     return (
                       <Button
                         key={id}
                         type="link"
                         size="small"
-                        onClick={() => window.open(item.link, "_blank")}
+                        onClick={() =>
+                          window.open(
+                            fullUrl(`/term/list/${item.case}`),
+                            "_blank",
+                          )
+                        }
                       >
-                        <Tag key={id}>{item.label}</Tag>
+                        <Tag key={id}>{item.label ?? item.case}</Tag>
                       </Button>
                     );
                   })}

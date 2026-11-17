@@ -1,0 +1,61 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-nissaya-cards-ending.yaml
+get:
+  summary: 缅文词尾卡片
+  tags:
+    - nissaya-cards
+  operationId: get_api_v3_nissaya_cards_ending_
+  description: |-
+    词尾对应的语法术语（说明是新渲染器的节点树），以及它表达的语法关系：关系名与格位都带本地译名，
+    另有含义分类与翻译建议。术语取 `_System_Grammar_Term_{lang}_`，没有就用 en（`lang` 字段是实际用到的语言）。
+    词尾查不到时 `term` 为 null、`relations` 为空，不是 404。
+
+    实现：`V3\NissayaCardController@__invoke`
+  security:
+    - {  }
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: ending
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '缅文词尾，如 သည်'
+    -
+      name: lang
+      in: query
+      schema:
+        type: string
+      description: '语言，如 zh-Hans。缺省用界面语言（Accept-Language 协商的结果）'
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  ending:
+                    type: string
+                  lang:
+                    type: string
+                  term:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      word: { type: string }
+                      tag: { type: string }
+                      meaning: { type: string }
+                      body: { type: array, items: { $ref: '../../main.yaml#/components/schemas/MarkupNode' } }
+                    nullable: true
+                  relations:
+                    type: array
+                    items:
+                      type: object
+                      properties: { relation: { type: string }, relation_label: { type: string, nullable: true }, from: { type: object, properties: { cases: { type: array, items: { type: object, properties: { case: { type: string }, label: { type: string } } } }, spell: { type: string } }, nullable: true }, to: { type: object, properties: { cases: { type: array, items: { type: object, properties: { case: { type: string }, label: { type: string } } } }, spell: { type: string } }, nullable: true }, category: { type: object, properties: { name: { type: string }, meaning: { type: string }, note: { type: string } }, nullable: true }, local_endings: { type: array, items: { type: string } } }
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

@@ -3782,7 +3782,10 @@ export interface paths {
         };
         /**
          * 获取单个 nissaya-card/{nissaya_card}
-         * @description 实现：`NissayaCardController@show`
+         * @deprecated
+         * @description 已被 `GET /v3/nissaya-cards/{ending}` 取代：只给结构化数据（不再有 mustache 渲染的 markdown 分支、写死的表头文字、拼好的 dashboard 链接），
+         *     术语批量查（v2 逐个格位查），词尾说明是新渲染器的节点树。字段：`row`→`relations`，`case`→`cases`，`local_relation`→`relation_label`，
+         *     `local_ending`（分号拼接）→`local_endings`（数组）。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         get: operations["get_api_v2_nissaya_card_nissaya_card_"];
         /**
@@ -8881,6 +8884,30 @@ export interface paths {
          *     实现：`V3\MeReadingTimeController@store`
          */
         post: operations["post_api_v3_me_reading_time"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/nissaya-cards/{ending}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 缅文词尾卡片
+         * @description 词尾对应的语法术语（说明是新渲染器的节点树），以及它表达的语法关系：关系名与格位都带本地译名，
+         *     另有含义分类与翻译建议。术语取 `_System_Grammar_Term_{lang}_`，没有就用 en（`lang` 字段是实际用到的语言）。
+         *     词尾查不到时 `term` 为 null、`relations` 为空，不是 404。
+         *
+         *     实现：`V3\NissayaCardController@__invoke`
+         */
+        get: operations["get_api_v3_nissaya_cards_ending_"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -39875,6 +39902,69 @@ export interface operations {
                 };
             };
             401: components["responses"]["ProblemUnauthorized"];
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    get_api_v3_nissaya_cards_ending_: {
+        parameters: {
+            query?: {
+                /** @description 语言，如 zh-Hans。缺省用界面语言（Accept-Language 协商的结果） */
+                lang?: string;
+            };
+            header?: never;
+            path: {
+                /** @description 缅文词尾，如 သည် */
+                ending: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            ending?: string;
+                            lang?: string;
+                            term?: {
+                                id?: string;
+                                word?: string;
+                                tag?: string;
+                                meaning?: string;
+                                body?: components["schemas"]["MarkupNode"][];
+                            } | null;
+                            relations?: {
+                                relation?: string;
+                                relation_label?: string | null;
+                                from?: {
+                                    cases?: {
+                                        case?: string;
+                                        label?: string;
+                                    }[];
+                                    spell?: string;
+                                } | null;
+                                to?: {
+                                    cases?: {
+                                        case?: string;
+                                        label?: string;
+                                    }[];
+                                    spell?: string;
+                                } | null;
+                                category?: {
+                                    name?: string;
+                                    meaning?: string;
+                                    note?: string;
+                                } | null;
+                                local_endings?: string[];
+                            }[];
+                        };
+                    };
+                };
+            };
             422: components["responses"]["ProblemValidation"];
         };
     };
