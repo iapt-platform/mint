@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Http\Api\MdRender;
-use App\Services\Template\TemplateService;
 use App\Tools\Markdown;
 use App\Tools\Tools;
 use Illuminate\Console\Command;
@@ -47,33 +46,6 @@ class TestMdRender extends Command
         if (Tools::isStop()) {
             return 0;
         }
-
-        $content = <<<'md'
-        # 测试
-        ## 测试
-
-        {{note|text=这是一个普通信息提示|type=info}}
-
-        下面是一个警告信息：
-        {{warning|message=请注意这个重要提示|title=重要}}
-
-        你也可以使用位置参数：
-        {{note|
-        成功完成操作|
-        success}}
-
-        支持嵌套模板：
-        {{info|
-        content=外层信息 {{note|内嵌提示|warning}} 继续外层|
-        title=嵌套示例}}
-
-        **粗体文本** 和 *斜体文本* 也被支持。
-        md;
-        $parser = new TemplateService(false);
-        $render = $parser->parseAndRender($content, 'json');
-        var_dump($render);
-
-        return 0;
 
         Log::info('md render start item='.$this->argument('item'));
         $data = [];
