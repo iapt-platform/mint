@@ -253,7 +253,7 @@ function castToType(string $value, string $type): mixed
  *
  * 支持（Scribe 风格，位置固定）：
  *   @queryParam  name type [required] 描述。可在描述里写 Enum: a,b,c / Default: x / Example: y
- *   @bodyParam   name type [required] 描述
+ *   @bodyParam   name type [required] 描述。type 写成 `string|null` / `?string` 表示可传 null
  *   @urlParam    name type [required] 描述
  *   @deprecated  弃用说明
  *   @unauthenticated       该端点无需登录，不挂 401
@@ -304,6 +304,9 @@ function parseDocTags(array $tagLines): array
             $required = true;
             $rest = trim(preg_replace('/^required\b\.?\s*/u', '', $rest));
         }
+        // 类型写成 `string|null`（或 `?string`）表示可以显式传 null，生成 nullable: true
+        $nullable = (bool) preg_match('/(^\?|\|null$|^null\|)/i', $type);
+        $type = preg_replace('/(^\?|\|null$|^null\|)/i', '', $type);
         $entry = [
             'in' => match ($tag) {
                 'queryParam' => 'query',
@@ -313,6 +316,9 @@ function parseDocTags(array $tagLines): array
             'type' => normalizeType($type),
             'required' => $required,
         ];
+        if ($nullable) {
+            $entry['nullable'] = true;
+        }
         if (preg_match('/\bEnum:\s*((?:(?!\bDefault:|\bExample:)[^.。\n])+)/u', $rest, $e)) {
             $entry['enum'] = array_values(array_filter(array_map('trim', explode(',', $e[1]))));
             $rest = trim(str_replace($e[0], '', $rest));
@@ -861,6 +867,9 @@ function buildOperation(array $route, string $httpMethod): array
                 continue;
             }
             $schema = ['type' => $doc['type']];
+            if (! empty($doc['nullable'])) {
+                $schema['nullable'] = true;
+            }
             if (! empty($doc['description'])) {
                 $schema['description'] = $doc['description'];
             }
