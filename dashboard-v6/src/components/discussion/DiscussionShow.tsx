@@ -32,7 +32,7 @@ import {
   type TDiscussionType,
 } from "../../api/discussion";
 import { refreshDiscussionBadge } from "./utils";
-import MdView from "../general/MdView";
+import MarkupView from "../markup/MarkupView";
 import { SeverityTag } from "./SeverityTag";
 
 const { Text } = Typography;
@@ -340,8 +340,8 @@ const DiscussionShowWidget = ({
       style={{ width: "100%" }}
     >
       <div>
-        {data.html ? (
-          <MdView html={data.html} />
+        {data.body ? (
+          <MarkupView nodes={data.body} />
         ) : (
           <Marked text={data.content ?? undefined} />
         )}

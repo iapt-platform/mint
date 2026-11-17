@@ -138,6 +138,10 @@ docs/Model/GetApiV3TipitakaRelatedParagraphsAggregate200Response.md
 docs/Model/GetApiV3TipitakaRelatedParagraphsAggregate200ResponseDataInner.md
 docs/Model/GetApiV3TipitakaRelatedParagraphsAggregateBookName200Response.md
 docs/Model/GetApiV3TipitakaRelatedParagraphsAggregateBookName200ResponseDataInner.md
+docs/Model/MarkupElement.md
+docs/Model/MarkupNode.md
+docs/Model/MarkupTemplate.md
+docs/Model/MarkupText.md
 docs/Model/PaginationMeta.md
 docs/Model/PatchApiV3ChannelsChannelLinksRequest.md
 docs/Model/PatchApiV3ChannelsChannelRequest.md
@@ -333,6 +337,10 @@ lib/Model/GetApiV3TipitakaRelatedParagraphsAggregate200Response.php
 lib/Model/GetApiV3TipitakaRelatedParagraphsAggregate200ResponseDataInner.php
 lib/Model/GetApiV3TipitakaRelatedParagraphsAggregateBookName200Response.php
 lib/Model/GetApiV3TipitakaRelatedParagraphsAggregateBookName200ResponseDataInner.php
+lib/Model/MarkupElement.php
+lib/Model/MarkupNode.php
+lib/Model/MarkupTemplate.php
+lib/Model/MarkupText.php
 lib/Model/ModelInterface.php
 lib/Model/PaginationMeta.php
 lib/Model/PatchApiV3ChannelsChannelLinksRequest.php
@@ -526,6 +534,10 @@ test/Model/GetApiV3TipitakaRelatedParagraphsAggregate200ResponseDataInnerTest.ph
 test/Model/GetApiV3TipitakaRelatedParagraphsAggregate200ResponseTest.php
 test/Model/GetApiV3TipitakaRelatedParagraphsAggregateBookName200ResponseDataInnerTest.php
 test/Model/GetApiV3TipitakaRelatedParagraphsAggregateBookName200ResponseTest.php
+test/Model/MarkupElementTest.php
+test/Model/MarkupNodeTest.php
+test/Model/MarkupTemplateTest.php
+test/Model/MarkupTextTest.php
 test/Model/PaginationMetaTest.php
 test/Model/PatchApiV3ChannelsChannelLinksRequestTest.php
 test/Model/PatchApiV3ChannelsChannelRequestTest.php

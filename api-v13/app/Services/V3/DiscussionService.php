@@ -3,7 +3,6 @@
 namespace App\Services\V3;
 
 use App\Exceptions\BusinessException;
-use App\Http\Api\MdRender;
 use App\Http\Api\Mq;
 use App\Http\Api\ShareApi;
 use App\Http\Resources\DiscussionResource as MqDiscussionPayload;
@@ -16,6 +15,9 @@ use App\Models\Sentence;
 use App\Models\Task;
 use App\Models\Wbw;
 use App\Models\WbwBlock;
+use App\Services\Markup\Format;
+use App\Services\Markup\MarkupService;
+use App\Services\Markup\RenderOptions;
 use App\Services\UserService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
@@ -89,6 +91,7 @@ class DiscussionService
         private readonly AgentGrantService $grants,
         private readonly TipitakaReadingService $reading,
         private readonly ChannelAbilityService $channels,
+        private readonly MarkupService $markup,
     ) {}
 
     /**
@@ -366,7 +369,7 @@ class DiscussionService
         $topic->type = $type;
         $topic->title = $data['title'] ?? null;
         $topic->content = $data['content'] ?? null;
-        $topic->content_type = 'markdown';
+        $topic->markWrittenByV3();
         $topic->severity = $data['severity'] ?? null;
         $topic->tpl_id = $data['tpl_id'] ?? null;
         $topic->fill(array_intersect_key($data, array_flip(self::ANCHOR_FIELDS)));
@@ -403,7 +406,7 @@ class DiscussionService
             $assessment->type = Discussion::TYPE_ASSESSMENT;
             $assessment->title = $data['title'] ?? null;
             $assessment->content = $data['content'] ?? null;
-            $assessment->content_type = 'markdown';
+            $assessment->markWrittenByV3();
             $assessment->severity = $data['severity'];
             $assessment->score = (int) $data['score'];
             $assessment->tpl_id = $data['tpl_id'] ?? null;
@@ -445,7 +448,7 @@ class DiscussionService
             $reply->type = $topic->type;
             $reply->parent = $topic->id;
             $reply->content = $data['content'];
-            $reply->content_type = 'markdown';
+            $reply->markWrittenByV3();
             $reply->editor_uid = $userUid;
             $reply->co_editor_uid = $actor['co_editor'];
             $reply->save();
@@ -526,6 +529,10 @@ class DiscussionService
             // 只改状态 / 类型 / severity 是管理动作，不动内容的署名。
             if ($authored !== []) {
                 $discussion->co_editor_uid = $actor['co_editor'];
+            }
+            // 经 v3 改过正文，就按 v3 的方言存（旧正文里的反引号从此按代码解析，渲染差异不考虑）
+            if (array_key_exists('content', $authored)) {
+                $discussion->markWrittenByV3();
             }
             foreach (['status', 'type', 'severity'] as $field) {
                 if (array_key_exists($field, $data)) {
@@ -954,15 +961,29 @@ class DiscussionService
             ? collect()
             : Sentence::whereIn('uid', $sentenceIds)->pluck('channel_uid', 'uid');
 
-        foreach ($items as $item) {
+        $sources = [];
+        foreach ($items as $key => $item) {
             $item->abilities = $this->abilities($item, $viewerUid);
             $channel = $item->res_type === 'sentence' ? ($channels[$item->res_id] ?? null) : null;
             if ($channel && ! $item->trashed() && $item->content) {
-                $item->rendered = [
-                    'html' => MdRender::render($item->content, [$channel], null, 'read'),
-                    'summary' => MdRender::render($item->content, [$channel], null, 'read', 'translation', 'markdown', 'text'),
+                $sources[$key] = [
+                    'source' => $item->content,
+                    'channels' => [$channel],
+                    'contentType' => $item->effectiveContentType(),
                 ];
             }
+        }
+        if ($sources === []) {
+            return;
+        }
+
+        // 整页一起渲染：正文里的术语、句子模板合在一起批量查
+        $rendered = $this->markup->renderManyAs($sources, new RenderOptions, [Format::Tree, Format::Text]);
+        foreach (array_keys($sources) as $key) {
+            $items[$key]->rendered = [
+                'body' => $rendered[Format::Tree->value][$key],
+                'summary' => $rendered[Format::Text->value][$key],
+            ];
         }
     }
 

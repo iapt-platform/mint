@@ -4,6 +4,8 @@ namespace App\Http\Resources\V3;
 
 use App\Http\Resources\Concerns\ResolvesActor;
 use App\Models\Discussion;
+use App\Services\Markup\MarkupService;
+use App\Services\Markup\Render\TreeRenderer;
 use App\Services\V3\DiscussionService;
 use Illuminate\Http\Request;
 
@@ -25,6 +27,14 @@ use Illuminate\Http\Request;
  *
  * `sentence` 只在按经文范围列出时有（`GET /v3/tipitaka-discussions/{channel}`）：所在句子的坐标，
  * 由查询顺带取出（`sentence_*` 属性），本类不另查。
+ *
+ * `body` 是渲染后的正文（{@see MarkupService} 的节点树，节点形状见
+ * {@see TreeRenderer}），`summary` 是纯文本摘要；两者只在挂在句子上、
+ * 未删除、有正文时给（正文里的模板要用句子所在的 channel 解析）。取代了 v3 早期的 `html`
+ * （v2 MdRender 的 MdTpl HTML 字符串）。
+ *
+ * `content_type` 是正文实际的方言：v3 写入的是 `markdown-e2`（存在 content_type_v2 列），
+ * v2 写入的是原 content_type（markdown / text / html），见 {@see Discussion::effectiveContentType()}。
  *
  * 字段名改了两处（v2 → v3）：res_type / res_id → target_type / target_id，
  * parent → parent_id；children_count → reply_count（只有话题有）。
@@ -49,7 +59,7 @@ class DiscussionResource extends BaseResource
      *     title: string|null,
      *     content: string|null,
      *     content_type: string,
-     *     html?: string,
+     *     body?: list<MarkupNode>,
      *     summary?: string,
      *     tpl_id: string|null,
      *     pos_start: int|null,
@@ -82,8 +92,8 @@ class DiscussionResource extends BaseResource
             'status' => $this->status,
             'title' => $tombstone ? null : $this->title,
             'content' => $tombstone ? null : $this->content,
-            'content_type' => $this->content_type,
-            'html' => $this->when($this->rendered !== null, fn () => $this->rendered['html']),
+            'content_type' => $this->effectiveContentType(),
+            'body' => $this->when($this->rendered !== null, fn () => $this->rendered['body']),
             'summary' => $this->when($this->rendered !== null, fn () => $this->rendered['summary']),
             'tpl_id' => $this->tpl_id,
             'pos_start' => $this->pos_start,

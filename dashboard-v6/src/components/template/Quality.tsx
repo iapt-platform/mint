@@ -22,7 +22,7 @@ interface IQualityCtl {
  * 渲染单个质量标签
  * 非法取值回退为默认的 pending，保证样式始终可预期
  */
-const QualityCtl = ({ value = "pending" }: IQualityCtl) => {
+export const QualityCtl = ({ value = "pending" }: IQualityCtl) => {
   const color = QUALITY_COLORS[value] ?? QUALITY_COLORS.pending;
   return <Tag color={color}>{value}</Tag>;
 };

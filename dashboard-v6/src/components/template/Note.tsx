@@ -13,7 +13,7 @@ interface IWidgetNoteCtl {
   note?: string;
   children?: React.ReactNode;
 }
-const NoteCtl = ({ trigger, note, children }: IWidgetNoteCtl) => {
+export const NoteCtl = ({ trigger, note, children }: IWidgetNoteCtl) => {
   const show = trigger ? trigger : <InfoCircleOutlined />;
   return (
     <>

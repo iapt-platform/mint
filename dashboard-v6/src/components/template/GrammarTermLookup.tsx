@@ -5,7 +5,7 @@ interface IGrammarTermLookupCtl {
   word?: string;
   term?: IWidgetTermCtl;
 }
-const GrammarTermLookupCtl = ({ word, term }: IGrammarTermLookupCtl) => {
+export const GrammarTermLookupCtl = ({ word, term }: IGrammarTermLookupCtl) => {
   return (
     <GrammarLookup word={word}>
       <TermCtl {...term} compact={true} />

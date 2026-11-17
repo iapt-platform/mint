@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\Markup\MarkupService;
 use App\Services\PaliContentService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -49,6 +50,7 @@ class Discussion extends Model
         'title',
         'content',
         'content_type',
+        'content_type_v2',
         'parent',
         'editor_uid',
         'pos_start',
@@ -145,9 +147,34 @@ class Discussion extends Model
      * 正文渲染结果（只有挂在句子上的才有，需要句子所在的 channel 才能渲染模板），
      * 同样由 Service 算好后挂上。
      *
-     * @var array{html: string, summary: string}|null
+     * body 是 {@see MarkupService} 的节点树，summary 是纯文本。
+     *
+     * @var array{body: list<array<string, mixed>>, summary: string}|null
      */
     public ?array $rendered = null;
+
+    /** v3 写入的正文方言，存在 content_type_v2（content_type 的 CHECK 约束存不下它） */
+    public const CONTENT_TYPE_V3 = 'markdown-e2';
+
+    /**
+     * 正文实际的方言：content_type_v2 优先（v3 写入的），为空取 content_type（v2 写入的）。
+     * v3 读取、渲染都用它；v2 只认 content_type。
+     *
+     * TODO v2 下线后：content_type 废弃，存量空的 content_type_v2 回填为 markdown，这里只读 content_type_v2。
+     */
+    public function effectiveContentType(): string
+    {
+        return $this->content_type_v2 ?: ($this->content_type ?: 'markdown');
+    }
+
+    /**
+     * 标记这条正文是 v3 写的：content_type_v2 = markdown-e2，content_type 仍填 markdown 给 v2 / v4 读。
+     */
+    public function markWrittenByV3(): void
+    {
+        $this->content_type = 'markdown';
+        $this->content_type_v2 = self::CONTENT_TYPE_V3;
+    }
 
     /**
      * 编辑者（人类用户）。editor_uid 对 user_infos.userid。

@@ -6,7 +6,7 @@
 import type { IUser } from "./Auth";
 import { api, unwrap, unwrapQuiet } from "./client";
 import { ApiError } from "./error";
-import type { paths } from "./schema";
+import type { components, paths } from "./schema";
 
 /**
  * 通用的资源类型：transfer、webhook、右侧面板等也在用，比讨论能挂的对象多。
@@ -129,7 +129,8 @@ export interface IComment {
   parent?: string | null;
   title?: string | null;
   content?: string | null;
-  html?: string;
+  /** 渲染后的正文节点树（只有挂在句子上的有）；没有时按 content 渲染 markdown */
+  body?: components["schemas"]["MarkupNode"][];
   summary?: string;
   status?: TDiscussionStatus;
   childrenCount?: number;
@@ -169,7 +170,7 @@ export const toIComment = (value: DiscussionData): IComment => ({
   parent: value.parent_id,
   title: value.title,
   content: value.content,
-  html: value.html,
+  body: value.body,
   summary: value.summary,
   status: value.status as TDiscussionStatus,
   childrenCount: value.reply_count,

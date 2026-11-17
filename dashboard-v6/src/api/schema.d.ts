@@ -9344,6 +9344,37 @@ export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
         /**
+         * @description 正文（markdown + 模板）渲染后的节点树，由 App\Services\Markup 生成。
+         *     三种节点：text 纯文本（前端作为 React 文本节点，自动转义）；el HTML 元素（tag 与 attrs 已过白名单）；
+         *     tpl 模板（name 是前端组件名，props 随模板而定，props 里嵌套的内容也是节点数组）。
+         */
+        MarkupNode: components["schemas"]["MarkupText"] | components["schemas"]["MarkupElement"] | components["schemas"]["MarkupTemplate"];
+        MarkupText: {
+            /** @enum {string} */
+            type: "text";
+            value: string;
+        };
+        MarkupElement: {
+            /** @enum {string} */
+            type: "el";
+            /** @description 白名单内的 HTML 标签名（小写） */
+            tag: string;
+            attrs?: {
+                [key: string]: string;
+            };
+            children: components["schemas"]["MarkupNode"][];
+        };
+        MarkupTemplate: {
+            /** @enum {string} */
+            type: "tpl";
+            /** @description 前端组件名：term、note、sentread、sentedit、quote、quote-link、mermaid… */
+            name: string;
+            props: {
+                [key: string]: unknown;
+            };
+            children: components["schemas"]["MarkupNode"][];
+        };
+        /**
          * @description RFC 9457 Problem Details，v3 端点的错误响应体。
          *     由 bootstrap/app.php 的异常处理器统一渲染，控制器不自己拼。
          *     media type 是 application/problem+json。
@@ -36939,7 +36970,7 @@ export interface operations {
                             content?: string | null;
                             content_type?: string;
                             /** @description 仅在部分查询口径下返回。 */
-                            html?: string;
+                            body?: components["schemas"]["MarkupNode"][];
                             /** @description 仅在部分查询口径下返回。 */
                             summary?: string;
                             tpl_id?: string | null;
@@ -37070,7 +37101,7 @@ export interface operations {
                             content?: string | null;
                             content_type?: string;
                             /** @description 仅在部分查询口径下返回。 */
-                            html?: string;
+                            body?: components["schemas"]["MarkupNode"][];
                             /** @description 仅在部分查询口径下返回。 */
                             summary?: string;
                             tpl_id?: string | null;
@@ -37139,7 +37170,7 @@ export interface operations {
                             content?: string | null;
                             content_type?: string;
                             /** @description 仅在部分查询口径下返回。 */
-                            html?: string;
+                            body?: components["schemas"]["MarkupNode"][];
                             /** @description 仅在部分查询口径下返回。 */
                             summary?: string;
                             tpl_id?: string | null;
@@ -37313,7 +37344,7 @@ export interface operations {
                             content?: string | null;
                             content_type?: string;
                             /** @description 仅在部分查询口径下返回。 */
-                            html?: string;
+                            body?: components["schemas"]["MarkupNode"][];
                             /** @description 仅在部分查询口径下返回。 */
                             summary?: string;
                             tpl_id?: string | null;
@@ -37397,7 +37428,7 @@ export interface operations {
                             content?: string | null;
                             content_type?: string;
                             /** @description 仅在部分查询口径下返回。 */
-                            html?: string;
+                            body?: components["schemas"]["MarkupNode"][];
                             /** @description 仅在部分查询口径下返回。 */
                             summary?: string;
                             tpl_id?: string | null;
@@ -37530,7 +37561,7 @@ export interface operations {
                             content?: string | null;
                             content_type?: string;
                             /** @description 仅在部分查询口径下返回。 */
-                            html?: string;
+                            body?: components["schemas"]["MarkupNode"][];
                             /** @description 仅在部分查询口径下返回。 */
                             summary?: string;
                             tpl_id?: string | null;
@@ -37629,7 +37660,7 @@ export interface operations {
                             content?: string | null;
                             content_type?: string;
                             /** @description 仅在部分查询口径下返回。 */
-                            html?: string;
+                            body?: components["schemas"]["MarkupNode"][];
                             /** @description 仅在部分查询口径下返回。 */
                             summary?: string;
                             tpl_id?: string | null;
@@ -37726,7 +37757,7 @@ export interface operations {
                             content?: string | null;
                             content_type?: string;
                             /** @description 仅在部分查询口径下返回。 */
-                            html?: string;
+                            body?: components["schemas"]["MarkupNode"][];
                             /** @description 仅在部分查询口径下返回。 */
                             summary?: string;
                             tpl_id?: string | null;
@@ -37795,7 +37826,7 @@ export interface operations {
                             content?: string | null;
                             content_type?: string;
                             /** @description 仅在部分查询口径下返回。 */
-                            html?: string;
+                            body?: components["schemas"]["MarkupNode"][];
                             /** @description 仅在部分查询口径下返回。 */
                             summary?: string;
                             tpl_id?: string | null;
@@ -40313,7 +40344,7 @@ export interface operations {
                             content?: string | null;
                             content_type?: string;
                             /** @description 仅在部分查询口径下返回。 */
-                            html?: string;
+                            body?: components["schemas"]["MarkupNode"][];
                             /** @description 仅在部分查询口径下返回。 */
                             summary?: string;
                             tpl_id?: string | null;

@@ -126,7 +126,10 @@ test.describe('话题页 /workspace/discussion/topic/:id', () => {
       await page.getByRole('button', { name: /提 *交/ }).click();
       const res = await posted;
       expect(res.status()).toBe(201);
-      uiReplyId = (await res.json()).data.id;
+      const replied = (await res.json()).data;
+      uiReplyId = replied.id;
+      // v6 经 v3 写入，正文一律是 markdown-e2（反引号是代码，与编辑器预览一致）
+      expect(replied.content_type).toBe('markdown-e2');
       await expect(page.locator(`#answer-${uiReplyId}`)).toContainText('页面上发的回复');
       await shot(page, '02-replied');
       log.dump('2. 发一条回复');
@@ -257,5 +260,54 @@ test.describe('v4 漏搬的讨论入口', () => {
       return typeof mod.default;
     }, BASE);
     expect(loaded).toBe('function');
+  });
+});
+
+test.describe('话题正文：后端节点树（body）渲染成组件', () => {
+  const stamp = `e2e-tmp-${Date.now()}-body`;
+  let topicId = '';
+
+  test.beforeAll(async ({ request }) => {
+    const topic = await call(request, 'POST', '/discussions', {
+      target_type: 'sentence',
+      target_id: SENTENCE,
+      type: 'discussion',
+      title: stamp,
+      content: '正文有 **粗体**、[[dhamma]] 与脚注{{n|脚注正文 *斜体*|trigger=①}}。\n\n- 列表一\n- 列表二',
+      notify: false,
+    });
+    expect(topic.status, JSON.stringify(topic.body)).toBe(201);
+    topicId = topic.body.data.id;
+    expect(topic.body.data.body, '挂在句子上的话题应带 body').toBeTruthy();
+    expect(topic.body.data).not.toHaveProperty('html');
+  });
+
+  test.afterAll(async ({ request }) => {
+    if (topicId) await call(request, 'DELETE', `/discussions/${topicId}`);
+  });
+
+  test('markdown、术语、脚注都渲染成元素 / 组件，没有「未定义模版」', async ({ page }) => {
+    const log = collect(page);
+    await page.goto(`workspace/discussion/topic/${topicId}`, { waitUntil: 'networkidle' });
+    const topic = page.locator(`#answer-${topicId}`);
+
+    await expect(topic.locator('strong', { hasText: '粗体' })).toBeVisible();
+    await expect(topic.locator('ul > li')).toHaveCount(2);
+    await expect(topic).toContainText('dhamma');
+    await expect(topic).not.toContainText('未定义模版');
+    await expect(topic).not.toContainText('{{');
+
+    // 脚注：角标 ①，悬停弹出正文（正文里的 markdown 也渲染了）
+    const trigger = topic.getByText('①', { exact: true });
+    await expect(trigger).toBeVisible();
+    await trigger.hover();
+    const popover = page.locator('.ant-popover:not(.ant-popover-hidden)');
+    await expect(popover).toContainText('脚注正文');
+    await expect(popover.locator('em', { hasText: '斜体' })).toBeVisible();
+    await shot(page, '10-body-rendered');
+
+    const problems = discussionProblems(log.all);
+    log.dump('正文节点树');
+    expect(problems).toEqual([]);
   });
 });

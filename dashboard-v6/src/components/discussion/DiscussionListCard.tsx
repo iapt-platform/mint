@@ -234,7 +234,6 @@ const DiscussionListCardWidget = ({
                     title: item.title,
                     parent: null,
                     content: item.content,
-                    html: item.html,
                     summary: item.summary ? item.summary : item._summary,
                     status: "active",
                     childrenCount: 0,

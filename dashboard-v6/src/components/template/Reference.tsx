@@ -18,7 +18,7 @@ interface IReference {
 interface IReferenceCtl {
   pali?: IReference[];
 }
-const ReferenceCtl = ({ pali }: IReferenceCtl) => {
+export const ReferenceCtl = ({ pali }: IReferenceCtl) => {
   const Reference = (ref: IReference) => {
     return (
       <Paragraph>{`[${ref.sn}] ${ucFirst(ref.title)} ${

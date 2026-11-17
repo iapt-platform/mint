@@ -233,7 +233,8 @@ it('creates a topic', function () {
         ->assertJsonPath('data.severity', 'error')
         ->assertJsonPath('data.parent_id', null)
         ->assertJsonPath('data.reply_count', 0)
-        ->assertJsonPath('data.content_type', 'markdown');
+        // v3 写入一律是 markdown-e2（存 content_type_v2；content_type 列仍是 markdown）
+        ->assertJsonPath('data.content_type', 'markdown-e2');
 
     expect(Discussion::where('editor_uid', $user)->value('res_id'))->toBe($target);
 });

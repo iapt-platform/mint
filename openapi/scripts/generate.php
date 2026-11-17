@@ -592,6 +592,54 @@ function shapeToProperties(string $inner): array
 }
 
 /** PHPDoc 类型 → OpenAPI schema */
+/**
+ * Resource 的 `@return array{...}` 里可以直接写的命名类型 → components.schemas 里的定义。
+ *
+ * 用于写不成 array{...} 的形状（递归的节点树）。名字就是 schema 名，前端从
+ * `components["schemas"]["名字"]` 取类型。
+ */
+const NAMED_SCHEMAS = [
+    // App\Services\Markup\Render\TreeRenderer 的输出：正文渲染后的节点树
+    'MarkupNode' => [
+        'description' => "正文（markdown + 模板）渲染后的节点树，由 App\\Services\\Markup 生成。\n" .
+            "三种节点：text 纯文本（前端作为 React 文本节点，自动转义）；el HTML 元素（tag 与 attrs 已过白名单）；\n" .
+            'tpl 模板（name 是前端组件名，props 随模板而定，props 里嵌套的内容也是节点数组）。',
+        'oneOf' => [
+            ['$ref' => '#/components/schemas/MarkupText'],
+            ['$ref' => '#/components/schemas/MarkupElement'],
+            ['$ref' => '#/components/schemas/MarkupTemplate'],
+        ],
+    ],
+    'MarkupText' => [
+        'type' => 'object',
+        'properties' => [
+            'type' => ['type' => 'string', 'enum' => ['text']],
+            'value' => ['type' => 'string'],
+        ],
+        'required' => ['type', 'value'],
+    ],
+    'MarkupElement' => [
+        'type' => 'object',
+        'properties' => [
+            'type' => ['type' => 'string', 'enum' => ['el']],
+            'tag' => ['type' => 'string', 'description' => '白名单内的 HTML 标签名（小写）'],
+            'attrs' => ['type' => 'object', 'additionalProperties' => ['type' => 'string']],
+            'children' => ['type' => 'array', 'items' => ['$ref' => '#/components/schemas/MarkupNode']],
+        ],
+        'required' => ['type', 'tag', 'children'],
+    ],
+    'MarkupTemplate' => [
+        'type' => 'object',
+        'properties' => [
+            'type' => ['type' => 'string', 'enum' => ['tpl']],
+            'name' => ['type' => 'string', 'description' => '前端组件名：term、note、sentread、sentedit、quote、quote-link、mermaid…'],
+            'props' => ['type' => 'object', 'additionalProperties' => true],
+            'children' => ['type' => 'array', 'items' => ['$ref' => '#/components/schemas/MarkupNode']],
+        ],
+        'required' => ['type', 'name', 'props', 'children'],
+    ],
+];
+
 function phpTypeToSchema(string $type): array
 {
     $type = trim($type);
@@ -626,6 +674,13 @@ function phpTypeToSchema(string $type): array
         $type = $concrete ? $concrete[0] : 'mixed';
     }
     $type = trim($type);
+
+    // 在 main.yaml components.schemas 里定义的命名 schema（如递归的 MarkupNode）
+    if (isset(NAMED_SCHEMAS[$type])) {
+        $schema = ['$ref' => '../../main.yaml#/components/schemas/' . $type];
+
+        return $nullable ? ['allOf' => [$schema], 'nullable' => true] : $schema;
+    }
 
     // 嵌套 array{...}
     if (preg_match('/^array\s*\{(.*)$/s', $type, $m)) {
@@ -1166,7 +1221,7 @@ $main = [
                 ]]],
             ],
         ],
-        'schemas' => [
+        'schemas' => NAMED_SCHEMAS + [
             'ProblemDetails' => [
                 'type' => 'object',
                 'description' => "RFC 9457 Problem Details，v3 端点的错误响应体。\n" .

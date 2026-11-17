@@ -160,6 +160,14 @@ test('discussions 一轮：建话题 → 回复 → 关闭后回复 409 → 重�
         assert_eq($id, $r['body']['data']['parent_id'] ?? null, '回复 parent_id');
         assert_eq('issue', $r['body']['data']['type'] ?? null, '回复类型跟话题');
 
+        // 正文渲染：挂在句子上的给节点树 body 与纯文本 summary（App\Services\Markup；不再有 html）
+        $rendered = raw('GET', "/v3/discussions/{$replyId}", null, null, $token);
+        assert_eq([['type' => 'text', 'value' => 'api-test 回复']], $rendered['body']['data']['body'] ?? null, '回复 body');
+        assert_eq('api-test 回复', $rendered['body']['data']['summary'] ?? null, '回复 summary');
+        if (array_key_exists('html', $rendered['body']['data'] ?? [])) {
+            fail('回复：不应再有 html 字段');
+        }
+
         // 回复上改话题专属字段（标题、状态、类型）→ 422
         $topicOnly = raw('PATCH', "/v3/discussions/{$replyId}", null, ['title' => 'x'], $token);
         assert_field_error('title', $topicOnly, 'PATCH 回复的 title');

@@ -65,6 +65,74 @@ components:
               message: { type: string }
               errors: { type: object, additionalProperties: { type: array, items: { type: string } } }
   schemas:
+    MarkupNode:
+      description: |-
+        正文（markdown + 模板）渲染后的节点树，由 App\Services\Markup 生成。
+        三种节点：text 纯文本（前端作为 React 文本节点，自动转义）；el HTML 元素（tag 与 attrs 已过白名单）；
+        tpl 模板（name 是前端组件名，props 随模板而定，props 里嵌套的内容也是节点数组）。
+      oneOf:
+        -
+          $ref: '#/components/schemas/MarkupText'
+        -
+          $ref: '#/components/schemas/MarkupElement'
+        -
+          $ref: '#/components/schemas/MarkupTemplate'
+    MarkupText:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - text
+        value:
+          type: string
+      required:
+        - type
+        - value
+    MarkupElement:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - el
+        tag:
+          type: string
+          description: '白名单内的 HTML 标签名（小写）'
+        attrs:
+          type: object
+          additionalProperties:
+            type: string
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/MarkupNode'
+      required:
+        - type
+        - tag
+        - children
+    MarkupTemplate:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - tpl
+        name:
+          type: string
+          description: 前端组件名：term、note、sentread、sentedit、quote、quote-link、mermaid…
+        props:
+          type: object
+          additionalProperties: true
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/MarkupNode'
+      required:
+        - type
+        - name
+        - props
+        - children
     ProblemDetails:
       type: object
       description: |-
