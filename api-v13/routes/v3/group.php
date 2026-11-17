@@ -30,6 +30,10 @@ Route::patch('groups/{group}', [GroupController::class, 'update'])
     ->whereUuid('group');
 
 // 团队成员。scopeBindings：{member} 必须属于 {group}，否则 404。
+// FIXME: {member} 现在是 group_members.id（雪花 id，内部主键不该进 URL）。一个用户在一个团队里只会有一行
+//   （库里有唯一索引 group_members_user_id_group_id_unique），应改成 groups/{group}/members/{user_id}（用户 uuid），
+//   按 (group_id, user_id) 定位；同时去掉 me/groups 的 member_id、成员行的 id 改成用户 uuid，
+//   v6 的 src/api/group-member.ts 与 features/teamspace/refreshMyGroups.ts 跟着改。现在不改（2026-11-17 用户定）。
 // 用组而不是 apiResource()->scoped()：后者会把 URI 写成 {group:}，规格生成器认不出。
 // 只注册 PATCH，不注册 PUT（v3-resource skill 硬规范第 10 条）
 Route::middleware('auth.v3')->scopeBindings()->group(function () {
@@ -43,6 +47,11 @@ Route::middleware('auth.v3')->scopeBindings()->group(function () {
         ->whereNumber('member');
 
     // 团队文档（共享给团队的资源）。{share} 必须是共享给 {group} 的
+    // FIXME: {share} 现在是 shares.id（雪花 id，内部主键不该进 URL）。在一个团队下，一项资源只会共享一次
+    //   （库里有唯一索引 shares_res_id_res_type_cooperator_id_cooperator_type_unique，cooperator 就是团队），
+    //   应改成 groups/{group}/shares/{res_id}（被共享资源的 uuid），按 (cooperator_id = group, res_id) 定位；
+    //   资源 uuid 跨类型实际不会重复，真要严格就再加 ?res_type=。列表行的 id 跟着改成资源 uuid，
+    //   v6 的移出团队调用一并改。现在不改（2026-11-17 用户定）。
     Route::apiResource('groups.shares', GroupShareController::class)
         ->only(['index', 'destroy'])
         ->whereUuid('group')

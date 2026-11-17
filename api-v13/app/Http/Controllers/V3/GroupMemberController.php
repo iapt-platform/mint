@@ -85,6 +85,8 @@ class GroupMemberController extends Controller
      */
     public function update(UpdateGroupMemberRequest $request, GroupInfo $group, GroupMember $member)
     {
+        // FIXME: {member} 是 group_members.id（雪花 id），应改成用户 uuid：一个用户在一个团队里只有一行
+        //   （唯一索引 user_id + group_id），路由改为 groups/{group}/members/{user_id}。见 routes/v3/group.php。
         return GroupMemberResource::make($this->members->update(
             $group,
             $member,
@@ -107,6 +109,8 @@ class GroupMemberController extends Controller
      */
     public function destroy(Request $request, GroupInfo $group, GroupMember $member)
     {
+        // FIXME: {member} 是 group_members.id（雪花 id），应改成用户 uuid：一个用户在一个团队里只有一行
+        //   （唯一索引 user_id + group_id），路由改为 groups/{group}/members/{user_id}。见 routes/v3/group.php。
         $this->members->remove($group, $member, $this->currentUser($request)['user_uid']);
 
         return response()->noContent();
