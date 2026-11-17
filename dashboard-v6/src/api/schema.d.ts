@@ -8122,6 +8122,38 @@ export interface paths {
         patch: operations["patch_api_v3_channels_channel_"];
         trace?: never;
     };
+    "/v3/channels/{channel}/links": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * channel 的关系设置
+         * @description 能读这个 channel 的人都能看。指向的 channel 已删除、或查看者看不见的，不出现在结果里。
+         *     `can_update` 表示查看者能不能改。
+         *
+         *     实现：`V3\ChannelLinkController@show`
+         */
+        get: operations["get_api_v3_channels_channel_links"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * 改 channel 的关系设置
+         * @description 传了哪个键就整体替换哪一种关系，没传的不动；单值传 null 清掉，列表传 [] 清空。
+         *     能改 channel 信息的人才能改（拥有者、团队 owner / manager / editor、共享权限 ≥30）。AI 模型不能改。
+         *     目标必须是你看得见的 channel，且不能是自己。降级版本必须与本 channel 同类型；
+         *     术语路径只有 translation channel 能设，目标也只能是 translation（传 [] 清空总是允许）。
+         *
+         *     实现：`V3\ChannelLinkController@update`
+         */
+        patch: operations["patch_api_v3_channels_channel_links"];
+        trace?: never;
+    };
     "/v3/credit-policy": {
         parameters: {
             query?: never;
@@ -36651,6 +36683,152 @@ export interface operations {
                             progress?: number | null;
                             created_at?: string;
                             updated_at?: string;
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            /** @description 不能修改 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    get_api_v3_channels_channel_links: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description channel uid */
+                channel: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            channel_id?: string;
+                            derived_from?: {
+                                id?: string;
+                                name?: string;
+                                type?: string;
+                                lang?: string;
+                                status?: number;
+                            } | null;
+                            wbw?: {
+                                id?: string;
+                                name?: string;
+                                type?: string;
+                                lang?: string;
+                                status?: number;
+                            } | null;
+                            fallback?: {
+                                id?: string;
+                                name?: string;
+                                type?: string;
+                                lang?: string;
+                                status?: number;
+                            }[];
+                            term_source?: {
+                                id?: string;
+                                name?: string;
+                                type?: string;
+                                lang?: string;
+                                status?: number;
+                            }[];
+                            can_update?: boolean;
+                        };
+                    };
+                };
+            };
+            /** @description 私有 channel，且看不见 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    patch_api_v3_channels_channel_links: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description channel uid */
+                channel: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    /** @description 继承自哪个 channel（如英文版译自中文版），只记录 */
+                    derived_from?: string | null;
+                    /** @description 捆绑的逐词 channel，必须是 wbw 类型；载入时当原文 */
+                    wbw?: string | null;
+                    /** @description 降级 channel，有序，最多 3 个，须与本 channel 同类型；段落没有数据时由客户端改取 */
+                    fallback?: string[];
+                    /** @description 术语路径，有序，最多 10 个，只能是 translation；只有 translation channel 能设 */
+                    term_source?: string[];
+                };
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            channel_id?: string;
+                            derived_from?: {
+                                id?: string;
+                                name?: string;
+                                type?: string;
+                                lang?: string;
+                                status?: number;
+                            } | null;
+                            wbw?: {
+                                id?: string;
+                                name?: string;
+                                type?: string;
+                                lang?: string;
+                                status?: number;
+                            } | null;
+                            fallback?: {
+                                id?: string;
+                                name?: string;
+                                type?: string;
+                                lang?: string;
+                                status?: number;
+                            }[];
+                            term_source?: {
+                                id?: string;
+                                name?: string;
+                                type?: string;
+                                lang?: string;
+                                status?: number;
+                            }[];
+                            can_update?: boolean;
                         };
                     };
                 };

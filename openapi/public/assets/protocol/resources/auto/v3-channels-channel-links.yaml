@@ -1,0 +1,177 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-channels-channel-links.yaml
+get:
+  summary: 'channel 的关系设置'
+  tags:
+    - channels
+  operationId: get_api_v3_channels_channel_links
+  description: |-
+    能读这个 channel 的人都能看。指向的 channel 已删除、或查看者看不见的，不出现在结果里。
+    `can_update` 表示查看者能不能改。
+
+    实现：`V3\ChannelLinkController@show`
+  security:
+    - {  }
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: channel
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 'channel uid'
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  channel_id:
+                    type: string
+                  derived_from:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      name: { type: string }
+                      type: { type: string }
+                      lang: { type: string }
+                      status: { type: integer }
+                    nullable: true
+                  wbw:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      name: { type: string }
+                      type: { type: string }
+                      lang: { type: string }
+                      status: { type: integer }
+                    nullable: true
+                  fallback:
+                    type: array
+                    items:
+                      type: object
+                      properties: { id: { type: string }, name: { type: string }, type: { type: string }, lang: { type: string }, status: { type: integer } }
+                  term_source:
+                    type: array
+                    items:
+                      type: object
+                      properties: { id: { type: string }, name: { type: string }, type: { type: string }, lang: { type: string }, status: { type: integer } }
+                  can_update:
+                    type: boolean
+    403:
+      description: '私有 channel，且看不见'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'
+patch:
+  summary: '改 channel 的关系设置'
+  tags:
+    - channels
+  operationId: patch_api_v3_channels_channel_links
+  description: |-
+    传了哪个键就整体替换哪一种关系，没传的不动；单值传 null 清掉，列表传 [] 清空。
+    能改 channel 信息的人才能改（拥有者、团队 owner / manager / editor、共享权限 ≥30）。AI 模型不能改。
+    目标必须是你看得见的 channel，且不能是自己。降级版本必须与本 channel 同类型；
+    术语路径只有 translation channel 能设，目标也只能是 translation（传 [] 清空总是允许）。
+
+    实现：`V3\ChannelLinkController@update`
+  security:
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: channel
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 'channel uid'
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            derived_from:
+              type: string
+              nullable: true
+              description: '继承自哪个 channel（如英文版译自中文版），只记录'
+            wbw:
+              type: string
+              nullable: true
+              description: '捆绑的逐词 channel，必须是 wbw 类型；载入时当原文'
+            fallback:
+              type: array
+              description: '降级 channel，有序，最多 3 个，须与本 channel 同类型；段落没有数据时由客户端改取'
+              items:
+                type: string
+                description: 'channel uid'
+            term_source:
+              type: array
+              description: '术语路径，有序，最多 10 个，只能是 translation；只有 translation channel 能设'
+              items:
+                type: string
+                description: 'channel uid'
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  channel_id:
+                    type: string
+                  derived_from:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      name: { type: string }
+                      type: { type: string }
+                      lang: { type: string }
+                      status: { type: integer }
+                    nullable: true
+                  wbw:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      name: { type: string }
+                      type: { type: string }
+                      lang: { type: string }
+                      status: { type: integer }
+                    nullable: true
+                  fallback:
+                    type: array
+                    items:
+                      type: object
+                      properties: { id: { type: string }, name: { type: string }, type: { type: string }, lang: { type: string }, status: { type: integer } }
+                  term_source:
+                    type: array
+                    items:
+                      type: object
+                      properties: { id: { type: string }, name: { type: string }, type: { type: string }, lang: { type: string }, status: { type: integer } }
+                  can_update:
+                    type: boolean
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    403:
+      description: 不能修改
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

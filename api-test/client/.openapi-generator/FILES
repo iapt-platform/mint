@@ -74,6 +74,10 @@ docs/Model/GetApiV3Channels200ResponseDataInner.md
 docs/Model/GetApiV3Channels200ResponseDataInnerAbilities.md
 docs/Model/GetApiV3Channels200ResponseDataInnerOwner.md
 docs/Model/GetApiV3ChannelsChannel200Response.md
+docs/Model/GetApiV3ChannelsChannelLinks200Response.md
+docs/Model/GetApiV3ChannelsChannelLinks200ResponseData.md
+docs/Model/GetApiV3ChannelsChannelLinks200ResponseDataDerivedFrom.md
+docs/Model/GetApiV3ChannelsChannelLinks200ResponseDataFallbackInner.md
 docs/Model/GetApiV3CreditPolicy200Response.md
 docs/Model/GetApiV3CreditPolicy200ResponseData.md
 docs/Model/GetApiV3CreditPolicy200ResponseDataDailyFree.md
@@ -135,6 +139,7 @@ docs/Model/GetApiV3TipitakaRelatedParagraphsAggregate200ResponseDataInner.md
 docs/Model/GetApiV3TipitakaRelatedParagraphsAggregateBookName200Response.md
 docs/Model/GetApiV3TipitakaRelatedParagraphsAggregateBookName200ResponseDataInner.md
 docs/Model/PaginationMeta.md
+docs/Model/PatchApiV3ChannelsChannelLinksRequest.md
 docs/Model/PatchApiV3ChannelsChannelRequest.md
 docs/Model/PatchApiV3DiscussionsDiscussionRequest.md
 docs/Model/PatchApiV3GroupsGroupMembersMemberRequest.md
@@ -264,6 +269,10 @@ lib/Model/GetApiV3Channels200ResponseDataInner.php
 lib/Model/GetApiV3Channels200ResponseDataInnerAbilities.php
 lib/Model/GetApiV3Channels200ResponseDataInnerOwner.php
 lib/Model/GetApiV3ChannelsChannel200Response.php
+lib/Model/GetApiV3ChannelsChannelLinks200Response.php
+lib/Model/GetApiV3ChannelsChannelLinks200ResponseData.php
+lib/Model/GetApiV3ChannelsChannelLinks200ResponseDataDerivedFrom.php
+lib/Model/GetApiV3ChannelsChannelLinks200ResponseDataFallbackInner.php
 lib/Model/GetApiV3CreditPolicy200Response.php
 lib/Model/GetApiV3CreditPolicy200ResponseData.php
 lib/Model/GetApiV3CreditPolicy200ResponseDataDailyFree.php
@@ -326,6 +335,7 @@ lib/Model/GetApiV3TipitakaRelatedParagraphsAggregateBookName200Response.php
 lib/Model/GetApiV3TipitakaRelatedParagraphsAggregateBookName200ResponseDataInner.php
 lib/Model/ModelInterface.php
 lib/Model/PaginationMeta.php
+lib/Model/PatchApiV3ChannelsChannelLinksRequest.php
 lib/Model/PatchApiV3ChannelsChannelRequest.php
 lib/Model/PatchApiV3DiscussionsDiscussionRequest.php
 lib/Model/PatchApiV3GroupsGroupMembersMemberRequest.php
@@ -452,6 +462,10 @@ test/Model/GetApiV3Channels200ResponseDataInnerOwnerTest.php
 test/Model/GetApiV3Channels200ResponseDataInnerTest.php
 test/Model/GetApiV3Channels200ResponseTest.php
 test/Model/GetApiV3ChannelsChannel200ResponseTest.php
+test/Model/GetApiV3ChannelsChannelLinks200ResponseDataDerivedFromTest.php
+test/Model/GetApiV3ChannelsChannelLinks200ResponseDataFallbackInnerTest.php
+test/Model/GetApiV3ChannelsChannelLinks200ResponseDataTest.php
+test/Model/GetApiV3ChannelsChannelLinks200ResponseTest.php
 test/Model/GetApiV3CreditPolicy200ResponseDataDailyFreeTest.php
 test/Model/GetApiV3CreditPolicy200ResponseDataEarnReadingTest.php
 test/Model/GetApiV3CreditPolicy200ResponseDataEarnTest.php
@@ -513,6 +527,7 @@ test/Model/GetApiV3TipitakaRelatedParagraphsAggregate200ResponseTest.php
 test/Model/GetApiV3TipitakaRelatedParagraphsAggregateBookName200ResponseDataInnerTest.php
 test/Model/GetApiV3TipitakaRelatedParagraphsAggregateBookName200ResponseTest.php
 test/Model/PaginationMetaTest.php
+test/Model/PatchApiV3ChannelsChannelLinksRequestTest.php
 test/Model/PatchApiV3ChannelsChannelRequestTest.php
 test/Model/PatchApiV3DiscussionsDiscussionRequestTest.php
 test/Model/PatchApiV3GroupsGroupMembersMemberRequestTest.php

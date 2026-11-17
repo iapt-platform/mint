@@ -66,4 +66,10 @@ return [
     'channel_studio_forbidden' => '你不能查看或管理这个工作室（团队）的版本。',
     'channel_name_exists' => '这个工作室（团队）里已经有同名的版本了。',
     'channel_has_content' => '版本里已经有译文、术语或逐词解析，不能删除。',
+    'channel_link_self' => '不能指向这个版本自己。',
+    'channel_link_target_missing' => '找不到这个版本，或者你没有权限查看它。',
+    'channel_link_wbw_type' => '捆绑的逐词版本必须是逐词（wbw）类型。',
+    'channel_link_fallback_type' => '降级版本必须与本版本类型相同。',
+    'channel_link_term_source_channel' => '只有译文（translation）版本才能设置术语路径。',
+    'channel_link_term_source_type' => '术语路径只能选译文（translation）版本。',
 ];

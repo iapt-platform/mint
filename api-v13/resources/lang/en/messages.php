@@ -66,4 +66,10 @@ return [
     'channel_studio_forbidden' => 'You cannot view or manage the channels of this studio (team).',
     'channel_name_exists' => 'A channel with this name already exists in this studio (team).',
     'channel_has_content' => 'The channel already has translations, terms or word-by-word data and cannot be deleted.',
+    'channel_link_self' => 'A channel cannot point to itself.',
+    'channel_link_target_missing' => 'This channel does not exist, or you are not allowed to see it.',
+    'channel_link_wbw_type' => 'The bound word-by-word channel must be of type wbw.',
+    'channel_link_fallback_type' => 'A fallback channel must be of the same type as this channel.',
+    'channel_link_term_source_channel' => 'Only translation channels can have term sources.',
+    'channel_link_term_source_type' => 'Term sources must be translation channels.',
 ];

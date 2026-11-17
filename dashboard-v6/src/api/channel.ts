@@ -260,3 +260,32 @@ export const fetchChannelProgress = async (
       body: { sentences, studio },
     }),
   ).data ?? [];
+
+/* ─── channel 之间的关系设置（v3 新能力：继承自 / 捆绑逐词 / 降级 / 术语路径；服务端只记录）─── */
+
+type ChannelLinksSingle =
+  paths["/v3/channels/{channel}/links"]["get"]["responses"][200]["content"]["application/json"];
+export type ChannelLinks = NonNullable<ChannelLinksSingle["data"]>;
+export type ChannelRef = NonNullable<ChannelLinks["derived_from"]>;
+export type ChannelLinksInput = NonNullable<
+  paths["/v3/channels/{channel}/links"]["patch"]["requestBody"]
+>["content"]["application/json"];
+
+export const fetchChannelLinks = async (channel: string) =>
+  unwrap(
+    await api.GET("/v3/channels/{channel}/links", {
+      params: { path: { channel } },
+    }),
+  ).data;
+
+/** 传了哪个键就整体替换哪一种关系；单值传 null 清掉，列表传 [] 清空 */
+export const updateChannelLinks = async (
+  channel: string,
+  body: ChannelLinksInput,
+) =>
+  unwrap(
+    await api.PATCH("/v3/channels/{channel}/links", {
+      params: { path: { channel } },
+      body,
+    }),
+  ).data;

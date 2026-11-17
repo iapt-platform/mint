@@ -715,6 +715,8 @@ paths:
     $ref: ./resources/auto/v3-channels-editable.yaml
   '/v3/channels/{channel}':
     $ref: ./resources/auto/v3-channels-channel.yaml
+  '/v3/channels/{channel}/links':
+    $ref: ./resources/auto/v3-channels-channel-links.yaml
   /v3/credit-policy:
     $ref: ./resources/auto/v3-credit-policy.yaml
   /v3/discussions:

@@ -13,6 +13,7 @@
 
 use App\Http\Controllers\V3\ChannelBatchProgressController;
 use App\Http\Controllers\V3\ChannelController;
+use App\Http\Controllers\V3\ChannelLinkController;
 use App\Http\Controllers\V3\EditableChannelController;
 use App\Http\Controllers\V3\ProgressController;
 use App\Http\Controllers\V3\StudioChannelController;
@@ -47,3 +48,12 @@ Route::post('studios/{studio}/channels', [StudioChannelController::class, 'store
     ->name('studios.channels.store')
     ->middleware('auth.v3')
     ->whereUuid('studio');
+
+// channel 之间的关系设置（单例：每个 channel 一份）。读公开（可选登录），写要登录；只有 PATCH
+Route::get('channels/{channel}/links', [ChannelLinkController::class, 'show'])
+    ->name('channels.links.show')
+    ->whereUuid('channel');
+Route::patch('channels/{channel}/links', [ChannelLinkController::class, 'update'])
+    ->name('channels.links.update')
+    ->middleware('auth.v3')
+    ->whereUuid('channel');

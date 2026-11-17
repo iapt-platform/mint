@@ -7,6 +7,7 @@ import { Button, Card, Tabs } from "antd";
 import ShareModal from "../../../components/share/ShareModal";
 
 import Edit from "../../../components/channel/Edit";
+import ChannelLinks from "../../../components/channel/ChannelLinks";
 import WebhookList from "../../../components/webhook/WebhookList";
 import WebhookEdit from "../../../components/webhook/WebhookEdit";
 import { EResType } from "../../../components/share/utils";
@@ -60,6 +61,11 @@ const Widget = () => {
                   onLoad={(data: Channel) => setTitle(data.name ?? "")}
                 />
               ),
+            },
+            {
+              label: intl.formatMessage({ id: "channel.links.tab" }),
+              key: "links",
+              children: <ChannelLinks channelId={channelId} />,
             },
             {
               label: `Webhooks`,
