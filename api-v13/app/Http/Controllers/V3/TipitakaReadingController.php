@@ -63,7 +63,7 @@ class TipitakaReadingController extends Controller
      *             Default: 10
      * @queryParam unit string 每块大小的单位：para 按段落数，byte 按段落长度累加。
      *             两种单位下每块都至少一段、至多 200 段。Enum: para,byte Default: para
-     * @queryParam format string 内容格式。Enum: html,markdown,react,text Default: html
+     * @queryParam format string 内容格式。Enum: html,markdown,text Default: html
      * @queryParam include string 输出口径：display 整段合并，sentences 逐句，all 两者都给。
      *             不叫 view 是因为 v2 的 `view=` 是必填互斥的业务路径开关，名字撞上会误导。
      *             Enum: display,sentences,all Default: display

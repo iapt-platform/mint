@@ -18,6 +18,10 @@ use App\Models\Sentence;
 use App\Models\SentSimIndex;
 use App\Models\Wbw;
 use App\Models\WbwBlock;
+use App\Services\Markup\Annotation\AnnotationSet;
+use App\Services\Markup\Format;
+use App\Services\Markup\MarkupService;
+use App\Services\Markup\RenderOptions;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -716,7 +720,19 @@ class PaliContentService
      *
      * @var array<int, string>
      */
-    private const FORMATS = ['html', 'markdown', 'react', 'text'];
+    private const FORMATS = ['html', 'markdown', 'text'];
+
+    /**
+     * 阅读格式 → App\Services\Markup 的输出格式。
+     */
+    private static function markupFormat(string $format): Format
+    {
+        return match ($format) {
+            'markdown' => Format::Markdown,
+            'text' => Format::Text,
+            default => Format::Html,
+        };
+    }
 
     /**
      * 义注对应（commentary）批注最多渲染几句。
@@ -729,7 +745,8 @@ class PaliContentService
      */
     public static function paragraphCacheKey(int $book, int $para, string $channelUid, string $format): string
     {
-        return "/read-para/{$book}-{$para}/{$channelUid}/{$format}";
+        // markup：App\Services\Markup 渲染的缓存，与 MdRender 时代的旧缓存分开（旧 key 自然过期）
+        return "/read-para/markup/{$book}-{$para}/{$channelUid}/{$format}";
     }
 
     /**
@@ -743,28 +760,32 @@ class PaliContentService
     }
 
     /**
-     * 段落批注内嵌：把锚定到该句子的批注排进句子 content，再交给 MdRender 渲染。
+     * 段落批注内嵌：把锚定到该句子的批注排进句子 content，再交给 App\Services\Markup 渲染。
      *
      * 四种批注，显示方式不同（排版规则与交叠处理见 {@see AnnotationLayout}）：
      * - `commentary`（注释书对应）：content 是义注 / 复注的句子模板 `{{book-para-start-end}}`，
      *   渲染成这几句的译文，作为 {{note}} 边注插在锚点末尾，并追加 <cite> 跳转出处；
      * - `note`（普通边注）：content 就是注解正文（markdown），同样插成 {{note}}，没有出处；
      * - `glossary`（外挂术语）：锚点处的原文换成 `[[title#原文]]`，渲染成术语（title 是词头）；
-     * - `issue`：锚点处的原文包一层高亮 span，带 discussion id，阅读器点击看内容；
-     *   没有位置的合成一个三角叹号图标放在句尾。只在 html 格式输出。
+     * - `issue`：锚点处的原文包一层高亮，带 discussion id，阅读器点击看内容；
+     *   没有位置的合成一个三角叹号图标放在句尾。纯文本 / markdown 里不显示。
      * - `assessment`（译文评估）：句尾一个对勾图标，颜色按分数分档，带 discussion id，
-     *   阅读器点击看分数与理由。一句只有一条（有并发残留时取最近更新的）。只在 html 格式输出。
+     *   阅读器点击看分数与理由。一句只有一条（有并发残留时取最近更新的）。纯文本 / markdown 里不显示。
      *   同段里其它没有评估的句子由 {@see self::renderReadSentences()} 补灰色对勾。
      * issue / glossary 只注入未关闭的；批注与评估没有开关状态。
      *
      * 位置按 pos_* 定位，与 quote_exact 对不上（正文改过）时按摘录重新定位。
      *
-     * @return array{content: string, notes: list<array{fnId: string, noteHtml: string, citeHtml: string}>, assessed: bool}
+     * 插入点写的是结构化标记（{@see AnnotationSet}）而不是 HTML：content 里留下占位符，渲染时变成
+     * anno-issue / anno-issue-mark / anno-assessment / note 模板节点，任意格式都能输出。
+     *
+     * @return array{content: string, notes: list<array{fnId: string, noteHtml: string, citeHtml: string}>, assessed: bool, annotations: AnnotationSet}
      */
     protected function injectAnnotationNotes(Sentence $row, string $channelType, string $format = 'html'): array
     {
         $content = (string) $row->content;
-        $result = ['content' => $content, 'notes' => [], 'assessed' => false];
+        $annotations = new AnnotationSet;
+        $result = ['content' => $content, 'notes' => [], 'assessed' => false, 'annotations' => $annotations];
         $records = Discussion::where('res_type', 'sentence')
             ->where('res_id', $row->uid)
             ->whereIn('type', Discussion::READING_TYPES)
@@ -819,7 +840,12 @@ class PaliContentService
             if ($at === null || $at < 0 || $at > $len) {
                 $at = $len;
             }
-            $notes[] = ['id' => $record->id, 'at' => $at, 'order' => $note['order'], 'html' => $note['template']];
+            $notes[] = [
+                'id' => $record->id,
+                'at' => $at,
+                'order' => $note['order'],
+                'html' => $annotations->note($note['body'], $note['params'], $record->effectiveContentType()),
+            ];
             $footnotes[$record->id] = [
                 'fnId' => 'fn-'.$record->id,
                 'noteHtml' => $note['noteHtml'],
@@ -827,13 +853,15 @@ class PaliContentService
             ];
         }
 
+        // 结构化注入：插入点写批注标记（不是 HTML），渲染时变成模板节点，各格式自己决定怎么显示
         $layout = AnnotationLayout::apply(
             $content,
             $glossaries,
             $issues,
             $notes,
-            $format === 'html',
+            true,
             $assessment === null ? null : ['id' => $assessment['id'], 'score' => $assessment['score']],
+            $annotations,
         );
         $result['content'] = $layout['content'];
         $result['notes'] = array_map(fn ($id) => $footnotes[$id], $layout['notes']);
@@ -849,10 +877,10 @@ class PaliContentService
     }
 
     /**
-     * 把一条批注（commentary / note）渲染成要插入正文的 {{note}} 模板与段后脚注条目。
+     * 把一条批注（commentary / note）整理成要插入正文的 note 模板（正文 + 参数）与段后脚注条目。
      * 不合格的（正文为空、commentary 不是句子模板）返回 null，不插角标也不进脚注列表。
      *
-     * @return array{template: string, noteHtml: string, citeHtml: string, order: array<int, int>}|null
+     * @return array{body: string, params: array<string, string>, noteHtml: string, citeHtml: string, order: array<int, int>}|null
      */
     protected function renderAnnotationNote(Discussion $note, Sentence $row, string $channelType): ?array
     {
@@ -880,40 +908,34 @@ class PaliContentService
             // 普通边注：content 就是注解正文，照原样渲染。
             $source = $noteContent;
         }
-        // 边注实际内容：先用 MdRender 渲染出来，再放进 {{note|text=…}} ——
-        // 直接嵌套 {{…}} 会被 wiki2xml 的平铺替换破坏。
-        // 用 text 格式渲染：避免「1.」被 markdown 解释成有序列表，
-        // 产生 <ol></p></p> 这类坏 HTML 把 sidenote 的闭合结构破坏、吞掉后续正文。
-        $noteHtml = MdRender::render(
-            $source,
-            [$row->channel_uid],
-            null,
-            'read',
-            $channelType,
-            'markdown',
-            'text'
-        );
+        // 段后脚注列表用的纯文本（边注本身是结构化的 note 节点，正文照 markdown 渲染）
+        $noteHtml = (string) app(MarkupService::class)->render($source, new RenderOptions(
+            format: Format::Text,
+            channels: [(string) $row->channel_uid],
+            channelType: $channelType,
+            contentType: $note->effectiveContentType(),
+        ));
         // 义注被截断时补省略号，提示后面还有；想看全文点 <cite> 跳过去。
         if (count($sents) > self::MAX_COMMENTARY_SENTENCES) {
             $noteHtml = rtrim($noteHtml).'...';
+            $source .= '...';
         }
         // 出处只有 commentary 有。跳转目标（义注书-段-起-止）同时挂在 <cite> 和角标
         // <label> 上，前者用于「点链接跳页」，后者用于平板双栏「点角标跨栏高亮」。
         // 多句时跳转到第一句（义注对这个词的解释从那里开始）。
         $citeHtml = '';
-        $citeParam = '';
+        $params = [];
         if ($sents) {
             $m = $sents[0];
             $target = ' data-book="'.$m[1].'" data-para="'.$m[2].'" data-start="'.$m[3].'" data-end="'.$m[4].'"';
             $citeHtml = '<cite class="anno-jump"'.$target.'>义注</cite>';
-            $citeParam = '|cite=义注'
-                .'|citelink='.$m[1].'-'.$m[2].'-'.$m[3].'-'.$m[4];
+            $params = ['cite' => '义注', 'citelink' => $m[1].'-'.$m[2].'-'.$m[3].'-'.$m[4]];
         }
 
         return [
-            // 用 {{note}} 模板渲染 tufte sidenote（label + input + span.sidenote），复用 render_note()。
-            // text 传已预渲染的纯文本（嵌套 {{…}} 会被 wiki2xml 平铺替换破坏）。
-            'template' => '{{note|text='.$noteHtml.$citeParam.'}}',
+            // note 模板的正文（markdown）与参数：渲染成 tufte sidenote（label + input + span.sidenote）
+            'body' => $source,
+            'params' => $params,
             'noteHtml' => $noteHtml,
             'citeHtml' => $citeHtml,
             // 同一插入点上的先后：按义注原文的先后；普通 note 没有坐标，取 0，排在义注对应之前
@@ -972,23 +994,31 @@ class PaliContentService
         $injections = $records->map(fn (Sentence $row) => $this->injectAnnotationNotes($row, $channelType, $format));
         // 段里有句子评估过，其余没评估的句子在句尾补灰色对勾：不然读者会把它与下一句的
         // 对勾连起来，误以为是一句。整段都没评估就都不补（段落本身有分隔）。
-        $markUnassessed = $format === 'html' && $injections->contains('assessed', true);
+        $markUnassessed = $injections->contains('assessed', true);
+        $sources = [];
         foreach ($records as $i => $row) {
             $injected = $injections[$i];
             $content = $injected['content'];
             if ($markUnassessed && ! $injected['assessed'] && trim($content) !== '') {
-                $content .= AnnotationLayout::unassessedMark();
+                $content .= $injected['annotations']->unassessedMark();
             }
             $allNotes = array_merge($allNotes, $injected['notes']);
-            $html = MdRender::render(
-                $content,
-                [$row->channel_uid],
-                null,
-                'read',
-                $channelType,
-                $row->content_type,
-                $format
-            );
+            $sources[$i] = [
+                'source' => $content,
+                'channels' => [(string) $row->channel_uid],
+                'contentType' => (string) $row->content_type,
+                'annotations' => $injected['annotations'],
+                // 边注的 HTML id 带上句子坐标，整页唯一
+                'idPrefix' => "{$row->book_id}-{$row->paragraph}-{$row->word_start}-{$row->word_end}",
+            ];
+        }
+        // 整段一起渲染：各句里的术语、句子模板（含义注对应）合在一起批量查
+        $rendered = $sources === [] ? [] : app(MarkupService::class)->renderMany(
+            $sources,
+            new RenderOptions(format: self::markupFormat($format), channelType: $channelType),
+        );
+        foreach ($records as $i => $row) {
+            $html = $rendered[$i] ?? '';
             if (empty($html)) {
                 continue;
             }

@@ -40,7 +40,7 @@ class TipitakaReadingRequest extends FormRequest
             'after' => ['string', 'regex:/^\d+-\d+$/'],
             'page_size' => ['integer', 'min:1'],
             'unit' => ['string', 'in:para,byte'],
-            'format' => ['string', 'in:html,markdown,react,text'],
+            'format' => ['string', 'in:html,markdown,text'],
             'include' => ['string', 'in:display,sentences,all'],
         ];
     }
