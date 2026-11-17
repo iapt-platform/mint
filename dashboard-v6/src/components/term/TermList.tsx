@@ -4,22 +4,23 @@ import { Button, Space, Table, Dropdown, Modal, message } from "antd";
 import {
   ExclamationCircleOutlined,
   DeleteOutlined,
-  ImportOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
 
-import type { ITermDeleteRequest, ITermListResponse } from "../../api/Term";
-import { delete_2, get } from "../../request";
-import type { IDeleteResponse } from "../../api/article";
+import {
+  deleteTerm,
+  fetchChannelTerms,
+  fetchStudioTerms,
+  type TermExchangeTarget,
+  type TermListQuery,
+} from "../../api/Term";
 import { useRef } from "react";
 import TermExport from "./TermExport";
+import TermImport from "./TermImport";
 
 import TermModal from "./TermModal";
-import { getSorterUrl } from "../../utils";
 import { useAppSelector } from "../../hooks";
 import { currentUser } from "../../reducers/current-user";
-import type { IChannel } from "../../api/channel";
-import DataImport from "../general/DataImport";
 import { Link } from "react-router";
 
 interface IItem {
@@ -27,7 +28,7 @@ interface IItem {
   id: string;
   word: string;
   tag: string;
-  channel?: IChannel;
+  channel?: string;
   meaning: string;
   meaning2: string;
   note: string | null;
@@ -35,10 +36,13 @@ interface IItem {
 }
 
 interface IWidget {
+  /** v3 列表用：用户或团队的 uuid */
+  studioId?: string;
+  /** TermModal 的「在 Studio 中打开」用 */
   studioName?: string;
   channelId?: string;
 }
-const TermListWidget = ({ studioName, channelId }: IWidget) => {
+const TermListWidget = ({ studioId, studioName, channelId }: IWidget) => {
   const intl = useIntl();
   const currUser = useAppSelector(currentUser);
 
@@ -61,29 +65,25 @@ const TermListWidget = ({ studioName, channelId }: IWidget) => {
       cancelText: intl.formatMessage({
         id: "buttons.no",
       }),
-      onOk() {
-        console.log("delete", id);
-        return delete_2<ITermDeleteRequest, IDeleteResponse>(
-          `/api/v2/terms/${id}`,
-          {
-            uuid: true,
-            id: id,
-          }
-        )
-          .then((json) => {
-            if (json.ok) {
-              message.success("删除成功");
-              ref.current?.reload();
-            } else {
-              message.error(json.message);
-            }
-          })
-          .catch((e: unknown) => console.log("Oops errors!", e));
+      async onOk() {
+        // v3 一条一条软删；没有删除权限的那条会弹出提示并中止
+        for (const termId of id) {
+          await deleteTerm(termId);
+        }
+        message.success("删除成功");
+        ref.current?.reload();
       },
     });
   };
 
   const ref = useRef<ActionType | null>(null);
+  // 导入 / 导出的范围：channel 详情页按 channel，术语页按当前身份的 studio
+  const exchangeTarget: TermExchangeTarget | undefined =
+    typeof channelId === "string"
+      ? { channelId }
+      : studioId
+        ? { studioId }
+        : undefined;
 
   return (
     <>
@@ -128,7 +128,10 @@ const TermListWidget = ({ studioName, channelId }: IWidget) => {
             dataIndex: "channel",
             key: "channel",
             render(_dom, entity) {
-              return entity.channel?.name;
+              return (
+                entity.channel ??
+                intl.formatMessage({ id: "term.general-in-studio" })
+              );
             },
           },
           {
@@ -243,7 +246,7 @@ const TermListWidget = ({ studioName, channelId }: IWidget) => {
                   console.log(selectedRowKeys);
                   showDeleteConfirm(
                     selectedRowKeys.map((item) => item.toString()),
-                    selectedRowKeys.length + "个单词"
+                    selectedRowKeys.length + "个单词",
                   );
                   onCleanSelected();
                 }}
@@ -253,40 +256,39 @@ const TermListWidget = ({ studioName, channelId }: IWidget) => {
             </Space>
           );
         }}
-        request={async (params = {}, sorter, filter) => {
-          console.log(params, sorter, filter);
-          const offset =
-            ((params.current ? params.current : 1) - 1) *
-            (params.pageSize ? params.pageSize : 20);
-          let url = `/api/v2/terms?`;
-          if (typeof channelId === "string") {
-            url += `view=channel&id=${channelId}`;
-          } else {
-            url += `view=studio&name=${studioName}`;
+        request={async (params = {}, sorter) => {
+          const page = params.current ?? 1;
+          const perPage = params.pageSize ?? 20;
+          const query: TermListQuery = {
+            page,
+            per_page: perPage,
+            search: params.keyword || undefined,
+          };
+          const sort = sorter?.updated_at;
+          if (sort) {
+            query.order = "updated_at";
+            query.dir = sort === "ascend" ? "asc" : "desc";
           }
-
-          url += `&limit=${params.pageSize}&offset=${offset}`;
-          if (typeof params.keyword !== "undefined") {
-            url += "&search=" + (params.keyword ? params.keyword : "");
-          }
-          url += getSorterUrl(sorter);
-          const res = await get<ITermListResponse>(url);
-          console.log(res);
-          const items: IItem[] = res.data.rows.map((item, id) => {
-            return {
-              sn: id + offset + 1,
-              id: item.guid,
-              word: item.word,
-              tag: item.tag,
-              channel: item.channel,
-              meaning: item.meaning,
-              meaning2: item.other_meaning,
-              note: item.note,
-              updated_at: item.updated_at,
-            };
-          });
+          const res =
+            typeof channelId === "string"
+              ? await fetchChannelTerms(channelId, query)
+              : studioId
+                ? await fetchStudioTerms(studioId, query)
+                : undefined;
+          const offset = (page - 1) * perPage;
+          const items: IItem[] = (res?.data ?? []).map((item, index) => ({
+            sn: index + offset + 1,
+            id: item.id ?? "",
+            word: item.word ?? "",
+            tag: item.tag ?? "",
+            channel: item.channel?.name,
+            meaning: item.meaning ?? "",
+            meaning2: item.other_meaning ?? "",
+            note: item.summary_text ?? "",
+            updated_at: item.updated_at ?? "",
+          }));
           return {
-            total: res.data.count,
+            total: res?.meta?.total ?? 0,
             success: true,
             data: items,
           };
@@ -298,23 +300,12 @@ const TermListWidget = ({ studioName, channelId }: IWidget) => {
           showSizeChanger: true,
         }}
         toolBarRender={() => [
-          <DataImport
-            url="/api/v2/terms-import"
-            urlExtra={
-              channelId
-                ? `view=channel&id=${channelId}`
-                : `view=studio&name=${studioName}`
-            }
-            trigger={
-              <Button icon={<ImportOutlined />}>
-                {intl.formatMessage({ id: "buttons.import" })}
-              </Button>
-            }
-            onSuccess={() => {
-              ref.current?.reload();
-            }}
+          <TermImport
+            key="import"
+            target={exchangeTarget}
+            onSuccess={() => ref.current?.reload()}
           />,
-          <TermExport channelId={channelId} studioName={studioName} />,
+          <TermExport key="export" target={exchangeTarget} />,
           <TermModal
             trigger={
               <Button

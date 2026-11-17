@@ -31,4 +31,15 @@ final class CategoryTemplate extends Template
     {
         return (string) $call->param('name');
     }
+
+    /**
+     * HTML 里带上类名与分类名，由页面决定样式与去向（百科页换成指向分类列表的标签链接，
+     * 见 App\Services\WikiService::contentHtml() 与 resources/css/modules/wiki.css）。
+     */
+    public function html(Call $call, RenderContext $ctx): string
+    {
+        $name = e($this->text($call, $ctx));
+
+        return '<span class="tpl-category" data-category="'.$name.'">'.$name.'</span>';
+    }
 }

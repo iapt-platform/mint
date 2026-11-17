@@ -1,4 +1,9 @@
-import { useMatches, useNavigate, useParams, useSearchParams } from "react-router";
+import {
+  useMatches,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router";
 import { useIntl } from "react-intl";
 
 import TermEditor from "../../../features/editor/Term";
@@ -27,6 +32,11 @@ const Widget = () => {
           const newParams = new URLSearchParams(searchParams);
           newParams.set("channel", channelsParams);
           setSearchParams(newParams);
+        }}
+        onTermSelect={(termId) => {
+          // 点正文里的术语：在当前页打开那条术语，保留所选版本
+          const query = searchParams.toString();
+          navigate(`/workspace/term/${termId}${query ? `?${query}` : ""}`);
         }}
         onEdit={() => {
           navigate(`/workspace/term/${id}/edit`);

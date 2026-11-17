@@ -150,6 +150,25 @@
     color: var(--tblr-body-color);
 }
 
+/* 正文里的 {{category|…}}：渲染器输出 span.tpl-category，百科页换成指向分类列表的链接；样式同 .wiki-tag */
+.wiki-content-body .tpl-category {
+    display: inline-block;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    padding: 3px 10px;
+    margin: 0 4px 4px 0;
+    border-radius: 20px;
+    border: 1px solid var(--tblr-border-color);
+    color: var(--tblr-secondary);
+    text-decoration: none;
+    transition: background 0.12s;
+}
+
+.wiki-content-body a.tpl-category:hover {
+    background: var(--tblr-bg-surface-secondary);
+    color: var(--tblr-body-color);
+}
+
 /* ══════════════════════════════════════════
    四、首页组件
    ══════════════════════════════════════════ */

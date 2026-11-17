@@ -4,16 +4,14 @@ get:
   tags:
     - terms
   operationId: get_api_v2_terms
-  description: |-
-    按 view 指定的口径返回术语列表。studio、channel、user 三个口径需要登录；
-    studio 要求 name 指向的 studio 属于当前用户，否则 403；channel 要求当前用户是
-    channel owner 或协作者（ShareApi 权限值非 0），否则 403。
-    create-by-channel、show、hot-meaning 三个口径直接返回各自的数据结构，
-    不走后面的搜索/排序/分页；其余口径统一返回 {rows, count}。
-    hot-meaning 结果会按 config('mint.cache.expire') 缓存在 term/hot_meaning 键下。
-    未指定 view（或给了无法识别的值）时没有任何基础查询，会直接报错，调用方必须传 view。
-
-    实现：`DhammaTermController@index`
+  description: |
+    各 view 的去向：
+    - `channel` → `GET /v3/channels/{channel}/terms`
+    - `studio` / `user` → `GET /v3/studios/{studio}/terms`（`{studio}` 一律 uuid；`general=true` 只要 studio 级术语）
+    - `word` → `GET /v3/terms?word=`（只列看得见的；`with_body=true` 带渲染后的正文）
+    - `create-by-channel` 不迁：v6 改为「按词查 + channel 详情」两次调用
+    - `show`、`tag`、`hot-meaning` 没有消费者，不迁
+    保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
   parameters:
     -
       name: view
@@ -160,23 +158,15 @@ get:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
       $ref: '../../main.yaml#/components/responses/ValidationError'
+  deprecated: true
 post:
   summary: 新建术语
   tags:
     - terms
   operationId: post_api_v2_terms
-  description: |-
-    需要登录。传了 channel 则建 channel 级术语，owner 取该 channel 所属 studio、
-    language 取该 channel 的语言（请求里的 language 被覆盖），并要求当前身份对该
-    channel 有编辑权（owner / 协作者 / channel access token），否则 403。
-    不传 channel 则建 studio 级术语，只允许 studio 本人创建（studioId 必须等于当前
-    用户 uid，否则 403）；AI 模型身份一律禁止（403），因为 access token 只能代持
-    channel 级权限。
-    唯一性：channel 级按 channel+word+tag 查重，studio 级按 owner+word+tag+language
-    且 channal 为空查重；重复时返回 'word existed'，HTTP 状态仍是 200。
-    写入成功后清除该词的 term 缓存并重建 OpenSearch 索引（索引失败只记日志）。
-
-    实现：`DhammaTermController@store`
+  description: |
+    已被取代：带 channel 的 → `POST /v3/channels/{channel}/terms`；studio 级（不带 channel）→ `POST /v3/studios/{studio}/terms`。
+    v3 的 AI 代写走 `X-Agent-Grant` 请求头，不再收 body 里的 `access_token`。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
   requestBody:
     required: true
     content:
@@ -284,3 +274,4 @@ post:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
       $ref: '../../main.yaml#/components/responses/ValidationError'
+  deprecated: true

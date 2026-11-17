@@ -1,0 +1,71 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-channels-channel-terms-imports.yaml
+post:
+  summary: '向 channel 导入术语'
+  tags:
+    - channels
+  operationId: post_api_v3_channels_channel_terms_imports
+  description: |-
+    上传 xlsx（第一行是列名，至少有 word、meaning；可以直接用导出的表格）。所有行都落在这个 channel，
+    语言跟随 channel。有 id 的行改那一条（word / tag 不能改；带 etag 列时与当前不一致就跳过），
+    没有 id 的按 word + tag 找，有就改、没有就建。**部分成功**：出错的行跳过，`errors` 逐行给出原因。
+    能写这个 channel 的人（含团队 editor）才能导入；AI 模型不能导入。最多 5000 行。
+
+    实现：`V3\ChannelTermImportController@__invoke`
+  security:
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: channel
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 'channel uid'
+  requestBody:
+    required: true
+    content:
+      multipart/form-data:
+        schema:
+          type: object
+          properties:
+            file:
+              type: string
+              format: binary
+              description: 'xlsx 表格，不超过 5MB'
+          required:
+            - file
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  created:
+                    type: integer
+                  updated:
+                    type: integer
+                  unchanged:
+                    type: integer
+                  reindexed:
+                    type: boolean
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties: { row: { type: integer }, message: { type: string } }
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    403:
+      description: '不能写这个 channel'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

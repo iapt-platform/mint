@@ -1,7 +1,7 @@
 import { Modal, Space } from "antd";
 import { Link } from "react-router";
 import TermEdit from "./TermEdit";
-import type { ITermDataResponse } from "../../api/Term";
+import type { Term } from "../../api/Term";
 import useMergedState from "../../hooks/useMergedState"; // 确保路径正确
 
 interface IWidget {
@@ -15,7 +15,7 @@ interface IWidget {
   parentChannelId?: string;
   parentStudioId?: string;
   community?: boolean;
-  onUpdate?: (value: ITermDataResponse) => void;
+  onUpdate?: (value: Term) => void;
   onClose?: () => void;
 }
 
@@ -70,7 +70,7 @@ const TermModalWidget = (props: IWidget) => {
         <TermEdit
           {...restEditProps}
           studioName={studioName}
-          onUpdate={(value: ITermDataResponse) => {
+          onUpdate={(value: Term) => {
             close();
             onUpdate?.(value);
           }}

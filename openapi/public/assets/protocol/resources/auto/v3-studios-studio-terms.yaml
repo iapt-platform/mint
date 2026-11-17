@@ -1,0 +1,471 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-studios-studio-terms.yaml
+get:
+  summary: 'studio 的术语列表'
+  tags:
+    - studios
+  operationId: get_api_v3_studios_studio_terms
+  description: |-
+    studio 名下的全部术语（它的 channel 里的与 studio 级的）。本人或团队成员能看。请求头 `Accept` 是
+    `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet` 时导出成 xlsx（列与说明同 channel 的术语列表），
+    取代 v2 `terms-export?view=studio`。
+
+    实现：`V3\StudioTermController@index`
+  security:
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: studio
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '用户或团队的 uuid'
+    -
+      name: general
+      in: query
+      schema:
+        type: boolean
+      description: '只要 studio 级术语（不属于任何 channel）'
+    -
+      name: per_page
+      in: query
+      schema:
+        type: integer
+        default: 20
+      description: '每页条数，最大 200'
+    -
+      name: search
+      in: query
+      schema:
+        type: string
+      description: 按词、释义搜索
+    -
+      name: quality
+      in: query
+      schema:
+        type: string
+        enum:
+          - featured
+          - standard
+          - draft
+          - pending
+      description: '质量；pending 含未评级的'
+    -
+      name: category
+      in: query
+      schema:
+        type: string
+      description: 百科分类
+    -
+      name: order
+      in: query
+      schema:
+        type: string
+        enum:
+          - updated_at
+          - created_at
+          - word
+        default: updated_at
+      description: 排序字段
+    -
+      name: dir
+      in: query
+      schema:
+        type: string
+        enum:
+          - asc
+          - desc
+      description: 排序方向
+    -
+      name: page
+      in: query
+      schema:
+        type: integer
+      description: 页码
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    word:
+                      type: string
+                    tag:
+                      type: string
+                      nullable: true
+                    meaning:
+                      type: string
+                    other_meaning:
+                      type: string
+                      nullable: true
+                    language:
+                      type: string
+                    channel_id:
+                      type: string
+                      nullable: true
+                    channel:
+                      type: object
+                      properties: { id: { type: string }, name: { type: string } }
+                      nullable: true
+                    owner_id:
+                      type: string
+                    quality:
+                      type: string
+                      nullable: true
+                    content_type:
+                      type: string
+                    summary:
+                      type: string
+                      nullable: true
+                    note:
+                      type: string
+                      nullable: true
+                    redirect:
+                      type: string
+                      nullable: true
+                    categories:
+                      type: array
+                      items: { type: string }
+                    summary_text:
+                      type: string
+                    body:
+                      type: array
+                      items: { $ref: '../../main.yaml#/components/schemas/MarkupNode' }
+                      description: 仅在部分查询口径下返回。
+                    html:
+                      type: string
+                      description: 仅在部分查询口径下返回。
+                    editor:
+                      type: object
+                      properties: { id: { type: string }, nickName: { type: string }, userName: { type: string }, realName: { type: string }, sn: { type: integer }, avatar: { type: string }, roles: { type: array, items: { type: string } } }
+                      nullable: true
+                    co_editor:
+                      type: object
+                      properties: { id: { type: string }, nickName: { type: string }, userName: { type: string }, realName: { type: string }, sn: { type: integer }, avatar: { type: string }, roles: { type: array, items: { type: string } } }
+                      nullable: true
+                    etag:
+                      type: string
+                    abilities:
+                      type: object
+                      properties: { update: { type: boolean }, delete: { type: boolean } }
+                    created_at:
+                      type: string
+                    updated_at:
+                      type: string
+                    deleted_at:
+                      type: string
+                      nullable: true
+              meta:
+                $ref: '../../main.yaml#/components/schemas/PaginationMeta'
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    403:
+      description: 不是本人，也不是团队成员
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'
+post:
+  summary: '新建 studio 级术语'
+  tags:
+    - studios
+  operationId: post_api_v3_studios_studio_terms
+  description: |-
+    不属于任何 channel，owner 名下所有 channel 共用。本人或团队 owner / manager 能建；AI 模型不能建。
+    同一 studio、同一语言里 word@tag 唯一（409）。
+
+    实现：`V3\StudioTermController@store`
+  security:
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: studio
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '用户或团队的 uuid'
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            word:
+              type: string
+              description: 巴利词，建立后不能改
+            tag:
+              type: string
+              nullable: true
+              description: '义项（同词多义时区分），不能含 @，建立后不能改'
+            meaning:
+              type: string
+              description: 释义
+            language:
+              type: string
+              description: 语言
+            other_meaning:
+              type: string
+              nullable: true
+              description: 其它释义
+            note:
+              type: string
+              nullable: true
+              description: 正文
+            summary:
+              type: string
+              nullable: true
+              description: '摘要，格式与 note 相同'
+            quality:
+              type: string
+              nullable: true
+              description: 质量
+              enum:
+                - featured
+                - standard
+                - draft
+                - pending
+            content_type:
+              type: string
+              description: 正文方言
+              enum:
+                - markdown
+                - markdown-e2
+              default: markdown-e2
+            redirect:
+              type: string
+              nullable: true
+              description: '重定向到 word 或 word@tag'
+          required:
+            - word
+            - meaning
+            - language
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  word:
+                    type: string
+                  tag:
+                    type: string
+                    nullable: true
+                  meaning:
+                    type: string
+                  other_meaning:
+                    type: string
+                    nullable: true
+                  language:
+                    type: string
+                  channel_id:
+                    type: string
+                    nullable: true
+                  channel:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      name: { type: string }
+                    nullable: true
+                  owner_id:
+                    type: string
+                  quality:
+                    type: string
+                    nullable: true
+                  content_type:
+                    type: string
+                  summary:
+                    type: string
+                    nullable: true
+                  note:
+                    type: string
+                    nullable: true
+                  redirect:
+                    type: string
+                    nullable: true
+                  categories:
+                    type: array
+                    items:
+                      type: string
+                  summary_text:
+                    type: string
+                  body:
+                    type: array
+                    items:
+                      $ref: '../../main.yaml#/components/schemas/MarkupNode'
+                    description: 仅在部分查询口径下返回。
+                  html:
+                    type: string
+                    description: 仅在部分查询口径下返回。
+                  editor:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string }
+                      roles: { type: array, items: { type: string } }
+                    nullable: true
+                  co_editor:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string }
+                      roles: { type: array, items: { type: string } }
+                    nullable: true
+                  etag:
+                    type: string
+                  abilities:
+                    type: object
+                    properties:
+                      update: { type: boolean }
+                      delete: { type: boolean }
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  deleted_at:
+                    type: string
+                    nullable: true
+    201:
+      description: 已新建
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  word:
+                    type: string
+                  tag:
+                    type: string
+                    nullable: true
+                  meaning:
+                    type: string
+                  other_meaning:
+                    type: string
+                    nullable: true
+                  language:
+                    type: string
+                  channel_id:
+                    type: string
+                    nullable: true
+                  channel:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      name: { type: string }
+                    nullable: true
+                  owner_id:
+                    type: string
+                  quality:
+                    type: string
+                    nullable: true
+                  content_type:
+                    type: string
+                  summary:
+                    type: string
+                    nullable: true
+                  note:
+                    type: string
+                    nullable: true
+                  redirect:
+                    type: string
+                    nullable: true
+                  categories:
+                    type: array
+                    items:
+                      type: string
+                  summary_text:
+                    type: string
+                  body:
+                    type: array
+                    items:
+                      $ref: '../../main.yaml#/components/schemas/MarkupNode'
+                    description: 仅在部分查询口径下返回。
+                  html:
+                    type: string
+                    description: 仅在部分查询口径下返回。
+                  editor:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string }
+                      roles: { type: array, items: { type: string } }
+                    nullable: true
+                  co_editor:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string }
+                      roles: { type: array, items: { type: string } }
+                    nullable: true
+                  etag:
+                    type: string
+                  abilities:
+                    type: object
+                    properties:
+                      update: { type: boolean }
+                      delete: { type: boolean }
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                  deleted_at:
+                    type: string
+                    nullable: true
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    403:
+      description: '不能在这个 studio 新建'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+    409:
+      description: '已有这个 word@tag'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

@@ -77,8 +77,17 @@ class StudiosApi
         'getApiV3StudiosStudioChannels' => [
             'application/json',
         ],
+        'getApiV3StudiosStudioTerms' => [
+            'application/json',
+        ],
         'postApiV3StudiosStudioChannels' => [
             'application/json',
+        ],
+        'postApiV3StudiosStudioTerms' => [
+            'application/json',
+        ],
+        'postApiV3StudiosStudioTermsImports' => [
+            'multipart/form-data',
         ],
     ];
 
@@ -612,6 +621,444 @@ class StudiosApi
     }
 
     /**
+     * Operation getApiV3StudiosStudioTerms
+     *
+     * studio 的术语列表
+     *
+     * @param  string $studio 用户或团队的 uuid (required)
+     * @param  int|null $per_page 每页条数，最大 200 (optional, default to 20)
+     * @param  string|null $search 按词、释义搜索 (optional)
+     * @param  string|null $quality 质量；pending 含未评级的 (optional)
+     * @param  string|null $category 百科分类 (optional)
+     * @param  bool|null $general 只要 studio 级术语（不属于任何 channel） (optional)
+     * @param  string|null $order 排序字段 (optional, default to 'updated_at')
+     * @param  string|null $dir 排序方向 (optional)
+     * @param  int|null $page 页码 (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3StudiosStudioTerms'] to see the possible values for this operation
+     *
+     * @throws \WikipaliApi\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return \WikipaliApi\Model\GetApiV3ChannelsChannelTerms200Response|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails
+     */
+    public function getApiV3StudiosStudioTerms($studio, $per_page = 20, $search = null, $quality = null, $category = null, $general = null, $order = 'updated_at', $dir = null, $page = null, string $contentType = self::contentTypes['getApiV3StudiosStudioTerms'][0])
+    {
+        list($response) = $this->getApiV3StudiosStudioTermsWithHttpInfo($studio, $per_page, $search, $quality, $category, $general, $order, $dir, $page, $contentType);
+        return $response;
+    }
+
+    /**
+     * Operation getApiV3StudiosStudioTermsWithHttpInfo
+     *
+     * studio 的术语列表
+     *
+     * @param  string $studio 用户或团队的 uuid (required)
+     * @param  int|null $per_page 每页条数，最大 200 (optional, default to 20)
+     * @param  string|null $search 按词、释义搜索 (optional)
+     * @param  string|null $quality 质量；pending 含未评级的 (optional)
+     * @param  string|null $category 百科分类 (optional)
+     * @param  bool|null $general 只要 studio 级术语（不属于任何 channel） (optional)
+     * @param  string|null $order 排序字段 (optional, default to 'updated_at')
+     * @param  string|null $dir 排序方向 (optional)
+     * @param  int|null $page 页码 (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3StudiosStudioTerms'] to see the possible values for this operation
+     *
+     * @throws \WikipaliApi\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of \WikipaliApi\Model\GetApiV3ChannelsChannelTerms200Response|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function getApiV3StudiosStudioTermsWithHttpInfo($studio, $per_page = 20, $search = null, $quality = null, $category = null, $general = null, $order = 'updated_at', $dir = null, $page = null, string $contentType = self::contentTypes['getApiV3StudiosStudioTerms'][0])
+    {
+        $request = $this->getApiV3StudiosStudioTermsRequest($studio, $per_page, $search, $quality, $category, $general, $order, $dir, $page, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    return $this->handleResponseWithDataType(
+                        '\WikipaliApi\Model\GetApiV3ChannelsChannelTerms200Response',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $request,
+                        $response,
+                    );
+                case 403:
+                    return $this->handleResponseWithDataType(
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $request,
+                        $response,
+                    );
+            }
+
+            
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            return $this->handleResponseWithDataType(
+                '\WikipaliApi\Model\GetApiV3ChannelsChannelTerms200Response',
+                $request,
+                $response,
+            );
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\WikipaliApi\Model\GetApiV3ChannelsChannelTerms200Response',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+            }
+        
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation getApiV3StudiosStudioTermsAsync
+     *
+     * studio 的术语列表
+     *
+     * @param  string $studio 用户或团队的 uuid (required)
+     * @param  int|null $per_page 每页条数，最大 200 (optional, default to 20)
+     * @param  string|null $search 按词、释义搜索 (optional)
+     * @param  string|null $quality 质量；pending 含未评级的 (optional)
+     * @param  string|null $category 百科分类 (optional)
+     * @param  bool|null $general 只要 studio 级术语（不属于任何 channel） (optional)
+     * @param  string|null $order 排序字段 (optional, default to 'updated_at')
+     * @param  string|null $dir 排序方向 (optional)
+     * @param  int|null $page 页码 (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3StudiosStudioTerms'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function getApiV3StudiosStudioTermsAsync($studio, $per_page = 20, $search = null, $quality = null, $category = null, $general = null, $order = 'updated_at', $dir = null, $page = null, string $contentType = self::contentTypes['getApiV3StudiosStudioTerms'][0])
+    {
+        return $this->getApiV3StudiosStudioTermsAsyncWithHttpInfo($studio, $per_page, $search, $quality, $category, $general, $order, $dir, $page, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation getApiV3StudiosStudioTermsAsyncWithHttpInfo
+     *
+     * studio 的术语列表
+     *
+     * @param  string $studio 用户或团队的 uuid (required)
+     * @param  int|null $per_page 每页条数，最大 200 (optional, default to 20)
+     * @param  string|null $search 按词、释义搜索 (optional)
+     * @param  string|null $quality 质量；pending 含未评级的 (optional)
+     * @param  string|null $category 百科分类 (optional)
+     * @param  bool|null $general 只要 studio 级术语（不属于任何 channel） (optional)
+     * @param  string|null $order 排序字段 (optional, default to 'updated_at')
+     * @param  string|null $dir 排序方向 (optional)
+     * @param  int|null $page 页码 (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3StudiosStudioTerms'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function getApiV3StudiosStudioTermsAsyncWithHttpInfo($studio, $per_page = 20, $search = null, $quality = null, $category = null, $general = null, $order = 'updated_at', $dir = null, $page = null, string $contentType = self::contentTypes['getApiV3StudiosStudioTerms'][0])
+    {
+        $returnType = '\WikipaliApi\Model\GetApiV3ChannelsChannelTerms200Response';
+        $request = $this->getApiV3StudiosStudioTermsRequest($studio, $per_page, $search, $quality, $category, $general, $order, $dir, $page, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'getApiV3StudiosStudioTerms'
+     *
+     * @param  string $studio 用户或团队的 uuid (required)
+     * @param  int|null $per_page 每页条数，最大 200 (optional, default to 20)
+     * @param  string|null $search 按词、释义搜索 (optional)
+     * @param  string|null $quality 质量；pending 含未评级的 (optional)
+     * @param  string|null $category 百科分类 (optional)
+     * @param  bool|null $general 只要 studio 级术语（不属于任何 channel） (optional)
+     * @param  string|null $order 排序字段 (optional, default to 'updated_at')
+     * @param  string|null $dir 排序方向 (optional)
+     * @param  int|null $page 页码 (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3StudiosStudioTerms'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function getApiV3StudiosStudioTermsRequest($studio, $per_page = 20, $search = null, $quality = null, $category = null, $general = null, $order = 'updated_at', $dir = null, $page = null, string $contentType = self::contentTypes['getApiV3StudiosStudioTerms'][0])
+    {
+
+        // verify the required parameter 'studio' is set
+        if ($studio === null || (is_array($studio) && count($studio) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $studio when calling getApiV3StudiosStudioTerms'
+            );
+        }
+
+
+
+
+
+
+
+
+
+
+        $resourcePath = '/v3/studios/{studio}/terms';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $per_page,
+            'per_page', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $search,
+            'search', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $quality,
+            'quality', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $category,
+            'category', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $general,
+            'general', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $order,
+            'order', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $dir,
+            'dir', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $page,
+            'page', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+
+
+        // path params
+        if ($studio !== null) {
+            $resourcePath = str_replace(
+                '{studio}',
+                ObjectSerializer::toPathValue($studio),
+                $resourcePath
+            );
+        }
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', 'application/problem+json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+        // this endpoint requires Bearer authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'GET',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
      * Operation postApiV3StudiosStudioChannels
      *
      * 在 studio 名下建 channel
@@ -913,6 +1360,715 @@ class StudiosApi
                 $httpBody = $post_api_v3_studios_studio_channels_request;
             }
         } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+        // this endpoint requires Bearer authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'POST',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation postApiV3StudiosStudioTerms
+     *
+     * 新建 studio 级术语
+     *
+     * @param  string $studio 用户或团队的 uuid (required)
+     * @param  \WikipaliApi\Model\PostApiV3StudiosStudioTermsRequest $post_api_v3_studios_studio_terms_request post_api_v3_studios_studio_terms_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['postApiV3StudiosStudioTerms'] to see the possible values for this operation
+     *
+     * @throws \WikipaliApi\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return \WikipaliApi\Model\PostApiV3ChannelsChannelTerms200Response|\WikipaliApi\Model\PostApiV3ChannelsChannelTerms200Response|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails
+     */
+    public function postApiV3StudiosStudioTerms($studio, $post_api_v3_studios_studio_terms_request, string $contentType = self::contentTypes['postApiV3StudiosStudioTerms'][0])
+    {
+        list($response) = $this->postApiV3StudiosStudioTermsWithHttpInfo($studio, $post_api_v3_studios_studio_terms_request, $contentType);
+        return $response;
+    }
+
+    /**
+     * Operation postApiV3StudiosStudioTermsWithHttpInfo
+     *
+     * 新建 studio 级术语
+     *
+     * @param  string $studio 用户或团队的 uuid (required)
+     * @param  \WikipaliApi\Model\PostApiV3StudiosStudioTermsRequest $post_api_v3_studios_studio_terms_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['postApiV3StudiosStudioTerms'] to see the possible values for this operation
+     *
+     * @throws \WikipaliApi\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of \WikipaliApi\Model\PostApiV3ChannelsChannelTerms200Response|\WikipaliApi\Model\PostApiV3ChannelsChannelTerms200Response|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function postApiV3StudiosStudioTermsWithHttpInfo($studio, $post_api_v3_studios_studio_terms_request, string $contentType = self::contentTypes['postApiV3StudiosStudioTerms'][0])
+    {
+        $request = $this->postApiV3StudiosStudioTermsRequest($studio, $post_api_v3_studios_studio_terms_request, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    return $this->handleResponseWithDataType(
+                        '\WikipaliApi\Model\PostApiV3ChannelsChannelTerms200Response',
+                        $request,
+                        $response,
+                    );
+                case 201:
+                    return $this->handleResponseWithDataType(
+                        '\WikipaliApi\Model\PostApiV3ChannelsChannelTerms200Response',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $request,
+                        $response,
+                    );
+                case 403:
+                    return $this->handleResponseWithDataType(
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $request,
+                        $response,
+                    );
+                case 409:
+                    return $this->handleResponseWithDataType(
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $request,
+                        $response,
+                    );
+            }
+
+            
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            return $this->handleResponseWithDataType(
+                '\WikipaliApi\Model\PostApiV3ChannelsChannelTerms200Response',
+                $request,
+                $response,
+            );
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\WikipaliApi\Model\PostApiV3ChannelsChannelTerms200Response',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 201:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\WikipaliApi\Model\PostApiV3ChannelsChannelTerms200Response',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 409:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+            }
+        
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation postApiV3StudiosStudioTermsAsync
+     *
+     * 新建 studio 级术语
+     *
+     * @param  string $studio 用户或团队的 uuid (required)
+     * @param  \WikipaliApi\Model\PostApiV3StudiosStudioTermsRequest $post_api_v3_studios_studio_terms_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['postApiV3StudiosStudioTerms'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function postApiV3StudiosStudioTermsAsync($studio, $post_api_v3_studios_studio_terms_request, string $contentType = self::contentTypes['postApiV3StudiosStudioTerms'][0])
+    {
+        return $this->postApiV3StudiosStudioTermsAsyncWithHttpInfo($studio, $post_api_v3_studios_studio_terms_request, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation postApiV3StudiosStudioTermsAsyncWithHttpInfo
+     *
+     * 新建 studio 级术语
+     *
+     * @param  string $studio 用户或团队的 uuid (required)
+     * @param  \WikipaliApi\Model\PostApiV3StudiosStudioTermsRequest $post_api_v3_studios_studio_terms_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['postApiV3StudiosStudioTerms'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function postApiV3StudiosStudioTermsAsyncWithHttpInfo($studio, $post_api_v3_studios_studio_terms_request, string $contentType = self::contentTypes['postApiV3StudiosStudioTerms'][0])
+    {
+        $returnType = '\WikipaliApi\Model\PostApiV3ChannelsChannelTerms200Response';
+        $request = $this->postApiV3StudiosStudioTermsRequest($studio, $post_api_v3_studios_studio_terms_request, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'postApiV3StudiosStudioTerms'
+     *
+     * @param  string $studio 用户或团队的 uuid (required)
+     * @param  \WikipaliApi\Model\PostApiV3StudiosStudioTermsRequest $post_api_v3_studios_studio_terms_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['postApiV3StudiosStudioTerms'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function postApiV3StudiosStudioTermsRequest($studio, $post_api_v3_studios_studio_terms_request, string $contentType = self::contentTypes['postApiV3StudiosStudioTerms'][0])
+    {
+
+        // verify the required parameter 'studio' is set
+        if ($studio === null || (is_array($studio) && count($studio) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $studio when calling postApiV3StudiosStudioTerms'
+            );
+        }
+
+        // verify the required parameter 'post_api_v3_studios_studio_terms_request' is set
+        if ($post_api_v3_studios_studio_terms_request === null || (is_array($post_api_v3_studios_studio_terms_request) && count($post_api_v3_studios_studio_terms_request) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $post_api_v3_studios_studio_terms_request when calling postApiV3StudiosStudioTerms'
+            );
+        }
+
+
+        $resourcePath = '/v3/studios/{studio}/terms';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+        // path params
+        if ($studio !== null) {
+            $resourcePath = str_replace(
+                '{studio}',
+                ObjectSerializer::toPathValue($studio),
+                $resourcePath
+            );
+        }
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', 'application/problem+json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (isset($post_api_v3_studios_studio_terms_request)) {
+            if (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the body
+                try {
+                    $httpBody = json_encode(ObjectSerializer::sanitizeForSerialization($post_api_v3_studios_studio_terms_request), JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
+            } else {
+                $httpBody = $post_api_v3_studios_studio_terms_request;
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+        // this endpoint requires Bearer authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'POST',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation postApiV3StudiosStudioTermsImports
+     *
+     * 向 studio 导入术语
+     *
+     * @param  string $studio 用户或团队的 uuid (required)
+     * @param  \SplFileObject $file xlsx 表格，不超过 5MB (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['postApiV3StudiosStudioTermsImports'] to see the possible values for this operation
+     *
+     * @throws \WikipaliApi\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return \WikipaliApi\Model\PostApiV3ChannelsChannelTermsImports200Response|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails
+     */
+    public function postApiV3StudiosStudioTermsImports($studio, $file, string $contentType = self::contentTypes['postApiV3StudiosStudioTermsImports'][0])
+    {
+        list($response) = $this->postApiV3StudiosStudioTermsImportsWithHttpInfo($studio, $file, $contentType);
+        return $response;
+    }
+
+    /**
+     * Operation postApiV3StudiosStudioTermsImportsWithHttpInfo
+     *
+     * 向 studio 导入术语
+     *
+     * @param  string $studio 用户或团队的 uuid (required)
+     * @param  \SplFileObject $file xlsx 表格，不超过 5MB (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['postApiV3StudiosStudioTermsImports'] to see the possible values for this operation
+     *
+     * @throws \WikipaliApi\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of \WikipaliApi\Model\PostApiV3ChannelsChannelTermsImports200Response|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function postApiV3StudiosStudioTermsImportsWithHttpInfo($studio, $file, string $contentType = self::contentTypes['postApiV3StudiosStudioTermsImports'][0])
+    {
+        $request = $this->postApiV3StudiosStudioTermsImportsRequest($studio, $file, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    return $this->handleResponseWithDataType(
+                        '\WikipaliApi\Model\PostApiV3ChannelsChannelTermsImports200Response',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $request,
+                        $response,
+                    );
+                case 403:
+                    return $this->handleResponseWithDataType(
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $request,
+                        $response,
+                    );
+            }
+
+            
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            return $this->handleResponseWithDataType(
+                '\WikipaliApi\Model\PostApiV3ChannelsChannelTermsImports200Response',
+                $request,
+                $response,
+            );
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\WikipaliApi\Model\PostApiV3ChannelsChannelTermsImports200Response',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+            }
+        
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation postApiV3StudiosStudioTermsImportsAsync
+     *
+     * 向 studio 导入术语
+     *
+     * @param  string $studio 用户或团队的 uuid (required)
+     * @param  \SplFileObject $file xlsx 表格，不超过 5MB (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['postApiV3StudiosStudioTermsImports'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function postApiV3StudiosStudioTermsImportsAsync($studio, $file, string $contentType = self::contentTypes['postApiV3StudiosStudioTermsImports'][0])
+    {
+        return $this->postApiV3StudiosStudioTermsImportsAsyncWithHttpInfo($studio, $file, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation postApiV3StudiosStudioTermsImportsAsyncWithHttpInfo
+     *
+     * 向 studio 导入术语
+     *
+     * @param  string $studio 用户或团队的 uuid (required)
+     * @param  \SplFileObject $file xlsx 表格，不超过 5MB (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['postApiV3StudiosStudioTermsImports'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function postApiV3StudiosStudioTermsImportsAsyncWithHttpInfo($studio, $file, string $contentType = self::contentTypes['postApiV3StudiosStudioTermsImports'][0])
+    {
+        $returnType = '\WikipaliApi\Model\PostApiV3ChannelsChannelTermsImports200Response';
+        $request = $this->postApiV3StudiosStudioTermsImportsRequest($studio, $file, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'postApiV3StudiosStudioTermsImports'
+     *
+     * @param  string $studio 用户或团队的 uuid (required)
+     * @param  \SplFileObject $file xlsx 表格，不超过 5MB (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['postApiV3StudiosStudioTermsImports'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function postApiV3StudiosStudioTermsImportsRequest($studio, $file, string $contentType = self::contentTypes['postApiV3StudiosStudioTermsImports'][0])
+    {
+
+        // verify the required parameter 'studio' is set
+        if ($studio === null || (is_array($studio) && count($studio) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $studio when calling postApiV3StudiosStudioTermsImports'
+            );
+        }
+
+        // verify the required parameter 'file' is set
+        if ($file === null || (is_array($file) && count($file) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $file when calling postApiV3StudiosStudioTermsImports'
+            );
+        }
+
+
+        $resourcePath = '/v3/studios/{studio}/terms/imports';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+        // path params
+        if ($studio !== null) {
+            $resourcePath = str_replace(
+                '{studio}',
+                ObjectSerializer::toPathValue($studio),
+                $resourcePath
+            );
+        }
+
+        // form params
+        $formDataProcessor = new FormDataProcessor();
+
+        $formData = $formDataProcessor->prepare([
+            'file' => $file,
+        ]);
+
+        $formParams = $formDataProcessor->flatten($formData);
+        $multipart = $formDataProcessor->has_file;
+
+        $multipart = true;
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', 'application/problem+json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (count($formParams) > 0) {
             if ($multipart) {
                 $multipartContents = [];
                 foreach ($formParams as $formParamName => $formParamValue) {

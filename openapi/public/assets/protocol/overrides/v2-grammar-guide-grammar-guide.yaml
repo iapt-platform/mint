@@ -1,0 +1,7 @@
+# 手写补充：v2 语法点说明已由 v6 改用 v3 术语接口取代（2026-11-17），不另设 v3 端点。
+get:
+  deprecated: true
+  description: |
+    v6 的 GrammarPop 不再调用：启动时已有 `GET /v3/glossaries/grammar`（带术语 id），按词找到 id 后取 `GET /v3/terms/{term}`；
+    表里没有就按词查 `GET /v3/terms?word=&with_body=true`，只认 `_System_Grammar_Term_{语言}_`（其次 en）里的那条。
+    正文改由新渲染器渲染（v2 这里返回 `# 释义\n正文` 的 markdown 字符串）。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。

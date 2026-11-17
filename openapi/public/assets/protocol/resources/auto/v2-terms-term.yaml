@@ -4,10 +4,9 @@ get:
   tags:
     - terms
   operationId: get_api_v2_terms_term_
-  description: |-
-    按 guid（不是自增 id）查找，公开接口，不需要登录。查不到返回错误 '没有查询到数据'。
-
-    实现：`DhammaTermController@show`
+  description: |
+    已被 `GET /v3/terms/{term}` 取代（正文是新渲染器的「摘要 + 正文」，节点树 `body` 或 `format=html` 的 `html`；
+    可用 `channels` / `mode` 指定渲染版本与模式）。保留仅为 dashboard-v4、旧客户端兼容，待 v4 下线后删除。
   parameters:
     -
       name: term
@@ -118,20 +117,15 @@ get:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
       $ref: '../../main.yaml#/components/responses/ValidationError'
+  deprecated: true
 put:
   summary: 修改术语
   tags:
     - terms
   operationId: put_api_v2_terms_term_
-  description: |-
-    需要登录（未登录 401），按主键 id 查找，不存在返回 '404'。
-    权限：studio 级术语（channal 为空）只有 owner 本人能改，AI 模型一律 403；
-    channel 级术语要求对该 channel 有编辑权（owner / 协作者 / access token），否则 403。
-    增量更新——只有请求里出现的字段才会被写入，未提交的字段保持原值；
-    提交 word 时会同步重算 word_en。create_time 不变，只刷新 modify_time。
-    保存后清除该词的 term 缓存并重建 OpenSearch 索引（索引失败只记日志）。
-
-    实现：`DhammaTermController@update`
+  description: |
+    已被 `PATCH /v3/terms/{term}` 取代（只有 PATCH；必须带 `If-Match`；word / tag 建立后不能改）。
+    保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
   parameters:
     -
       name: term
@@ -234,20 +228,15 @@ put:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
       $ref: '../../main.yaml#/components/responses/ValidationError'
+  deprecated: true
 patch:
   summary: 修改术语
   tags:
     - terms
   operationId: patch_api_v2_terms_term_
-  description: |-
-    需要登录（未登录 401），按主键 id 查找，不存在返回 '404'。
-    权限：studio 级术语（channal 为空）只有 owner 本人能改，AI 模型一律 403；
-    channel 级术语要求对该 channel 有编辑权（owner / 协作者 / access token），否则 403。
-    增量更新——只有请求里出现的字段才会被写入，未提交的字段保持原值；
-    提交 word 时会同步重算 word_en。create_time 不变，只刷新 modify_time。
-    保存后清除该词的 term 缓存并重建 OpenSearch 索引（索引失败只记日志）。
-
-    实现：`DhammaTermController@update`
+  description: |
+    已被 `PATCH /v3/terms/{term}` 取代（必须带 `If-Match`；word / tag 建立后不能改）。
+    保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
   parameters:
     -
       name: term
@@ -350,19 +339,15 @@ patch:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
       $ref: '../../main.yaml#/components/responses/ValidationError'
+  deprecated: true
 delete:
   summary: 批量删除术语
   tags:
     - terms
   operationId: delete_api_v2_terms_term_
-  description: |-
-    需要登录。一次可以删除多条，返回实际删除的条数；无权限的条目被跳过而不报错。
-    传了 uuid 参数时，id 按数组处理：owner 本人可删，非 owner 且术语属于某个 channel 时
-    需要该 channel 的协作权限达到 20（编辑）才可删，studio 级术语非 owner 一律跳过。
-    未传 uuid 时，id 按 JSON 字符串数组处理，且只能删除 owner 是当前用户的术语。
-    每删一条都会清除该词对应的 term 缓存。
-
-    实现：`DhammaTermController@destroy`
+  description: |
+    已被 `DELETE /v3/terms/{term}` 取代（一次一条、软删除，返回被删的术语；v2 的 body 里传一批 id 不再支持）。
+    保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
   parameters:
     -
       name: term
@@ -401,3 +386,4 @@ delete:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
       $ref: '../../main.yaml#/components/responses/ValidationError'
+  deprecated: true

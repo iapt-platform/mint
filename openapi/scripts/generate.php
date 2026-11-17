@@ -253,7 +253,8 @@ function castToType(string $value, string $type): mixed
  *
  * 支持（Scribe 风格，位置固定）：
  *   @queryParam  name type [required] 描述。可在描述里写 Enum: a,b,c / Default: x / Example: y
- *   @bodyParam   name type [required] 描述。type 写成 `string|null` / `?string` 表示可传 null
+ *   @bodyParam   name type [required] 描述。type 写成 `string|null` / `?string` 表示可传 null；
+ *                写成 `file` 表示上传文件，整个请求体按 multipart/form-data 生成
  *   @urlParam    name type [required] 描述
  *   @deprecated  弃用说明
  *   @unauthenticated       该端点无需登录，不挂 401
@@ -357,6 +358,8 @@ function normalizeType(string $type): string
         'bool', 'boolean' => 'boolean',
         'array', 'string[]', 'int[]' => 'array',
         'object' => 'object',
+        // 上传的文件：请求体按 multipart/form-data 生成（见下方 requestBody）
+        'file' => 'file',
         default => 'string',
     };
 }
@@ -917,11 +920,17 @@ function buildOperation(array $route, string $httpMethod): array
             $props[$name] = $schema;
         }
         // 文档注释里写明的字段最权威，覆盖推断结果
+        $multipart = false;
         foreach ($documented as $name => $doc) {
             if ($doc['in'] === 'path') {
                 continue;
             }
             $schema = ['type' => $doc['type']];
+            if ($doc['type'] === 'file') {
+                // `@bodyParam file file required …`：OpenAPI 3 里文件是 binary 字符串，整个请求体改成 multipart
+                $schema = ['type' => 'string', 'format' => 'binary'];
+                $multipart = true;
+            }
             if (! empty($doc['nullable'])) {
                 $schema['nullable'] = true;
             }
@@ -950,7 +959,7 @@ function buildOperation(array $route, string $httpMethod): array
             }
             $op['requestBody'] = [
                 'required' => (bool) $required,
-                'content' => ['application/json' => ['schema' => $body]],
+                'content' => [($multipart ? 'multipart/form-data' : 'application/json') => ['schema' => $body]],
             ];
         }
     }

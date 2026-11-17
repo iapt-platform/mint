@@ -2949,7 +2949,10 @@ export interface paths {
         };
         /**
          * 获取单个 grammar-guide/{grammar_guide}
-         * @description 实现：`GrammarGuideController@show`
+         * @deprecated
+         * @description v6 的 GrammarPop 不再调用：启动时已有 `GET /v3/glossaries/grammar`（带术语 id），按词找到 id 后取 `GET /v3/terms/{term}`；
+         *     表里没有就按词查 `GET /v3/terms?word=&with_body=true`，只认 `_System_Grammar_Term_{语言}_`（其次 en）里的那条。
+         *     正文改由新渲染器渲染（v2 这里返回 `# 释义\n正文` 的 markdown 字符串）。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         get: operations["get_api_v2_grammar_guide_grammar_guide_"];
         /**
@@ -6655,7 +6658,10 @@ export interface paths {
         };
         /**
          * 列出 term-vocabulary
-         * @description 实现：`TermVocabularyController@index`
+         * @deprecated
+         * @description 已被 `GET /v3/glossaries/{kind}` 取代：`view=grammar` → `/v3/glossaries/grammar`，`view=community` → `/v3/glossaries/community`，
+         *     `lang` 仍是查询参数（缺省按 `Accept-Language`，没有该语言的表时回退到 en，`meta.lang` 是实际用到的语言）。
+         *     `view=studio` / `user` 从未实现，不迁。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         get: operations["get_api_v2_term_vocabulary"];
         put?: never;
@@ -6711,31 +6717,22 @@ export interface paths {
         };
         /**
          * 列出术语（dhamma term）
-         * @description 按 view 指定的口径返回术语列表。studio、channel、user 三个口径需要登录；
-         *     studio 要求 name 指向的 studio 属于当前用户，否则 403；channel 要求当前用户是
-         *     channel owner 或协作者（ShareApi 权限值非 0），否则 403。
-         *     create-by-channel、show、hot-meaning 三个口径直接返回各自的数据结构，
-         *     不走后面的搜索/排序/分页；其余口径统一返回 {rows, count}。
-         *     hot-meaning 结果会按 config('mint.cache.expire') 缓存在 term/hot_meaning 键下。
-         *     未指定 view（或给了无法识别的值）时没有任何基础查询，会直接报错，调用方必须传 view。
-         *
-         *     实现：`DhammaTermController@index`
+         * @deprecated
+         * @description 各 view 的去向：
+         *     - `channel` → `GET /v3/channels/{channel}/terms`
+         *     - `studio` / `user` → `GET /v3/studios/{studio}/terms`（`{studio}` 一律 uuid；`general=true` 只要 studio 级术语）
+         *     - `word` → `GET /v3/terms?word=`（只列看得见的；`with_body=true` 带渲染后的正文）
+         *     - `create-by-channel` 不迁：v6 改为「按词查 + channel 详情」两次调用
+         *     - `show`、`tag`、`hot-meaning` 没有消费者，不迁
+         *     保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         get: operations["get_api_v2_terms"];
         put?: never;
         /**
          * 新建术语
-         * @description 需要登录。传了 channel 则建 channel 级术语，owner 取该 channel 所属 studio、
-         *     language 取该 channel 的语言（请求里的 language 被覆盖），并要求当前身份对该
-         *     channel 有编辑权（owner / 协作者 / channel access token），否则 403。
-         *     不传 channel 则建 studio 级术语，只允许 studio 本人创建（studioId 必须等于当前
-         *     用户 uid，否则 403）；AI 模型身份一律禁止（403），因为 access token 只能代持
-         *     channel 级权限。
-         *     唯一性：channel 级按 channel+word+tag 查重，studio 级按 owner+word+tag+language
-         *     且 channal 为空查重；重复时返回 'word existed'，HTTP 状态仍是 200。
-         *     写入成功后清除该词的 term 缓存并重建 OpenSearch 索引（索引失败只记日志）。
-         *
-         *     实现：`DhammaTermController@store`
+         * @deprecated
+         * @description 已被取代：带 channel 的 → `POST /v3/channels/{channel}/terms`；studio 级（不带 channel）→ `POST /v3/studios/{studio}/terms`。
+         *     v3 的 AI 代写走 `X-Agent-Grant` 请求头，不再收 body 里的 `access_token`。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         post: operations["post_api_v2_terms"];
         delete?: never;
@@ -6753,7 +6750,10 @@ export interface paths {
         };
         /**
          * 列出 terms-export
-         * @description 实现：`TermExportController@index`
+         * @deprecated
+         * @description 已被取代：列表接口带请求头 `Accept: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet` 直接返回 xlsx——
+         *     `view=channel` → `GET /v3/channels/{channel}/terms`，`view=studio` → `GET /v3/studios/{studio}/terms`（权限同列表）。
+         *     不再先存 Redis、再凭 uuid 下载。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         get: operations["get_api_v2_terms_export"];
         put?: never;
@@ -6777,7 +6777,8 @@ export interface paths {
         };
         /**
          * 获取单个 terms-export/{terms_export}
-         * @description 实现：`TermExportController@show`
+         * @deprecated
+         * @description v3 导出直接返回 xlsx（见 `GET /v3/channels/{channel}/terms` 的说明），没有这一步。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         get: operations["get_api_v2_terms_export_terms_export_"];
         /**
@@ -6809,7 +6810,10 @@ export interface paths {
         };
         /**
          * import terms-import
-         * @description 实现：`TermExportController@import`
+         * @deprecated
+         * @description 已被取代：`view=channel` → `POST /v3/channels/{channel}/terms/imports`，`view=studio` → `POST /v3/studios/{studio}/terms/imports`，
+         *     直接上传 xlsx（multipart，不再经附件临时区、不再用 GET 写入）。按列名读取（v2 导出的表格也能用），部分成功、逐行给出跳过原因；
+         *     word / tag 不能改，带 etag 列时校验；「有 id、word 为空就删除」不再支持。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         get: operations["get_api_v2_terms_import"];
         put?: never;
@@ -6829,47 +6833,33 @@ export interface paths {
         };
         /**
          * 查询单条术语
-         * @description 按 guid（不是自增 id）查找，公开接口，不需要登录。查不到返回错误 '没有查询到数据'。
-         *
-         *     实现：`DhammaTermController@show`
+         * @deprecated
+         * @description 已被 `GET /v3/terms/{term}` 取代（正文是新渲染器的「摘要 + 正文」，节点树 `body` 或 `format=html` 的 `html`；
+         *     可用 `channels` / `mode` 指定渲染版本与模式）。保留仅为 dashboard-v4、旧客户端兼容，待 v4 下线后删除。
          */
         get: operations["get_api_v2_terms_term_"];
         /**
          * 修改术语
-         * @description 需要登录（未登录 401），按主键 id 查找，不存在返回 '404'。
-         *     权限：studio 级术语（channal 为空）只有 owner 本人能改，AI 模型一律 403；
-         *     channel 级术语要求对该 channel 有编辑权（owner / 协作者 / access token），否则 403。
-         *     增量更新——只有请求里出现的字段才会被写入，未提交的字段保持原值；
-         *     提交 word 时会同步重算 word_en。create_time 不变，只刷新 modify_time。
-         *     保存后清除该词的 term 缓存并重建 OpenSearch 索引（索引失败只记日志）。
-         *
-         *     实现：`DhammaTermController@update`
+         * @deprecated
+         * @description 已被 `PATCH /v3/terms/{term}` 取代（只有 PATCH；必须带 `If-Match`；word / tag 建立后不能改）。
+         *     保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         put: operations["put_api_v2_terms_term_"];
         post?: never;
         /**
          * 批量删除术语
-         * @description 需要登录。一次可以删除多条，返回实际删除的条数；无权限的条目被跳过而不报错。
-         *     传了 uuid 参数时，id 按数组处理：owner 本人可删，非 owner 且术语属于某个 channel 时
-         *     需要该 channel 的协作权限达到 20（编辑）才可删，studio 级术语非 owner 一律跳过。
-         *     未传 uuid 时，id 按 JSON 字符串数组处理，且只能删除 owner 是当前用户的术语。
-         *     每删一条都会清除该词对应的 term 缓存。
-         *
-         *     实现：`DhammaTermController@destroy`
+         * @deprecated
+         * @description 已被 `DELETE /v3/terms/{term}` 取代（一次一条、软删除，返回被删的术语；v2 的 body 里传一批 id 不再支持）。
+         *     保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         delete: operations["delete_api_v2_terms_term_"];
         options?: never;
         head?: never;
         /**
          * 修改术语
-         * @description 需要登录（未登录 401），按主键 id 查找，不存在返回 '404'。
-         *     权限：studio 级术语（channal 为空）只有 owner 本人能改，AI 模型一律 403；
-         *     channel 级术语要求对该 channel 有编辑权（owner / 协作者 / access token），否则 403。
-         *     增量更新——只有请求里出现的字段才会被写入，未提交的字段保持原值；
-         *     提交 word 时会同步重算 word_en。create_time 不变，只刷新 modify_time。
-         *     保存后清除该词的 term 缓存并重建 OpenSearch 索引（索引失败只记日志）。
-         *
-         *     实现：`DhammaTermController@update`
+         * @deprecated
+         * @description 已被 `PATCH /v3/terms/{term}` 取代（必须带 `If-Match`；word / tag 建立后不能改）。
+         *     保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         patch: operations["patch_api_v2_terms_term_"];
         trace?: never;
@@ -8154,6 +8144,63 @@ export interface paths {
         patch: operations["patch_api_v3_channels_channel_links"];
         trace?: never;
     };
+    "/v3/channels/{channel}/terms": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * channel 的术语列表
+         * @description 能读 channel 的人都能看。请求头 `Accept` 是
+         *     `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet` 时导出成 xlsx：整表（过滤同列表、不分页），
+         *     列为 id / word / tag / meaning / other_meaning / summary / note / quality / content_type / redirect / language /
+         *     channel_id / etag，可改后用导入接口传回（取代 v2 `terms-export`）。
+         *
+         *     实现：`V3\ChannelTermController@index`
+         */
+        get: operations["get_api_v3_channels_channel_terms"];
+        put?: never;
+        /**
+         * 在 channel 里新建术语
+         * @description 能写 channel 内容的人（含团队 editor）。owner 与语言跟 channel。同一 channel 里 word@tag 唯一（409）。
+         *     分类写在 note 的 `{{category|…}}` 里。AI 模型凭 `X-Agent-Grant` 代写。
+         *
+         *     实现：`V3\ChannelTermController@store`
+         */
+        post: operations["post_api_v3_channels_channel_terms"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/channels/{channel}/terms/imports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 向 channel 导入术语
+         * @description 上传 xlsx（第一行是列名，至少有 word、meaning；可以直接用导出的表格）。所有行都落在这个 channel，
+         *     语言跟随 channel。有 id 的行改那一条（word / tag 不能改；带 etag 列时与当前不一致就跳过），
+         *     没有 id 的按 word + tag 找，有就改、没有就建。**部分成功**：出错的行跳过，`errors` 逐行给出原因。
+         *     能写这个 channel 的人（含团队 editor）才能导入；AI 模型不能导入。最多 5000 行。
+         *
+         *     实现：`V3\ChannelTermImportController@__invoke`
+         */
+        post: operations["post_api_v3_channels_channel_terms_imports"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v3/credit-policy": {
         parameters: {
             query?: never;
@@ -8363,6 +8410,29 @@ export interface paths {
          *     实现：`V3\EmailCertificationController@store`
          */
         post: operations["post_api_v3_email_certifications"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/glossaries/{kind}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 术语词汇表
+         * @description 整表返回、不分页（客户端启动时拉一次，本地查词）。`meta.lang` 是实际用到的语言：
+         *     该语言没有这张表时回退到英文。
+         *
+         *     实现：`V3\GlossaryController@__invoke`
+         */
+        get: operations["get_api_v3_glossaries_kind_"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -9067,6 +9137,120 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/v3/studios/{studio}/terms": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * studio 的术语列表
+         * @description studio 名下的全部术语（它的 channel 里的与 studio 级的）。本人或团队成员能看。请求头 `Accept` 是
+         *     `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet` 时导出成 xlsx（列与说明同 channel 的术语列表），
+         *     取代 v2 `terms-export?view=studio`。
+         *
+         *     实现：`V3\StudioTermController@index`
+         */
+        get: operations["get_api_v3_studios_studio_terms"];
+        put?: never;
+        /**
+         * 新建 studio 级术语
+         * @description 不属于任何 channel，owner 名下所有 channel 共用。本人或团队 owner / manager 能建；AI 模型不能建。
+         *     同一 studio、同一语言里 word@tag 唯一（409）。
+         *
+         *     实现：`V3\StudioTermController@store`
+         */
+        post: operations["post_api_v3_studios_studio_terms"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/studios/{studio}/terms/imports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 向 studio 导入术语
+         * @description 上传 xlsx。`channel_id` 列有值的行落在那个 channel（必须属于这个 studio、你能写），没有的是 studio 通用术语
+         *     （要填 `language`；新建要团队 owner / manager，修改团队 editor 也行）。其余规则同向 channel 导入：
+         *     部分成功、word / tag 不能改、带 etag 列时校验。AI 模型不能导入。最多 5000 行。
+         *
+         *     实现：`V3\StudioTermImportController@__invoke`
+         */
+        post: operations["post_api_v3_studios_studio_terms_imports"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/terms": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 按词查术语
+         * @description 这些词在你看得见的 channel 与 studio 级术语里的词条（编辑时看同词的其它义项、社区译法）。
+         *
+         *     实现：`V3\TermController@index`
+         */
+        get: operations["get_api_v3_terms"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/terms/{term}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 术语详情
+         * @description 带渲染后的「摘要 + 正文」（`body`）。channel 里的术语跟 channel 的可见性，studio 级的谁都能看。
+         *     响应带 `ETag` 头（与 `etag` 字段相同），修改时放进 `If-Match`。
+         *
+         *     实现：`V3\TermController@show`
+         */
+        get: operations["get_api_v3_terms_term_"];
+        put?: never;
+        post?: never;
+        /**
+         * 删术语
+         * @description 软删除，返回被删的术语。拥有者本人或团队 owner 能删；AI 模型不能删。
+         *
+         *     实现：`V3\TermController@destroy`
+         */
+        delete: operations["delete_api_v3_terms_term_"];
+        options?: never;
+        head?: never;
+        /**
+         * 改术语
+         * @description 只改传了的字段；word / tag 不能改（要改就新建一条，把旧的 redirect 过去）。必须带请求头
+         *     `If-Match`（取自详情的 `etag` / `ETag`）：不带 428，这条在你编辑期间被改过 412（响应里给出最新的 `etag`）。
+         *     分类从 note 的 `{{category|…}}` 重新抽取。channel 里的术语跟 channel 的写权限，studio 级的要团队 editor 以上。
+         *
+         *     实现：`V3\TermController@update`
+         */
+        patch: operations["patch_api_v3_terms_term_"];
         trace?: never;
     };
     "/v3/tipitaka-channels": {
@@ -36877,6 +37061,348 @@ export interface operations {
             422: components["responses"]["ProblemValidation"];
         };
     };
+    get_api_v3_channels_channel_terms: {
+        parameters: {
+            query?: {
+                /** @description 每页条数，最大 200 */
+                per_page?: number;
+                /** @description 按词、释义搜索 */
+                search?: string;
+                /** @description 质量；pending 含未评级的 */
+                quality?: "featured" | "standard" | "draft" | "pending";
+                /** @description 百科分类 */
+                category?: string;
+                /** @description 排序字段 */
+                order?: "updated_at" | "created_at" | "word";
+                /** @description 排序方向 */
+                dir?: "asc" | "desc";
+                /** @description 页码 */
+                page?: number;
+            };
+            header?: never;
+            path: {
+                /** @description channel uid */
+                channel: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            word?: string;
+                            tag?: string | null;
+                            meaning?: string;
+                            other_meaning?: string | null;
+                            language?: string;
+                            channel_id?: string | null;
+                            channel?: {
+                                id?: string;
+                                name?: string;
+                            } | null;
+                            owner_id?: string;
+                            quality?: string | null;
+                            content_type?: string;
+                            summary?: string | null;
+                            note?: string | null;
+                            redirect?: string | null;
+                            categories?: string[];
+                            summary_text?: string;
+                            /** @description 仅在部分查询口径下返回。 */
+                            body?: components["schemas"]["MarkupNode"][];
+                            /** @description 仅在部分查询口径下返回。 */
+                            html?: string;
+                            editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            co_editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            etag?: string;
+                            abilities?: {
+                                update?: boolean;
+                                delete?: boolean;
+                            };
+                            created_at?: string;
+                            updated_at?: string;
+                            deleted_at?: string | null;
+                        }[];
+                        meta?: components["schemas"]["PaginationMeta"];
+                    };
+                };
+            };
+            /** @description 私有 channel，且看不见 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    post_api_v3_channels_channel_terms: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description channel uid */
+                channel: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description 巴利词，建立后不能改 */
+                    word: string;
+                    /** @description 义项（同词多义时区分），不能含 @，建立后不能改 */
+                    tag?: string | null;
+                    /** @description 释义 */
+                    meaning: string;
+                    /** @description 其它释义 */
+                    other_meaning?: string | null;
+                    /** @description 正文 */
+                    note?: string | null;
+                    /** @description 摘要，格式与 note 相同 */
+                    summary?: string | null;
+                    /**
+                     * @description 质量
+                     * @enum {string|null}
+                     */
+                    quality?: "featured" | "standard" | "draft" | "pending" | null;
+                    /**
+                     * @description 正文方言
+                     * @default markdown-e2
+                     * @enum {string}
+                     */
+                    content_type?: "markdown" | "markdown-e2";
+                    /** @description 重定向到 word 或 word@tag */
+                    redirect?: string | null;
+                };
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            word?: string;
+                            tag?: string | null;
+                            meaning?: string;
+                            other_meaning?: string | null;
+                            language?: string;
+                            channel_id?: string | null;
+                            channel?: {
+                                id?: string;
+                                name?: string;
+                            } | null;
+                            owner_id?: string;
+                            quality?: string | null;
+                            content_type?: string;
+                            summary?: string | null;
+                            note?: string | null;
+                            redirect?: string | null;
+                            categories?: string[];
+                            summary_text?: string;
+                            /** @description 仅在部分查询口径下返回。 */
+                            body?: components["schemas"]["MarkupNode"][];
+                            /** @description 仅在部分查询口径下返回。 */
+                            html?: string;
+                            editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            co_editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            etag?: string;
+                            abilities?: {
+                                update?: boolean;
+                                delete?: boolean;
+                            };
+                            created_at?: string;
+                            updated_at?: string;
+                            deleted_at?: string | null;
+                        };
+                    };
+                };
+            };
+            /** @description 已新建 */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            word?: string;
+                            tag?: string | null;
+                            meaning?: string;
+                            other_meaning?: string | null;
+                            language?: string;
+                            channel_id?: string | null;
+                            channel?: {
+                                id?: string;
+                                name?: string;
+                            } | null;
+                            owner_id?: string;
+                            quality?: string | null;
+                            content_type?: string;
+                            summary?: string | null;
+                            note?: string | null;
+                            redirect?: string | null;
+                            categories?: string[];
+                            summary_text?: string;
+                            /** @description 仅在部分查询口径下返回。 */
+                            body?: components["schemas"]["MarkupNode"][];
+                            /** @description 仅在部分查询口径下返回。 */
+                            html?: string;
+                            editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            co_editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            etag?: string;
+                            abilities?: {
+                                update?: boolean;
+                                delete?: boolean;
+                            };
+                            created_at?: string;
+                            updated_at?: string;
+                            deleted_at?: string | null;
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            /** @description 不能写这个 channel */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description 已有这个 word@tag */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    post_api_v3_channels_channel_terms_imports: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description channel uid */
+                channel: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    /**
+                     * Format: binary
+                     * @description xlsx 表格，不超过 5MB
+                     */
+                    file: string;
+                };
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            created?: number;
+                            updated?: number;
+                            unchanged?: number;
+                            reindexed?: boolean;
+                            errors?: {
+                                row?: number;
+                                message?: string;
+                            }[];
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            /** @description 不能写这个 channel */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
     get_api_v3_credit_policy: {
         parameters: {
             query?: never;
@@ -37947,6 +38473,49 @@ export interface operations {
                     "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
             };
+        };
+    };
+    get_api_v3_glossaries_kind_: {
+        parameters: {
+            query?: {
+                /** @description 语言，如 zh-Hans。缺省用界面语言（Accept-Language 协商的结果） */
+                lang?: string;
+            };
+            header?: never;
+            path: {
+                /** @description 哪张表：grammar 语法术语，community 社区译名 */
+                kind: "grammar" | "community";
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            word?: string;
+                            tag?: string | null;
+                            meaning?: string;
+                            other_meaning?: string | null;
+                        }[];
+                        meta?: {
+                            /** @description 哪张表 */
+                            kind?: string;
+                            /** @description 实际用到的语言（没有该语言的表时是 en） */
+                            lang?: string;
+                            /** @description 条数 */
+                            total?: number;
+                        };
+                    };
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
         };
     };
     get_api_v3_groups: {
@@ -40074,6 +40643,751 @@ export interface operations {
                 };
             };
             422: components["responses"]["ProblemValidation"];
+        };
+    };
+    get_api_v3_studios_studio_terms: {
+        parameters: {
+            query?: {
+                /** @description 只要 studio 级术语（不属于任何 channel） */
+                general?: boolean;
+                /** @description 每页条数，最大 200 */
+                per_page?: number;
+                /** @description 按词、释义搜索 */
+                search?: string;
+                /** @description 质量；pending 含未评级的 */
+                quality?: "featured" | "standard" | "draft" | "pending";
+                /** @description 百科分类 */
+                category?: string;
+                /** @description 排序字段 */
+                order?: "updated_at" | "created_at" | "word";
+                /** @description 排序方向 */
+                dir?: "asc" | "desc";
+                /** @description 页码 */
+                page?: number;
+            };
+            header?: never;
+            path: {
+                /** @description 用户或团队的 uuid */
+                studio: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            word?: string;
+                            tag?: string | null;
+                            meaning?: string;
+                            other_meaning?: string | null;
+                            language?: string;
+                            channel_id?: string | null;
+                            channel?: {
+                                id?: string;
+                                name?: string;
+                            } | null;
+                            owner_id?: string;
+                            quality?: string | null;
+                            content_type?: string;
+                            summary?: string | null;
+                            note?: string | null;
+                            redirect?: string | null;
+                            categories?: string[];
+                            summary_text?: string;
+                            /** @description 仅在部分查询口径下返回。 */
+                            body?: components["schemas"]["MarkupNode"][];
+                            /** @description 仅在部分查询口径下返回。 */
+                            html?: string;
+                            editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            co_editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            etag?: string;
+                            abilities?: {
+                                update?: boolean;
+                                delete?: boolean;
+                            };
+                            created_at?: string;
+                            updated_at?: string;
+                            deleted_at?: string | null;
+                        }[];
+                        meta?: components["schemas"]["PaginationMeta"];
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            /** @description 不是本人，也不是团队成员 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    post_api_v3_studios_studio_terms: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 用户或团队的 uuid */
+                studio: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description 巴利词，建立后不能改 */
+                    word: string;
+                    /** @description 义项（同词多义时区分），不能含 @，建立后不能改 */
+                    tag?: string | null;
+                    /** @description 释义 */
+                    meaning: string;
+                    /** @description 语言 */
+                    language: string;
+                    /** @description 其它释义 */
+                    other_meaning?: string | null;
+                    /** @description 正文 */
+                    note?: string | null;
+                    /** @description 摘要，格式与 note 相同 */
+                    summary?: string | null;
+                    /**
+                     * @description 质量
+                     * @enum {string|null}
+                     */
+                    quality?: "featured" | "standard" | "draft" | "pending" | null;
+                    /**
+                     * @description 正文方言
+                     * @default markdown-e2
+                     * @enum {string}
+                     */
+                    content_type?: "markdown" | "markdown-e2";
+                    /** @description 重定向到 word 或 word@tag */
+                    redirect?: string | null;
+                };
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            word?: string;
+                            tag?: string | null;
+                            meaning?: string;
+                            other_meaning?: string | null;
+                            language?: string;
+                            channel_id?: string | null;
+                            channel?: {
+                                id?: string;
+                                name?: string;
+                            } | null;
+                            owner_id?: string;
+                            quality?: string | null;
+                            content_type?: string;
+                            summary?: string | null;
+                            note?: string | null;
+                            redirect?: string | null;
+                            categories?: string[];
+                            summary_text?: string;
+                            /** @description 仅在部分查询口径下返回。 */
+                            body?: components["schemas"]["MarkupNode"][];
+                            /** @description 仅在部分查询口径下返回。 */
+                            html?: string;
+                            editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            co_editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            etag?: string;
+                            abilities?: {
+                                update?: boolean;
+                                delete?: boolean;
+                            };
+                            created_at?: string;
+                            updated_at?: string;
+                            deleted_at?: string | null;
+                        };
+                    };
+                };
+            };
+            /** @description 已新建 */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            word?: string;
+                            tag?: string | null;
+                            meaning?: string;
+                            other_meaning?: string | null;
+                            language?: string;
+                            channel_id?: string | null;
+                            channel?: {
+                                id?: string;
+                                name?: string;
+                            } | null;
+                            owner_id?: string;
+                            quality?: string | null;
+                            content_type?: string;
+                            summary?: string | null;
+                            note?: string | null;
+                            redirect?: string | null;
+                            categories?: string[];
+                            summary_text?: string;
+                            /** @description 仅在部分查询口径下返回。 */
+                            body?: components["schemas"]["MarkupNode"][];
+                            /** @description 仅在部分查询口径下返回。 */
+                            html?: string;
+                            editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            co_editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            etag?: string;
+                            abilities?: {
+                                update?: boolean;
+                                delete?: boolean;
+                            };
+                            created_at?: string;
+                            updated_at?: string;
+                            deleted_at?: string | null;
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            /** @description 不能在这个 studio 新建 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description 已有这个 word@tag */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    post_api_v3_studios_studio_terms_imports: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 用户或团队的 uuid */
+                studio: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    /**
+                     * Format: binary
+                     * @description xlsx 表格，不超过 5MB
+                     */
+                    file: string;
+                };
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            created?: number;
+                            updated?: number;
+                            unchanged?: number;
+                            reindexed?: boolean;
+                            errors?: {
+                                row?: number;
+                                message?: string;
+                            }[];
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            /** @description 不是本人，也不是团队成员 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    get_api_v3_terms: {
+        parameters: {
+            query: {
+                /** @description 每条都带渲染后的正文 `body` */
+                with_body?: boolean;
+                /** @description 每页条数，最大 200 */
+                per_page?: number;
+                /** @description 巴利词，逗号分隔，最多 50 个 */
+                word: string;
+                /** @description 义项；传空串只要没有义项的 */
+                tag?: string;
+                /** @description 只要这个 channel 的 */
+                channel?: string;
+                /** @description 只要这个语言的 */
+                language?: string;
+                /** @description 页码 */
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            word?: string;
+                            tag?: string | null;
+                            meaning?: string;
+                            other_meaning?: string | null;
+                            language?: string;
+                            channel_id?: string | null;
+                            channel?: {
+                                id?: string;
+                                name?: string;
+                            } | null;
+                            owner_id?: string;
+                            quality?: string | null;
+                            content_type?: string;
+                            summary?: string | null;
+                            note?: string | null;
+                            redirect?: string | null;
+                            categories?: string[];
+                            summary_text?: string;
+                            /** @description 仅在部分查询口径下返回。 */
+                            body?: components["schemas"]["MarkupNode"][];
+                            /** @description 仅在部分查询口径下返回。 */
+                            html?: string;
+                            editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            co_editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            etag?: string;
+                            abilities?: {
+                                update?: boolean;
+                                delete?: boolean;
+                            };
+                            created_at?: string;
+                            updated_at?: string;
+                            deleted_at?: string | null;
+                        }[];
+                        meta?: components["schemas"]["PaginationMeta"];
+                    };
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    get_api_v3_terms_term_: {
+        parameters: {
+            query?: {
+                /** @description 正文按这些 channel 解析（句子、术语），逗号分隔，最多 20 个；只认你看得见的，不给就用术语所在 channel */
+                channels?: string;
+                /** @description 正文模式 */
+                mode?: "read" | "edit";
+                /** @description 正文格式：tree 给节点树 `body`，html 给 HTML 字符串 `html`（WebView 显示用） */
+                format?: "tree" | "html";
+            };
+            header?: never;
+            path: {
+                /** @description 术语 id（guid） */
+                term: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            word?: string;
+                            tag?: string | null;
+                            meaning?: string;
+                            other_meaning?: string | null;
+                            language?: string;
+                            channel_id?: string | null;
+                            channel?: {
+                                id?: string;
+                                name?: string;
+                            } | null;
+                            owner_id?: string;
+                            quality?: string | null;
+                            content_type?: string;
+                            summary?: string | null;
+                            note?: string | null;
+                            redirect?: string | null;
+                            categories?: string[];
+                            summary_text?: string;
+                            /** @description 仅在部分查询口径下返回。 */
+                            body?: components["schemas"]["MarkupNode"][];
+                            /** @description 仅在部分查询口径下返回。 */
+                            html?: string;
+                            editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            co_editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            etag?: string;
+                            abilities?: {
+                                update?: boolean;
+                                delete?: boolean;
+                            };
+                            created_at?: string;
+                            updated_at?: string;
+                            deleted_at?: string | null;
+                        };
+                    };
+                };
+            };
+            /** @description 所在 channel 看不见 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    delete_api_v3_terms_term_: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 术语 id（guid） */
+                term: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            word?: string;
+                            tag?: string | null;
+                            meaning?: string;
+                            other_meaning?: string | null;
+                            language?: string;
+                            channel_id?: string | null;
+                            channel?: {
+                                id?: string;
+                                name?: string;
+                            } | null;
+                            owner_id?: string;
+                            quality?: string | null;
+                            content_type?: string;
+                            summary?: string | null;
+                            note?: string | null;
+                            redirect?: string | null;
+                            categories?: string[];
+                            summary_text?: string;
+                            /** @description 仅在部分查询口径下返回。 */
+                            body?: components["schemas"]["MarkupNode"][];
+                            /** @description 仅在部分查询口径下返回。 */
+                            html?: string;
+                            editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            co_editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            etag?: string;
+                            abilities?: {
+                                update?: boolean;
+                                delete?: boolean;
+                            };
+                            created_at?: string;
+                            updated_at?: string;
+                            deleted_at?: string | null;
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            /** @description 不能删除 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    patch_api_v3_terms_term_: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 术语 id（guid） */
+                term: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    /** @description 释义 */
+                    meaning?: string;
+                    /** @description 其它释义 */
+                    other_meaning?: string | null;
+                    /** @description 正文 */
+                    note?: string | null;
+                    /** @description 摘要，格式与 note 相同 */
+                    summary?: string | null;
+                    /**
+                     * @description 质量
+                     * @enum {string|null}
+                     */
+                    quality?: "featured" | "standard" | "draft" | "pending" | null;
+                    /**
+                     * @description 正文方言
+                     * @enum {string}
+                     */
+                    content_type?: "markdown" | "markdown-e2";
+                    /** @description 重定向到 word 或 word@tag */
+                    redirect?: string | null;
+                    /** @description 语言（只有 studio 级术语能改） */
+                    language?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            word?: string;
+                            tag?: string | null;
+                            meaning?: string;
+                            other_meaning?: string | null;
+                            language?: string;
+                            channel_id?: string | null;
+                            channel?: {
+                                id?: string;
+                                name?: string;
+                            } | null;
+                            owner_id?: string;
+                            quality?: string | null;
+                            content_type?: string;
+                            summary?: string | null;
+                            note?: string | null;
+                            redirect?: string | null;
+                            categories?: string[];
+                            summary_text?: string;
+                            /** @description 仅在部分查询口径下返回。 */
+                            body?: components["schemas"]["MarkupNode"][];
+                            /** @description 仅在部分查询口径下返回。 */
+                            html?: string;
+                            editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            co_editor?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            etag?: string;
+                            abilities?: {
+                                update?: boolean;
+                                delete?: boolean;
+                            };
+                            created_at?: string;
+                            updated_at?: string;
+                            deleted_at?: string | null;
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            /** @description 不能修改 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description 这条在你编辑期间被改过 */
+            412: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+            /** @description 没带 If-Match */
+            428: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
         };
     };
     get_api_v3_tipitaka_channels: {

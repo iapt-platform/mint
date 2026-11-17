@@ -22,6 +22,7 @@ export default defineConfig({
                 'resources/js/reader.js',
                 'resources/js/modules/term-tooltip.js',
                 'resources/js/modules/share.js',
+                'resources/js/modules/wiki-share.js',
             ],
             refresh: true,
         }),

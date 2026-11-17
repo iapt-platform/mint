@@ -40,6 +40,7 @@ export default function TermEditor({
   anthologyId,
   mode = "read",
   channelId,
+  onTermSelect,
   onChannelSelect,
   onEdit,
 }: ArticleEditorProps) {
@@ -81,6 +82,7 @@ export default function TermEditor({
           channelId={channelId}
           headerExtra={expandButton}
           onEdit={onEdit}
+          onTermClick={onTermSelect}
         />
       )}
     </Editor>

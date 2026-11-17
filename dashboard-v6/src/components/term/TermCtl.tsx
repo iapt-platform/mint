@@ -7,7 +7,7 @@ import { SearchOutlined, EditOutlined } from "@ant-design/icons";
 import store from "../../store";
 import TermModal from "../term/TermModal";
 
-import type { ITerm, ITermDataResponse, ITermResponse } from "../../api/Term";
+import { fetchTerm, type ITerm, type Term } from "../../api/Term";
 import {
   changedTerm,
   refresh,
@@ -15,7 +15,6 @@ import {
   upgrade,
 } from "../../reducers/term-change";
 import { useAppSelector } from "../../hooks";
-import { get } from "../../request";
 import { fullUrl } from "../../utils";
 import lodash from "lodash";
 import { order, push } from "../../reducers/term-order";
@@ -23,16 +22,15 @@ import { click } from "../../reducers/term-click";
 
 const { Text, Title } = Typography;
 
-const dataMap = (input?: ITermDataResponse): ITerm => {
+const dataMap = (input?: Term): ITerm => {
   return {
-    id: input?.guid,
+    id: input?.id,
     word: input?.word,
     meaning: input?.meaning,
-    meaning2: input?.other_meaning?.split(","),
-    summary: input?.summary ?? "",
-    channelId: input?.channal,
-    studioId: input?.studio.id,
-    summary_is_community: input?.summary_is_community,
+    meaning2: input?.other_meaning ? input.other_meaning.split(",") : undefined,
+    summary: input?.summary_text ?? "",
+    channelId: input?.channel_id ?? undefined,
+    studioId: input?.owner_id,
   };
 };
 
@@ -58,7 +56,7 @@ interface ITermState {
 }
 
 type TermAction =
-  | { type: "UPDATE_TERM"; payload: ITermDataResponse }
+  | { type: "UPDATE_TERM"; payload: Term }
   | { type: "SET_TERM_DATA"; payload: ITerm };
 
 function termReducer(state: ITermState, action: TermAction): ITermState {
@@ -122,11 +120,11 @@ export const TermCtl = ({
 
   const [loading, setLoading] = useState(false);
 
-  const newTerm: ITermDataResponse | undefined = useAppSelector(changedTerm);
+  const newTerm: Term | undefined = useAppSelector(changedTerm);
   const cache = useAppSelector(termCache);
 
   const [uid] = useState<string>(
-    lodash.times(20, () => lodash.random(35).toString(36)).join("")
+    lodash.times(20, () => lodash.random(35).toString(36)).join(""),
   );
   const termOrder = useAppSelector(order);
 
@@ -137,7 +135,7 @@ export const TermCtl = ({
       (value) =>
         value.word === word &&
         value.channelId === parentChannelId &&
-        value.first === uid
+        value.first === uid,
     );
     return index !== -1;
   }, [termOrder, word, parentChannelId, uid]);
@@ -153,10 +151,10 @@ export const TermCtl = ({
     if (
       newTerm && // 收窄掉 undefined
       newTerm.word === word &&
-      parentStudioId === newTerm.studio.id
+      parentStudioId === newTerm.owner_id
     ) {
       console.debug("Term studio 匹配", newTerm);
-      dispatch({ type: "UPDATE_TERM", payload: newTerm }); // 此时 newTerm: ITermDataResponse ✅
+      dispatch({ type: "UPDATE_TERM", payload: newTerm });
     }
   }, [newTerm, parentStudioId, word]);
 
@@ -169,20 +167,17 @@ export const TermCtl = ({
   const onPopoverOpen = (visible: boolean) => {
     setOpenPopover(visible);
     if (visible && isInit && typeof id !== "undefined") {
-      const term = cache?.find((value) => value.guid === id);
+      const term = cache?.find((value) => value.id === id);
       if (term) {
-        // term 已收窄为 ITermDataResponse，非 undefined ✅
         dispatch({ type: "SET_TERM_DATA", payload: dataMap(term) });
         return;
       } else {
-        const url = `/api/v2/terms/${id}?community_summary=1`;
-        console.info("api request", url);
         setLoading(true);
-        get<ITermResponse>(url)
-          .then((json) => {
-            if (json.ok) {
-              dispatch({ type: "UPDATE_TERM", payload: json.data });
-              store.dispatch(upgrade(json.data));
+        fetchTerm(id)
+          .then((data) => {
+            if (data) {
+              dispatch({ type: "UPDATE_TERM", payload: data });
+              store.dispatch(upgrade(data));
             }
           })
           .finally(() => setLoading(false));
@@ -206,7 +201,7 @@ export const TermCtl = ({
                   onClick={() => {
                     window.open(
                       fullUrl(`/term/list/${termData.word}`),
-                      "_blank"
+                      "_blank",
                     );
                   }}
                   type="link"
@@ -214,9 +209,9 @@ export const TermCtl = ({
                   icon={<SearchOutlined />}
                 />
                 <TermModal
-                  onUpdate={(value: ITermDataResponse) => {
+                  onUpdate={(value: Term) => {
                     onModalClose();
-                    sessionStorage.removeItem(`term/summary/${value.guid}`);
+                    sessionStorage.removeItem(`term/summary/${value.id}`);
                     store.dispatch(refresh(value));
                   }}
                   onClose={() => {
@@ -258,12 +253,7 @@ export const TermCtl = ({
                   active
                 />
               ) : (
-                <>
-                  <div>{termData.summary}</div>
-                  <div style={{ textAlign: "right" }}>
-                    {termData.summary_is_community ? "社区解释" : ""}
-                  </div>
-                </>
+                <div>{termData.summary}</div>
               )}
             </div>
           }
@@ -290,7 +280,7 @@ export const TermCtl = ({
   } else {
     return (
       <TermModal
-        onUpdate={(value: ITermDataResponse) => {
+        onUpdate={(value: Term) => {
           onModalClose();
           store.dispatch(refresh(value));
         }}

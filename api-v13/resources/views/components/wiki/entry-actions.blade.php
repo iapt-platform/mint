@@ -45,51 +45,5 @@
 </div>
 
 @push('scripts')
-<script>
-    (function() {
-        const btn = document.getElementById('wikiShareWechat');
-        const modal = document.getElementById('wikiWechatModal');
-        const backdrop = document.getElementById('wikiWechatBackdrop');
-        const closeBtn = document.getElementById('wikiWechatClose');
-        const qrEl = document.getElementById('wikiWechatQr');
-
-        if (!btn || !modal || !qrEl) return;
-
-        function openWechatShare() {
-            const url = encodeURIComponent(window.location.href);
-
-            // 使用更稳定的二维码服务
-            qrEl.innerHTML = `
-            <img
-                src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${url}"
-                width="180"
-                height="180"
-                alt="QR Code"
-            >
-        `;
-
-            modal.style.display = 'flex';
-        }
-
-        function closeWechatShare() {
-            modal.style.display = 'none';
-        }
-
-        btn.addEventListener('click', openWechatShare);
-
-        if (closeBtn) {
-            closeBtn.addEventListener('click', closeWechatShare);
-        }
-
-        if (backdrop) {
-            backdrop.addEventListener('click', closeWechatShare);
-        }
-
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeWechatShare();
-            }
-        });
-    })();
-</script>
+@vite('resources/js/modules/wiki-share.js')
 @endpush

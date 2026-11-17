@@ -16,6 +16,7 @@ docs/Api/ChannelsApi.md
 docs/Api/CreditPolicyApi.md
 docs/Api/DiscussionsApi.md
 docs/Api/EmailCertificationsApi.md
+docs/Api/GlossariesApi.md
 docs/Api/GroupsApi.md
 docs/Api/HeartbeatApi.md
 docs/Api/InvitesApi.md
@@ -28,6 +29,7 @@ docs/Api/SearchApi.md
 docs/Api/SearchSuggestApi.md
 docs/Api/SessionsApi.md
 docs/Api/StudiosApi.md
+docs/Api/TermsApi.md
 docs/Api/TipitakaChannelsApi.md
 docs/Api/TipitakaChapterChannelsApi.md
 docs/Api/TipitakaChaptersApi.md
@@ -78,6 +80,10 @@ docs/Model/GetApiV3ChannelsChannelLinks200Response.md
 docs/Model/GetApiV3ChannelsChannelLinks200ResponseData.md
 docs/Model/GetApiV3ChannelsChannelLinks200ResponseDataDerivedFrom.md
 docs/Model/GetApiV3ChannelsChannelLinks200ResponseDataFallbackInner.md
+docs/Model/GetApiV3ChannelsChannelTerms200Response.md
+docs/Model/GetApiV3ChannelsChannelTerms200ResponseDataInner.md
+docs/Model/GetApiV3ChannelsChannelTerms200ResponseDataInnerAbilities.md
+docs/Model/GetApiV3ChannelsChannelTerms200ResponseDataInnerChannel.md
 docs/Model/GetApiV3CreditPolicy200Response.md
 docs/Model/GetApiV3CreditPolicy200ResponseData.md
 docs/Model/GetApiV3CreditPolicy200ResponseDataDailyFree.md
@@ -90,6 +96,9 @@ docs/Model/GetApiV3Discussions200ResponseDataInnerSentence.md
 docs/Model/GetApiV3DiscussionsSummary200Response.md
 docs/Model/GetApiV3DiscussionsSummary200ResponseData.md
 docs/Model/GetApiV3DiscussionsSummary200ResponseDataStatusCounts.md
+docs/Model/GetApiV3GlossariesKind200Response.md
+docs/Model/GetApiV3GlossariesKind200ResponseDataInner.md
+docs/Model/GetApiV3GlossariesKind200ResponseMeta.md
 docs/Model/GetApiV3Groups200Response.md
 docs/Model/GetApiV3Groups200ResponseDataInner.md
 docs/Model/GetApiV3GroupsGroupMembers200Response.md
@@ -150,6 +159,7 @@ docs/Model/PatchApiV3GroupsGroupMembersMemberRequest.md
 docs/Model/PatchApiV3GroupsGroupRequest.md
 docs/Model/PatchApiV3MeAgentThreadsThreadRequest.md
 docs/Model/PatchApiV3PasswordResetsTokenRequest.md
+docs/Model/PatchApiV3TermsTermRequest.md
 docs/Model/PostApiV3AgentCharges200Response.md
 docs/Model/PostApiV3AgentCharges200ResponseData.md
 docs/Model/PostApiV3AgentChargesRequest.md
@@ -168,6 +178,11 @@ docs/Model/PostApiV3AgentTracesRequest.md
 docs/Model/PostApiV3ChannelsBatchProgress200Response.md
 docs/Model/PostApiV3ChannelsBatchProgress200ResponseDataInner.md
 docs/Model/PostApiV3ChannelsBatchProgressRequest.md
+docs/Model/PostApiV3ChannelsChannelTerms200Response.md
+docs/Model/PostApiV3ChannelsChannelTermsImports200Response.md
+docs/Model/PostApiV3ChannelsChannelTermsImports200ResponseData.md
+docs/Model/PostApiV3ChannelsChannelTermsImports200ResponseDataErrorsInner.md
+docs/Model/PostApiV3ChannelsChannelTermsRequest.md
 docs/Model/PostApiV3Discussions200Response.md
 docs/Model/PostApiV3DiscussionsBatchCount200Response.md
 docs/Model/PostApiV3DiscussionsBatchCount200ResponseDataInner.md
@@ -194,6 +209,7 @@ docs/Model/PostApiV3Sessions200Response.md
 docs/Model/PostApiV3Sessions200ResponseData.md
 docs/Model/PostApiV3SessionsRequest.md
 docs/Model/PostApiV3StudiosStudioChannelsRequest.md
+docs/Model/PostApiV3StudiosStudioTermsRequest.md
 docs/Model/PostApiV3Users200Response.md
 docs/Model/PostApiV3Users200ResponseData.md
 docs/Model/PostApiV3UsersRequest.md
@@ -211,6 +227,7 @@ lib/Api/ChannelsApi.php
 lib/Api/CreditPolicyApi.php
 lib/Api/DiscussionsApi.php
 lib/Api/EmailCertificationsApi.php
+lib/Api/GlossariesApi.php
 lib/Api/GroupsApi.php
 lib/Api/HeartbeatApi.php
 lib/Api/InvitesApi.php
@@ -223,6 +240,7 @@ lib/Api/SearchApi.php
 lib/Api/SearchSuggestApi.php
 lib/Api/SessionsApi.php
 lib/Api/StudiosApi.php
+lib/Api/TermsApi.php
 lib/Api/TipitakaChannelsApi.php
 lib/Api/TipitakaChapterChannelsApi.php
 lib/Api/TipitakaChaptersApi.php
@@ -277,6 +295,10 @@ lib/Model/GetApiV3ChannelsChannelLinks200Response.php
 lib/Model/GetApiV3ChannelsChannelLinks200ResponseData.php
 lib/Model/GetApiV3ChannelsChannelLinks200ResponseDataDerivedFrom.php
 lib/Model/GetApiV3ChannelsChannelLinks200ResponseDataFallbackInner.php
+lib/Model/GetApiV3ChannelsChannelTerms200Response.php
+lib/Model/GetApiV3ChannelsChannelTerms200ResponseDataInner.php
+lib/Model/GetApiV3ChannelsChannelTerms200ResponseDataInnerAbilities.php
+lib/Model/GetApiV3ChannelsChannelTerms200ResponseDataInnerChannel.php
 lib/Model/GetApiV3CreditPolicy200Response.php
 lib/Model/GetApiV3CreditPolicy200ResponseData.php
 lib/Model/GetApiV3CreditPolicy200ResponseDataDailyFree.php
@@ -289,6 +311,9 @@ lib/Model/GetApiV3Discussions200ResponseDataInnerSentence.php
 lib/Model/GetApiV3DiscussionsSummary200Response.php
 lib/Model/GetApiV3DiscussionsSummary200ResponseData.php
 lib/Model/GetApiV3DiscussionsSummary200ResponseDataStatusCounts.php
+lib/Model/GetApiV3GlossariesKind200Response.php
+lib/Model/GetApiV3GlossariesKind200ResponseDataInner.php
+lib/Model/GetApiV3GlossariesKind200ResponseMeta.php
 lib/Model/GetApiV3Groups200Response.php
 lib/Model/GetApiV3Groups200ResponseDataInner.php
 lib/Model/GetApiV3GroupsGroupMembers200Response.php
@@ -350,6 +375,7 @@ lib/Model/PatchApiV3GroupsGroupMembersMemberRequest.php
 lib/Model/PatchApiV3GroupsGroupRequest.php
 lib/Model/PatchApiV3MeAgentThreadsThreadRequest.php
 lib/Model/PatchApiV3PasswordResetsTokenRequest.php
+lib/Model/PatchApiV3TermsTermRequest.php
 lib/Model/PostApiV3AgentCharges200Response.php
 lib/Model/PostApiV3AgentCharges200ResponseData.php
 lib/Model/PostApiV3AgentChargesRequest.php
@@ -368,6 +394,11 @@ lib/Model/PostApiV3AgentTracesRequest.php
 lib/Model/PostApiV3ChannelsBatchProgress200Response.php
 lib/Model/PostApiV3ChannelsBatchProgress200ResponseDataInner.php
 lib/Model/PostApiV3ChannelsBatchProgressRequest.php
+lib/Model/PostApiV3ChannelsChannelTerms200Response.php
+lib/Model/PostApiV3ChannelsChannelTermsImports200Response.php
+lib/Model/PostApiV3ChannelsChannelTermsImports200ResponseData.php
+lib/Model/PostApiV3ChannelsChannelTermsImports200ResponseDataErrorsInner.php
+lib/Model/PostApiV3ChannelsChannelTermsRequest.php
 lib/Model/PostApiV3Discussions200Response.php
 lib/Model/PostApiV3DiscussionsBatchCount200Response.php
 lib/Model/PostApiV3DiscussionsBatchCount200ResponseDataInner.php
@@ -394,6 +425,7 @@ lib/Model/PostApiV3Sessions200Response.php
 lib/Model/PostApiV3Sessions200ResponseData.php
 lib/Model/PostApiV3SessionsRequest.php
 lib/Model/PostApiV3StudiosStudioChannelsRequest.php
+lib/Model/PostApiV3StudiosStudioTermsRequest.php
 lib/Model/PostApiV3Users200Response.php
 lib/Model/PostApiV3Users200ResponseData.php
 lib/Model/PostApiV3UsersRequest.php
@@ -412,6 +444,7 @@ test/Api/ChannelsApiTest.php
 test/Api/CreditPolicyApiTest.php
 test/Api/DiscussionsApiTest.php
 test/Api/EmailCertificationsApiTest.php
+test/Api/GlossariesApiTest.php
 test/Api/GroupsApiTest.php
 test/Api/HeartbeatApiTest.php
 test/Api/InvitesApiTest.php
@@ -424,6 +457,7 @@ test/Api/SearchApiTest.php
 test/Api/SearchSuggestApiTest.php
 test/Api/SessionsApiTest.php
 test/Api/StudiosApiTest.php
+test/Api/TermsApiTest.php
 test/Api/TipitakaChannelsApiTest.php
 test/Api/TipitakaChapterChannelsApiTest.php
 test/Api/TipitakaChaptersApiTest.php
@@ -474,6 +508,10 @@ test/Model/GetApiV3ChannelsChannelLinks200ResponseDataDerivedFromTest.php
 test/Model/GetApiV3ChannelsChannelLinks200ResponseDataFallbackInnerTest.php
 test/Model/GetApiV3ChannelsChannelLinks200ResponseDataTest.php
 test/Model/GetApiV3ChannelsChannelLinks200ResponseTest.php
+test/Model/GetApiV3ChannelsChannelTerms200ResponseDataInnerAbilitiesTest.php
+test/Model/GetApiV3ChannelsChannelTerms200ResponseDataInnerChannelTest.php
+test/Model/GetApiV3ChannelsChannelTerms200ResponseDataInnerTest.php
+test/Model/GetApiV3ChannelsChannelTerms200ResponseTest.php
 test/Model/GetApiV3CreditPolicy200ResponseDataDailyFreeTest.php
 test/Model/GetApiV3CreditPolicy200ResponseDataEarnReadingTest.php
 test/Model/GetApiV3CreditPolicy200ResponseDataEarnTest.php
@@ -486,6 +524,9 @@ test/Model/GetApiV3Discussions200ResponseTest.php
 test/Model/GetApiV3DiscussionsSummary200ResponseDataStatusCountsTest.php
 test/Model/GetApiV3DiscussionsSummary200ResponseDataTest.php
 test/Model/GetApiV3DiscussionsSummary200ResponseTest.php
+test/Model/GetApiV3GlossariesKind200ResponseDataInnerTest.php
+test/Model/GetApiV3GlossariesKind200ResponseMetaTest.php
+test/Model/GetApiV3GlossariesKind200ResponseTest.php
 test/Model/GetApiV3Groups200ResponseDataInnerTest.php
 test/Model/GetApiV3Groups200ResponseTest.php
 test/Model/GetApiV3GroupsGroupMembers200ResponseDataInnerTest.php
@@ -546,6 +587,7 @@ test/Model/PatchApiV3GroupsGroupMembersMemberRequestTest.php
 test/Model/PatchApiV3GroupsGroupRequestTest.php
 test/Model/PatchApiV3MeAgentThreadsThreadRequestTest.php
 test/Model/PatchApiV3PasswordResetsTokenRequestTest.php
+test/Model/PatchApiV3TermsTermRequestTest.php
 test/Model/PostApiV3AgentCharges200ResponseDataTest.php
 test/Model/PostApiV3AgentCharges200ResponseTest.php
 test/Model/PostApiV3AgentChargesRequestTest.php
@@ -564,6 +606,11 @@ test/Model/PostApiV3AgentTracesRequestTest.php
 test/Model/PostApiV3ChannelsBatchProgress200ResponseDataInnerTest.php
 test/Model/PostApiV3ChannelsBatchProgress200ResponseTest.php
 test/Model/PostApiV3ChannelsBatchProgressRequestTest.php
+test/Model/PostApiV3ChannelsChannelTerms200ResponseTest.php
+test/Model/PostApiV3ChannelsChannelTermsImports200ResponseDataErrorsInnerTest.php
+test/Model/PostApiV3ChannelsChannelTermsImports200ResponseDataTest.php
+test/Model/PostApiV3ChannelsChannelTermsImports200ResponseTest.php
+test/Model/PostApiV3ChannelsChannelTermsRequestTest.php
 test/Model/PostApiV3Discussions200ResponseTest.php
 test/Model/PostApiV3DiscussionsBatchCount200ResponseDataInnerTest.php
 test/Model/PostApiV3DiscussionsBatchCount200ResponseTest.php
@@ -590,6 +637,7 @@ test/Model/PostApiV3Sessions200ResponseDataTest.php
 test/Model/PostApiV3Sessions200ResponseTest.php
 test/Model/PostApiV3SessionsRequestTest.php
 test/Model/PostApiV3StudiosStudioChannelsRequestTest.php
+test/Model/PostApiV3StudiosStudioTermsRequestTest.php
 test/Model/PostApiV3Users200ResponseDataTest.php
 test/Model/PostApiV3Users200ResponseTest.php
 test/Model/PostApiV3UsersRequestTest.php

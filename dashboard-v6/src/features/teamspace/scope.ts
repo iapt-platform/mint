@@ -24,7 +24,6 @@ const PERSONAL_ONLY = [
 const NOT_YET_SUPPORTED = [
   "workspace.article",
   "workspace.anthology",
-  "workspace.term",
   "workspace.course",
   "workspace.task",
   "workspace.tag",

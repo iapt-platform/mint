@@ -4,7 +4,10 @@ get:
   tags:
     - terms-export
   operationId: get_api_v2_terms_export
-  description: 实现：`TermExportController@index`
+  description: |
+    已被取代：列表接口带请求头 `Accept: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet` 直接返回 xlsx——
+    `view=channel` → `GET /v3/channels/{channel}/terms`，`view=studio` → `GET /v3/studios/{studio}/terms`（权限同列表）。
+    不再先存 Redis、再凭 uuid 下载。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
   parameters:
     -
       name: view
@@ -82,6 +85,7 @@ get:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
       $ref: '../../main.yaml#/components/responses/ValidationError'
+  deprecated: true
 post:
   summary: '新建 terms-export'
   tags:

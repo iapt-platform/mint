@@ -1,0 +1,145 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-terms.yaml
+get:
+  summary: 按词查术语
+  tags:
+    - terms
+  operationId: get_api_v3_terms
+  description: |-
+    这些词在你看得见的 channel 与 studio 级术语里的词条（编辑时看同词的其它义项、社区译法）。
+
+    实现：`V3\TermController@index`
+  security:
+    - {  }
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: with_body
+      in: query
+      schema:
+        type: boolean
+      description: '每条都带渲染后的正文 `body`'
+    -
+      name: per_page
+      in: query
+      schema:
+        type: integer
+        default: 20
+      description: '每页条数，最大 200'
+    -
+      name: word
+      in: query
+      schema:
+        type: string
+      description: '巴利词，逗号分隔，最多 50 个'
+      required: true
+    -
+      name: tag
+      in: query
+      schema:
+        type: string
+      description: 义项；传空串只要没有义项的
+    -
+      name: channel
+      in: query
+      schema:
+        type: string
+      description: '只要这个 channel 的'
+    -
+      name: language
+      in: query
+      schema:
+        type: string
+      description: 只要这个语言的
+    -
+      name: page
+      in: query
+      schema:
+        type: integer
+      description: 页码
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    word:
+                      type: string
+                    tag:
+                      type: string
+                      nullable: true
+                    meaning:
+                      type: string
+                    other_meaning:
+                      type: string
+                      nullable: true
+                    language:
+                      type: string
+                    channel_id:
+                      type: string
+                      nullable: true
+                    channel:
+                      type: object
+                      properties: { id: { type: string }, name: { type: string } }
+                      nullable: true
+                    owner_id:
+                      type: string
+                    quality:
+                      type: string
+                      nullable: true
+                    content_type:
+                      type: string
+                    summary:
+                      type: string
+                      nullable: true
+                    note:
+                      type: string
+                      nullable: true
+                    redirect:
+                      type: string
+                      nullable: true
+                    categories:
+                      type: array
+                      items: { type: string }
+                    summary_text:
+                      type: string
+                    body:
+                      type: array
+                      items: { $ref: '../../main.yaml#/components/schemas/MarkupNode' }
+                      description: 仅在部分查询口径下返回。
+                    html:
+                      type: string
+                      description: 仅在部分查询口径下返回。
+                    editor:
+                      type: object
+                      properties: { id: { type: string }, nickName: { type: string }, userName: { type: string }, realName: { type: string }, sn: { type: integer }, avatar: { type: string }, roles: { type: array, items: { type: string } } }
+                      nullable: true
+                    co_editor:
+                      type: object
+                      properties: { id: { type: string }, nickName: { type: string }, userName: { type: string }, realName: { type: string }, sn: { type: integer }, avatar: { type: string }, roles: { type: array, items: { type: string } } }
+                      nullable: true
+                    etag:
+                      type: string
+                    abilities:
+                      type: object
+                      properties: { update: { type: boolean }, delete: { type: boolean } }
+                    created_at:
+                      type: string
+                    updated_at:
+                      type: string
+                    deleted_at:
+                      type: string
+                      nullable: true
+              meta:
+                $ref: '../../main.yaml#/components/schemas/PaginationMeta'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

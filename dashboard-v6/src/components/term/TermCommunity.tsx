@@ -10,9 +10,7 @@ import {
 import { DownOutlined } from "@ant-design/icons";
 import { useState, useEffect } from "react";
 import { useIntl } from "react-intl";
-import { get } from "../../request";
-
-import type { ITermListResponse } from "../../api/Term";
+import { lookupTerms } from "../../api/Term";
 import { Link } from "react-router";
 import type { IUser } from "../../api/Auth";
 
@@ -41,24 +39,16 @@ const TermCommunityWidget = ({ word }: IWidget) => {
     if (typeof word === "undefined") {
       return;
     }
-    const url = `/api/v2/terms?view=word&word=${word}&exp=1`;
-    console.log("url", url);
-    get<ITermListResponse>(url)
+    // v3 没有 v2 的 exp（编辑者经验值）：每条按同样的分数计
+    lookupTerms({ word, per_page: 200 })
       .then((json) => {
-        if (json.ok === false) {
-          return;
-        }
         const meaning = new Map<string, number>();
         const note = new Map<string, number>();
         const editorId = new Map<string, number>();
         const editor = new Map<string, IUser>();
-        for (const it of json.data.rows) {
+        for (const it of json.data ?? []) {
           let score: number | undefined;
-          let currScore = 100;
-          if (it.exp) {
-            //分数计算
-            currScore = Math.floor(it.exp / 3600);
-          }
+          const currScore = 100;
           if (it.meaning) {
             score = meaning.get(it.meaning);
             meaning.set(it.meaning, score ? score + currScore : currScore);
@@ -70,10 +60,10 @@ const TermCommunityWidget = ({ word }: IWidget) => {
             note.set(it.note, score ? score + noteScore : noteScore);
           }
 
-          if (it.editor) {
+          if (it.editor?.id) {
             score = editorId.get(it.editor.id);
             editorId.set(it.editor.id, score ? score + currScore : currScore);
-            editor.set(it.editor.id, it.editor);
+            editor.set(it.editor.id, it.editor as IUser);
           }
         }
         const _data: IWord = {
@@ -124,7 +114,7 @@ const TermCommunityWidget = ({ word }: IWidget) => {
   };
 
   const meaningLow = wordData?.meaning.filter(
-    (value, index: number) => !isShow(value.score, index)
+    (value, index: number) => !isShow(value.score, index),
   );
   const meaningExtra = meaningLow?.map((item, id) => {
     return <span key={id}>{item.value}</span>;

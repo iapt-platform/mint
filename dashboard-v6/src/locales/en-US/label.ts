@@ -140,6 +140,30 @@ const items = {
   "term.fields.meaning.tooltip": "单词的首选意思",
   "term.fields.meaning2.label": "other meanings",
   "term.fields.meaning2.tooltip": "其他意思将出现在后面的括号里",
+  "term.fields.quality.label": "Quality",
+  "term.fields.quality.featured": "Featured",
+  "term.fields.quality.standard": "Standard",
+  "term.fields.quality.draft": "Draft",
+  "term.fields.quality.pending": "Pending",
+  "term.fields.summary.label": "Summary",
+  "term.fields.summary.tooltip":
+    "Shown before the note. Leave empty to use the first paragraph of the note",
+  "term.fields.content_type.label": "Format",
+  "term.fields.redirect.label": "Redirect to",
+  "term.fields.redirect.tooltip":
+    "word or word@tag. For alternative spellings of the same entry: readers are sent to the target",
+  "term.fields.immutable.tooltip":
+    "The word and tag cannot be changed once created. Create a new term and redirect this one to it",
+  "term.message.modified":
+    "Someone else changed this term while you were editing. Reload it and try again",
+  "term.import.result": "Import result",
+  "term.import.summary":
+    "{created} created, {updated} updated, {unchanged} unchanged, {failed} rows skipped",
+  "term.import.reindex_later":
+    "Many changes: the search index will be updated by the weekly rebuild",
+  "term.import.row": "Row",
+  "term.import.reason": "Reason skipped",
+  "term.grammar.not_found": "No grammar note for {word}",
   "term.fields.note.label": "note",
   "term.general-in-studio": "general in studio",
   "labels.resources": "Resources",
@@ -149,7 +173,8 @@ const items = {
   "labels.channel.select": "Select version",
   "labels.teamspace": "Teamspaces",
   "labels.teamspace.current": "Teamspace: {name}",
-  "labels.teamspace.personal-only": "Personal only — not available in a teamspace",
+  "labels.teamspace.personal-only":
+    "Personal only — not available in a teamspace",
   "labels.teamspace.unsupported": "This module does not support teamspaces yet",
   "labels.group.role.owner": "Owner",
   "labels.group.role.manager": "Manager",

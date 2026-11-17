@@ -62,7 +62,8 @@ const TEMPLATES: Record<string, TemplateRenderer> = {
   para: (p) => <ParaCtl {...as<typeof ParaCtl>(p)} />,
   quality: (p) => <QualityCtl {...as<typeof QualityCtl>(p)} />,
   article: (p) => <ArticleCtl {...as<typeof ArticleCtl>(p)} />,
-  category: (p) => <Tag>{p.name as string}</Tag>,
+  // antd 6 的 Tag 默认是无边框的浅灰填充，在灰底页面上看不出是标签，给个颜色
+  category: (p) => <Tag color="blue">{p.name as string}</Tag>,
   toggle: (_, children) => <ToggleCtl>{children}</ToggleCtl>,
   // 目录：自带一行标题（不是正文的一节），children 是链到各标题的嵌套列表
   toc: (p, children) => (

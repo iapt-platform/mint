@@ -2,11 +2,28 @@
 
 namespace App\Services;
 
+use App\Models\Channel;
+use App\Models\DhammaTerm;
+use App\Models\GroupInfo;
+use App\Models\TermCategory;
+use App\Models\UserInfo;
+use App\Services\Markup\Format;
+use App\Services\Markup\MarkupService;
+use App\Services\Markup\RenderOptions;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
+/**
+ * 术语写进 OpenSearch（全站搜索用）。v2 与 v3 的写入、`IndexTerm` 命令共用。
+ *
+ * 渲染用新渲染器（{@see MarkupService}）：内容 = 摘要 + 正文，按 content_type 的方言解析，
+ * 模板按术语所在 channel 取数。分类与质量优先取 v3 的列（term_categories、quality），
+ * 没有时（v2 写入的条目）从正文的 `{{category|…}}` / `{{quality|…}}` 抽。
+ */
 class TermIndexService
 {
     public function __construct(
         protected OpenSearchService $openSearchService,
-        protected TermService $termService,
+        protected MarkupService $markup,
     ) {}
 
     /**
@@ -31,15 +48,33 @@ class TermIndexService
      *
      * @param  string  $guid  DhammaTerm 的 guid
      * @return array<string, mixed>
+     *
+     * @throws ModelNotFoundException 术语不存在（含已删除）
      */
     public function buildDocument(string $guid): array
     {
-        $termData = $this->termService->find($guid, 'text');
-        $channelName = $termData['channel']['name'] ?? '';
-        $content = $termData['html'] ?? $termData['meaning'];
+        $term = DhammaTerm::where('guid', $guid)->firstOrFail();
+        $channelName = $term->channal ? (string) Channel::where('uid', $term->channal)->value('name') : '';
+        $studioName = (string) (UserInfo::where('userid', $term->owner)->value('username')
+            ?? GroupInfo::where('uid', $term->owner)->value('name')
+            ?? '');
 
-        $categories = $this->extractCategories($termData['note'] ?? '');
-        $quality = $this->extractFirstQuality($termData['note'] ?? '');
+        $summary = trim((string) $term->summary);
+        $options = [
+            'channels' => $term->channal ? [$term->channal] : [],
+            'contentType' => $term->effectiveContentType(),
+        ];
+        $rendered = $this->markup->renderManyAs([
+            'body' => $options + ['source' => trim($summary."\n\n".(string) $term->note)],
+            'summary' => $options + ['source' => $summary !== '' ? $summary : (string) $term->note],
+        ], new RenderOptions(lang: $term->language ?: 'zh-Hans'), [Format::Html, Format::Text]);
+        $display = (string) $rendered[Format::Html->value]['body'];
+        $plainText = (string) $rendered[Format::Text->value]['body'];
+        $summaryText = $this->firstLine((string) $rendered[Format::Text->value]['summary'], $summary !== '');
+
+        $categories = TermCategory::where('term_guid', $term->guid)->orderBy('position')->pluck('category')->all()
+            ?: $this->extractCategories((string) $term->note);
+        $quality = $term->quality ?: $this->extractFirstQuality((string) $term->note);
         $tags = [];
         foreach ($categories as $category) {
             $tags[] = "category:{$category}";
@@ -48,40 +83,54 @@ class TermIndexService
             $tags[] = "quality:{$quality}";
         }
 
-        $document = [
-            'id' => "term_{$guid}",
-            'resource_id' => $guid,
+        return [
+            'id' => "term_{$term->guid}",
+            'resource_id' => $term->guid,
             'resource_type' => 'term',
             'title' => [
                 'text' => [
-                    'pali' => $termData['word'],
-                    'zh' => $termData['meaning'],
+                    'pali' => $term->word,
+                    'zh' => $term->meaning,
                 ],
                 'suggest' => [
-                    'pali' => [$termData['word']],
-                    'zh' => [$termData['meaning']],
+                    'pali' => [$term->word],
+                    'zh' => [$term->meaning],
                 ],
             ],
             'summary' => [
-                'text' => $termData['summary'] ?? '',
+                'text' => $summaryText,
             ],
-            'content' => [],
-            'bold_single' => [$termData['meaning'], $termData['word']],
-            'related_id' => $termData['word'],
+            // TODO: 补充语言判断，将内容放入对应的 text.pali 或 text.zh 字段
+            'content' => [
+                'text' => ['zh' => $plainText !== '' ? $plainText : (string) $term->meaning],
+                'display' => $display !== '' ? $display : (string) $term->meaning,
+            ],
+            'bold_single' => [$term->meaning, $term->word],
+            'related_id' => $term->word,
             'category' => null,
             'tags' => $tags,
-            'language' => $termData['language'],
+            'language' => $term->language,
             'updated_at' => now()->toIso8601String(),
-            'path' => $termData['studio']['realName']."/{$channelName}",
-            'metadata' => ['channel' => $termData['channel_id']],
+            'path' => "{$studioName}/{$channelName}",
+            'metadata' => ['channel' => $term->channal],
         ];
+    }
 
-        // TODO: 补充语言判断，将内容放入对应的 text.pali 或 text.zh 字段
-        $plainText = strip_tags($content);
-        $document['content']['text']['zh'] = $plainText;
-        $document['content']['display'] = $content;             // 展示
+    /**
+     * 摘要纯文本：给了 summary 就整段用；没给取正文第一段（纯文本里段落之间只隔一个换行）。
+     */
+    private function firstLine(string $text, bool $whole): string
+    {
+        if ($whole) {
+            return trim($text);
+        }
+        foreach (preg_split('/\n/u', $text) ?: [] as $line) {
+            if (trim($line) !== '') {
+                return trim($line);
+            }
+        }
 
-        return $document;
+        return '';
     }
 
     /**

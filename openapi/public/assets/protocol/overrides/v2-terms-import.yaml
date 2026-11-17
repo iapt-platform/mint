@@ -1,0 +1,7 @@
+# 手写补充：v2 术语导入已被 v3 取代（2026-11-17）。
+get:
+  deprecated: true
+  description: |
+    已被取代：`view=channel` → `POST /v3/channels/{channel}/terms/imports`，`view=studio` → `POST /v3/studios/{studio}/terms/imports`，
+    直接上传 xlsx（multipart，不再经附件临时区、不再用 GET 写入）。按列名读取（v2 导出的表格也能用），部分成功、逐行给出跳过原因；
+    word / tag 不能改，带 etag 列时校验；「有 id、word 为空就删除」不再支持。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。

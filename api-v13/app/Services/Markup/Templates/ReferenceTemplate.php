@@ -116,6 +116,27 @@ final class ReferenceTemplate extends Template
         return $text;
     }
 
+    /**
+     * 一条一行（与 v6 的 ReferenceCtl 一致）。模板落在 `<p>` 里，不能再套块级元素，用 `<br />` 分行；
+     * 没有这个方法时走基类的「转义后的纯文本」，条目间的换行会被浏览器合并成空格。
+     */
+    public function html(Call $call, RenderContext $ctx): string
+    {
+        $references = $this->bibliography($ctx);
+        if ($references === []) {
+            return '';
+        }
+        $title = $this->title($call, $ctx);
+        $items = $title === '' ? [] : ['<span class="tpl-reference-title">'.e($title).'</span>'];
+        foreach ($references as $reference) {
+            $items[] = '<span class="tpl-reference-item">'
+                .e('['.$reference['sn'].'] '.ucfirst($reference['title']).' '.$reference['copyright'])
+                .'</span>';
+        }
+
+        return implode('<br />', $items);
+    }
+
     public function markdown(Call $call, RenderContext $ctx): string
     {
         $references = $this->bibliography($ctx);

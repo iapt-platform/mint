@@ -1,0 +1,21 @@
+# 手写补充：v2 单条术语的读、改、删已被 v3 取代（2026-11-17）。
+get:
+  deprecated: true
+  description: |
+    已被 `GET /v3/terms/{term}` 取代（正文是新渲染器的「摘要 + 正文」，节点树 `body` 或 `format=html` 的 `html`；
+    可用 `channels` / `mode` 指定渲染版本与模式）。保留仅为 dashboard-v4、旧客户端兼容，待 v4 下线后删除。
+put:
+  deprecated: true
+  description: |
+    已被 `PATCH /v3/terms/{term}` 取代（只有 PATCH；必须带 `If-Match`；word / tag 建立后不能改）。
+    保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
+patch:
+  deprecated: true
+  description: |
+    已被 `PATCH /v3/terms/{term}` 取代（必须带 `If-Match`；word / tag 建立后不能改）。
+    保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
+delete:
+  deprecated: true
+  description: |
+    已被 `DELETE /v3/terms/{term}` 取代（一次一条、软删除，返回被删的术语；v2 的 body 里传一批 id 不再支持）。
+    保留仅为 dashboard-v4 兼容，待 v4 下线后删除。

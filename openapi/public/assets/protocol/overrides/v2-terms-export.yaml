@@ -1,0 +1,7 @@
+# 手写补充：v2 术语导出已被 v3 取代（2026-11-17）。
+get:
+  deprecated: true
+  description: |
+    已被取代：列表接口带请求头 `Accept: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet` 直接返回 xlsx——
+    `view=channel` → `GET /v3/channels/{channel}/terms`，`view=studio` → `GET /v3/studios/{studio}/terms`（权限同列表）。
+    不再先存 Redis、再凭 uuid 下载。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。

@@ -4,24 +4,18 @@ namespace App\Http\Controllers\Library;
 
 use App\Helpers\WikiContentParser;
 use App\Http\Controllers\Controller;
-use App\Services\OpenSearchService;
 use App\Services\TermService;
+use App\Services\WikiService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
+/**
+ * library 百科页。词条数据直接查库（{@see WikiService}），不经 OpenSearch。
+ */
 class WikiController extends Controller
 {
-    // 质量等级（数值越小等级越高）
-    private $qualityRank = [
-        'featured' => 1,
-        'standard' => 2,
-        'draft' => 3,
-        'pending' => 4,
-    ];
-
     public function __construct(
         private TermService $termService,
-        private OpenSearchService $searchService
+        private WikiService $wiki,
     ) {}
 
     // ── Mock 数据 ────────────────────────────────────────────────
@@ -75,15 +69,24 @@ HTML,
 
         if ($category) {
             $taxNode = collect(config('taxonomy'))->firstWhere('id', $category);
-            $subs = $taxNode ? $this->subEntries($taxNode['subs'], $lang, $quality) : null;
+            // 不是分类树里的一级 id，就当作分类名（词条正文里的 {{category|…}} 链过来的）
+            $subs = $taxNode
+                ? $this->subEntries($taxNode['subs'], $lang, $quality)
+                : [[
+                    'id' => $category,
+                    'label' => $category,
+                    'tags' => [],
+                    'entries' => $this->wiki->categoryEntries([$category], $lang, $quality),
+                ]];
         }
 
         $result = $this->termService->communityTerms($lang);
         $fakeRequest = Request::create('', 'GET', []);
         $terms = $result['data']->toArray($fakeRequest);
-        $first = $terms[0];
+        // 该语言的社区 channel 不存在或没有数据时不显示「今日词条」（原来直接取 [0]，会 500）
+        $first = $terms[0] ?? null;
 
-        $today = [
+        $today = $first ? [
             'word' => $first['word'],
             'lang' => $first['language'],
             'slug' => $first['word'],
@@ -91,7 +94,7 @@ HTML,
             'quality' => 'featured',
             'category' => '法义术语',
             'content' => $first['summary'],
-        ];
+        ] : null;
 
         return response()
             ->view('library.wiki.index', [
@@ -109,136 +112,46 @@ HTML,
     }
 
     /**
-     * 给每个二级分类注入 词条列表
-     * 真实数据替换时：按 sub['tags'] 查询术语表，返回同结构数组即可
+     * 给每个二级分类注入词条列表：分类名为二级分类本身或它下面的任一标签。
      */
     private function subEntries(array $subs, string $lang, string $quality): array
     {
         return array_map(function ($sub) use ($lang, $quality) {
-            $entries = $this->querySubCat($sub['tags'], $lang, $quality);
+            $entries = $this->wiki->categoryEntries([$sub['label'], ...$sub['tags']], $lang, $quality);
 
             return array_merge($sub, ['entries' => $entries]);
         }, $subs);
     }
 
-    private function querySubCat(array $cats, string $lang, string $quality): array
-    {
-        $params = [
-            'pageSize' => 1000,
-            'resourceType' => 'term',
-            'language' => $lang,
-            'tags' => array_map(fn ($n) => "category:{$n}", $cats),
-        ];
-
-        $result = $this->searchService->search($params);
-
-        // 当前允许的最大等级
-        $maxRank = $this->qualityRank[$quality] ?? 4;
-
-        $unique = [];
-
-        foreach ($result['hits']['hits'] as $item) {
-            $text = $item['_source']['title']['text'];
-            $id = $item['_source']['resource_id'];
-
-            if (isset($item['_source']['tags'])) {
-                $itemQuality = $this->getQuality($item['_source']['tags']) ?? 'pending';
-            } else {
-                $itemQuality = 'pending';
-            }
-
-            $itemRank = $this->qualityRank[$itemQuality] ?? 4;
-
-            // 按输入质量过滤
-            if ($itemRank > $maxRank) {
-                continue;
-            }
-
-            $record = [
-                'id' => $id,
-                'word' => $text['pali'],
-                'zh' => $text['zh'],
-                'quality' => $itemQuality,
-            ];
-
-            // 用 pali + zh 去重
-            $key = mb_strtolower(trim($text['pali']).'|'.trim($text['zh']));
-
-            // 如果不存在，直接保存
-            if (! isset($unique[$key])) {
-                $unique[$key] = $record;
-
-                continue;
-            }
-
-            // 已存在时，保留质量更高的
-            $existingQuality = $unique[$key]['quality'];
-            $existingRank = $this->qualityRank[$existingQuality] ?? 4;
-
-            if ($itemRank < $existingRank) {
-                $unique[$key] = $record;
-            }
-        }
-
-        return array_values($unique);
-    }
-
-    private function getQuality(array $tags)
-    {
-        $qualityTag = array_find($tags, function ($tag) {
-            return str_contains($tag, 'quality:');
-        });
-        if ($qualityTag) {
-            return mb_substr($qualityTag, 8, null, 'UTF-8');
-        } else {
-            return null;
-        }
-    }
-
-    private function getCategories(array $tags)
-    {
-        $catTag = array_filter($tags, function ($tag) {
-            return str_contains($tag, 'category:');
-        });
-
-        return array_map(fn ($item) => mb_substr($item, mb_strlen('category:', 'UTF-8')), $catTag);
-    }
-
+    /**
+     * 词条详情。$word 是词或 guid；词条设了重定向（同一词条的另一种拼写）就转到目标词条。
+     */
     public function show(string $lang, string $word)
     {
-        if (Str::isUuid($word)) {
-            $term = $this->termService->find($word, 'html');
-        } else {
-            $term = $this->termService->communityWiki($word, $lang, 'html');
-        }
-
-        try {
-            $result = $this->searchService->get("term_{$term['guid']}");
-        } catch (\Throwable $th) {
+        $term = $this->wiki->find($lang, $word);
+        if (! $term) {
             abort(404);
         }
-
-        if (isset($result['_source']['tags'])) {
-            $quality = $this->getQuality($result['_source']['tags']);
-        } else {
-            $quality = null;
+        $target = $this->wiki->redirectTarget($term);
+        if ($target) {
+            return redirect()->route('library.wiki.show', [$lang, $target->guid]);
         }
 
-        $cats = $this->getCategories($result['_source']['tags']);
+        $cats = $this->wiki->categoriesOf($term);
         $entry = [
-            'word' => $term['word'],
-            'lang' => $term['language'],
-            'slug' => $term['word'],
-            'meaning' => $term['meaning'],
-            'quality' => $quality,   // featured | standard | draft | pending | null
+            'word' => $term->word,
+            'lang' => $term->language,
+            'slug' => $term->word,
+            'meaning' => $term->meaning,
+            'quality' => $term->quality,   // featured | standard | draft | pending | null
             'category' => '法义术语',
             'tags' => $cats,
             'langs' => [
                 ['lang' => 'zh-Hant', 'label' => '繁体中文',   'word' => '无常'],
                 ['lang' => 'en', 'label' => 'English', 'word' => 'Impermanence'],
             ],
-            'related' => $this->related($cats),
-            'content' => $term['html'] ?? '',
+            'related' => $this->wiki->related($term, $cats),
+            'content' => $this->wiki->contentHtml($term, $lang),
         ];
         $parsed = WikiContentParser::parse($entry['content']);
 
@@ -246,36 +159,14 @@ HTML,
             'entry' => array_merge($entry, [
                 'content' => $parsed['content'],
                 'toc' => $parsed['toc'],
-                'edit_url' => config('mint.server.dashboard_base_path')."/workspace/term/{$term['guid']}/edit",
+                'edit_url' => config('mint.server.dashboard_base_path')."/workspace/term/{$term->guid}/edit",
                 'zh' => '编辑',
-                'other_versions' => $this->otherVersions($term['word']),
+                'other_versions' => $this->wiki->otherVersions($term),
             ]),
             'categories' => $this->categories(),
             'lang' => $lang,
 
         ]);
-    }
-
-    private function related(array $tags): array
-    {
-        $params = [
-            'pageSize' => 5,
-            'resourceType' => 'term',
-            'tags' => array_map(fn ($n) => "category:{$n}", $tags),
-        ];
-
-        $result = $this->searchService->search($params);
-        $relates = [];
-
-        foreach ($result['hits']['hits'] as $item) {
-            $relates[] = [
-                'word' => $item['_source']['title']['text']['pali'],
-                'zh' => $item['_source']['title']['text']['zh'],
-                'lang' => $item['_source']['language'],
-            ];
-        }
-
-        return $relates;
     }
 
     // ── Helpers ──────────────────────────────────────────────────
@@ -368,35 +259,5 @@ HTML,
             ['word' => '阿含经',   'lang' => 'zh'],
             ['word' => 'Rājagaha', 'lang' => 'pi'],
         ];
-    }
-
-    private function otherVersions(string $word): array
-    {
-        $params = [
-            'query' => $word,
-            'pageSize' => 10,
-            'resourceType' => 'term',
-            'tags' => array_map(fn ($n) => "quality:{$n}", array_keys($this->qualityRank)),
-        ];
-
-        $result = $this->searchService->search($params);
-        $versions = [];
-
-        foreach ($result['hits']['hits'] as $item) {
-            $text = $item['_source']['title']['text'];
-            $id = $item['_source']['resource_id'];
-            $versions[] = [
-                'type' => 'term',
-                'id' => $id,
-                'lang' => $item['_source']['language'],
-                'title' => $text['zh'] ?? 'null',
-                'quality' => $this->getQuality($item['_source']['tags'] ?? 'quality:pending'),
-                'category' => '法義術語',
-                'snippet' => $item['_source']['summary']['text'],
-                'updated' => $item['_source']['updated_at'],
-            ];
-        }
-
-        return $versions;
     }
 }

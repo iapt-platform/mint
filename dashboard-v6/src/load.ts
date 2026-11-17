@@ -1,11 +1,7 @@
 //import { Empty } from "google-protobuf/google/protobuf/empty_pb";
 //import { Duration } from "google-protobuf/google/protobuf/duration_pb";
 
-import {
-  get as getToken,
-  guest,
-  signIn,
-} from "./reducers/current-user";
+import { get as getToken, guest, signIn } from "./reducers/current-user";
 import { remove as removeToken } from "./reducers/session";
 import { fetchMe } from "./api/session";
 import { ApiError } from "./api/error";
@@ -20,7 +16,8 @@ import { get } from "./request";
 import { get as getLang } from "./locales";
 
 import store from "./store";
-import { grammar, type ITerm, update } from "./reducers/term-vocabulary";
+import { grammar, update } from "./reducers/term-vocabulary";
+import { fetchGlossary } from "./api/glossary";
 import { push as nissayaEndingPush } from "./reducers/nissaya-ending-vocabulary";
 
 import { pushRelation } from "./reducers/relation";
@@ -39,14 +36,6 @@ export interface ISiteInfoResponse {
   subhead: string;
   models?: ISettingModels;
 }
-interface ITermResponse {
-  ok: boolean;
-  message: string;
-  data: {
-    rows: ITerm[];
-    count: number;
-  };
-}
 interface INissayaEnding {
   ending: string;
 }
@@ -61,14 +50,9 @@ interface INissayaEndingResponse {
 
 export const grammarTermFetch = () => {
   //获取语法术语表
-  get<ITermResponse>(
-    `/api/v2/term-vocabulary?view=grammar&lang=` + getLang()
-  ).then((json) => {
-    if (json.ok) {
-      console.debug("grammar dispatch", json.data.rows);
-      store.dispatch(grammar(json.data.rows));
-    }
-  });
+  fetchGlossary("grammar", getLang())
+    .then((rows) => store.dispatch(grammar(rows)))
+    .catch((e: unknown) => console.warn("fetch grammar glossary failed", e));
 };
 
 const init = () => {
@@ -93,7 +77,7 @@ const init = () => {
 
     // 团队列表取不到不影响使用：账户列表里只剩个人，团队空间沿用 localStorage 里的，下次启动再校验
     refreshMyGroups(store.dispatch).catch((e: unknown) =>
-      console.warn("fetch my groups failed", e)
+      console.warn("fetch my groups failed", e),
     );
   } else {
     console.log("no token");
@@ -110,14 +94,10 @@ const init = () => {
   //获取语法术语表
   grammarTermFetch();
 
-  //获取术语表
-  get<ITermResponse>(
-    `/api/v2/term-vocabulary?view=community&lang=` + getLang()
-  ).then((json) => {
-    if (json.ok) {
-      store.dispatch(update(json.data.rows));
-    }
-  });
+  //获取术语表（社区译名）
+  fetchGlossary("community", getLang())
+    .then((rows) => store.dispatch(update(rows)))
+    .catch((e: unknown) => console.warn("fetch community glossary failed", e));
 
   //获取nissaya ending 表
   get<INissayaEndingResponse>(`/api/v2/nissaya-ending-vocabulary?lang=my`).then(
@@ -126,7 +106,7 @@ const init = () => {
         const nissayaEnding = json.data.rows.map((item) => item.ending);
         store.dispatch(nissayaEndingPush(nissayaEnding));
       }
-    }
+    },
   );
 
   //获取 relation 表

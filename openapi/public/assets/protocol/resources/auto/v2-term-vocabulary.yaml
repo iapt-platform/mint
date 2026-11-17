@@ -4,7 +4,10 @@ get:
   tags:
     - term-vocabulary
   operationId: get_api_v2_term_vocabulary
-  description: 实现：`TermVocabularyController@index`
+  description: |
+    已被 `GET /v3/glossaries/{kind}` 取代：`view=grammar` → `/v3/glossaries/grammar`，`view=community` → `/v3/glossaries/community`，
+    `lang` 仍是查询参数（缺省按 `Accept-Language`，没有该语言的表时回退到 en，`meta.lang` 是实际用到的语言）。
+    `view=studio` / `user` 从未实现，不迁。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
   parameters:
     -
       name: search
@@ -64,6 +67,7 @@ get:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
       $ref: '../../main.yaml#/components/responses/ValidationError'
+  deprecated: true
 post:
   summary: '新建 term-vocabulary'
   tags:

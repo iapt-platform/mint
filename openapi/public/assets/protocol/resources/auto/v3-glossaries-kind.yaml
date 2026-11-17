@@ -1,0 +1,71 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-glossaries-kind.yaml
+get:
+  summary: 术语词汇表
+  tags:
+    - glossaries
+  operationId: get_api_v3_glossaries_kind_
+  description: |-
+    整表返回、不分页（客户端启动时拉一次，本地查词）。`meta.lang` 是实际用到的语言：
+    该语言没有这张表时回退到英文。
+
+    实现：`V3\GlossaryController@__invoke`
+  security:
+    - {  }
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: kind
+      in: path
+      required: true
+      schema:
+        type: string
+        enum:
+          - grammar
+          - community
+      description: '哪张表：grammar 语法术语，community 社区译名'
+    -
+      name: lang
+      in: query
+      schema:
+        type: string
+      description: '语言，如 zh-Hans。缺省用界面语言（Accept-Language 协商的结果）'
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    word:
+                      type: string
+                    tag:
+                      type: string
+                      nullable: true
+                    meaning:
+                      type: string
+                    other_meaning:
+                      type: string
+                      nullable: true
+              meta:
+                type: object
+                properties:
+                  kind:
+                    type: string
+                    description: 哪张表
+                  lang:
+                    type: string
+                    description: '实际用到的语言（没有该语言的表时是 en）'
+                  total:
+                    type: integer
+                    description: 条数
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'
