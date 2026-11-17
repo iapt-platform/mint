@@ -11,6 +11,7 @@ use App\Models\Discussion;
 use App\Models\PageNumber;
 use App\Models\PaliText;
 use App\Services\ArticleService;
+use App\Services\ChannelService;
 use App\Tools\Tools;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -425,7 +426,7 @@ class TemplateRender
 
         if (! $tplParam) {
             $this->info('没有，再查社区', 'term');
-            $community_channel = ChannelApi::getSysChannel('_community_term_zh-hans_');
+            $community_channel = app(ChannelService::class)->systemUid('_community_term_zh-hans_');
             $table = DhammaTerm::where('word', $word);
             if (! empty($tag)) {
                 $table = $table->where('tag', $tag);
@@ -1374,7 +1375,7 @@ class TemplateRender
         $word = $this->get_param($this->param, 'word', 1);
         $props = ['word' => $word];
 
-        $localTermChannel = ChannelApi::getSysChannel(
+        $localTermChannel = app(ChannelService::class)->systemUid(
             '_System_Grammar_Term_'.strtolower($this->lang).'_',
             '_System_Grammar_Term_en_'
         );

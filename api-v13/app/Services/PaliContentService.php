@@ -612,10 +612,10 @@ class PaliContentService
         if ($param['original']) {
             if ($param['mode'] === 'read') {
                 // 阅读模式加载html格式原文
-                $channelId = ChannelApi::getSysChannel('_System_Pali_VRI_');
+                $channelId = app(ChannelService::class)->systemUid('_System_Pali_VRI_');
             } else {
                 // 翻译模式加载json格式原文
-                $channelId = ChannelApi::getSysChannel('_System_Wbw_VRI_');
+                $channelId = app(ChannelService::class)->systemUid('_System_Wbw_VRI_');
             }
         }
 
