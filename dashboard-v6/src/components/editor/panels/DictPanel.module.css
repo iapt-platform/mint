@@ -18,3 +18,8 @@
   white-space: nowrap;
   vertical-align: bottom;
 }
+
+/* 正文与面板左边框留出间距，与右边栏标题栏的左内边距一致 */
+.tabs > :global(.ant-tabs-body-holder) {
+  padding-left: 12px;
+}

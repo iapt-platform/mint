@@ -111,14 +111,20 @@ Route::prefix('library')->name('library.')->group(function () {
 });
 // 博客路由
 Route::prefix('blog')->group(function () {
+    // categories / archives / tag / search / show 在 BlogController 里整段注释掉了（尚未实现），
+    // 但 blog 布局仍用这些路由名生成导航链接，所以路由名保留、先回 404——
+    // 指向不存在的控制器方法会抛 BadMethodCallException 变成 500（staging 日志里爬虫扫到过）。
+    // 实现了哪个就把它改回 [BlogController::class, '方法名']。
+    $notImplemented = fn () => abort(404);
+
     Route::get('/{user}', [BlogController::class, 'index'])->name('blog.index')->where('user', '[a-zA-Z0-9_-]+');
-    Route::get('/{user}/categories', [BlogController::class, 'categories'])->name('blog.categories');
+    Route::get('/{user}/categories', $notImplemented)->name('blog.categories');
     Route::get('/{user}/category/{category1}/{category2?}/{category3?}/{category4?}/{category5?}', [BlogController::class, 'category'])->name('blog.category');
-    Route::get('/{user}/archives', [BlogController::class, 'archives'])->name('blog.archives');
-    Route::get('/{user}/archives/{year}', [BlogController::class, 'archivesByYear'])->name('blog.archives.year');
-    Route::get('/{user}/tag/{tag}', [BlogController::class, 'tag'])->name('blog.tag');
-    Route::get('/{user}/search', [BlogController::class, 'search'])->name('blog.search');
-    Route::get('/{user}/{post}', [BlogController::class, 'show'])
+    Route::get('/{user}/archives', $notImplemented)->name('blog.archives');
+    Route::get('/{user}/archives/{year}', $notImplemented)->name('blog.archives.year');
+    Route::get('/{user}/tag/{tag}', $notImplemented)->name('blog.tag');
+    Route::get('/{user}/search', $notImplemented)->name('blog.search');
+    Route::get('/{user}/{post}', $notImplemented)
         ->name('blog.show')
         ->where([
             'user' => '[a-zA-Z0-9_-]+',

@@ -1,0 +1,58 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-pali-word-suggestions.yaml
+get:
+  summary: 巴利词补全
+  tags:
+    - pali-word-suggestions
+  operationId: get_api_v3_pali_word_suggestions
+  description: |-
+    按已输入的前缀列出三藏里出现过的词形，带出现次数与黑体次数。前缀同时匹配去掉变音符号的写法
+    （输入 dhamma 也能补出 dhammā），不区分大小写。与输入完全相同的词排在最前，其余按出现次数降序。
+
+    实现：`V3\PaliWordSuggestionController@__invoke`
+  security:
+    - {  }
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: limit
+      in: query
+      schema:
+        type: integer
+        default: 10
+      description: '最多返回几条，上限 50'
+    -
+      name: q
+      in: query
+      schema:
+        type: string
+      description: 已输入的前缀
+      required: true
+      example: vitakk
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    word:
+                      type: string
+                    count:
+                      type: integer
+                    bold:
+                      type: integer
+              meta:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                    description: 本次返回的条数
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

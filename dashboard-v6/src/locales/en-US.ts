@@ -12,6 +12,7 @@ import error from "./en-US/error";
 import pages from "./en-US/pages";
 import admin from "./en-US/admin";
 import adminStats from "./en-US/admin-stats";
+import search from "./en-US/search";
 
 const items = {
   "columns.library.title": "Library",
@@ -77,6 +78,7 @@ const items = {
   "channel.links.empty": "Not set",
   ...admin,
   ...adminStats,
+  ...search,
 };
 
 export default items;

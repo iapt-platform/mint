@@ -1,9 +1,8 @@
-import { CommentOutlined, SearchOutlined } from "@ant-design/icons";
+import { CommentOutlined } from "@ant-design/icons";
 import { useEffect, useState, type ReactNode } from "react";
 import SplitLayout, { type RightToolbarTab } from "../general/SplitLayout";
 import ChannelPanel from "./panels/ChannelPanel";
 import DictPanel from "./panels/DictPanel";
-import SearchPanel from "./panels/SearchPanel";
 import {
   ChannelIcon,
   DictIcon,
@@ -18,7 +17,10 @@ import type { IChannel } from "../../api/channel";
 import { useAppSelector } from "../../hooks";
 import { openPanel, rightPanel } from "../../reducers/right-panel";
 import store from "../../store";
-import { WORKSPACE_STICKY_TOP } from "../../layouts/workspace/constants";
+import {
+  WORKSPACE_CONTENT_TOP,
+  WORKSPACE_HEADER_HEIGHT,
+} from "../../layouts/workspace/constants";
 
 /**
  * redux openPanel 面板名 → 右边栏 tab key。
@@ -110,12 +112,6 @@ export default function Editor({
   // content 用独立组件而非内联 JSX，保证 articleId 等 props 变化时正常 re-render
   const rightTabs: RightToolbarTab[] = [
     {
-      key: "search",
-      icon: <SearchOutlined />,
-      label: "搜索",
-      content: <SearchPanel articleId={articleId} anthologyId={anthologyId} />,
-    },
-    {
       key: "dict",
       icon: <DictIcon />,
       label: "字典",
@@ -175,7 +171,8 @@ export default function Editor({
       sidebar={sidebar}
       rightTabs={rightTabs}
       openRequest={openRequest}
-      stickyTop={WORKSPACE_STICKY_TOP}
+      stickyTop={WORKSPACE_HEADER_HEIGHT}
+      restTop={WORKSPACE_CONTENT_TOP}
     >
       {({ expandButton }) => children({ expandButton })}
     </SplitLayout>

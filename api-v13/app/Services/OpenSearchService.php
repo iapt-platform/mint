@@ -431,9 +431,10 @@ class OpenSearchService
      * @type string $category           按分类过滤
      * @type array $tags               按标签过滤（terms）
      * @type array $pageRefs           按页码引用过滤（terms）
-     * @type string $relatedId          按关联 ID 过滤
+     * @type string|array $relatedId    按关联 ID 过滤（数组时命中任一）
      * @type string $author             按作者过滤
-     * @type string $channel            按频道过滤
+     * @type string $channel            按频道过滤（channel uuid）
+     * @type bool $aggregations       是否计算分面聚合，默认 true
      * @type array $highlight_pre_tags 高亮前置标签，默认 ['<mark>']
      * @type array $highlight_post_tags 高亮后置标签，默认 ['</mark>']
      *             }
@@ -497,15 +498,19 @@ class OpenSearchService
         }
 
         if (! empty($params['relatedId'])) {
-            $filters[] = ['term' => ['related_id' => $params['relatedId']]];
+            $filters[] = is_array($params['relatedId'])
+                ? ['terms' => ['related_id' => array_values($params['relatedId'])]]
+                : ['term' => ['related_id' => $params['relatedId']]];
         }
 
         if (! empty($params['author'])) {
             $filters[] = ['match' => ['metadata.author' => $params['author']]];
         }
 
+        // metadata.channel 在映射里是 text（标准分词器会把 uuid 按连字符拆开），
+        // term 拿整个 uuid 去比永远对不上，只能按短语匹配
         if (! empty($params['channel'])) {
-            $filters[] = ['term' => ['metadata.channel' => $params['channel']]];
+            $filters[] = ['match_phrase' => ['metadata.channel' => $params['channel']]];
         }
 
         // ---------- 查询部分 ----------
@@ -560,7 +565,10 @@ class OpenSearchService
                     ],
                 ]
                 : $query,
-            'aggs' => [
+        ];
+
+        if ($params['aggregations'] ?? true) {
+            $dsl['aggs'] = [
                 'resource_type' => [
                     'terms' => ['field' => 'resource_type'],
                 ],
@@ -573,8 +581,8 @@ class OpenSearchService
                 'granularity' => [
                     'terms' => ['field' => 'granularity'],
                 ],
-            ],
-        ];
+            ];
+        }
 
         // 只有有搜索词时才开启高亮；字段按语种路由，避免把巴利文喂给中文分词器
         if ($queryText !== '') {
@@ -1355,8 +1363,14 @@ class OpenSearchService
             ];
         }
 
-        $dsl = ['suggest' => $suggests];
+        // 每条候选只带出处的元数据，不把整篇文档（正文、向量）拉回来
+        $dsl = [
+            '_source' => ['resource_type', 'language', 'granularity', 'category'],
+            'suggest' => $suggests,
+        ];
 
+        // FIXME: completion suggester 会忽略 query，这个语言过滤从来没生效过（v3 已不再传）。
+        // 真要按语言过滤得给 *.suggest.* 字段配 completion context 并重建索引。
         if ($language) {
             $dsl['query'] = ['term' => ['language' => $language]];
         }

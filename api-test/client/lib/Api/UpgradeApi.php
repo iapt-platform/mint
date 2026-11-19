@@ -134,7 +134,7 @@ class UpgradeApi
      *
      * @throws \WikipaliApi\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \WikipaliApi\Model\GetApiV3SearchSearch200Response
+     * @return \WikipaliApi\Model\GetApiV3Upgrade200Response
      */
     public function getApiV3Upgrade(string $contentType = self::contentTypes['getApiV3Upgrade'][0])
     {
@@ -151,7 +151,7 @@ class UpgradeApi
      *
      * @throws \WikipaliApi\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \WikipaliApi\Model\GetApiV3SearchSearch200Response, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \WikipaliApi\Model\GetApiV3Upgrade200Response, HTTP status code, HTTP response headers (array of strings)
      */
     public function getApiV3UpgradeWithHttpInfo(string $contentType = self::contentTypes['getApiV3Upgrade'][0])
     {
@@ -183,7 +183,7 @@ class UpgradeApi
             switch($statusCode) {
                 case 200:
                     return $this->handleResponseWithDataType(
-                        '\WikipaliApi\Model\GetApiV3SearchSearch200Response',
+                        '\WikipaliApi\Model\GetApiV3Upgrade200Response',
                         $request,
                         $response,
                     );
@@ -205,7 +205,7 @@ class UpgradeApi
             }
 
             return $this->handleResponseWithDataType(
-                '\WikipaliApi\Model\GetApiV3SearchSearch200Response',
+                '\WikipaliApi\Model\GetApiV3Upgrade200Response',
                 $request,
                 $response,
             );
@@ -214,7 +214,7 @@ class UpgradeApi
                 case 200:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        '\WikipaliApi\Model\GetApiV3SearchSearch200Response',
+                        '\WikipaliApi\Model\GetApiV3Upgrade200Response',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -258,7 +258,7 @@ class UpgradeApi
      */
     public function getApiV3UpgradeAsyncWithHttpInfo(string $contentType = self::contentTypes['getApiV3Upgrade'][0])
     {
-        $returnType = '\WikipaliApi\Model\GetApiV3SearchSearch200Response';
+        $returnType = '\WikipaliApi\Model\GetApiV3Upgrade200Response';
         $request = $this->getApiV3UpgradeRequest($contentType);
 
         return $this->client

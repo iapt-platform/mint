@@ -136,29 +136,30 @@ class SearchApi
      *
      * 全文检索
      *
-     * @param  string $q 搜索关键词 (required)
-     * @param  int|null $page 页码 (optional, default to 1)
-     * @param  int|null $page_size 每页数量，上限 100 (optional, default to 20)
-     * @param  string|null $search_mode 检索模式 (optional, default to 'fuzzy')
-     * @param  string|null $resource_type 资源类型 (optional)
+     * @param  string $q 检索词 (required)
+     * @param  string|null $search_mode 检索模式：fuzzy 多词模糊（默认）、exact 词形精确、semantic 语义向量、hybrid 模糊 + 语义、definition 黑体定义优先 (optional, default to 'fuzzy')
+     * @param  string|null $resource_type 资源类型：tipitaka 三藏（段落与整章）、original_text 原文分段、term 术语 (optional)
      * @param  string|null $resource_id 限定某个资源 id (optional)
      * @param  string|null $granularity 文档颗粒度 (optional)
-     * @param  string|null $language 语言 (optional)
-     * @param  string|null $category 文档分类，逗号分隔 (optional)
-     * @param  string|null $tags 标签过滤，逗号分隔 (optional)
-     * @param  string[]|null $page_refs 页码标记 (optional)
-     * @param  string[]|null $related_id 关联 id (optional)
-     * @param  string|null $author 按作者或译者过滤 (optional)
-     * @param  string|null $channel 按来源 channel 过滤 (optional)
+     * @param  string|null $language 文档语言，如 pi、zh、en (optional)
+     * @param  string|null $category 分类，逗号分隔，须全部命中 (optional)
+     * @param  string|null $tags 标签，逗号分隔，命中任一 (optional)
+     * @param  string[]|null $page_refs 页码标记，命中任一 (optional)
+     * @param  string[]|null $related_id 关联 id（经文段落是 &#x60;{book}-{para}&#x60;），命中任一 (optional)
+     * @param  string|null $author 作者或译者 (optional)
+     * @param  string|null $channel 来源 channel 的 uuid (optional)
+     * @param  bool|null $facets 是否在 &#x60;meta.facets&#x60; 里返回按 resource_type / language / category / granularity 的分面计数 (optional, default to false)
+     * @param  int|null $page 页码 (optional, default to 1)
+     * @param  int|null $per_page 每页条数，上限 100 (optional, default to 20)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3Search'] to see the possible values for this operation
      *
      * @throws \WikipaliApi\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \WikipaliApi\Model\GetApiV3Search200Response|\WikipaliApi\Model\ProblemDetails
+     * @return \WikipaliApi\Model\GetApiV3Search200Response|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails
      */
-    public function getApiV3Search($q, $page = 1, $page_size = 20, $search_mode = 'fuzzy', $resource_type = null, $resource_id = null, $granularity = null, $language = null, $category = null, $tags = null, $page_refs = null, $related_id = null, $author = null, $channel = null, string $contentType = self::contentTypes['getApiV3Search'][0])
+    public function getApiV3Search($q, $search_mode = 'fuzzy', $resource_type = null, $resource_id = null, $granularity = null, $language = null, $category = null, $tags = null, $page_refs = null, $related_id = null, $author = null, $channel = null, $facets = false, $page = 1, $per_page = 20, string $contentType = self::contentTypes['getApiV3Search'][0])
     {
-        list($response) = $this->getApiV3SearchWithHttpInfo($q, $page, $page_size, $search_mode, $resource_type, $resource_id, $granularity, $language, $category, $tags, $page_refs, $related_id, $author, $channel, $contentType);
+        list($response) = $this->getApiV3SearchWithHttpInfo($q, $search_mode, $resource_type, $resource_id, $granularity, $language, $category, $tags, $page_refs, $related_id, $author, $channel, $facets, $page, $per_page, $contentType);
         return $response;
     }
 
@@ -167,29 +168,30 @@ class SearchApi
      *
      * 全文检索
      *
-     * @param  string $q 搜索关键词 (required)
-     * @param  int|null $page 页码 (optional, default to 1)
-     * @param  int|null $page_size 每页数量，上限 100 (optional, default to 20)
-     * @param  string|null $search_mode 检索模式 (optional, default to 'fuzzy')
-     * @param  string|null $resource_type 资源类型 (optional)
+     * @param  string $q 检索词 (required)
+     * @param  string|null $search_mode 检索模式：fuzzy 多词模糊（默认）、exact 词形精确、semantic 语义向量、hybrid 模糊 + 语义、definition 黑体定义优先 (optional, default to 'fuzzy')
+     * @param  string|null $resource_type 资源类型：tipitaka 三藏（段落与整章）、original_text 原文分段、term 术语 (optional)
      * @param  string|null $resource_id 限定某个资源 id (optional)
      * @param  string|null $granularity 文档颗粒度 (optional)
-     * @param  string|null $language 语言 (optional)
-     * @param  string|null $category 文档分类，逗号分隔 (optional)
-     * @param  string|null $tags 标签过滤，逗号分隔 (optional)
-     * @param  string[]|null $page_refs 页码标记 (optional)
-     * @param  string[]|null $related_id 关联 id (optional)
-     * @param  string|null $author 按作者或译者过滤 (optional)
-     * @param  string|null $channel 按来源 channel 过滤 (optional)
+     * @param  string|null $language 文档语言，如 pi、zh、en (optional)
+     * @param  string|null $category 分类，逗号分隔，须全部命中 (optional)
+     * @param  string|null $tags 标签，逗号分隔，命中任一 (optional)
+     * @param  string[]|null $page_refs 页码标记，命中任一 (optional)
+     * @param  string[]|null $related_id 关联 id（经文段落是 &#x60;{book}-{para}&#x60;），命中任一 (optional)
+     * @param  string|null $author 作者或译者 (optional)
+     * @param  string|null $channel 来源 channel 的 uuid (optional)
+     * @param  bool|null $facets 是否在 &#x60;meta.facets&#x60; 里返回按 resource_type / language / category / granularity 的分面计数 (optional, default to false)
+     * @param  int|null $page 页码 (optional, default to 1)
+     * @param  int|null $per_page 每页条数，上限 100 (optional, default to 20)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3Search'] to see the possible values for this operation
      *
      * @throws \WikipaliApi\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \WikipaliApi\Model\GetApiV3Search200Response|\WikipaliApi\Model\ProblemDetails, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \WikipaliApi\Model\GetApiV3Search200Response|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getApiV3SearchWithHttpInfo($q, $page = 1, $page_size = 20, $search_mode = 'fuzzy', $resource_type = null, $resource_id = null, $granularity = null, $language = null, $category = null, $tags = null, $page_refs = null, $related_id = null, $author = null, $channel = null, string $contentType = self::contentTypes['getApiV3Search'][0])
+    public function getApiV3SearchWithHttpInfo($q, $search_mode = 'fuzzy', $resource_type = null, $resource_id = null, $granularity = null, $language = null, $category = null, $tags = null, $page_refs = null, $related_id = null, $author = null, $channel = null, $facets = false, $page = 1, $per_page = 20, string $contentType = self::contentTypes['getApiV3Search'][0])
     {
-        $request = $this->getApiV3SearchRequest($q, $page, $page_size, $search_mode, $resource_type, $resource_id, $granularity, $language, $category, $tags, $page_refs, $related_id, $author, $channel, $contentType);
+        $request = $this->getApiV3SearchRequest($q, $search_mode, $resource_type, $resource_id, $granularity, $language, $category, $tags, $page_refs, $related_id, $author, $channel, $facets, $page, $per_page, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -222,6 +224,12 @@ class SearchApi
                         $response,
                     );
                 case 422:
+                    return $this->handleResponseWithDataType(
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $request,
+                        $response,
+                    );
+                case 503:
                     return $this->handleResponseWithDataType(
                         '\WikipaliApi\Model\ProblemDetails',
                         $request,
@@ -267,6 +275,14 @@ class SearchApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 503:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -279,28 +295,29 @@ class SearchApi
      *
      * 全文检索
      *
-     * @param  string $q 搜索关键词 (required)
-     * @param  int|null $page 页码 (optional, default to 1)
-     * @param  int|null $page_size 每页数量，上限 100 (optional, default to 20)
-     * @param  string|null $search_mode 检索模式 (optional, default to 'fuzzy')
-     * @param  string|null $resource_type 资源类型 (optional)
+     * @param  string $q 检索词 (required)
+     * @param  string|null $search_mode 检索模式：fuzzy 多词模糊（默认）、exact 词形精确、semantic 语义向量、hybrid 模糊 + 语义、definition 黑体定义优先 (optional, default to 'fuzzy')
+     * @param  string|null $resource_type 资源类型：tipitaka 三藏（段落与整章）、original_text 原文分段、term 术语 (optional)
      * @param  string|null $resource_id 限定某个资源 id (optional)
      * @param  string|null $granularity 文档颗粒度 (optional)
-     * @param  string|null $language 语言 (optional)
-     * @param  string|null $category 文档分类，逗号分隔 (optional)
-     * @param  string|null $tags 标签过滤，逗号分隔 (optional)
-     * @param  string[]|null $page_refs 页码标记 (optional)
-     * @param  string[]|null $related_id 关联 id (optional)
-     * @param  string|null $author 按作者或译者过滤 (optional)
-     * @param  string|null $channel 按来源 channel 过滤 (optional)
+     * @param  string|null $language 文档语言，如 pi、zh、en (optional)
+     * @param  string|null $category 分类，逗号分隔，须全部命中 (optional)
+     * @param  string|null $tags 标签，逗号分隔，命中任一 (optional)
+     * @param  string[]|null $page_refs 页码标记，命中任一 (optional)
+     * @param  string[]|null $related_id 关联 id（经文段落是 &#x60;{book}-{para}&#x60;），命中任一 (optional)
+     * @param  string|null $author 作者或译者 (optional)
+     * @param  string|null $channel 来源 channel 的 uuid (optional)
+     * @param  bool|null $facets 是否在 &#x60;meta.facets&#x60; 里返回按 resource_type / language / category / granularity 的分面计数 (optional, default to false)
+     * @param  int|null $page 页码 (optional, default to 1)
+     * @param  int|null $per_page 每页条数，上限 100 (optional, default to 20)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3Search'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function getApiV3SearchAsync($q, $page = 1, $page_size = 20, $search_mode = 'fuzzy', $resource_type = null, $resource_id = null, $granularity = null, $language = null, $category = null, $tags = null, $page_refs = null, $related_id = null, $author = null, $channel = null, string $contentType = self::contentTypes['getApiV3Search'][0])
+    public function getApiV3SearchAsync($q, $search_mode = 'fuzzy', $resource_type = null, $resource_id = null, $granularity = null, $language = null, $category = null, $tags = null, $page_refs = null, $related_id = null, $author = null, $channel = null, $facets = false, $page = 1, $per_page = 20, string $contentType = self::contentTypes['getApiV3Search'][0])
     {
-        return $this->getApiV3SearchAsyncWithHttpInfo($q, $page, $page_size, $search_mode, $resource_type, $resource_id, $granularity, $language, $category, $tags, $page_refs, $related_id, $author, $channel, $contentType)
+        return $this->getApiV3SearchAsyncWithHttpInfo($q, $search_mode, $resource_type, $resource_id, $granularity, $language, $category, $tags, $page_refs, $related_id, $author, $channel, $facets, $page, $per_page, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -313,29 +330,30 @@ class SearchApi
      *
      * 全文检索
      *
-     * @param  string $q 搜索关键词 (required)
-     * @param  int|null $page 页码 (optional, default to 1)
-     * @param  int|null $page_size 每页数量，上限 100 (optional, default to 20)
-     * @param  string|null $search_mode 检索模式 (optional, default to 'fuzzy')
-     * @param  string|null $resource_type 资源类型 (optional)
+     * @param  string $q 检索词 (required)
+     * @param  string|null $search_mode 检索模式：fuzzy 多词模糊（默认）、exact 词形精确、semantic 语义向量、hybrid 模糊 + 语义、definition 黑体定义优先 (optional, default to 'fuzzy')
+     * @param  string|null $resource_type 资源类型：tipitaka 三藏（段落与整章）、original_text 原文分段、term 术语 (optional)
      * @param  string|null $resource_id 限定某个资源 id (optional)
      * @param  string|null $granularity 文档颗粒度 (optional)
-     * @param  string|null $language 语言 (optional)
-     * @param  string|null $category 文档分类，逗号分隔 (optional)
-     * @param  string|null $tags 标签过滤，逗号分隔 (optional)
-     * @param  string[]|null $page_refs 页码标记 (optional)
-     * @param  string[]|null $related_id 关联 id (optional)
-     * @param  string|null $author 按作者或译者过滤 (optional)
-     * @param  string|null $channel 按来源 channel 过滤 (optional)
+     * @param  string|null $language 文档语言，如 pi、zh、en (optional)
+     * @param  string|null $category 分类，逗号分隔，须全部命中 (optional)
+     * @param  string|null $tags 标签，逗号分隔，命中任一 (optional)
+     * @param  string[]|null $page_refs 页码标记，命中任一 (optional)
+     * @param  string[]|null $related_id 关联 id（经文段落是 &#x60;{book}-{para}&#x60;），命中任一 (optional)
+     * @param  string|null $author 作者或译者 (optional)
+     * @param  string|null $channel 来源 channel 的 uuid (optional)
+     * @param  bool|null $facets 是否在 &#x60;meta.facets&#x60; 里返回按 resource_type / language / category / granularity 的分面计数 (optional, default to false)
+     * @param  int|null $page 页码 (optional, default to 1)
+     * @param  int|null $per_page 每页条数，上限 100 (optional, default to 20)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3Search'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function getApiV3SearchAsyncWithHttpInfo($q, $page = 1, $page_size = 20, $search_mode = 'fuzzy', $resource_type = null, $resource_id = null, $granularity = null, $language = null, $category = null, $tags = null, $page_refs = null, $related_id = null, $author = null, $channel = null, string $contentType = self::contentTypes['getApiV3Search'][0])
+    public function getApiV3SearchAsyncWithHttpInfo($q, $search_mode = 'fuzzy', $resource_type = null, $resource_id = null, $granularity = null, $language = null, $category = null, $tags = null, $page_refs = null, $related_id = null, $author = null, $channel = null, $facets = false, $page = 1, $per_page = 20, string $contentType = self::contentTypes['getApiV3Search'][0])
     {
         $returnType = '\WikipaliApi\Model\GetApiV3Search200Response';
-        $request = $this->getApiV3SearchRequest($q, $page, $page_size, $search_mode, $resource_type, $resource_id, $granularity, $language, $category, $tags, $page_refs, $related_id, $author, $channel, $contentType);
+        $request = $this->getApiV3SearchRequest($q, $search_mode, $resource_type, $resource_id, $granularity, $language, $category, $tags, $page_refs, $related_id, $author, $channel, $facets, $page, $per_page, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -376,26 +394,27 @@ class SearchApi
     /**
      * Create request for operation 'getApiV3Search'
      *
-     * @param  string $q 搜索关键词 (required)
-     * @param  int|null $page 页码 (optional, default to 1)
-     * @param  int|null $page_size 每页数量，上限 100 (optional, default to 20)
-     * @param  string|null $search_mode 检索模式 (optional, default to 'fuzzy')
-     * @param  string|null $resource_type 资源类型 (optional)
+     * @param  string $q 检索词 (required)
+     * @param  string|null $search_mode 检索模式：fuzzy 多词模糊（默认）、exact 词形精确、semantic 语义向量、hybrid 模糊 + 语义、definition 黑体定义优先 (optional, default to 'fuzzy')
+     * @param  string|null $resource_type 资源类型：tipitaka 三藏（段落与整章）、original_text 原文分段、term 术语 (optional)
      * @param  string|null $resource_id 限定某个资源 id (optional)
      * @param  string|null $granularity 文档颗粒度 (optional)
-     * @param  string|null $language 语言 (optional)
-     * @param  string|null $category 文档分类，逗号分隔 (optional)
-     * @param  string|null $tags 标签过滤，逗号分隔 (optional)
-     * @param  string[]|null $page_refs 页码标记 (optional)
-     * @param  string[]|null $related_id 关联 id (optional)
-     * @param  string|null $author 按作者或译者过滤 (optional)
-     * @param  string|null $channel 按来源 channel 过滤 (optional)
+     * @param  string|null $language 文档语言，如 pi、zh、en (optional)
+     * @param  string|null $category 分类，逗号分隔，须全部命中 (optional)
+     * @param  string|null $tags 标签，逗号分隔，命中任一 (optional)
+     * @param  string[]|null $page_refs 页码标记，命中任一 (optional)
+     * @param  string[]|null $related_id 关联 id（经文段落是 &#x60;{book}-{para}&#x60;），命中任一 (optional)
+     * @param  string|null $author 作者或译者 (optional)
+     * @param  string|null $channel 来源 channel 的 uuid (optional)
+     * @param  bool|null $facets 是否在 &#x60;meta.facets&#x60; 里返回按 resource_type / language / category / granularity 的分面计数 (optional, default to false)
+     * @param  int|null $page 页码 (optional, default to 1)
+     * @param  int|null $per_page 每页条数，上限 100 (optional, default to 20)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3Search'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function getApiV3SearchRequest($q, $page = 1, $page_size = 20, $search_mode = 'fuzzy', $resource_type = null, $resource_id = null, $granularity = null, $language = null, $category = null, $tags = null, $page_refs = null, $related_id = null, $author = null, $channel = null, string $contentType = self::contentTypes['getApiV3Search'][0])
+    public function getApiV3SearchRequest($q, $search_mode = 'fuzzy', $resource_type = null, $resource_id = null, $granularity = null, $language = null, $category = null, $tags = null, $page_refs = null, $related_id = null, $author = null, $channel = null, $facets = false, $page = 1, $per_page = 20, string $contentType = self::contentTypes['getApiV3Search'][0])
     {
 
         // verify the required parameter 'q' is set
@@ -404,6 +423,7 @@ class SearchApi
                 'Missing the required parameter $q when calling getApiV3Search'
             );
         }
+
 
 
 
@@ -434,24 +454,6 @@ class SearchApi
             'form', // style
             true, // explode
             true // required
-        ) ?? []);
-        // query params
-        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
-            $page,
-            'page', // param base name
-            'integer', // openApiType
-            'form', // style
-            true, // explode
-            false // required
-        ) ?? []);
-        // query params
-        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
-            $page_size,
-            'page_size', // param base name
-            'integer', // openApiType
-            'form', // style
-            true, // explode
-            false // required
         ) ?? []);
         // query params
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
@@ -552,6 +554,33 @@ class SearchApi
             true, // explode
             false // required
         ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $facets,
+            'facets', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $page,
+            'page', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $per_page,
+            'per_page', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
 
 
 
@@ -620,14 +649,14 @@ class SearchApi
     /**
      * Operation getApiV3SearchSearch
      *
-     * 按 id 取单条检索结果
+     * 按 id 取单条检索文档
      *
      * @param  string $search OpenSearch 文档 id (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3SearchSearch'] to see the possible values for this operation
      *
      * @throws \WikipaliApi\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \WikipaliApi\Model\GetApiV3SearchSearch200Response|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails
+     * @return \WikipaliApi\Model\GetApiV3SearchSearch200Response|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails
      */
     public function getApiV3SearchSearch($search, string $contentType = self::contentTypes['getApiV3SearchSearch'][0])
     {
@@ -638,14 +667,14 @@ class SearchApi
     /**
      * Operation getApiV3SearchSearchWithHttpInfo
      *
-     * 按 id 取单条检索结果
+     * 按 id 取单条检索文档
      *
      * @param  string $search OpenSearch 文档 id (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3SearchSearch'] to see the possible values for this operation
      *
      * @throws \WikipaliApi\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \WikipaliApi\Model\GetApiV3SearchSearch200Response|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \WikipaliApi\Model\GetApiV3SearchSearch200Response|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails, HTTP status code, HTTP response headers (array of strings)
      */
     public function getApiV3SearchSearchWithHttpInfo($search, string $contentType = self::contentTypes['getApiV3SearchSearch'][0])
     {
@@ -688,6 +717,12 @@ class SearchApi
                         $response,
                     );
                 case 422:
+                    return $this->handleResponseWithDataType(
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $request,
+                        $response,
+                    );
+                case 503:
                     return $this->handleResponseWithDataType(
                         '\WikipaliApi\Model\ProblemDetails',
                         $request,
@@ -741,6 +776,14 @@ class SearchApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 503:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -751,7 +794,7 @@ class SearchApi
     /**
      * Operation getApiV3SearchSearchAsync
      *
-     * 按 id 取单条检索结果
+     * 按 id 取单条检索文档
      *
      * @param  string $search OpenSearch 文档 id (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3SearchSearch'] to see the possible values for this operation
@@ -772,7 +815,7 @@ class SearchApi
     /**
      * Operation getApiV3SearchSearchAsyncWithHttpInfo
      *
-     * 按 id 取单条检索结果
+     * 按 id 取单条检索文档
      *
      * @param  string $search OpenSearch 文档 id (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3SearchSearch'] to see the possible values for this operation
@@ -931,7 +974,7 @@ class SearchApi
      *
      * @throws \WikipaliApi\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \WikipaliApi\Model\GetApiV3Search200Response|\WikipaliApi\Model\ProblemDetails
+     * @return \WikipaliApi\Model\PostApiV3Search200Response|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails
      */
     public function postApiV3Search($post_api_v3_search_request, string $contentType = self::contentTypes['postApiV3Search'][0])
     {
@@ -949,7 +992,7 @@ class SearchApi
      *
      * @throws \WikipaliApi\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \WikipaliApi\Model\GetApiV3Search200Response|\WikipaliApi\Model\ProblemDetails, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \WikipaliApi\Model\PostApiV3Search200Response|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails, HTTP status code, HTTP response headers (array of strings)
      */
     public function postApiV3SearchWithHttpInfo($post_api_v3_search_request, string $contentType = self::contentTypes['postApiV3Search'][0])
     {
@@ -981,11 +1024,17 @@ class SearchApi
             switch($statusCode) {
                 case 200:
                     return $this->handleResponseWithDataType(
-                        '\WikipaliApi\Model\GetApiV3Search200Response',
+                        '\WikipaliApi\Model\PostApiV3Search200Response',
                         $request,
                         $response,
                     );
                 case 422:
+                    return $this->handleResponseWithDataType(
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $request,
+                        $response,
+                    );
+                case 503:
                     return $this->handleResponseWithDataType(
                         '\WikipaliApi\Model\ProblemDetails',
                         $request,
@@ -1009,7 +1058,7 @@ class SearchApi
             }
 
             return $this->handleResponseWithDataType(
-                '\WikipaliApi\Model\GetApiV3Search200Response',
+                '\WikipaliApi\Model\PostApiV3Search200Response',
                 $request,
                 $response,
             );
@@ -1018,12 +1067,20 @@ class SearchApi
                 case 200:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        '\WikipaliApi\Model\GetApiV3Search200Response',
+                        '\WikipaliApi\Model\PostApiV3Search200Response',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
                     throw $e;
                 case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 503:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
                         '\WikipaliApi\Model\ProblemDetails',
@@ -1072,7 +1129,7 @@ class SearchApi
      */
     public function postApiV3SearchAsyncWithHttpInfo($post_api_v3_search_request, string $contentType = self::contentTypes['postApiV3Search'][0])
     {
-        $returnType = '\WikipaliApi\Model\GetApiV3Search200Response';
+        $returnType = '\WikipaliApi\Model\PostApiV3Search200Response';
         $request = $this->postApiV3SearchRequest($post_api_v3_search_request, $contentType);
 
         return $this->client

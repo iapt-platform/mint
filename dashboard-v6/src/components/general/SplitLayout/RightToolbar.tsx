@@ -29,7 +29,7 @@ interface RightToolbarProps {
   activeKey: string | null;
   onTabClick: (key: string) => void;
   onClose: () => void;
-  /** 吸顶时距视口顶部的距离（px），面板高度相应减去它 */
+  /** 当前距视口顶部的距离（px），面板高度 = 100vh 减去它 */
   stickyTop?: number;
 }
 

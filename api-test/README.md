@@ -169,7 +169,7 @@ bash api-test/tools/regen.sh
 - **新增端点** → 在 `cases/` 加对应 `test()`（参照现有文件按领域放）。
 - **参数变了**（新增 required、改名、枚举增删）→ 改对应用例的入参。
 - **响应字段变了**（Resource 的 `@return` 改了形状）→ 改对应断言。
-- **种子数据失效** → `fixtures.php` 里的 `channel` / `target_id` / `search_doc_id` 换新值。
+- **种子数据失效** → `fixtures.php` 里的 `channel` / `target_id` 换新值。
 
 ### 4. 跑全量验证
 
@@ -187,20 +187,19 @@ php run.php --username=<username> --password=<password> --server=staging
 
 | 端点                     | spec 说                                          | 实际                                                                        | 处理                                                                                   |
 | ------------------------ | ------------------------------------------------ | --------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| `GET/POST /v3/search`    | 200 `{data:数组, meta}` + 非法 `search_mode` 422 | 200 `{success, data:{took,hits}}`；`search_mode` 不校验                     | `filter-v3.php` 把 200 schema 修为 `{success,data:对象}`；用例只断言状态码 + `data` 键 |
-| `GET /v3/search-suggest` | 200 `{data:数组, meta}`；空 q 422                | 200 `{success, data:{query,suggestions}}`；空 q 400 `{success:false,error}` | 同上修 schema；空 q 用例按实际 400 断言                                                |
 | `GET /v3/upgrade`        | 200 `{data:数组, meta}`                          | 200 `{data:{status:"ok"}}`                                                  | 修 schema 为 `{data:对象}`                                                             |
 
-根因是这三个控制器还没迁到 v3 的 Resource 信封（`{data}` 原生形状、错误体 RFC 9457
+根因是这个控制器还没迁到 v3 的 Resource 信封（`{data}` 原生形状、错误体 RFC 9457
 Problem Details、成败只看状态码）。正确的长期修法在 api-v13 侧，这里只让测试客户端能用、
-把漂移显式记录。`filter-v3.php` 里的 `applyDriftPatches()` 就是这三处补丁，改对齐后可删。
+把漂移显式记录。`filter-v3.php` 里的 `applyDriftPatches()` 就是这处补丁，改对齐后可删。（`/v3/search`、`/v3/search-suggestions` 已于 2026-11-19 对齐，补丁已删。）
 
 ## 环境注意
 
 - **pspell / xdebug 启动警告**：本机 PHP CLI 的 pspell 扩展与 PHP 版本不匹配，每次 `php`
   都会在 stderr 打警告，与测试无关，可忽略。
-- **staging 的 OpenSearch**：`/v3/search`、`/v3/search-suggest` 在 staging 会 500
-  （索引 mapping 与代码不一致：`resource_type` 缺 fielddata、`content.suggest.pali` 没映射）。
+- **staging 的 OpenSearch**：`/v3/search?facets=true`、`/v3/search-suggestions` 在 staging 会 500
+  （索引 mapping 与代码不一致：`resource_type` 是 text 不能聚合、`content.suggest.pali` 不是 completion）。
+  `/v3/search` 默认不再算聚合，不带 facets 时不受影响。
   这是 staging 环境问题，本地跑这几条是绿的。
 - **`registered_email` 种子**：`email-certifications` 的「已注册邮箱 → 422」用例需要一个
   真实存在的账号邮箱，从环境变量 `API_TEST_REGISTERED_EMAIL` 读，没给就 SKIP。它只走

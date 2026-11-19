@@ -57,7 +57,7 @@ class GetApiV3SearchSearch200Response implements ModelInterface, ArrayAccess, \J
      * @var string[]
      */
     protected static $openAPITypes = [
-        'data' => 'object'
+        'data' => '\WikipaliApi\Model\GetApiV3Search200ResponseDataInner'
     ];
 
     /**
@@ -292,7 +292,7 @@ class GetApiV3SearchSearch200Response implements ModelInterface, ArrayAccess, \J
     /**
      * Gets data
      *
-     * @return object|null
+     * @return \WikipaliApi\Model\GetApiV3Search200ResponseDataInner|null
      */
     public function getData()
     {
@@ -302,7 +302,7 @@ class GetApiV3SearchSearch200Response implements ModelInterface, ArrayAccess, \J
     /**
      * Sets data
      *
-     * @param object|null $data data
+     * @param \WikipaliApi\Model\GetApiV3Search200ResponseDataInner|null $data data
      *
      * @return self
      */

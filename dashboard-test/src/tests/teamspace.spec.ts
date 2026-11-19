@@ -5,7 +5,7 @@ import { collect } from '../lib/collect.js';
 import { shotDir } from '../lib/env.js';
 
 /**
- * 团队空间（P0）：头像弹窗里切到团队空间、顶栏标签、菜单置灰、直接访问被拦、
+ * 团队空间（P0）：头像弹窗里切到团队空间、主导航顶部换成团队、菜单置灰、直接访问被拦、
  * 刷新后保持、切回个人空间、localStorage 里的过期团队被清掉。
  *
  * 团队空间 = 以某个 group 为 owner 浏览资源。P0 阶段所有可团队化的模块都还没迁 v3，
@@ -17,7 +17,13 @@ const TEAM2 = 'e2e 团队空间 2';
 
 const shot = (page: Page, name: string) =>
   page.screenshot({ path: `${SHOT}/${name}.png`, fullPage: true });
-const badge = (page: Page) => page.getByTestId('teamspace-badge');
+/** 主导航顶部的当前账号（头像 + 名字）；团队空间里显示团队名 */
+const active = (page: Page) => page.getByTestId('active-account');
+/** 当前账号是某个团队（TEAM 是 TEAM2 的前缀，所以要锚定结尾） */
+const isTeam = (page: Page, name: string) =>
+  expect(active(page)).toHaveText(new RegExp(`${name}$`));
+/** 当前是个人账号：顶部名字不是任何一个测试团队 */
+const isPersonal = (page: Page) => expect(active(page)).not.toContainText('e2e 团队空间');
 const menuItem = (page: Page, label: string) =>
   page.locator('.ant-layout-sider .ant-menu-item').filter({ hasText: label });
 /** 展开主导航的「协作」子菜单（inline 子菜单收起时子项不渲染） */
@@ -41,13 +47,24 @@ async function ensureTeam(request: APIRequestContext, name: string): Promise<str
 
 /** 头像弹窗里选一个团队空间 */
 async function switchTo(page: Page, name: string) {
-  await page.locator('.ant-layout-sider .ant-avatar').first().hover();
+  await active(page).hover();
   const popover = page.locator('.ant-popover:visible');
-  const title = popover.getByText('切换到团队空间');
+  const title = popover.getByText('切换账号');
   if (!(await popover.getByText(name, { exact: true }).isVisible())) {
     await title.click();
   }
   await popover.getByText(name, { exact: true }).click();
+}
+
+/** 头像弹窗里选个人账号 */
+async function switchToPersonal(page: Page) {
+  await active(page).hover();
+  const popover = page.locator('.ant-popover:visible');
+  const personal = popover.getByTestId('account-personal');
+  if (!(await personal.isVisible())) {
+    await popover.getByText('切换账号').click();
+  }
+  await personal.click();
 }
 
 let teamId = '';
@@ -66,13 +83,27 @@ test.describe('团队空间切换', () => {
       await page.goto('workspace', { waitUntil: 'networkidle' });
       await page.evaluate(() => localStorage.removeItem('teamspace'));
       await page.reload({ waitUntil: 'networkidle' });
-      await expect(badge(page)).toHaveCount(0);
+      await isPersonal(page);
 
       await switchTo(page, TEAM);
 
-      await expect(badge(page)).toContainText(TEAM);
+      await isTeam(page, TEAM);
       expect(JSON.parse((await stored(page)) ?? '{}').id).toBe(teamId);
       await shot(page, '01-switched');
+    });
+
+    await test.step('1b. 主导航头像与弹窗换成团队账号，标注我的角色', async () => {
+      // 主导航顶部显示团队名
+      await isTeam(page, TEAM);
+      await active(page).hover();
+      const popover = page.locator('.ant-popover:visible');
+      await expect(popover.locator('h3')).toHaveText(TEAM);
+      await expect(popover.getByTestId('account-role')).toHaveText('拥有者');
+      // 账号列表：个人账号与团队之间有分隔线，团队带角色
+      const list = popover.locator('.ant-menu-sub');
+      await expect(list.locator('.ant-menu-item-divider')).toHaveCount(1);
+      await expect(list.locator('.ant-menu-item').filter({ hasText: TEAM2 })).toContainText('拥有者');
+      await shot(page, '01b-account-popover');
       log.dump('1. 切到团队空间');
     });
 
@@ -100,14 +131,14 @@ test.describe('团队空间切换', () => {
 
     await test.step('2c. 在成员管理页切换团队空间，成员列表跟着换', async () => {
       await page.goto('workspace/members', { waitUntil: 'networkidle' });
-      await expect(badge(page)).toContainText(TEAM);
+      await isTeam(page, TEAM);
 
       const refetched = page.waitForResponse(
         (r) => r.url().includes(`/api/v3/groups/${team2Id}/members`) && r.request().method() === 'GET',
       );
       await switchTo(page, TEAM2);
       expect((await refetched).status()).toBe(200);
-      await expect(badge(page)).toContainText(TEAM2);
+      await isTeam(page, TEAM2);
       await expect(page).toHaveURL(/workspace\/members$/);
       await shot(page, '02c-switched-members');
 
@@ -115,7 +146,7 @@ test.describe('团队空间切换', () => {
       const back = page.waitForResponse((r) => r.url().includes(`/api/v3/groups/${teamId}/members`));
       await switchTo(page, TEAM);
       await back;
-      await expect(badge(page)).toContainText(TEAM);
+      await isTeam(page, TEAM);
     });
 
     await test.step('3a. 已迁 v3 的术语在团队空间可用，列的是团队的术语', async () => {
@@ -137,13 +168,13 @@ test.describe('团队空间切换', () => {
 
     await test.step('4. 刷新后仍在团队空间', async () => {
       await page.reload({ waitUntil: 'networkidle' });
-      await expect(badge(page)).toContainText(TEAM);
+      await isTeam(page, TEAM);
       await expect(page.getByTestId('teamspace-blocked')).toBeVisible();
     });
 
     await test.step('5. 拦截页上切回个人空间', async () => {
       await page.getByTestId('teamspace-blocked').getByRole('button', { name: '切回个人空间' }).click();
-      await expect(badge(page)).toHaveCount(0);
+      await isPersonal(page);
       await expect(page.locator('.ant-table')).toBeVisible();
       expect(await stored(page)).toBeNull();
       await shot(page, '05-personal');
@@ -159,16 +190,16 @@ test.describe('团队空间切换', () => {
       await expect(page.getByTestId('teamspace-blocked').getByRole('button')).toHaveCount(0);
     });
 
-    await test.step('6. 顶栏标签关掉也能切回个人空间', async () => {
+    await test.step('6. 账号列表里选个人账号切回个人空间', async () => {
       await page.evaluate(
         ([id, name]) =>
           localStorage.setItem('teamspace', JSON.stringify({ id, nickName: name, realName: id })),
         [teamId, TEAM],
       );
       await page.goto('workspace', { waitUntil: 'networkidle' });
-      await expect(badge(page)).toBeVisible();
-      await badge(page).locator('.ant-tag-close-icon').click();
-      await expect(badge(page)).toHaveCount(0);
+      await isTeam(page, TEAM);
+      await switchToPersonal(page);
+      await isPersonal(page);
       expect(await stored(page)).toBeNull();
     });
   });
@@ -188,7 +219,7 @@ test.describe('团队空间切换', () => {
     await page.reload({ waitUntil: 'networkidle' });
 
     // group 列表回来后校验成员资格，不是成员就回到个人空间
-    await expect(badge(page)).toHaveCount(0);
+    await isPersonal(page);
     await expect.poll(() => stored(page)).toBeNull();
   });
 });

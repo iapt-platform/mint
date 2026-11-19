@@ -60,6 +60,7 @@ class PostApiV3SearchRequest implements ModelInterface, ArrayAccess, \JsonSerial
         'q' => 'string',
         'search_mode' => 'string',
         'resource_type' => 'string',
+        'resource_id' => 'string',
         'granularity' => 'string',
         'language' => 'string',
         'category' => 'string',
@@ -68,8 +69,9 @@ class PostApiV3SearchRequest implements ModelInterface, ArrayAccess, \JsonSerial
         'related_id' => 'string[]',
         'author' => 'string',
         'channel' => 'string',
+        'facets' => 'bool',
         'page' => 'int',
-        'page_size' => 'int'
+        'per_page' => 'int'
     ];
 
     /**
@@ -83,6 +85,7 @@ class PostApiV3SearchRequest implements ModelInterface, ArrayAccess, \JsonSerial
         'q' => null,
         'search_mode' => null,
         'resource_type' => null,
+        'resource_id' => null,
         'granularity' => null,
         'language' => null,
         'category' => null,
@@ -91,8 +94,9 @@ class PostApiV3SearchRequest implements ModelInterface, ArrayAccess, \JsonSerial
         'related_id' => null,
         'author' => null,
         'channel' => null,
+        'facets' => null,
         'page' => null,
-        'page_size' => null
+        'per_page' => null
     ];
 
     /**
@@ -104,6 +108,7 @@ class PostApiV3SearchRequest implements ModelInterface, ArrayAccess, \JsonSerial
         'q' => false,
         'search_mode' => false,
         'resource_type' => false,
+        'resource_id' => false,
         'granularity' => false,
         'language' => false,
         'category' => false,
@@ -112,8 +117,9 @@ class PostApiV3SearchRequest implements ModelInterface, ArrayAccess, \JsonSerial
         'related_id' => false,
         'author' => false,
         'channel' => false,
+        'facets' => false,
         'page' => false,
-        'page_size' => false
+        'per_page' => false
     ];
 
     /**
@@ -205,6 +211,7 @@ class PostApiV3SearchRequest implements ModelInterface, ArrayAccess, \JsonSerial
         'q' => 'q',
         'search_mode' => 'search_mode',
         'resource_type' => 'resource_type',
+        'resource_id' => 'resource_id',
         'granularity' => 'granularity',
         'language' => 'language',
         'category' => 'category',
@@ -213,8 +220,9 @@ class PostApiV3SearchRequest implements ModelInterface, ArrayAccess, \JsonSerial
         'related_id' => 'related_id',
         'author' => 'author',
         'channel' => 'channel',
+        'facets' => 'facets',
         'page' => 'page',
-        'page_size' => 'page_size'
+        'per_page' => 'per_page'
     ];
 
     /**
@@ -226,6 +234,7 @@ class PostApiV3SearchRequest implements ModelInterface, ArrayAccess, \JsonSerial
         'q' => 'setQ',
         'search_mode' => 'setSearchMode',
         'resource_type' => 'setResourceType',
+        'resource_id' => 'setResourceId',
         'granularity' => 'setGranularity',
         'language' => 'setLanguage',
         'category' => 'setCategory',
@@ -234,8 +243,9 @@ class PostApiV3SearchRequest implements ModelInterface, ArrayAccess, \JsonSerial
         'related_id' => 'setRelatedId',
         'author' => 'setAuthor',
         'channel' => 'setChannel',
+        'facets' => 'setFacets',
         'page' => 'setPage',
-        'page_size' => 'setPageSize'
+        'per_page' => 'setPerPage'
     ];
 
     /**
@@ -247,6 +257,7 @@ class PostApiV3SearchRequest implements ModelInterface, ArrayAccess, \JsonSerial
         'q' => 'getQ',
         'search_mode' => 'getSearchMode',
         'resource_type' => 'getResourceType',
+        'resource_id' => 'getResourceId',
         'granularity' => 'getGranularity',
         'language' => 'getLanguage',
         'category' => 'getCategory',
@@ -255,8 +266,9 @@ class PostApiV3SearchRequest implements ModelInterface, ArrayAccess, \JsonSerial
         'related_id' => 'getRelatedId',
         'author' => 'getAuthor',
         'channel' => 'getChannel',
+        'facets' => 'getFacets',
         'page' => 'getPage',
-        'page_size' => 'getPageSize'
+        'per_page' => 'getPerPage'
     ];
 
     /**
@@ -305,6 +317,13 @@ class PostApiV3SearchRequest implements ModelInterface, ArrayAccess, \JsonSerial
     public const SEARCH_MODE_SEMANTIC = 'semantic';
     public const SEARCH_MODE_HYBRID = 'hybrid';
     public const SEARCH_MODE_DEFINITION = 'definition';
+    public const RESOURCE_TYPE_TIPITAKA = 'tipitaka';
+    public const RESOURCE_TYPE_ORIGINAL_TEXT = 'original_text';
+    public const RESOURCE_TYPE_TERM = 'term';
+    public const GRANULARITY_BOOK = 'book';
+    public const GRANULARITY_CHAPTER = 'chapter';
+    public const GRANULARITY_SESSION = 'session';
+    public const GRANULARITY_PARAGRAPH = 'paragraph';
 
     /**
      * Gets allowable values of the enum
@@ -319,6 +338,35 @@ class PostApiV3SearchRequest implements ModelInterface, ArrayAccess, \JsonSerial
             self::SEARCH_MODE_SEMANTIC,
             self::SEARCH_MODE_HYBRID,
             self::SEARCH_MODE_DEFINITION,
+        ];
+    }
+
+    /**
+     * Gets allowable values of the enum
+     *
+     * @return string[]
+     */
+    public function getResourceTypeAllowableValues()
+    {
+        return [
+            self::RESOURCE_TYPE_TIPITAKA,
+            self::RESOURCE_TYPE_ORIGINAL_TEXT,
+            self::RESOURCE_TYPE_TERM,
+        ];
+    }
+
+    /**
+     * Gets allowable values of the enum
+     *
+     * @return string[]
+     */
+    public function getGranularityAllowableValues()
+    {
+        return [
+            self::GRANULARITY_BOOK,
+            self::GRANULARITY_CHAPTER,
+            self::GRANULARITY_SESSION,
+            self::GRANULARITY_PARAGRAPH,
         ];
     }
 
@@ -340,6 +388,7 @@ class PostApiV3SearchRequest implements ModelInterface, ArrayAccess, \JsonSerial
         $this->setIfExists('q', $data ?? [], null);
         $this->setIfExists('search_mode', $data ?? [], 'fuzzy');
         $this->setIfExists('resource_type', $data ?? [], null);
+        $this->setIfExists('resource_id', $data ?? [], null);
         $this->setIfExists('granularity', $data ?? [], null);
         $this->setIfExists('language', $data ?? [], null);
         $this->setIfExists('category', $data ?? [], null);
@@ -348,8 +397,9 @@ class PostApiV3SearchRequest implements ModelInterface, ArrayAccess, \JsonSerial
         $this->setIfExists('related_id', $data ?? [], null);
         $this->setIfExists('author', $data ?? [], null);
         $this->setIfExists('channel', $data ?? [], null);
+        $this->setIfExists('facets', $data ?? [], false);
         $this->setIfExists('page', $data ?? [], 1);
-        $this->setIfExists('page_size', $data ?? [], 20);
+        $this->setIfExists('per_page', $data ?? [], 20);
     }
 
     /**
@@ -391,6 +441,24 @@ class PostApiV3SearchRequest implements ModelInterface, ArrayAccess, \JsonSerial
             );
         }
 
+        $allowedValues = $this->getResourceTypeAllowableValues();
+        if (!is_null($this->container['resource_type']) && !in_array($this->container['resource_type'], $allowedValues, true)) {
+            $invalidProperties[] = sprintf(
+                "invalid value '%s' for 'resource_type', must be one of '%s'",
+                $this->container['resource_type'],
+                implode("', '", $allowedValues)
+            );
+        }
+
+        $allowedValues = $this->getGranularityAllowableValues();
+        if (!is_null($this->container['granularity']) && !in_array($this->container['granularity'], $allowedValues, true)) {
+            $invalidProperties[] = sprintf(
+                "invalid value '%s' for 'granularity', must be one of '%s'",
+                $this->container['granularity'],
+                implode("', '", $allowedValues)
+            );
+        }
+
         return $invalidProperties;
     }
 
@@ -419,7 +487,7 @@ class PostApiV3SearchRequest implements ModelInterface, ArrayAccess, \JsonSerial
     /**
      * Sets q
      *
-     * @param string $q 搜索关键词
+     * @param string $q 检索词
      *
      * @return self
      */
@@ -492,7 +560,44 @@ class PostApiV3SearchRequest implements ModelInterface, ArrayAccess, \JsonSerial
         if (is_null($resource_type)) {
             throw new \InvalidArgumentException('non-nullable resource_type cannot be null');
         }
+        $allowedValues = $this->getResourceTypeAllowableValues();
+        if (!in_array($resource_type, $allowedValues, true)) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    "Invalid value '%s' for 'resource_type', must be one of '%s'",
+                    $resource_type,
+                    implode("', '", $allowedValues)
+                )
+            );
+        }
         $this->container['resource_type'] = $resource_type;
+
+        return $this;
+    }
+
+    /**
+     * Gets resource_id
+     *
+     * @return string|null
+     */
+    public function getResourceId()
+    {
+        return $this->container['resource_id'];
+    }
+
+    /**
+     * Sets resource_id
+     *
+     * @param string|null $resource_id 限定某个资源 id
+     *
+     * @return self
+     */
+    public function setResourceId($resource_id)
+    {
+        if (is_null($resource_id)) {
+            throw new \InvalidArgumentException('non-nullable resource_id cannot be null');
+        }
+        $this->container['resource_id'] = $resource_id;
 
         return $this;
     }
@@ -519,6 +624,16 @@ class PostApiV3SearchRequest implements ModelInterface, ArrayAccess, \JsonSerial
         if (is_null($granularity)) {
             throw new \InvalidArgumentException('non-nullable granularity cannot be null');
         }
+        $allowedValues = $this->getGranularityAllowableValues();
+        if (!in_array($granularity, $allowedValues, true)) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    "Invalid value '%s' for 'granularity', must be one of '%s'",
+                    $granularity,
+                    implode("', '", $allowedValues)
+                )
+            );
+        }
         $this->container['granularity'] = $granularity;
 
         return $this;
@@ -537,7 +652,7 @@ class PostApiV3SearchRequest implements ModelInterface, ArrayAccess, \JsonSerial
     /**
      * Sets language
      *
-     * @param string|null $language 语言
+     * @param string|null $language 文档语言
      *
      * @return self
      */
@@ -564,7 +679,7 @@ class PostApiV3SearchRequest implements ModelInterface, ArrayAccess, \JsonSerial
     /**
      * Sets category
      *
-     * @param string|null $category 文档分类，逗号分隔
+     * @param string|null $category 分类，逗号分隔，须全部命中
      *
      * @return self
      */
@@ -591,7 +706,7 @@ class PostApiV3SearchRequest implements ModelInterface, ArrayAccess, \JsonSerial
     /**
      * Sets tags
      *
-     * @param string|null $tags 标签，逗号分隔
+     * @param string|null $tags 标签，逗号分隔，命中任一
      *
      * @return self
      */
@@ -618,7 +733,7 @@ class PostApiV3SearchRequest implements ModelInterface, ArrayAccess, \JsonSerial
     /**
      * Sets page_refs
      *
-     * @param string[]|null $page_refs 页码标记
+     * @param string[]|null $page_refs 页码标记，命中任一
      *
      * @return self
      */
@@ -645,7 +760,7 @@ class PostApiV3SearchRequest implements ModelInterface, ArrayAccess, \JsonSerial
     /**
      * Sets related_id
      *
-     * @param string[]|null $related_id 关联 id
+     * @param string[]|null $related_id 关联 id，命中任一
      *
      * @return self
      */
@@ -699,7 +814,7 @@ class PostApiV3SearchRequest implements ModelInterface, ArrayAccess, \JsonSerial
     /**
      * Sets channel
      *
-     * @param string|null $channel 来源 channel
+     * @param string|null $channel 来源 channel 的 uuid
      *
      * @return self
      */
@@ -709,6 +824,33 @@ class PostApiV3SearchRequest implements ModelInterface, ArrayAccess, \JsonSerial
             throw new \InvalidArgumentException('non-nullable channel cannot be null');
         }
         $this->container['channel'] = $channel;
+
+        return $this;
+    }
+
+    /**
+     * Gets facets
+     *
+     * @return bool|null
+     */
+    public function getFacets()
+    {
+        return $this->container['facets'];
+    }
+
+    /**
+     * Sets facets
+     *
+     * @param bool|null $facets 是否返回分面计数
+     *
+     * @return self
+     */
+    public function setFacets($facets)
+    {
+        if (is_null($facets)) {
+            throw new \InvalidArgumentException('non-nullable facets cannot be null');
+        }
+        $this->container['facets'] = $facets;
 
         return $this;
     }
@@ -741,28 +883,28 @@ class PostApiV3SearchRequest implements ModelInterface, ArrayAccess, \JsonSerial
     }
 
     /**
-     * Gets page_size
+     * Gets per_page
      *
      * @return int|null
      */
-    public function getPageSize()
+    public function getPerPage()
     {
-        return $this->container['page_size'];
+        return $this->container['per_page'];
     }
 
     /**
-     * Sets page_size
+     * Sets per_page
      *
-     * @param int|null $page_size 每页数量，上限 100
+     * @param int|null $per_page 每页条数，上限 100
      *
      * @return self
      */
-    public function setPageSize($page_size)
+    public function setPerPage($per_page)
     {
-        if (is_null($page_size)) {
-            throw new \InvalidArgumentException('non-nullable page_size cannot be null');
+        if (is_null($per_page)) {
+            throw new \InvalidArgumentException('non-nullable per_page cannot be null');
         }
-        $this->container['page_size'] = $page_size;
+        $this->container['per_page'] = $per_page;
 
         return $this;
     }

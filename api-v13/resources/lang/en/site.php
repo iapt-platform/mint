@@ -20,6 +20,7 @@ return [
     // 停机维护开关（.stop 文件）触发时，API 的 RFC 9457 detail 文案
     'maintenance' => 'The service is under scheduled maintenance.',
     'not_found' => 'The requested resource does not exist.',
+    'search_unavailable' => 'The search service is temporarily unavailable. Please try again later.',
     'forbidden' => 'You are not allowed to perform this action.',
     'invalid_parameter' => 'Invalid parameter.',
     'author.name' => 'iapt',

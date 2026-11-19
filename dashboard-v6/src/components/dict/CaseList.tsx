@@ -2,12 +2,11 @@ import { Badge, Button, Card, Checkbox, Select, Space, Typography } from "antd";
 import { DownOutlined, UpOutlined } from "@ant-design/icons";
 import { useEffect, useMemo, useReducer, useRef, useState } from "react";
 
-import { get } from "../../request";
-import type {
-  ICaseItem,
-  ICaseListData,
-  ICaseListResponse,
-} from "../../api/dict";
+import {
+  fetchWordForms,
+  type WordForm,
+  type WordFormGroup,
+} from "../../api/pali-word-form";
 import type { CheckboxChangeEvent } from "antd/es/checkbox";
 
 const { Text } = Typography;
@@ -22,7 +21,7 @@ interface IWidget {
 // State shape + reducer — all mutations go through dispatch, never setState
 // ---------------------------------------------------------------------------
 interface State {
-  words: ICaseItem[];
+  words: WordFormGroup[];
   currWord: string | undefined;
   checkedList: string[];
 }
@@ -30,7 +29,7 @@ interface State {
 type Action =
   | {
       type: "FETCHED";
-      words: ICaseItem[];
+      words: WordFormGroup[];
       currWord: string;
       checkedList: string[];
     }
@@ -67,12 +66,9 @@ function reducer(state: State, action: Action): State {
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-function sortedCases(cases: ICaseListData[]): ICaseListData[] {
-  return cases.slice().sort((a, b) => b.count - a.count);
-}
-
-function allWords(cases: ICaseListData[]): string[] {
-  return sortedCases(cases).map((c) => c.word);
+// 组内已按出现次数降序（服务端排好）
+function allWords(forms: WordForm[]): string[] {
+  return forms.map((c) => c.word);
 }
 
 // ---------------------------------------------------------------------------
@@ -98,15 +94,12 @@ const CaseListWidget = ({ word, lines, onChange }: IWidget) => {
   const { words, currWord, checkedList } = isMultiWord ? INITIAL_STATE : state;
 
   // Derive caseData in render — no state, no effect
-  const caseData: ICaseListData[] | undefined = useMemo(
+  const caseData: WordForm[] | undefined = useMemo(
     () =>
       currWord
-        ? words
-            .find((item) => item.word === currWord)
-            ?.case.slice()
-            .sort((a, b) => b.count - a.count)
+        ? words.find((item) => item.base === currWord)?.forms
         : undefined,
-    [words, currWord]
+    [words, currWord],
   );
 
   // -------------------------------------------------------------------------
@@ -118,17 +111,18 @@ const CaseListWidget = ({ word, lines, onChange }: IWidget) => {
 
     let cancelled = false;
 
-    get<ICaseListResponse>(`/api/v2/case/${word}`).then((json) => {
-      if (cancelled) return;
-      if (json.ok && json.data.rows.length > 0) {
-        const sorted = json.data.rows.slice().sort((a, b) => b.count - a.count);
-        dispatch({
-          type: "FETCHED",
-          words: sorted,
-          currWord: sorted[0].word,
-          checkedList: allWords(sorted[0].case),
-        });
-      }
+    fetchWordForms(word).then((groups) => {
+      if (cancelled || groups.length === 0) return;
+      // 词形最多的词根排前面
+      const sorted = groups
+        .slice()
+        .sort((a, b) => b.forms.length - a.forms.length);
+      dispatch({
+        type: "FETCHED",
+        words: sorted,
+        currWord: sorted[0].base,
+        checkedList: allWords(sorted[0].forms),
+      });
     });
 
     return () => {
@@ -151,7 +145,7 @@ const CaseListWidget = ({ word, lines, onChange }: IWidget) => {
   // Event handlers — all state changes happen here, never inside effects
   // -------------------------------------------------------------------------
   const handleWordChange = (value: string) => {
-    const cases = words.find((item) => item.word === value)?.case ?? [];
+    const cases = words.find((item) => item.base === value)?.forms ?? [];
     dispatch({
       type: "SELECT_WORD",
       currWord: value,
@@ -205,16 +199,16 @@ const CaseListWidget = ({ word, lines, onChange }: IWidget) => {
               options={words.map((item) => ({
                 label: (
                   <Space>
-                    {item.word}
+                    {item.base}
                     <Badge
-                      count={item.count}
+                      count={item.forms.length}
                       color="lime"
                       status="default"
                       size="small"
                     />
                   </Space>
                 ),
-                value: item.word,
+                value: item.base,
               }))}
             />
           }

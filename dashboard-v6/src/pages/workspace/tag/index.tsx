@@ -15,7 +15,7 @@ const Widget = () => {
       <TagList
         studioName={studioName}
         onSelect={(tag) => {
-          const url = `/workspace/tag/${tag.id}`;
+          const url = `/workspace/tags/${tag.id}`;
           navigate(url);
         }}
       />

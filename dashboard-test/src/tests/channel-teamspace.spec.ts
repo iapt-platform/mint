@@ -62,7 +62,7 @@ test.describe('团队空间里的 channel', () => {
       );
       await page.goto('workspace/channel', { waitUntil: 'networkidle' });
       expect((await listed).status()).toBe(200);
-      await expect(page.getByTestId('teamspace-badge')).toContainText(TEAM);
+      await expect(page.getByTestId('active-account')).toHaveText(new RegExp(`${TEAM}$`));
       await expect(row(page, TEAM_CHANNEL)).toBeVisible();
       // 个人名下的 channel 不出现：随便取一个个人 channel 名核对
       const personal = await call(request, 'GET', `/v3/studios/${mine.body.data.id}/channels?relation=own&per_page=1`);
@@ -103,7 +103,12 @@ test.describe('团队空间里的 channel', () => {
           r.url().includes(`/api/v3/studios/${mine.body.data.id}/channels`) &&
           new URL(r.url()).searchParams.get('per_page') !== '1',
       );
-      await page.getByTestId('teamspace-badge').locator('.ant-tag-close-icon').click();
+      await page.getByTestId('active-account').hover();
+      const popover = page.locator('.ant-popover:visible');
+      if (!(await popover.getByTestId('account-personal').isVisible())) {
+        await popover.getByText('切换账号').click();
+      }
+      await popover.getByTestId('account-personal').click();
       await relisted;
       await expect(row(page, TEAM_CHANNEL)).toHaveCount(0);
       await shot(page, '03-back-to-personal');

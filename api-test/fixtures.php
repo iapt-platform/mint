@@ -25,9 +25,8 @@ return [
     'book_name' => 'dn1',
     'cs_para'   => 4,
 
-    // 搜索关键词 + 一条真实 OpenSearch 文档 id（search/{id} 的 200 用例）
+    // 搜索关键词（search/{id} 的 200 用例从它的检索结果里取文档 id）
     'search_q'       => 'dukkha',
-    'search_doc_id'  => 'term_f8afdcaa-ad68-4795-b3d8-d5f12bdb3a5f',
 
     // discussions 写用例挂的句子：放在测试账号自己的 channel 里、由测试账号编辑，
     // 这样即便有通知也只发给自己（用例本身还会带 notify=false）。换环境时按需覆盖。

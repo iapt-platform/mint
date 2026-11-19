@@ -1,0 +1,78 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-tipitaka-word-paragraphs-aggregate.yaml
+get:
+  summary: 按书统计命中
+  tags:
+    - tipitaka-word-paragraphs
+  operationId: get_api_v3_tipitaka_word_paragraphs_aggregate
+  description: |-
+    与 `GET /v3/tipitaka-word-paragraphs` 同样的检索条件，按书汇总：每本书命中多少段、多少词次，
+    按段落数降序，不分页。v2 只给词次；同一段里出现多次只算一段，所以两者不相等。
+
+    实现：`V3\TipitakaWordParagraphAggregateController@__invoke`
+  security:
+    - {  }
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: words
+      in: query
+      schema:
+        type: string
+      description: '词形，逗号分隔，最多 200 个'
+      required: true
+      example: 'vitakko,vitakkaṃ'
+    -
+      name: bold
+      in: query
+      schema:
+        type: string
+        enum:
+          - only
+          - exclude
+      description: 只看黑体（only）或排除黑体（exclude）；不给则不限
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    book_id:
+                      type: integer
+                    book:
+                      type: integer
+                    para:
+                      type: integer
+                    title:
+                      type: string
+                    layer:
+                      type: string
+                      nullable: true
+                    tags:
+                      type: array
+                      items: { type: string }
+                    paragraphs:
+                      type: integer
+                    occurrences:
+                      type: integer
+              meta:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                    description: 书的数目
+                  paragraphs:
+                    type: integer
+                    description: 命中段落总数
+                  occurrences:
+                    type: integer
+                    description: 词次总数
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'
