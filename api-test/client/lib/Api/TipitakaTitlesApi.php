@@ -1,6 +1,6 @@
 <?php
 /**
- * TipitakaChaptersApi
+ * TipitakaTitlesApi
  * PHP version 8.1
  *
  * @category Class
@@ -43,14 +43,14 @@ use WikipaliApi\HeaderSelector;
 use WikipaliApi\ObjectSerializer;
 
 /**
- * TipitakaChaptersApi Class Doc Comment
+ * TipitakaTitlesApi Class Doc Comment
  *
  * @category Class
  * @package  WikipaliApi
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech
  */
-class TipitakaChaptersApi
+class TipitakaTitlesApi
 {
     /**
      * @var ClientInterface
@@ -74,7 +74,7 @@ class TipitakaChaptersApi
 
     /** @var string[] $contentTypes **/
     public const contentTypes = [
-        'getApiV3TipitakaChapters' => [
+        'getApiV3TipitakaTitles' => [
             'application/json',
         ],
     ];
@@ -126,7 +126,7 @@ class TipitakaChaptersApi
     }
 
     /**
-     * Operation getApiV3TipitakaChapters
+     * Operation getApiV3TipitakaTitles
      *
      * 找章节
      *
@@ -137,20 +137,20 @@ class TipitakaChaptersApi
      * @param  int|null $para 只列 book 里这一章下面的标题（含它自己），要和 book 一起给 (optional)
      * @param  string|null $layer 只要某几层，逗号分隔 (optional)
      * @param  int|null $max_level 只要层级不深于它的标题（1 是书名） (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3TipitakaChapters'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3TipitakaTitles'] to see the possible values for this operation
      *
      * @throws \WikipaliApi\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \WikipaliApi\Model\GetApiV3TipitakaChapters200Response|\WikipaliApi\Model\ProblemDetails
+     * @return \WikipaliApi\Model\GetApiV3TipitakaTitles200Response|\WikipaliApi\Model\ProblemDetails
      */
-    public function getApiV3TipitakaChapters($page = 1, $per_page = 50, $q = null, $book = null, $para = null, $layer = null, $max_level = null, string $contentType = self::contentTypes['getApiV3TipitakaChapters'][0])
+    public function getApiV3TipitakaTitles($page = 1, $per_page = 50, $q = null, $book = null, $para = null, $layer = null, $max_level = null, string $contentType = self::contentTypes['getApiV3TipitakaTitles'][0])
     {
-        list($response) = $this->getApiV3TipitakaChaptersWithHttpInfo($page, $per_page, $q, $book, $para, $layer, $max_level, $contentType);
+        list($response) = $this->getApiV3TipitakaTitlesWithHttpInfo($page, $per_page, $q, $book, $para, $layer, $max_level, $contentType);
         return $response;
     }
 
     /**
-     * Operation getApiV3TipitakaChaptersWithHttpInfo
+     * Operation getApiV3TipitakaTitlesWithHttpInfo
      *
      * 找章节
      *
@@ -161,15 +161,15 @@ class TipitakaChaptersApi
      * @param  int|null $para 只列 book 里这一章下面的标题（含它自己），要和 book 一起给 (optional)
      * @param  string|null $layer 只要某几层，逗号分隔 (optional)
      * @param  int|null $max_level 只要层级不深于它的标题（1 是书名） (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3TipitakaChapters'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3TipitakaTitles'] to see the possible values for this operation
      *
      * @throws \WikipaliApi\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \WikipaliApi\Model\GetApiV3TipitakaChapters200Response|\WikipaliApi\Model\ProblemDetails, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \WikipaliApi\Model\GetApiV3TipitakaTitles200Response|\WikipaliApi\Model\ProblemDetails, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getApiV3TipitakaChaptersWithHttpInfo($page = 1, $per_page = 50, $q = null, $book = null, $para = null, $layer = null, $max_level = null, string $contentType = self::contentTypes['getApiV3TipitakaChapters'][0])
+    public function getApiV3TipitakaTitlesWithHttpInfo($page = 1, $per_page = 50, $q = null, $book = null, $para = null, $layer = null, $max_level = null, string $contentType = self::contentTypes['getApiV3TipitakaTitles'][0])
     {
-        $request = $this->getApiV3TipitakaChaptersRequest($page, $per_page, $q, $book, $para, $layer, $max_level, $contentType);
+        $request = $this->getApiV3TipitakaTitlesRequest($page, $per_page, $q, $book, $para, $layer, $max_level, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -197,7 +197,7 @@ class TipitakaChaptersApi
             switch($statusCode) {
                 case 200:
                     return $this->handleResponseWithDataType(
-                        '\WikipaliApi\Model\GetApiV3TipitakaChapters200Response',
+                        '\WikipaliApi\Model\GetApiV3TipitakaTitles200Response',
                         $request,
                         $response,
                     );
@@ -225,7 +225,7 @@ class TipitakaChaptersApi
             }
 
             return $this->handleResponseWithDataType(
-                '\WikipaliApi\Model\GetApiV3TipitakaChapters200Response',
+                '\WikipaliApi\Model\GetApiV3TipitakaTitles200Response',
                 $request,
                 $response,
             );
@@ -234,7 +234,7 @@ class TipitakaChaptersApi
                 case 200:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        '\WikipaliApi\Model\GetApiV3TipitakaChapters200Response',
+                        '\WikipaliApi\Model\GetApiV3TipitakaTitles200Response',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -255,7 +255,7 @@ class TipitakaChaptersApi
     }
 
     /**
-     * Operation getApiV3TipitakaChaptersAsync
+     * Operation getApiV3TipitakaTitlesAsync
      *
      * 找章节
      *
@@ -266,14 +266,14 @@ class TipitakaChaptersApi
      * @param  int|null $para 只列 book 里这一章下面的标题（含它自己），要和 book 一起给 (optional)
      * @param  string|null $layer 只要某几层，逗号分隔 (optional)
      * @param  int|null $max_level 只要层级不深于它的标题（1 是书名） (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3TipitakaChapters'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3TipitakaTitles'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function getApiV3TipitakaChaptersAsync($page = 1, $per_page = 50, $q = null, $book = null, $para = null, $layer = null, $max_level = null, string $contentType = self::contentTypes['getApiV3TipitakaChapters'][0])
+    public function getApiV3TipitakaTitlesAsync($page = 1, $per_page = 50, $q = null, $book = null, $para = null, $layer = null, $max_level = null, string $contentType = self::contentTypes['getApiV3TipitakaTitles'][0])
     {
-        return $this->getApiV3TipitakaChaptersAsyncWithHttpInfo($page, $per_page, $q, $book, $para, $layer, $max_level, $contentType)
+        return $this->getApiV3TipitakaTitlesAsyncWithHttpInfo($page, $per_page, $q, $book, $para, $layer, $max_level, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -282,7 +282,7 @@ class TipitakaChaptersApi
     }
 
     /**
-     * Operation getApiV3TipitakaChaptersAsyncWithHttpInfo
+     * Operation getApiV3TipitakaTitlesAsyncWithHttpInfo
      *
      * 找章节
      *
@@ -293,15 +293,15 @@ class TipitakaChaptersApi
      * @param  int|null $para 只列 book 里这一章下面的标题（含它自己），要和 book 一起给 (optional)
      * @param  string|null $layer 只要某几层，逗号分隔 (optional)
      * @param  int|null $max_level 只要层级不深于它的标题（1 是书名） (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3TipitakaChapters'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3TipitakaTitles'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function getApiV3TipitakaChaptersAsyncWithHttpInfo($page = 1, $per_page = 50, $q = null, $book = null, $para = null, $layer = null, $max_level = null, string $contentType = self::contentTypes['getApiV3TipitakaChapters'][0])
+    public function getApiV3TipitakaTitlesAsyncWithHttpInfo($page = 1, $per_page = 50, $q = null, $book = null, $para = null, $layer = null, $max_level = null, string $contentType = self::contentTypes['getApiV3TipitakaTitles'][0])
     {
-        $returnType = '\WikipaliApi\Model\GetApiV3TipitakaChapters200Response';
-        $request = $this->getApiV3TipitakaChaptersRequest($page, $per_page, $q, $book, $para, $layer, $max_level, $contentType);
+        $returnType = '\WikipaliApi\Model\GetApiV3TipitakaTitles200Response';
+        $request = $this->getApiV3TipitakaTitlesRequest($page, $per_page, $q, $book, $para, $layer, $max_level, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -340,7 +340,7 @@ class TipitakaChaptersApi
     }
 
     /**
-     * Create request for operation 'getApiV3TipitakaChapters'
+     * Create request for operation 'getApiV3TipitakaTitles'
      *
      * @param  int|null $page 页码 (optional, default to 1)
      * @param  int|null $per_page 每页数量，最大 1000 (optional, default to 50)
@@ -349,12 +349,12 @@ class TipitakaChaptersApi
      * @param  int|null $para 只列 book 里这一章下面的标题（含它自己），要和 book 一起给 (optional)
      * @param  string|null $layer 只要某几层，逗号分隔 (optional)
      * @param  int|null $max_level 只要层级不深于它的标题（1 是书名） (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3TipitakaChapters'] to see the possible values for this operation
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3TipitakaTitles'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function getApiV3TipitakaChaptersRequest($page = 1, $per_page = 50, $q = null, $book = null, $para = null, $layer = null, $max_level = null, string $contentType = self::contentTypes['getApiV3TipitakaChapters'][0])
+    public function getApiV3TipitakaTitlesRequest($page = 1, $per_page = 50, $q = null, $book = null, $para = null, $layer = null, $max_level = null, string $contentType = self::contentTypes['getApiV3TipitakaTitles'][0])
     {
 
 
@@ -365,7 +365,7 @@ class TipitakaChaptersApi
 
 
 
-        $resourcePath = '/v3/tipitaka-chapters';
+        $resourcePath = '/v3/tipitaka-titles';
         $formParams = [];
         $queryParams = [];
         $headerParams = [];

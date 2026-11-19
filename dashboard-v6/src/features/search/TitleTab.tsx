@@ -1,25 +1,25 @@
 import { Alert, Flex, Segmented, Table, Typography, theme } from "antd";
 import { useIntl } from "react-intl";
 import { Link } from "react-router";
-import type { ChapterHit, ChapterLayer } from "../../api/tipitaka-search";
+import type { TitleHit, TipitakaLayer } from "../../api/tipitaka-search";
 import LayerTag from "./LayerTag";
-import { TITLE_PER_PAGE, type useChapterSearch } from "./hooks";
+import { TITLE_PER_PAGE, type useTitleSearch } from "./hooks";
 import type { ISearchState } from "./state";
 
 const { Text } = Typography;
 const PALI_FONT = '"Noto Serif", Georgia, "Times New Roman", serif';
-const LAYERS: ChapterLayer[] = ["mula", "atthakatha", "tika", "anna"];
+const LAYERS: TipitakaLayer[] = ["mula", "atthakatha", "tika", "anna"];
 
 interface IWidget {
   state: ISearchState;
-  result: ReturnType<typeof useChapterSearch>;
+  result: ReturnType<typeof useTitleSearch>;
   onChange: (patch: Partial<ISearchState>) => void;
   channel?: string | null;
   /** 链接在新标签页打开（在弹窗等浮动容器里时） */
   newTab?: boolean;
 }
 
-/** 标题标签页：按章节名定位（/v3/tipitaka-chapters?q=），可按层级筛选 */
+/** 标题标签页：按章节名定位（/v3/tipitaka-titles?q=），可按层级筛选 */
 const TitleTab = ({ state, result, onChange, channel, newTab }: IWidget) => {
   const intl = useIntl();
   const { token } = theme.useToken();
@@ -50,7 +50,7 @@ const TitleTab = ({ state, result, onChange, channel, newTab }: IWidget) => {
         <Text type="secondary">
           {intl.formatMessage({ id: "search.facet.layer" })}
         </Text>
-        <Segmented<ChapterLayer | "">
+        <Segmented<TipitakaLayer | "">
           size="small"
           value={state.layer ?? ""}
           options={[
@@ -79,7 +79,7 @@ const TitleTab = ({ state, result, onChange, channel, newTab }: IWidget) => {
             message={error.message}
           />
         ) : (
-          <Table<ChapterHit>
+          <Table<TitleHit>
             size="small"
             loading={loading}
             dataSource={data}

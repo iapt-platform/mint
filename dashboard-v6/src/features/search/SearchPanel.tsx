@@ -8,7 +8,7 @@ import PageTab from "./PageTab";
 import SearchInput from "./SearchInput";
 import TitleTab from "./TitleTab";
 import {
-  useChapterSearch,
+  useTitleSearch,
   useFullTextSearch,
   usePageNumbers,
   useWordBooks,
@@ -38,7 +38,7 @@ interface IWidget {
  *
  * - 全文：`/v3/search`，按分类（层级 / 藏别 / 其他）筛选
  * - 定义：`/v3/pali-word-forms` 展开词形 → `/v3/tipitaka-word-paragraphs`（+ `/aggregate` 按书统计）
- * - 标题：`/v3/tipitaka-chapters?q=`
+ * - 标题：`/v3/tipitaka-titles?q=`
  * - 页码：`/v3/tipitaka-page-numbers/{page}`，PTS / 缅甸版 / VRI / 泰国版 / 其他与 CS 段落号
  *
  * 全文、定义、标题同时查询，标签上直接显示命中数。
@@ -72,7 +72,7 @@ const SearchPanel = ({
     state.category,
     state.page,
   );
-  const chapters = useChapterSearch(state.q, state.layer, state.titlePage);
+  const titles = useTitleSearch(state.q, state.layer, state.titlePage);
   const pageQuery = useMemo(() => parsePageQuery(state.q), [state.q]);
   const pageNumbers = usePageNumbers(pageQuery);
 
@@ -152,7 +152,7 @@ const SearchPanel = ({
     );
   const totals: Partial<Record<SearchTab, number | undefined>> = {
     fulltext: state.q && !isPageQuery ? fullText.meta?.total : undefined,
-    title: state.q ? chapters.meta?.total : undefined,
+    title: state.q ? titles.meta?.total : undefined,
     page: pageQuery ? pageNumbers.meta?.total : undefined,
     definition:
       state.q && words.length ? wordParagraphs.meta?.total : undefined,
@@ -192,7 +192,7 @@ const SearchPanel = ({
         return (
           <TitleTab
             state={state}
-            result={chapters}
+            result={titles}
             onChange={onChange}
             channel={channel}
             newTab={newTab}

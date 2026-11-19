@@ -1,6 +1,6 @@
 // 全文检索的 category 分面是书的标签，藏别、层级、书系混在一个列表里。
 // 这里把它分成三组显示；过滤时仍然都放进 category 参数（后端要求全部命中）。
-import type { ChapterLayer } from "../../api/tipitaka-search";
+import type { TipitakaLayer } from "../../api/tipitaka-search";
 
 export interface ICategoryOption {
   /** 索引里的标签值 */
@@ -35,14 +35,14 @@ export const isLayerCategory = (key: string): boolean => LAYER_KEYS.has(key);
 export const isPitakaCategory = (key: string): boolean => PITAKA_KEYS.has(key);
 
 /** 段落的 category → 章节接口的 layer 值（用于统一的层级标签） */
-const CATEGORY_TO_LAYER: Record<string, ChapterLayer> = {
+const CATEGORY_TO_LAYER: Record<string, TipitakaLayer> = {
   mūla: "mula",
   aṭṭhakathā: "atthakatha",
   ṭīkā: "tika",
   añña: "anna",
 };
 
-export const layerOf = (category?: string[]): ChapterLayer | undefined => {
+export const layerOf = (category?: string[]): TipitakaLayer | undefined => {
   for (const c of category ?? []) {
     if (CATEGORY_TO_LAYER[c]) return CATEGORY_TO_LAYER[c];
   }

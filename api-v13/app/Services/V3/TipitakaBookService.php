@@ -14,7 +14,7 @@ use Illuminate\Support\Collection;
  */
 class TipitakaBookService
 {
-    /** 书的 tag → layer（同 TipitakaChapterService），一本书有多个时按这个顺序取第一个 */
+    /** 书的 tag → layer（同 TipitakaTitleService），一本书有多个时按这个顺序取第一个 */
     private const LAYER_TAGS = ['mūla' => 'mula', 'aṭṭhakathā' => 'atthakatha', 'ṭīkā' => 'tika', 'añña' => 'anna'];
 
     /**

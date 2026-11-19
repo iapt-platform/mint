@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import {
   aggregateWordBooks,
-  searchChapters,
+  searchTitles,
   searchPageNumbers,
   searchParagraphs,
   searchWordParagraphs,
   type BoldScope,
-  type ChapterHit,
-  type ChapterLayer,
+  type TitleHit,
+  type TipitakaLayer,
   type PageNumberHit,
   type SearchHit,
   type SearchMeta,
@@ -80,16 +80,16 @@ export const useFullTextSearch = (
   );
 };
 
-export const useChapterSearch = (
+export const useTitleSearch = (
   q: string,
-  layer: ChapterLayer | undefined,
+  layer: TipitakaLayer | undefined,
   page: number,
 ) => {
   const term = q.trim();
   const params = { q: term, layer, page, perPage: TITLE_PER_PAGE };
-  return useRemote<ChapterHit, { total?: number }>(
+  return useRemote<TitleHit, { total?: number }>(
     term ? JSON.stringify(params) : null,
-    () => searchChapters(params),
+    () => searchTitles(params),
   );
 };
 

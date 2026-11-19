@@ -1,6 +1,6 @@
 <?php
 /**
- * GetApiV3TipitakaChapters200ResponseDataInner
+ * GetApiV3TipitakaTitles200ResponseDataInner
  *
  * PHP version 8.1
  *
@@ -32,7 +32,7 @@ use \ArrayAccess;
 use \WikipaliApi\ObjectSerializer;
 
 /**
- * GetApiV3TipitakaChapters200ResponseDataInner Class Doc Comment
+ * GetApiV3TipitakaTitles200ResponseDataInner Class Doc Comment
  *
  * @category Class
  * @package  WikipaliApi
@@ -40,7 +40,7 @@ use \WikipaliApi\ObjectSerializer;
  * @link     https://openapi-generator.tech
  * @implements \ArrayAccess<string, mixed>
  */
-class GetApiV3TipitakaChapters200ResponseDataInner implements ModelInterface, ArrayAccess, \JsonSerializable
+class GetApiV3TipitakaTitles200ResponseDataInner implements ModelInterface, ArrayAccess, \JsonSerializable
 {
     public const DISCRIMINATOR = null;
 
@@ -49,7 +49,7 @@ class GetApiV3TipitakaChapters200ResponseDataInner implements ModelInterface, Ar
      *
      * @var string
      */
-    protected static $openAPIModelName = 'get_api_v3_tipitaka_chapters_200_response_data_inner';
+    protected static $openAPIModelName = 'get_api_v3_tipitaka_titles_200_response_data_inner';
 
     /**
      * Array of property to type mappings. Used for (de)serialization
@@ -61,14 +61,14 @@ class GetApiV3TipitakaChapters200ResponseDataInner implements ModelInterface, Ar
         'para' => 'int',
         'level' => 'int',
         'title' => 'string',
-        'translations' => '\WikipaliApi\Model\GetApiV3TipitakaChapters200ResponseDataInnerTranslationsInner[]',
+        'translations' => '\WikipaliApi\Model\GetApiV3TipitakaTitles200ResponseDataInnerTranslationsInner[]',
         'layer' => 'string',
         'paragraphs' => 'int',
         'chars' => 'int',
         'parent' => 'int',
         'prev' => 'int',
         'next' => 'int',
-        'path' => '\WikipaliApi\Model\GetApiV3TipitakaChapters200ResponseDataInnerPathInner[]',
+        'path' => '\WikipaliApi\Model\GetApiV3TipitakaTitles200ResponseDataInnerPathInner[]',
         'score' => 'float'
     ];
 
@@ -484,7 +484,7 @@ class GetApiV3TipitakaChapters200ResponseDataInner implements ModelInterface, Ar
     /**
      * Gets translations
      *
-     * @return \WikipaliApi\Model\GetApiV3TipitakaChapters200ResponseDataInnerTranslationsInner[]|null
+     * @return \WikipaliApi\Model\GetApiV3TipitakaTitles200ResponseDataInnerTranslationsInner[]|null
      */
     public function getTranslations()
     {
@@ -494,7 +494,7 @@ class GetApiV3TipitakaChapters200ResponseDataInner implements ModelInterface, Ar
     /**
      * Sets translations
      *
-     * @param \WikipaliApi\Model\GetApiV3TipitakaChapters200ResponseDataInnerTranslationsInner[]|null $translations translations
+     * @param \WikipaliApi\Model\GetApiV3TipitakaTitles200ResponseDataInnerTranslationsInner[]|null $translations translations
      *
      * @return self
      */
@@ -694,7 +694,7 @@ class GetApiV3TipitakaChapters200ResponseDataInner implements ModelInterface, Ar
     /**
      * Gets path
      *
-     * @return \WikipaliApi\Model\GetApiV3TipitakaChapters200ResponseDataInnerPathInner[]|null
+     * @return \WikipaliApi\Model\GetApiV3TipitakaTitles200ResponseDataInnerPathInner[]|null
      */
     public function getPath()
     {
@@ -704,7 +704,7 @@ class GetApiV3TipitakaChapters200ResponseDataInner implements ModelInterface, Ar
     /**
      * Sets path
      *
-     * @param \WikipaliApi\Model\GetApiV3TipitakaChapters200ResponseDataInnerPathInner[]|null $path path
+     * @param \WikipaliApi\Model\GetApiV3TipitakaTitles200ResponseDataInnerPathInner[]|null $path path
      *
      * @return self
      */

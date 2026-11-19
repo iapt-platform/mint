@@ -5162,7 +5162,7 @@ export interface paths {
         /**
          * 列出 search-title-index
          * @deprecated
-         * @description 已被 `GET /v3/tipitaka-chapters` 取代（带坐标、容错匹配、可按书列出全部标题），
+         * @description 已被 `GET /v3/tipitaka-titles` 取代（带坐标、容错匹配、可按书列出全部标题），
          *     保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
          */
         get: operations["get_api_v2_search_title_index"];
@@ -9393,36 +9393,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v3/tipitaka-chapters": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 找章节
-         * @description 两种用法，可以叠加：
-         *     - **按名字找**（给 `q`）：巴利名不分大小写、变音符号可有可无（`mahaparinibbana`），可以只写
-         *     名字的一部分，拼错一两个字母也能找到；也能用公开译本里的章节译名（如「大般涅槃经」）。
-         *     按匹配度排序，带 `score`（相等 1、开头相同 0.95、包含 0.9，拼错的按相似度最高 0.85）；同一档里根本典在前，再按与整个标题的接近度、大章在前。
-         *     - **列出一本书的标题**（给 `book`，不给 `q`）：按经文顺序。再给 `para` 只列那一章下面的；
-         *     `max_level` 限制层级深浅。
-         *     `layer` 是这本书属于根本典（mula）、义注（atthakatha）、复注（tika）还是其他（anna）；
-         *     `paragraphs` / `chars` 是这一章的段数与字符数；`parent` / `prev` / `next` 是同一本书里的段号，
-         *     没有为 null；`path` 是从丛书到上一级的路径（不含本章）。
-         *
-         *     实现：`V3\TipitakaChapterController@__invoke`
-         */
-        get: operations["get_api_v3_tipitaka_chapters"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/v3/tipitaka-discussions/{channel}": {
         parameters: {
             query?: never;
@@ -9585,6 +9555,36 @@ export interface paths {
          *     实现：`V3\TipitakaRelatedParagraphAggregateController@show`
          */
         get: operations["get_api_v3_tipitaka_related_paragraphs_aggregate_book_name_"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/tipitaka-titles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 找章节
+         * @description 两种用法，可以叠加：
+         *     - **按名字找**（给 `q`）：巴利名不分大小写、变音符号可有可无（`mahaparinibbana`），可以只写
+         *     名字的一部分，拼错一两个字母也能找到；也能用公开译本里的章节译名（如「大般涅槃经」）。
+         *     按匹配度排序，带 `score`（相等 1、开头相同 0.95、包含 0.9，拼错的按相似度最高 0.85）；同一档里根本典在前，再按与整个标题的接近度、大章在前。
+         *     - **列出一本书的标题**（给 `book`，不给 `q`）：按经文顺序。再给 `para` 只列那一章下面的；
+         *     `max_level` 限制层级深浅。
+         *     `layer` 是这本书属于根本典（mula）、义注（atthakatha）、复注（tika）还是其他（anna）；
+         *     `paragraphs` / `chars` 是这一章的段数与字符数；`parent` / `prev` / `next` 是同一本书里的段号，
+         *     没有为 null；`path` 是从丛书到上一级的路径（不含本章）。
+         *
+         *     实现：`V3\TipitakaTitleController@__invoke`
+         */
+        get: operations["get_api_v3_tipitaka_titles"];
         put?: never;
         post?: never;
         delete?: never;
@@ -41968,80 +41968,6 @@ export interface operations {
             422: components["responses"]["ProblemValidation"];
         };
     };
-    get_api_v3_tipitaka_chapters: {
-        parameters: {
-            query?: {
-                /** @description 页码 */
-                page?: number;
-                /** @description 每页数量，最大 1000 */
-                per_page?: number;
-                /**
-                 * @description 章节名：巴利名或译名，不给 book 时必填
-                 * @example mahaparinibbana
-                 */
-                q?: string;
-                /**
-                 * @description 书号，不给 q 时必填
-                 * @example 94
-                 */
-                book?: number;
-                /**
-                 * @description 只列 book 里这一章下面的标题（含它自己），要和 book 一起给
-                 * @example 287
-                 */
-                para?: number;
-                /** @description 只要某几层，逗号分隔 */
-                layer?: "mula" | "atthakatha" | "tika" | "anna";
-                /**
-                 * @description 只要层级不深于它的标题（1 是书名）
-                 * @example 3
-                 */
-                max_level?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 成功 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data?: {
-                            book?: number;
-                            para?: number;
-                            level?: number;
-                            title?: string;
-                            translations?: {
-                                lang?: string;
-                                title?: string;
-                            }[];
-                            layer?: string;
-                            paragraphs?: number;
-                            chars?: number;
-                            parent?: number | null;
-                            prev?: number | null;
-                            next?: number | null;
-                            path?: {
-                                book?: number;
-                                para?: number;
-                                title?: string;
-                                level?: number;
-                            }[];
-                            /** @description 仅在部分查询口径下返回。 */
-                            score?: number;
-                        }[];
-                        meta?: components["schemas"]["PaginationMeta"];
-                    };
-                };
-            };
-            422: components["responses"]["ProblemValidation"];
-        };
-    };
     get_api_v3_tipitaka_discussions_channel_: {
         parameters: {
             query?: {
@@ -42501,6 +42427,80 @@ export interface operations {
                     "application/json": {
                         data?: {
                             cs_para?: string;
+                        }[];
+                        meta?: components["schemas"]["PaginationMeta"];
+                    };
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    get_api_v3_tipitaka_titles: {
+        parameters: {
+            query?: {
+                /** @description 页码 */
+                page?: number;
+                /** @description 每页数量，最大 1000 */
+                per_page?: number;
+                /**
+                 * @description 章节名：巴利名或译名，不给 book 时必填
+                 * @example mahaparinibbana
+                 */
+                q?: string;
+                /**
+                 * @description 书号，不给 q 时必填
+                 * @example 94
+                 */
+                book?: number;
+                /**
+                 * @description 只列 book 里这一章下面的标题（含它自己），要和 book 一起给
+                 * @example 287
+                 */
+                para?: number;
+                /** @description 只要某几层，逗号分隔 */
+                layer?: "mula" | "atthakatha" | "tika" | "anna";
+                /**
+                 * @description 只要层级不深于它的标题（1 是书名）
+                 * @example 3
+                 */
+                max_level?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            book?: number;
+                            para?: number;
+                            level?: number;
+                            title?: string;
+                            translations?: {
+                                lang?: string;
+                                title?: string;
+                            }[];
+                            layer?: string;
+                            paragraphs?: number;
+                            chars?: number;
+                            parent?: number | null;
+                            prev?: number | null;
+                            next?: number | null;
+                            path?: {
+                                book?: number;
+                                para?: number;
+                                title?: string;
+                                level?: number;
+                            }[];
+                            /** @description 仅在部分查询口径下返回。 */
+                            score?: number;
                         }[];
                         meta?: components["schemas"]["PaginationMeta"];
                     };

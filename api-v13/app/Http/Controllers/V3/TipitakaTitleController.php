@@ -3,19 +3,22 @@
 namespace App\Http\Controllers\V3;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\V3\IndexTipitakaChapterRequest;
-use App\Http\Resources\V3\TipitakaChapterResource;
-use App\Services\V3\TipitakaChapterService;
+use App\Http\Requests\V3\IndexTipitakaTitleRequest;
+use App\Http\Resources\V3\TipitakaTitleResource;
+use App\Services\V3\TipitakaTitleService;
 
 /**
  * 三藏章节标题：按名字找章节，或列出一本书的全部标题。
  *
  * 取代 `GET /v2/search-title-index`（`SearchTitleController@index`）。v2 那份只回标题文字、
  * 不带坐标，在 dashboard-v4 下线前原样保留，不要改动。
+ *
+ * 2026-11-19 前叫 `GET /v3/tipitaka-chapters`（`TipitakaChapterController`），名字容易误会成章节正文，
+ * 改成 titles；旧路径已删除。
  */
-class TipitakaChapterController extends Controller
+class TipitakaTitleController extends Controller
 {
-    public function __construct(private readonly TipitakaChapterService $chapters) {}
+    public function __construct(private readonly TipitakaTitleService $chapters) {}
 
     /**
      * 找章节
@@ -42,9 +45,9 @@ class TipitakaChapterController extends Controller
      * @queryParam page integer 页码。Default: 1
      * @queryParam per_page integer 每页数量，最大 1000。Default: 50
      */
-    public function __invoke(IndexTipitakaChapterRequest $request)
+    public function __invoke(IndexTipitakaTitleRequest $request)
     {
-        return TipitakaChapterResource::collection($this->chapters->search(
+        return TipitakaTitleResource::collection($this->chapters->search(
             $request->safe()->only(['q', 'book', 'para', 'layer', 'max_level']),
             $request->integer('page', 1),
             $request->integer('per_page', 50),

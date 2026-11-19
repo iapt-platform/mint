@@ -64,7 +64,7 @@ class GetApiV3TipitakaWordParagraphs200ResponseDataInner implements ModelInterfa
         'hits' => 'int',
         'title' => 'string',
         'level' => 'int',
-        'path' => '\WikipaliApi\Model\GetApiV3TipitakaChapters200ResponseDataInnerPathInner[]',
+        'path' => '\WikipaliApi\Model\GetApiV3TipitakaTitles200ResponseDataInnerPathInner[]',
         'text' => 'string',
         'refs' => '\WikipaliApi\Model\GetApiV3TipitakaWordParagraphs200ResponseDataInnerRefsInner[]'
     ];
@@ -544,7 +544,7 @@ class GetApiV3TipitakaWordParagraphs200ResponseDataInner implements ModelInterfa
     /**
      * Gets path
      *
-     * @return \WikipaliApi\Model\GetApiV3TipitakaChapters200ResponseDataInnerPathInner[]|null
+     * @return \WikipaliApi\Model\GetApiV3TipitakaTitles200ResponseDataInnerPathInner[]|null
      */
     public function getPath()
     {
@@ -554,7 +554,7 @@ class GetApiV3TipitakaWordParagraphs200ResponseDataInner implements ModelInterfa
     /**
      * Sets path
      *
-     * @param \WikipaliApi\Model\GetApiV3TipitakaChapters200ResponseDataInnerPathInner[]|null $path path
+     * @param \WikipaliApi\Model\GetApiV3TipitakaTitles200ResponseDataInnerPathInner[]|null $path path
      *
      * @return self
      */

@@ -5,14 +5,14 @@ use App\Models\PaliText;
 use App\Models\ProgressChapter;
 use App\Models\Tag;
 use App\Models\TagMap;
-use App\Services\V3\TipitakaChapterService;
+use App\Services\V3\TipitakaTitleService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 
 uses(RefreshDatabase::class);
 
 /*
- * GET /v3/tipitaka-chapters：按名字找章节（容错）、列出一本书的标题。
+ * GET /v3/tipitaka-titles：按名字找章节（容错）、列出一本书的标题。
  *
  * 这里断言的是形状而非契约（spectator 未安装，见 v3-resource skill 第 3 步）。
  */
@@ -91,7 +91,7 @@ function tcV3Fixture(): void
 it('lists a book in canonical order with coordinates and size', function () {
     tcV3Fixture();
 
-    $response = $this->getJson('/api/v3/tipitaka-chapters?book=94')->assertOk();
+    $response = $this->getJson('/api/v3/tipitaka-titles?book=94')->assertOk();
 
     expect(array_column($response->json('data'), 'para'))->toBe([3, 287, 585, 663]);
     $sutta = $response->json('data.1');
@@ -107,11 +107,11 @@ it('lists a book in canonical order with coordinates and size', function () {
 it('narrows a book listing to one chapter and by level', function () {
     tcV3Fixture();
 
-    $this->getJson('/api/v3/tipitaka-chapters?book=94&para=287')
+    $this->getJson('/api/v3/tipitaka-titles?book=94&para=287')
         ->assertOk()
         ->assertJsonPath('data.*.para', [287, 585]);
 
-    $this->getJson('/api/v3/tipitaka-chapters?book=94&max_level=2')
+    $this->getJson('/api/v3/tipitaka-titles?book=94&max_level=2')
         ->assertOk()
         ->assertJsonPath('data.*.para', [3, 287, 663]);
 });
@@ -119,7 +119,7 @@ it('narrows a book listing to one chapter and by level', function () {
 it('finds a title regardless of case and diacritics, canonical text first', function () {
     tcV3Fixture();
 
-    $data = $this->getJson('/api/v3/tipitaka-chapters?q=MAHAPARINIBBANA')->assertOk()->json('data');
+    $data = $this->getJson('/api/v3/tipitaka-titles?q=MAHAPARINIBBANA')->assertOk()->json('data');
 
     expect(array_map(fn ($r) => [$r['book'], $r['para'], $r['score']], $data))
         ->toBe([[94, 287, 0.95], [104, 420, 0.95]]);
@@ -128,25 +128,25 @@ it('finds a title regardless of case and diacritics, canonical text first', func
 it('tolerates misspellings and ranks the closer title first', function () {
     tcV3Fixture();
 
-    $typo = $this->getJson('/api/v3/tipitaka-chapters?q=mahaparinibanasuta')->assertOk()->json('data');
+    $typo = $this->getJson('/api/v3/tipitaka-titles?q=mahaparinibanasuta')->assertOk()->json('data');
     expect($typo[0]['para'])->toBe(287)
         ->and($typo[0]['score'])->toBeLessThan(0.86)->toBeGreaterThan(0.6);
 
-    $ananda = $this->getJson('/api/v3/tipitaka-chapters?q=anandatheragatha')->assertOk()->json('data');
+    $ananda = $this->getJson('/api/v3/tipitaka-titles?q=anandatheragatha')->assertOk()->json('data');
     expect($ananda[0]['para'])->toBe(3809);
 });
 
 it('finds a chapter by its public translated title only', function () {
     tcV3Fixture();
 
-    $this->getJson('/api/v3/tipitaka-chapters?q='.urlencode('大般涅槃'))
+    $this->getJson('/api/v3/tipitaka-titles?q='.urlencode('大般涅槃'))
         ->assertOk()
         ->assertJsonPath('data.*.para', [287]);
 
-    $this->getJson('/api/v3/tipitaka-chapters?q='.urlencode('私密译名'))
+    $this->getJson('/api/v3/tipitaka-titles?q='.urlencode('私密译名'))
         ->assertOk()
         ->assertJsonCount(0, 'data');
-    $this->getJson('/api/v3/tipitaka-chapters?book=94&para=663')
+    $this->getJson('/api/v3/tipitaka-titles?book=94&para=663')
         ->assertOk()
         ->assertJsonPath('data.0.translations', []);
 });
@@ -154,13 +154,13 @@ it('finds a chapter by its public translated title only', function () {
 it('filters by layer', function () {
     tcV3Fixture();
 
-    $this->getJson('/api/v3/tipitaka-chapters?q=mahaparinibbana&layer=atthakatha')
+    $this->getJson('/api/v3/tipitaka-titles?q=mahaparinibbana&layer=atthakatha')
         ->assertOk()
         ->assertJsonPath('data.*.book', [104]);
 });
 
 it('rejects a query without q or book, para without book, and unknown layers', function (string $query, string $field) {
-    $this->getJson('/api/v3/tipitaka-chapters'.$query)
+    $this->getJson('/api/v3/tipitaka-titles'.$query)
         ->assertUnprocessable()
         ->assertJsonValidationErrors($field);
 })->with([
@@ -171,10 +171,10 @@ it('rejects a query without q or book, para without book, and unknown layers', f
 ]);
 
 it('scores tiers so that misspellings never outrank correct spellings', function () {
-    expect(TipitakaChapterService::score('mahaparinibbana', 'mahaparinibbana')[0])->toBe(1.0)
-        ->and(TipitakaChapterService::score('mahaparinibbana', 'mahaparinibbanasuttam')[0])->toBe(0.95)
-        ->and(TipitakaChapterService::score('parinibbana', 'mahaparinibbanasuttam')[0])->toBe(0.9)
-        ->and(TipitakaChapterService::score('mahaparinibanasuta', 'mahaparinibbanasuttam')[0])->toBeLessThanOrEqual(0.85)
-        ->and(TipitakaChapterService::score('vessantara', 'mahaparinibbanasuttam')[0])->toBe(0.0)
-        ->and(TipitakaChapterService::normalize('(DN) 3. Mahāparinibbānasuttaṃ'))->toBe('mahaparinibbanasuttam');
+    expect(TipitakaTitleService::score('mahaparinibbana', 'mahaparinibbana')[0])->toBe(1.0)
+        ->and(TipitakaTitleService::score('mahaparinibbana', 'mahaparinibbanasuttam')[0])->toBe(0.95)
+        ->and(TipitakaTitleService::score('parinibbana', 'mahaparinibbanasuttam')[0])->toBe(0.9)
+        ->and(TipitakaTitleService::score('mahaparinibanasuta', 'mahaparinibbanasuttam')[0])->toBeLessThanOrEqual(0.85)
+        ->and(TipitakaTitleService::score('vessantara', 'mahaparinibbanasuttam')[0])->toBe(0.0)
+        ->and(TipitakaTitleService::normalize('(DN) 3. Mahāparinibbānasuttaṃ'))->toBe('mahaparinibbanasuttam');
 });

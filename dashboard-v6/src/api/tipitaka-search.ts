@@ -2,7 +2,7 @@
 //
 // workspace 搜索面板用到的 v3 检索接口：
 // - 全文：`GET /v3/search`（OpenSearch，三藏段落）
-// - 标题：`GET /v3/tipitaka-chapters?q=`（章节名定位）
+// - 标题：`GET /v3/tipitaka-titles?q=`（章节名定位）
 import { api, unwrapQuiet } from "./client";
 import type { paths } from "./schema";
 
@@ -53,24 +53,24 @@ export const searchParagraphs = async (p: IFullTextParams) =>
 
 /* ─── 标题 ─── */
 
-type ChapterOp = paths["/v3/tipitaka-chapters"]["get"];
-type ChapterQuery = NonNullable<ChapterOp["parameters"]["query"]>;
-type ChapterBody = ChapterOp["responses"][200]["content"]["application/json"];
+type TitleOp = paths["/v3/tipitaka-titles"]["get"];
+type TitleQuery = NonNullable<TitleOp["parameters"]["query"]>;
+type TitleBody = TitleOp["responses"][200]["content"]["application/json"];
 
-export type ChapterLayer = NonNullable<ChapterQuery["layer"]>;
-export type ChapterHit = NonNullable<ChapterBody["data"]>[number];
+export type TipitakaLayer = NonNullable<TitleQuery["layer"]>;
+export type TitleHit = NonNullable<TitleBody["data"]>[number];
 
-export interface IChapterParams {
+export interface ITitleParams {
   q: string;
-  layer?: ChapterLayer;
+  layer?: TipitakaLayer;
   page: number;
   perPage: number;
 }
 
 /** 按章节名找章节（巴利名或译名，容错拼写与变音符号） */
-export const searchChapters = async (p: IChapterParams) =>
+export const searchTitles = async (p: ITitleParams) =>
   unwrapQuiet(
-    await api.GET("/v3/tipitaka-chapters", {
+    await api.GET("/v3/tipitaka-titles", {
       params: {
         query: {
           q: p.q,

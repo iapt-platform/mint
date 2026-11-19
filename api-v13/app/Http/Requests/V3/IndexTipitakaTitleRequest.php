@@ -5,12 +5,12 @@ namespace App\Http\Requests\V3;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * `GET /v3/tipitaka-chapters` 的入参。
+ * `GET /v3/tipitaka-titles` 的入参。
  *
  * 全是过滤条件，但至少要给 `q` 或 `book` 之一：不加条件就是 3.7 万条标题全表，没人会翻。
  * 两者可以同时给（在一本书里按名字找）。`para` 是 book 里的一章，只列它下面的标题，所以要和 book 一起给。
  */
-class IndexTipitakaChapterRequest extends FormRequest
+class IndexTipitakaTitleRequest extends FormRequest
 {
     /** layer 的取值：根本典、义注、复注、其他 */
     public const LAYERS = ['mula', 'atthakatha', 'tika', 'anna'];

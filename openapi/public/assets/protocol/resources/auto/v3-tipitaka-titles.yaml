@@ -1,9 +1,9 @@
-# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-tipitaka-chapters.yaml
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-tipitaka-titles.yaml
 get:
   summary: 找章节
   tags:
-    - tipitaka-chapters
-  operationId: get_api_v3_tipitaka_chapters
+    - tipitaka-titles
+  operationId: get_api_v3_tipitaka_titles
   description: |-
     两种用法，可以叠加：
     - **按名字找**（给 `q`）：巴利名不分大小写、变音符号可有可无（`mahaparinibbana`），可以只写
@@ -15,7 +15,7 @@ get:
     `paragraphs` / `chars` 是这一章的段数与字符数；`parent` / `prev` / `next` 是同一本书里的段号，
     没有为 null；`path` 是从丛书到上一级的路径（不含本章）。
 
-    实现：`V3\TipitakaChapterController@__invoke`
+    实现：`V3\TipitakaTitleController@__invoke`
   security:
     - {  }
     -

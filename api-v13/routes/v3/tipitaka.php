@@ -22,13 +22,13 @@ use App\Http\Controllers\V3\PaliWordFormController;
 use App\Http\Controllers\V3\PaliWordSuggestionController;
 use App\Http\Controllers\V3\TipitakaChannelController;
 use App\Http\Controllers\V3\TipitakaChapterChannelController;
-use App\Http\Controllers\V3\TipitakaChapterController;
 use App\Http\Controllers\V3\TipitakaDiscussionController;
 use App\Http\Controllers\V3\TipitakaPageNumberController;
 use App\Http\Controllers\V3\TipitakaParagraphChannelController;
 use App\Http\Controllers\V3\TipitakaReadingController;
 use App\Http\Controllers\V3\TipitakaRelatedParagraphAggregateController;
 use App\Http\Controllers\V3\TipitakaRelatedParagraphController;
+use App\Http\Controllers\V3\TipitakaTitleController;
 use App\Http\Controllers\V3\TipitakaWordParagraphAggregateController;
 use App\Http\Controllers\V3\TipitakaWordParagraphController;
 use Illuminate\Support\Facades\Route;
@@ -57,8 +57,10 @@ Route::get('tipitaka-paragraph-channels/{book}/{para}', TipitakaParagraphChannel
 Route::get('tipitaka-channels', TipitakaChannelController::class)
     ->name('tipitaka-channels.index');
 
-Route::get('tipitaka-chapters', TipitakaChapterController::class)
-    ->name('tipitaka-chapters.index');
+// 章节标题：按名字找章节（容错），或列出一本书的标题目录。取代 v2 search-title-index。
+// 2026-11-19 前叫 tipitaka-chapters（容易误会成章节正文，改名）
+Route::get('tipitaka-titles', TipitakaTitleController::class)
+    ->name('tipitaka-titles.index');
 
 // 段落关联关系：查询（原 v2 related-paragraph）+ 聚合（book_name 列表 / 某 book_name 的 cs_para）。
 Route::get('tipitaka-related-paragraphs/aggregate', [TipitakaRelatedParagraphAggregateController::class, 'index'])

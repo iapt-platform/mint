@@ -3,7 +3,7 @@ import { collect } from '../lib/collect.js';
 
 /**
  * workspace 搜索（取代 v4 的 /search 页）：主导航「搜索」弹窗 + 整页 /workspace/search。
- * 全文走 /v3/search（category 分面），标题走 /v3/tipitaka-chapters?q=；定义走 /v3/tipitaka-word-paragraphs，页码走 /v3/tipitaka-page-numbers（输入页码时全文不查）。
+ * 全文走 /v3/search（category 分面），标题走 /v3/tipitaka-titles?q=；定义走 /v3/tipitaka-word-paragraphs，页码走 /v3/tipitaka-page-numbers（输入页码时全文不查）。
  */
 const CHANNEL = '4a356b64-8e6b-414a-ae81-7dfa2d5b35b6';
 const READING = `workspace/tipitaka/chapter/83-150?channel=${CHANNEL}`;
@@ -27,7 +27,7 @@ test('主导航打开搜索弹窗：全文与标题同时查询，按层级筛�
   const dialog = await openModal(page);
 
   const fts = searchResponse(page);
-  const chapters = page.waitForResponse((r) => new URL(r.url()).pathname === '/api/v3/tipitaka-chapters');
+  const chapters = page.waitForResponse((r) => new URL(r.url()).pathname === '/api/v3/tipitaka-titles');
   await dialog.getByRole('combobox').fill('vitakka');
   await dialog.getByRole('combobox').press('Enter');
 
@@ -77,7 +77,7 @@ test('标题标签页按层级筛选；结果链接带上当前 channel，在新
   await dialog.getByRole('tab', { name: /标题/ }).click();
 
   const mula = page.waitForResponse(
-    (r) => new URL(r.url()).pathname === '/api/v3/tipitaka-chapters' && new URL(r.url()).searchParams.get('layer') === 'mula',
+    (r) => new URL(r.url()).pathname === '/api/v3/tipitaka-titles' && new URL(r.url()).searchParams.get('layer') === 'mula',
   );
   await dialog.getByTitle('根本', { exact: true }).click();
   const body = await (await mula).json();

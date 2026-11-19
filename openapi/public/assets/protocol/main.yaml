@@ -877,8 +877,6 @@ paths:
     $ref: ./resources/auto/v3-tipitaka-channels.yaml
   '/v3/tipitaka-chapter-channels/{book}/{para}':
     $ref: ./resources/auto/v3-tipitaka-chapter-channels-book-para.yaml
-  /v3/tipitaka-chapters:
-    $ref: ./resources/auto/v3-tipitaka-chapters.yaml
   '/v3/tipitaka-discussions/{channel}':
     $ref: ./resources/auto/v3-tipitaka-discussions-channel.yaml
   '/v3/tipitaka-page-numbers/{page}':
@@ -893,6 +891,8 @@ paths:
     $ref: ./resources/auto/v3-tipitaka-related-paragraphs-aggregate.yaml
   '/v3/tipitaka-related-paragraphs/aggregate/{book_name}':
     $ref: ./resources/auto/v3-tipitaka-related-paragraphs-aggregate-book-name.yaml
+  /v3/tipitaka-titles:
+    $ref: ./resources/auto/v3-tipitaka-titles.yaml
   /v3/tipitaka-word-paragraphs:
     $ref: ./resources/auto/v3-tipitaka-word-paragraphs.yaml
   /v3/tipitaka-word-paragraphs/aggregate:

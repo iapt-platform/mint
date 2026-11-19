@@ -1,8 +1,8 @@
 import { Tag } from "antd";
 import { useIntl } from "react-intl";
-import type { ChapterLayer } from "../../api/tipitaka-search";
+import type { TipitakaLayer } from "../../api/tipitaka-search";
 
-const COLOR: Record<ChapterLayer, string> = {
+const COLOR: Record<TipitakaLayer, string> = {
   mula: "green",
   atthakatha: "blue",
   tika: "magenta",
@@ -17,7 +17,7 @@ const LayerTag = ({ layer }: { layer?: string | null }) => {
   }
   return (
     <Tag
-      color={COLOR[layer as ChapterLayer]}
+      color={COLOR[layer as TipitakaLayer]}
       bordered={false}
       style={{ marginInlineEnd: 0 }}
     >

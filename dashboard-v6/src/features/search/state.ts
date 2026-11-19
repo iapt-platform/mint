@@ -2,7 +2,7 @@
 // 两边共用同一套字段，「在整页打开」只是把它序列化成查询串。
 import type {
   BoldScope,
-  ChapterLayer,
+  TipitakaLayer,
   SearchMode,
 } from "../../api/tipitaka-search";
 
@@ -17,7 +17,7 @@ export const SEARCH_TABS: SearchTab[] = [
 
 export const SEARCH_MODES: SearchMode[] = ["fuzzy", "exact", "definition"];
 
-const CHAPTER_LAYERS: ChapterLayer[] = ["mula", "atthakatha", "tika", "anna"];
+const TIPITAKA_LAYERS: TipitakaLayer[] = ["mula", "atthakatha", "tika", "anna"];
 
 /** 定义标签页的黑体范围：all 是不限 */
 export type DefinitionBold = BoldScope | "all";
@@ -33,7 +33,7 @@ export interface ISearchState {
   /** 全文：页码 */
   page: number;
   /** 标题：层级 */
-  layer?: ChapterLayer;
+  layer?: TipitakaLayer;
   /** 标题：页码 */
   titlePage: number;
   /** 定义：勾选的词形；undefined 表示按默认（输入词那一组的全部词形） */
@@ -105,7 +105,7 @@ export const parseSearchParams = (sp: URLSearchParams): ISearchState => ({
   mode: oneOf(SEARCH_MODES, sp.get("mode")) ?? "fuzzy",
   category: splitList(sp.get("category")),
   page: positive(sp.get("page")),
-  layer: oneOf(CHAPTER_LAYERS, sp.get("layer")),
+  layer: oneOf(TIPITAKA_LAYERS, sp.get("layer")),
   titlePage: positive(sp.get("title_page")),
   forms: sp.has("forms") ? splitList(sp.get("forms")) : undefined,
   bold: oneOf(DEFINITION_BOLDS, sp.get("bold")) ?? "only",

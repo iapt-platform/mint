@@ -1,6 +1,6 @@
 <?php
 /**
- * GetApiV3TipitakaChapters200Response
+ * GetApiV3TipitakaTitles200ResponseDataInnerPathInner
  *
  * PHP version 8.1
  *
@@ -32,7 +32,7 @@ use \ArrayAccess;
 use \WikipaliApi\ObjectSerializer;
 
 /**
- * GetApiV3TipitakaChapters200Response Class Doc Comment
+ * GetApiV3TipitakaTitles200ResponseDataInnerPathInner Class Doc Comment
  *
  * @category Class
  * @package  WikipaliApi
@@ -40,7 +40,7 @@ use \WikipaliApi\ObjectSerializer;
  * @link     https://openapi-generator.tech
  * @implements \ArrayAccess<string, mixed>
  */
-class GetApiV3TipitakaChapters200Response implements ModelInterface, ArrayAccess, \JsonSerializable
+class GetApiV3TipitakaTitles200ResponseDataInnerPathInner implements ModelInterface, ArrayAccess, \JsonSerializable
 {
     public const DISCRIMINATOR = null;
 
@@ -49,7 +49,7 @@ class GetApiV3TipitakaChapters200Response implements ModelInterface, ArrayAccess
      *
      * @var string
      */
-    protected static $openAPIModelName = 'get_api_v3_tipitaka_chapters_200_response';
+    protected static $openAPIModelName = 'get_api_v3_tipitaka_titles_200_response_data_inner_path_inner';
 
     /**
      * Array of property to type mappings. Used for (de)serialization
@@ -57,8 +57,10 @@ class GetApiV3TipitakaChapters200Response implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $openAPITypes = [
-        'data' => '\WikipaliApi\Model\GetApiV3TipitakaChapters200ResponseDataInner[]',
-        'meta' => '\WikipaliApi\Model\PaginationMeta'
+        'book' => 'int',
+        'para' => 'int',
+        'title' => 'string',
+        'level' => 'int'
     ];
 
     /**
@@ -69,8 +71,10 @@ class GetApiV3TipitakaChapters200Response implements ModelInterface, ArrayAccess
      * @psalm-var array<string, string|null>
      */
     protected static $openAPIFormats = [
-        'data' => null,
-        'meta' => null
+        'book' => null,
+        'para' => null,
+        'title' => null,
+        'level' => null
     ];
 
     /**
@@ -79,8 +83,10 @@ class GetApiV3TipitakaChapters200Response implements ModelInterface, ArrayAccess
      * @var boolean[]
      */
     protected static array $openAPINullables = [
-        'data' => false,
-        'meta' => false
+        'book' => false,
+        'para' => false,
+        'title' => false,
+        'level' => false
     ];
 
     /**
@@ -169,8 +175,10 @@ class GetApiV3TipitakaChapters200Response implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $attributeMap = [
-        'data' => 'data',
-        'meta' => 'meta'
+        'book' => 'book',
+        'para' => 'para',
+        'title' => 'title',
+        'level' => 'level'
     ];
 
     /**
@@ -179,8 +187,10 @@ class GetApiV3TipitakaChapters200Response implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $setters = [
-        'data' => 'setData',
-        'meta' => 'setMeta'
+        'book' => 'setBook',
+        'para' => 'setPara',
+        'title' => 'setTitle',
+        'level' => 'setLevel'
     ];
 
     /**
@@ -189,8 +199,10 @@ class GetApiV3TipitakaChapters200Response implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $getters = [
-        'data' => 'getData',
-        'meta' => 'getMeta'
+        'book' => 'getBook',
+        'para' => 'getPara',
+        'title' => 'getTitle',
+        'level' => 'getLevel'
     ];
 
     /**
@@ -250,8 +262,10 @@ class GetApiV3TipitakaChapters200Response implements ModelInterface, ArrayAccess
      */
     public function __construct(?array $data = null)
     {
-        $this->setIfExists('data', $data ?? [], null);
-        $this->setIfExists('meta', $data ?? [], null);
+        $this->setIfExists('book', $data ?? [], null);
+        $this->setIfExists('para', $data ?? [], null);
+        $this->setIfExists('title', $data ?? [], null);
+        $this->setIfExists('level', $data ?? [], null);
     }
 
     /**
@@ -297,55 +311,109 @@ class GetApiV3TipitakaChapters200Response implements ModelInterface, ArrayAccess
 
 
     /**
-     * Gets data
+     * Gets book
      *
-     * @return \WikipaliApi\Model\GetApiV3TipitakaChapters200ResponseDataInner[]|null
+     * @return int|null
      */
-    public function getData()
+    public function getBook()
     {
-        return $this->container['data'];
+        return $this->container['book'];
     }
 
     /**
-     * Sets data
+     * Sets book
      *
-     * @param \WikipaliApi\Model\GetApiV3TipitakaChapters200ResponseDataInner[]|null $data data
+     * @param int|null $book book
      *
      * @return self
      */
-    public function setData($data)
+    public function setBook($book)
     {
-        if (is_null($data)) {
-            throw new \InvalidArgumentException('non-nullable data cannot be null');
+        if (is_null($book)) {
+            throw new \InvalidArgumentException('non-nullable book cannot be null');
         }
-        $this->container['data'] = $data;
+        $this->container['book'] = $book;
 
         return $this;
     }
 
     /**
-     * Gets meta
+     * Gets para
      *
-     * @return \WikipaliApi\Model\PaginationMeta|null
+     * @return int|null
      */
-    public function getMeta()
+    public function getPara()
     {
-        return $this->container['meta'];
+        return $this->container['para'];
     }
 
     /**
-     * Sets meta
+     * Sets para
      *
-     * @param \WikipaliApi\Model\PaginationMeta|null $meta meta
+     * @param int|null $para para
      *
      * @return self
      */
-    public function setMeta($meta)
+    public function setPara($para)
     {
-        if (is_null($meta)) {
-            throw new \InvalidArgumentException('non-nullable meta cannot be null');
+        if (is_null($para)) {
+            throw new \InvalidArgumentException('non-nullable para cannot be null');
         }
-        $this->container['meta'] = $meta;
+        $this->container['para'] = $para;
+
+        return $this;
+    }
+
+    /**
+     * Gets title
+     *
+     * @return string|null
+     */
+    public function getTitle()
+    {
+        return $this->container['title'];
+    }
+
+    /**
+     * Sets title
+     *
+     * @param string|null $title title
+     *
+     * @return self
+     */
+    public function setTitle($title)
+    {
+        if (is_null($title)) {
+            throw new \InvalidArgumentException('non-nullable title cannot be null');
+        }
+        $this->container['title'] = $title;
+
+        return $this;
+    }
+
+    /**
+     * Gets level
+     *
+     * @return int|null
+     */
+    public function getLevel()
+    {
+        return $this->container['level'];
+    }
+
+    /**
+     * Sets level
+     *
+     * @param int|null $level level
+     *
+     * @return self
+     */
+    public function setLevel($level)
+    {
+        if (is_null($level)) {
+            throw new \InvalidArgumentException('non-nullable level cannot be null');
+        }
+        $this->container['level'] = $level;
 
         return $this;
     }

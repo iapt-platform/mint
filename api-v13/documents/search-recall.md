@@ -123,9 +123,9 @@
   连音（`koṭisanthāra`、`vassaṃvutthānaṃ`）会漏。`wbw_templates` 里已有拆好的词与词根，
   可给每段写一个词根字段进索引，比维护同义词表可靠。需要重建索引。
 
-### 4.6 章节标题检索走 OpenSearch（取代 `/v3/tipitaka-chapters` 里的 PHP 匹配）
+### 4.6 章节标题检索走 OpenSearch（取代 `/v3/tipitaka-titles` 里的 PHP 匹配）
 
-2026-11-11 新建了 `GET /v3/tipitaka-chapters`（取代 v2 `search-title-index`），`q` 的容错匹配写在 PHP 里
+2026-11-11 新建了 `GET /v3/tipitaka-chapters`（11-19 改名 `tipitaka-titles`）（取代 v2 `search-title-index`），`q` 的容错匹配写在 PHP 里
 （`App\Services\V3\TipitakaChapterService`：去变音符号、去序号与丛书缩写、三字母粗筛 + 编辑距离，
 外加公开译本的中文章节名），**只用来先验证「按章节名定位」的效果**。验证结果见 agent-poc
 `agent-tuning/docs/retrieval-recall-2026-11.md` 第七节：插件 `locate` 一条路就让 148 道真实问题里
@@ -153,7 +153,7 @@
 
 做法：新 `search_mode=title`（或 `granularity=chapter` 时的默认），`OpenSearchService` 里建查询；插件 `locate`
 改调 `/v3/search`，输出保持不变。**验收**：用 `agent-tuning/eval/recall/eval_navigate.py` + `eval_judge.py`
-重跑，locate 一路不低于 PHP 版（留出集 54/148、调参集 10/11）。`/v3/tipitaka-chapters` 继续作为 v2 替代与
+重跑，locate 一路不低于 PHP 版（留出集 54/148、调参集 10/11）。`/v3/tipitaka-titles`（原名 tipitaka-chapters） 继续作为 v2 替代与
 `toc`（按书列标题）的数据源，PHP 匹配不再扩展。
 
 ## 复现

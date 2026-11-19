@@ -30,13 +30,13 @@ use Illuminate\Pagination\LengthAwarePaginator;
  * 插件 `locate` 改调 `/v3/search`（granularity=chapter），计划见 `documents/search-recall.md` 4.6。
  * 届时这里的 PHP 匹配只保留给 v2 替代与小规模调用，不再扩展。
  */
-class TipitakaChapterService
+class TipitakaTitleService
 {
     /** 只有 level < 8 的段落是标题（与 v2、IndexTipitaka 同口径） */
     private const MAX_TITLE_LEVEL = 8;
 
     /** 缓存键带版本号：catalog 的结构变了就改版本号，不用等过期 */
-    private const CATALOG_KEY = '/v3/tipitaka-chapters/catalog/v1';
+    private const CATALOG_KEY = '/v3/tipitaka-titles/catalog/v1';
 
     private const CATALOG_TTL = 86400;
 
