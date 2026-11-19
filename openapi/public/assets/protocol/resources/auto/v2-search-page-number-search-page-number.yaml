@@ -4,7 +4,11 @@ get:
   tags:
     - search-page-number
   operationId: get_api_v2_search_page_number_search_page_number_
-  description: 实现：`SearchPageNumberController@show`
+  description: |
+    已被 `GET /v3/tipitaka-page-numbers/{page}` 取代：可按版本 `edition`（PTS / My / VRI / Thai / Other / CS）与卷号 `volume` 过滤，
+    每条带书名、书名所在段、层级与该版本的书名（v2 只有坐标）。字段：`type`（单字母）→`edition`，`para` 类型→`edition=CS`，
+    `paragraph`→`para`，`pcd_book_id`→`book_id`，卷号 0 → `volume: null`。响应 `{ok, data: [...]}` → `{data, meta: {total}}`。
+    保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
   parameters:
     -
       name: search_page_number
@@ -30,6 +34,7 @@ get:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
       $ref: '../../main.yaml#/components/responses/ValidationError'
+  deprecated: true
 put:
   summary: '更新 search-page-number/{search_page_number}'
   tags:

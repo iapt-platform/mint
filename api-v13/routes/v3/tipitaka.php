@@ -18,14 +18,19 @@
 |
 */
 
+use App\Http\Controllers\V3\PaliWordFormController;
+use App\Http\Controllers\V3\PaliWordSuggestionController;
 use App\Http\Controllers\V3\TipitakaChannelController;
 use App\Http\Controllers\V3\TipitakaChapterChannelController;
 use App\Http\Controllers\V3\TipitakaChapterController;
 use App\Http\Controllers\V3\TipitakaDiscussionController;
+use App\Http\Controllers\V3\TipitakaPageNumberController;
 use App\Http\Controllers\V3\TipitakaParagraphChannelController;
 use App\Http\Controllers\V3\TipitakaReadingController;
 use App\Http\Controllers\V3\TipitakaRelatedParagraphAggregateController;
 use App\Http\Controllers\V3\TipitakaRelatedParagraphController;
+use App\Http\Controllers\V3\TipitakaWordParagraphAggregateController;
+use App\Http\Controllers\V3\TipitakaWordParagraphController;
 use Illuminate\Support\Facades\Route;
 
 // 只有 channel 必填，所以路径上只有它一个变量；book / chapter / para 全是 filter。
@@ -62,3 +67,24 @@ Route::get('tipitaka-related-paragraphs/aggregate/{book_name}', [TipitakaRelated
     ->name('tipitaka-related-paragraphs.aggregate.show');
 Route::get('tipitaka-related-paragraphs', [TipitakaRelatedParagraphController::class, 'index'])
     ->name('tipitaka-related-paragraphs.index');
+
+// 词形展开：一个词 → 词根 → 三藏里出现过的词形及次数。取代 v2 case/{word}
+Route::get('pali-word-forms/{word}', PaliWordFormController::class)
+    ->where('word', '[^/]{1,64}')
+    ->name('pali-word-forms.show');
+
+// 巴利词补全（搜索框）：前缀 → 三藏里出现过的词形及次数。取代 v2 pali-word-index?view=key
+Route::get('pali-word-suggestions', PaliWordSuggestionController::class)
+    ->name('pali-word-suggestions.index');
+
+// 按词形找段落（逐词表）+ 按书统计。取代 v2 search-pali-wbw / search-pali-wbw-books。
+// 字面量段 aggregate 必须在前
+Route::get('tipitaka-word-paragraphs/aggregate', TipitakaWordParagraphAggregateController::class)
+    ->name('tipitaka-word-paragraphs.aggregate');
+Route::get('tipitaka-word-paragraphs', [TipitakaWordParagraphController::class, 'index'])
+    ->name('tipitaka-word-paragraphs.index');
+
+// 按印本页码（PTS / 缅 / VRI / 泰 / 其他）或 CS 段落号找段落。取代 v2 search-page-number
+Route::get('tipitaka-page-numbers/{page}', TipitakaPageNumberController::class)
+    ->whereNumber('page')
+    ->name('tipitaka-page-numbers.show');

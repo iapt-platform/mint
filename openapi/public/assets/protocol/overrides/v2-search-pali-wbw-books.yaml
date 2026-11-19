@@ -1,0 +1,7 @@
+# 手写补充：v2 逐词检索的出处分布已被 v3 取代（2026-11-19）。
+get:
+  deprecated: true
+  description: |
+    已被 `GET /v3/tipitaka-word-paragraphs/aggregate` 取代：同时给段落数 `paragraphs` 与词次 `occurrences`（v2 只有词次 `count`），
+    书名、tag 批量取（v2 每本书另查 3 次库），另给 `layer`。字段：`pcdBookId`→`book_id`，`paragraph`→`para`，`paliTitle`→`title`，
+    `tags[].name`→`tags`（字符串数组）。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。

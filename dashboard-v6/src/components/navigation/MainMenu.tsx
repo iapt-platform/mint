@@ -19,9 +19,10 @@ import {
   TermIcon,
   TipitakaIcon,
 } from "../../assets/icon";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import RecentModal from "../recent/RecentModal.tsx";
 import SettingModal from "../setting/SettingModal.tsx";
+import SearchModal from "../../features/search/SearchModal";
 import ToolsModals from "./ToolsModals";
 import { isToolKey, type ToolKey } from "./tools";
 import { useIntl } from "react-intl";
@@ -176,10 +177,7 @@ function toAntdItems(items: MenuItem[]): MenuProps["items"] {
 }
 
 /* ================= 组件 ================= */
-interface Props {
-  onSearch?: () => void;
-}
-const Widget = ({ onSearch }: Props) => {
+const Widget = () => {
   const intl = useIntl(); //i18n
 
   const navigate = useNavigate();
@@ -188,7 +186,21 @@ const Widget = ({ onSearch }: Props) => {
 
   const [recentOpen, setRecentOpen] = useState(false);
   const [openSetting, setOpenSetting] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [tool, setTool] = useState<ToolKey>();
+
+  /** 「/」打开搜索（输入框里打字时不算） */
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "/" || e.ctrlKey || e.metaKey || e.altKey) return;
+      const el = e.target as HTMLElement | null;
+      if (el?.closest("input, textarea, select, [contenteditable='true']")) return;
+      e.preventDefault();
+      setSearchOpen(true);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   /* ================= 菜单配置 ================= */
 
@@ -428,7 +440,7 @@ const Widget = ({ onSearch }: Props) => {
   /** 点击 */
   const handleClick: MenuProps["onClick"] = ({ key }) => {
     if (key === "search") {
-      onSearch?.();
+      setSearchOpen(true);
       return;
     } else if (key === "/workspace/recent") {
       setRecentOpen(true);
@@ -463,6 +475,7 @@ const Widget = ({ onSearch }: Props) => {
         }}
       />
       <SettingModal open={openSetting} onClose={() => setOpenSetting(false)} />
+      <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
       <ToolsModals tool={tool} onClose={() => setTool(undefined)} />
     </>
   );

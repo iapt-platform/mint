@@ -38,6 +38,8 @@ const UsersResetPassword = lazy(() => import("./pages/users/reset-password"));
 const DashboardIndex = lazy(() => import("./pages/dashboard/index"));
 
 const Home = lazy(() => import("./pages/home"));
+// 整页搜索；workspace 的搜索弹窗「在整页打开」跳到这里
+const Search = lazy(() => import("./pages/search"));
 const WorkspaceHome = lazy(() => import("./pages/workspace/home"));
 const WorkspaceChat = lazy(() => import("./pages/workspace/chat"));
 
@@ -48,6 +50,7 @@ const router = createBrowserRouter(
       Component: RootLayout,
       children: [
         { index: true, Component: Home },
+        { path: "search", Component: Search },
         // 字典、语法手册：/dictionary、/grammar-book
         ...dictionaryRoutes,
         {

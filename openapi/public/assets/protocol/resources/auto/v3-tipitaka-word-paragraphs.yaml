@@ -1,0 +1,94 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-tipitaka-word-paragraphs.yaml
+get:
+  summary: 按词形找段落
+  tags:
+    - tipitaka-word-paragraphs
+  operationId: get_api_v3_tipitaka_word_paragraphs
+  description: |-
+    在逐词表里精确匹配词形（连音已拆开），返回命中的段落，按命中权重降序、同分按经文顺序。
+    词形先用 `GET /v3/pali-word-forms/{word}` 展开——拿词根直接查通常是 0 条。
+    每条带整段正文（只含 `<b>` 黑体与 `<mark>` 命中词的安全 HTML）、章节路径与各印本页码。
+
+    实现：`V3\TipitakaWordParagraphController@index`
+  security:
+    - {  }
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: words
+      in: query
+      schema:
+        type: string
+      description: '词形，逗号分隔，最多 200 个'
+      required: true
+      example: 'vitakko,vitakkaṃ'
+    -
+      name: bold
+      in: query
+      schema:
+        type: string
+        enum:
+          - only
+          - exclude
+      description: 只看黑体（only，注释书里被解释的词）或排除黑体（exclude）；不给则不限
+    -
+      name: book_id
+      in: query
+      schema:
+        type: string
+      description: '只看这些书，逗号分隔的 book_id（见 `/aggregate`）'
+      example: '75,79'
+    -
+      name: page
+      in: query
+      schema:
+        type: integer
+        default: 1
+      description: 页码
+    -
+      name: per_page
+      in: query
+      schema:
+        type: integer
+        default: 20
+      description: '每页条数，上限 100'
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    book:
+                      type: integer
+                    para:
+                      type: integer
+                    score:
+                      type: integer
+                    hits:
+                      type: integer
+                    title:
+                      type: string
+                    level:
+                      type: integer
+                    path:
+                      type: array
+                      items: { type: object, properties: { book: { type: integer }, para: { type: integer }, title: { type: string }, level: { type: integer } } }
+                    text:
+                      type: string
+                    refs:
+                      type: array
+                      items: { type: object, properties: { type: { type: string }, volume: { type: integer, nullable: true }, page: { type: integer }, title: { type: string, nullable: true } } }
+              meta:
+                $ref: '../../main.yaml#/components/schemas/PaginationMeta'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

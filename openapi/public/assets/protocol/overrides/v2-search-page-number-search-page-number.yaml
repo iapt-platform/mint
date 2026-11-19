@@ -1,0 +1,8 @@
+# 手写补充：v2 页码检索已被 v3 取代（2026-11-19）。
+get:
+  deprecated: true
+  description: |
+    已被 `GET /v3/tipitaka-page-numbers/{page}` 取代：可按版本 `edition`（PTS / My / VRI / Thai / Other / CS）与卷号 `volume` 过滤，
+    每条带书名、书名所在段、层级与该版本的书名（v2 只有坐标）。字段：`type`（单字母）→`edition`，`para` 类型→`edition=CS`，
+    `paragraph`→`para`，`pcd_book_id`→`book_id`，卷号 0 → `volume: null`。响应 `{ok, data: [...]}` → `{data, meta: {total}}`。
+    保留仅为 dashboard-v4 兼容，待 v4 下线后删除。

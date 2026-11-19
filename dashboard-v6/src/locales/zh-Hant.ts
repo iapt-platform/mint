@@ -12,6 +12,7 @@ import error from "./zh-Hant/error";
 import pages from "./zh-Hant/pages";
 import admin from "./zh-Hant/admin";
 import adminStats from "./zh-Hant/admin-stats";
+import search from "./zh-Hant/search";
 
 const items = {
   "columns.library.title": "藏經閣",
@@ -77,6 +78,7 @@ const items = {
   "channel.links.empty": "未設定",
   ...admin,
   ...adminStats,
+  ...search,
 };
 
 export default items;

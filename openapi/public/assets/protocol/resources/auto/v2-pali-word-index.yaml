@@ -4,7 +4,10 @@ get:
   tags:
     - pali-word-index
   operationId: get_api_v2_pali_word_index
-  description: 实现：`WordIndexController@index`
+  description: |
+    `view=key` 已被 `GET /v3/pali-word-suggestions?q=` 取代：排序从「词长、去变音形」改成「与输入相同的在前，其余按出现次数降序」
+    （v2 下短而罕见的词形挤掉常用词），只回 `word` / `count` / `bold` 三个字段，不再整行吐出；输入里的 `%`、`_` 按字面匹配；
+    `key`→`q`，`rows`→`data`，`count`→`meta.total`，可用 `limit`（默认 10，上限 50）。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
   parameters:
     -
       name: view
@@ -76,6 +79,7 @@ get:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
       $ref: '../../main.yaml#/components/responses/ValidationError'
+  deprecated: true
 post:
   summary: '新建 pali-word-index'
   tags:

@@ -4,7 +4,12 @@ get:
   tags:
     - search-pali-wbw
   operationId: get_api_v2_search_pali_wbw
-  description: 实现：`SearchPaliWbwController@index`
+  description: |
+    已被 `GET /v3/tipitaka-word-paragraphs` 取代：段落、标题、页码整页批量取（v2 每行另查 3～4 次库）；`text` 只含 `<b>` 黑体与
+    `<mark>` 命中词的安全 HTML（v2 是整段原始 HTML 加字符串替换）；不再给指向旧版 library 的 `link`。参数：`key`→`words`，
+    `bold=on|off`→`bold=only|exclude`，`book`→`book_id`，`limit`/`offset`→`per_page`/`page`；`view`、`tags` 去掉。
+    字段：`paragraph`→`para`，`rank`→`score`，`paliTitle`→`title`，`highlight`→`text`，`ref`→`refs`（多了 `volume`）；`count`→`meta.total`。
+    保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
   parameters:
     -
       name: book
@@ -83,12 +88,14 @@ get:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
       $ref: '../../main.yaml#/components/responses/ValidationError'
+  deprecated: true
 post:
   summary: '新建 search-pali-wbw'
   tags:
     - search-pali-wbw
   operationId: post_api_v2_search_pali_wbw
-  description: 实现：`SearchPaliWbwController@store`
+  description: |
+    与 GET 相同，已被 `GET /v3/tipitaka-word-paragraphs` 取代。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
   responses:
     200:
       description: '成功。业务失败时 HTTP 仍可能为 200，以 ok 字段为准。'
@@ -107,3 +114,4 @@ post:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
       $ref: '../../main.yaml#/components/responses/ValidationError'
+  deprecated: true

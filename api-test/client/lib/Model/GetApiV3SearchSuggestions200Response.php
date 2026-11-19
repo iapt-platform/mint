@@ -58,7 +58,7 @@ class GetApiV3SearchSuggestions200Response implements ModelInterface, ArrayAcces
      */
     protected static $openAPITypes = [
         'data' => '\WikipaliApi\Model\GetApiV3SearchSuggestions200ResponseDataInner[]',
-        'meta' => '\WikipaliApi\Model\GetApiV3SearchSuggestions200ResponseMeta'
+        'meta' => '\WikipaliApi\Model\GetApiV3PaliWordSuggestions200ResponseMeta'
     ];
 
     /**
@@ -326,7 +326,7 @@ class GetApiV3SearchSuggestions200Response implements ModelInterface, ArrayAcces
     /**
      * Gets meta
      *
-     * @return \WikipaliApi\Model\GetApiV3SearchSuggestions200ResponseMeta|null
+     * @return \WikipaliApi\Model\GetApiV3PaliWordSuggestions200ResponseMeta|null
      */
     public function getMeta()
     {
@@ -336,7 +336,7 @@ class GetApiV3SearchSuggestions200Response implements ModelInterface, ArrayAcces
     /**
      * Sets meta
      *
-     * @param \WikipaliApi\Model\GetApiV3SearchSuggestions200ResponseMeta|null $meta meta
+     * @param \WikipaliApi\Model\GetApiV3PaliWordSuggestions200ResponseMeta|null $meta meta
      *
      * @return self
      */

@@ -841,6 +841,10 @@ paths:
     $ref: ./resources/auto/v3-me-reading-time.yaml
   '/v3/nissaya-cards/{ending}':
     $ref: ./resources/auto/v3-nissaya-cards-ending.yaml
+  '/v3/pali-word-forms/{word}':
+    $ref: ./resources/auto/v3-pali-word-forms-word.yaml
+  /v3/pali-word-suggestions:
+    $ref: ./resources/auto/v3-pali-word-suggestions.yaml
   /v3/password-resets:
     $ref: ./resources/auto/v3-password-resets.yaml
   '/v3/password-resets/{token}':
@@ -877,6 +881,8 @@ paths:
     $ref: ./resources/auto/v3-tipitaka-chapters.yaml
   '/v3/tipitaka-discussions/{channel}':
     $ref: ./resources/auto/v3-tipitaka-discussions-channel.yaml
+  '/v3/tipitaka-page-numbers/{page}':
+    $ref: ./resources/auto/v3-tipitaka-page-numbers-page.yaml
   '/v3/tipitaka-paragraph-channels/{book}/{para}':
     $ref: ./resources/auto/v3-tipitaka-paragraph-channels-book-para.yaml
   '/v3/tipitaka-reading/{channel}':
@@ -887,6 +893,10 @@ paths:
     $ref: ./resources/auto/v3-tipitaka-related-paragraphs-aggregate.yaml
   '/v3/tipitaka-related-paragraphs/aggregate/{book_name}':
     $ref: ./resources/auto/v3-tipitaka-related-paragraphs-aggregate-book-name.yaml
+  /v3/tipitaka-word-paragraphs:
+    $ref: ./resources/auto/v3-tipitaka-word-paragraphs.yaml
+  /v3/tipitaka-word-paragraphs/aggregate:
+    $ref: ./resources/auto/v3-tipitaka-word-paragraphs-aggregate.yaml
   /v3/upgrade:
     $ref: ./resources/auto/v3-upgrade.yaml
   /v3/users:

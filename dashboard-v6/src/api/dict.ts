@@ -107,20 +107,6 @@ export interface IUserDictDeleteRequest {
   id: string;
 }
 
-export interface ICaseItem {
-  word: string;
-  case: ICaseListData[];
-  count: number;
-}
-export interface ICaseListResponse {
-  ok: boolean;
-  message: string;
-  data: {
-    rows: ICaseItem[];
-    count: number;
-  };
-}
-
 export interface IFirstMeaning {
   word?: string;
   meaning?: string;

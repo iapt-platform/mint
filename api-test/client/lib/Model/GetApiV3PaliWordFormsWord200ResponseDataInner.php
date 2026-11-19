@@ -1,6 +1,6 @@
 <?php
 /**
- * GetApiV3SearchSuggestions200ResponseMeta
+ * GetApiV3PaliWordFormsWord200ResponseDataInner
  *
  * PHP version 8.1
  *
@@ -32,7 +32,7 @@ use \ArrayAccess;
 use \WikipaliApi\ObjectSerializer;
 
 /**
- * GetApiV3SearchSuggestions200ResponseMeta Class Doc Comment
+ * GetApiV3PaliWordFormsWord200ResponseDataInner Class Doc Comment
  *
  * @category Class
  * @package  WikipaliApi
@@ -40,7 +40,7 @@ use \WikipaliApi\ObjectSerializer;
  * @link     https://openapi-generator.tech
  * @implements \ArrayAccess<string, mixed>
  */
-class GetApiV3SearchSuggestions200ResponseMeta implements ModelInterface, ArrayAccess, \JsonSerializable
+class GetApiV3PaliWordFormsWord200ResponseDataInner implements ModelInterface, ArrayAccess, \JsonSerializable
 {
     public const DISCRIMINATOR = null;
 
@@ -49,7 +49,7 @@ class GetApiV3SearchSuggestions200ResponseMeta implements ModelInterface, ArrayA
      *
      * @var string
      */
-    protected static $openAPIModelName = 'get_api_v3_search_suggestions_200_response_meta';
+    protected static $openAPIModelName = 'get_api_v3_pali_word_forms_word__200_response_data_inner';
 
     /**
      * Array of property to type mappings. Used for (de)serialization
@@ -57,7 +57,8 @@ class GetApiV3SearchSuggestions200ResponseMeta implements ModelInterface, ArrayA
      * @var string[]
      */
     protected static $openAPITypes = [
-        'total' => 'int'
+        'base' => 'string',
+        'forms' => '\WikipaliApi\Model\GetApiV3PaliWordFormsWord200ResponseDataInnerFormsInner[]'
     ];
 
     /**
@@ -68,7 +69,8 @@ class GetApiV3SearchSuggestions200ResponseMeta implements ModelInterface, ArrayA
      * @psalm-var array<string, string|null>
      */
     protected static $openAPIFormats = [
-        'total' => null
+        'base' => null,
+        'forms' => null
     ];
 
     /**
@@ -77,7 +79,8 @@ class GetApiV3SearchSuggestions200ResponseMeta implements ModelInterface, ArrayA
      * @var boolean[]
      */
     protected static array $openAPINullables = [
-        'total' => false
+        'base' => false,
+        'forms' => false
     ];
 
     /**
@@ -166,7 +169,8 @@ class GetApiV3SearchSuggestions200ResponseMeta implements ModelInterface, ArrayA
      * @var string[]
      */
     protected static $attributeMap = [
-        'total' => 'total'
+        'base' => 'base',
+        'forms' => 'forms'
     ];
 
     /**
@@ -175,7 +179,8 @@ class GetApiV3SearchSuggestions200ResponseMeta implements ModelInterface, ArrayA
      * @var string[]
      */
     protected static $setters = [
-        'total' => 'setTotal'
+        'base' => 'setBase',
+        'forms' => 'setForms'
     ];
 
     /**
@@ -184,7 +189,8 @@ class GetApiV3SearchSuggestions200ResponseMeta implements ModelInterface, ArrayA
      * @var string[]
      */
     protected static $getters = [
-        'total' => 'getTotal'
+        'base' => 'getBase',
+        'forms' => 'getForms'
     ];
 
     /**
@@ -244,7 +250,8 @@ class GetApiV3SearchSuggestions200ResponseMeta implements ModelInterface, ArrayA
      */
     public function __construct(?array $data = null)
     {
-        $this->setIfExists('total', $data ?? [], null);
+        $this->setIfExists('base', $data ?? [], null);
+        $this->setIfExists('forms', $data ?? [], null);
     }
 
     /**
@@ -290,28 +297,55 @@ class GetApiV3SearchSuggestions200ResponseMeta implements ModelInterface, ArrayA
 
 
     /**
-     * Gets total
+     * Gets base
      *
-     * @return int|null
+     * @return string|null
      */
-    public function getTotal()
+    public function getBase()
     {
-        return $this->container['total'];
+        return $this->container['base'];
     }
 
     /**
-     * Sets total
+     * Sets base
      *
-     * @param int|null $total 本次返回的条数
+     * @param string|null $base base
      *
      * @return self
      */
-    public function setTotal($total)
+    public function setBase($base)
     {
-        if (is_null($total)) {
-            throw new \InvalidArgumentException('non-nullable total cannot be null');
+        if (is_null($base)) {
+            throw new \InvalidArgumentException('non-nullable base cannot be null');
         }
-        $this->container['total'] = $total;
+        $this->container['base'] = $base;
+
+        return $this;
+    }
+
+    /**
+     * Gets forms
+     *
+     * @return \WikipaliApi\Model\GetApiV3PaliWordFormsWord200ResponseDataInnerFormsInner[]|null
+     */
+    public function getForms()
+    {
+        return $this->container['forms'];
+    }
+
+    /**
+     * Sets forms
+     *
+     * @param \WikipaliApi\Model\GetApiV3PaliWordFormsWord200ResponseDataInnerFormsInner[]|null $forms forms
+     *
+     * @return self
+     */
+    public function setForms($forms)
+    {
+        if (is_null($forms)) {
+            throw new \InvalidArgumentException('non-nullable forms cannot be null');
+        }
+        $this->container['forms'] = $forms;
 
         return $this;
     }

@@ -1,0 +1,92 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-tipitaka-page-numbers-page.yaml
+get:
+  summary: 按页码找段落
+  tags:
+    - tipitaka-page-numbers
+  operationId: get_api_v3_tipitaka_page_numbers_page_
+  description: |-
+    一个页码在 PTS、缅甸版、VRI、泰国版、其他里各指一处或多处，另有 CS 版印的段落号（`edition=CS`）。
+    返回全部命中（不分页，通常几百条），按版本、书、卷、段排序。每条带书名、层级与该版本的书名。
+    卷号未知的记录 `volume` 为 null；给了 `volume` 就只要这一卷（CS 段落号不分卷，不返回）。
+
+    实现：`V3\TipitakaPageNumberController@__invoke`
+  security:
+    - {  }
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: page
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: '页码（或 CS 段落号）'
+      example: 100
+    -
+      name: edition
+      in: query
+      schema:
+        type: string
+        enum:
+          - PTS
+          - My
+          - VRI
+          - Thai
+          - Other
+          - CS
+      description: 只要这个版本
+    -
+      name: volume
+      in: query
+      schema:
+        type: integer
+      description: 只要这一卷
+      example: 2
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    edition:
+                      type: string
+                    volume:
+                      type: integer
+                      nullable: true
+                    page:
+                      type: integer
+                    book:
+                      type: integer
+                    para:
+                      type: integer
+                    book_id:
+                      type: integer
+                    book_title:
+                      type: string
+                    book_para:
+                      type: integer
+                    edition_title:
+                      type: string
+                      nullable: true
+                    layer:
+                      type: string
+                      nullable: true
+                    tags:
+                      type: array
+                      items: { type: string }
+              meta:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                    description: 命中数
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

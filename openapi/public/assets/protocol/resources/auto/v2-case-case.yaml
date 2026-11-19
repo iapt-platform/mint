@@ -4,7 +4,10 @@ get:
   tags:
     - case
   operationId: get_api_v2_case_case_
-  description: 实现：`CaseController@show`
+  description: |
+    已被 `GET /v3/pali-word-forms/{word}` 取代：候选词形一次批量查出现次数（v2 逐个词形查库，一个词上百次），
+    去掉了每条里多余的 `"0": "ending"` 键，词不区分大小写。字段：`rows[].word`→`data[].base`，`rows[].case`→`data[].forms`，
+    `count`→`meta.total`；没有任何词形出现过的词根不再列出。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
   parameters:
     -
       name: case
@@ -30,6 +33,7 @@ get:
       $ref: '../../main.yaml#/components/responses/Unauthorized'
     422:
       $ref: '../../main.yaml#/components/responses/ValidationError'
+  deprecated: true
 put:
   summary: '更新 case/{case}'
   tags:

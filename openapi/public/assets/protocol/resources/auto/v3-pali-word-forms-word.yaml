@@ -1,0 +1,50 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-pali-word-forms-word.yaml
+get:
+  summary: 词形展开
+  tags:
+    - pali-word-forms
+  operationId: get_api_v3_pali_word_forms_word_
+  description: |-
+    把一个巴利词还原成可能的词根，列出每个词根在三藏里实际出现过的词形（含 iti / api / ca / hi 连音），
+    带出现次数与黑体次数。第一组是输入的词本身，其后是推导出的词根；没有任何词形出现过的词根不列。
+    每组内按出现次数降序。词不区分大小写。
+
+    实现：`V3\PaliWordFormController@__invoke`
+  security:
+    - {  }
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: word
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '巴利词，如 vitakka'
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    base:
+                      type: string
+                    forms:
+                      type: array
+                      items: { type: object, properties: { word: { type: string }, count: { type: integer }, bold: { type: integer } } }
+              meta:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                    description: 组数
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

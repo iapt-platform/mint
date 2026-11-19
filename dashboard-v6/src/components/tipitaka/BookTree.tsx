@@ -31,6 +31,10 @@ interface IWidgetBookTree {
   multiSelect?: boolean;
   multiSelectable?: boolean;
   books?: IFtsData[];
+  /** 自定义节点计数（参数是节点的 tag）；给了就不用 books 数书本数，计数为 0 的节点变淡 */
+  count?: (tags: string[]) => number;
+  /** 受控的选中节点（节点 key 是 tag 用逗号连起来） */
+  selectedKeys?: Key[];
   onChange?: (selectedKeys: Key[], path?: string[]) => void;
   onSelect?: (key?: Key) => void;
   onRootChange?: (value: string) => void;
@@ -41,13 +45,16 @@ const BookTreeWidget = ({
   multiSelect = false,
   multiSelectable = true,
   books,
+  count: countOf,
+  selectedKeys: controlledKeys,
   onChange,
   onSelect,
   onRootChange,
 }: IWidgetBookTree) => {
   const intl = useIntl();
   const [treeData, setTreeData] = useState<ITocTree[]>([]);
-  const [selectedKeys, setSelectedKeys] = useState<Key[]>([]);
+  const [innerKeys, setSelectedKeys] = useState<Key[]>([]);
+  const selectedKeys = controlledKeys ?? innerKeys;
   const [isMultiSelect, setIsMultiSelect] = useState(multiSelect);
   const [currTocStyle, setCurrTocStyle] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -91,7 +98,7 @@ const BookTreeWidget = ({
       };
 
       const json = await get<IPaliBookListResponse[]>(
-        `/api/v2/pali-book-category/${value}`
+        `/api/v2/pali-book-category/${value}`,
       );
       const newTree: ITocTree[] = json.map(treeMap);
       setPathToNode(newTree, []);
@@ -102,6 +109,31 @@ const BookTreeWidget = ({
     } finally {
       setLoading(false);
     }
+  };
+
+  /** 节点 key → 它的全部祖先 key */
+  const ancestorsOf = (key: Key): Key[] => {
+    const walk = (nodes: ITocTree[], path: Key[]): Key[] | undefined => {
+      for (const node of nodes) {
+        if (node.key === key) return path;
+        const found = walk(node.children, [...path, node.key]);
+        if (found) return found;
+      }
+      return undefined;
+    };
+    return walk(treeData, []) ?? [];
+  };
+
+  /**
+   * 多选时，新选中的节点与已选的祖先 / 后代互斥：选了子目录，父目录取消；选了父目录，子目录取消
+   * （父目录已经包含子目录，两个都选没有意义，计数也会重复）。
+   */
+  const exclusive = (keys: Key[], picked: Key): Key[] => {
+    const up = ancestorsOf(picked);
+    return keys.filter(
+      (k) =>
+        k === picked || (!up.includes(k) && !ancestorsOf(k).includes(picked)),
+    );
   };
 
   const handleClearSelection = () => {
@@ -118,11 +150,13 @@ const BookTreeWidget = ({
       selectedNodes: ITocTree[];
       node: EventDataNode<ITocTree>;
       event: string;
-    }
+    },
   ) => {
-    console.log("tree selected", selectedKeys, info);
-    setSelectedKeys(selectedKeys);
     const node: ITocTree = info.node;
+    if (isMultiSelect && info.selected) {
+      selectedKeys = exclusive(selectedKeys, node.key);
+    }
+    setSelectedKeys(selectedKeys);
 
     if (typeof onChange !== "undefined") {
       onChange(selectedKeys, node.path);
@@ -133,6 +167,22 @@ const BookTreeWidget = ({
   };
 
   const titleRender = (node: ITocTree) => {
+    if (countOf) {
+      const n = countOf(node.tag);
+      return (
+        <Space style={{ opacity: n ? 1 : 0.45 }}>
+          <PaliText text={node.title} />
+          {n ? (
+            <Text
+              type="secondary"
+              style={{ fontVariantNumeric: "tabular-nums" }}
+            >
+              {n.toLocaleString()}
+            </Text>
+          ) : null}
+        </Space>
+      );
+    }
     //标签数量
     const tags = books?.filter((book) => {
       return node.tag.every((el) => {
@@ -186,6 +236,13 @@ const BookTreeWidget = ({
               defaultChecked={multiSelect}
               onChange={(checked) => {
                 setIsMultiSelect(checked);
+                // 切回单选时只留最后选的那一个
+                if (!checked && selectedKeys.length > 1) {
+                  const last = selectedKeys.slice(-1);
+                  setSelectedKeys(last);
+                  onChange?.(last);
+                  onSelect?.(last[0]);
+                }
               }}
             />
           </Flex>
@@ -198,7 +255,10 @@ const BookTreeWidget = ({
           selectedKeys={selectedKeys}
           multiple={isMultiSelect}
           showLine
-          switcherIcon={<DownOutlined />}
+          // 自定义图标时 antd 不会替它旋转（showLine 下尤其如此），按展开状态自己转；叶子不显示
+          switcherIcon={({ expanded, isLeaf }) =>
+            isLeaf ? null : <DownOutlined rotate={expanded ? 0 : -90} />
+          }
           defaultExpandedKeys={["sutta"]}
           onSelect={handleSelect}
           treeData={treeData}

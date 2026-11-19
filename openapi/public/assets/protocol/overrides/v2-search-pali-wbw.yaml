@@ -1,0 +1,13 @@
+# 手写补充：v2 逐词检索已被 v3 取代（2026-11-19）。
+get:
+  deprecated: true
+  description: |
+    已被 `GET /v3/tipitaka-word-paragraphs` 取代：段落、标题、页码整页批量取（v2 每行另查 3～4 次库）；`text` 只含 `<b>` 黑体与
+    `<mark>` 命中词的安全 HTML（v2 是整段原始 HTML 加字符串替换）；不再给指向旧版 library 的 `link`。参数：`key`→`words`，
+    `bold=on|off`→`bold=only|exclude`，`book`→`book_id`，`limit`/`offset`→`per_page`/`page`；`view`、`tags` 去掉。
+    字段：`paragraph`→`para`，`rank`→`score`，`paliTitle`→`title`，`highlight`→`text`，`ref`→`refs`（多了 `volume`）；`count`→`meta.total`。
+    保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
+post:
+  deprecated: true
+  description: |
+    与 GET 相同，已被 `GET /v3/tipitaka-word-paragraphs` 取代。保留仅为 dashboard-v4 兼容，待 v4 下线后删除。
