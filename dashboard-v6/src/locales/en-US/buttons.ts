@@ -117,7 +117,7 @@ const items = {
   "buttons.get_template": "Get Template",
   "buttons.duplicate": "Duplicate",
   "buttons.word_count": "Word Count",
-  "buttons.teamspace.switch": "Switch to teamspace",
+  "buttons.account.switch": "Switch account",
   "buttons.teamspace.leave": "Back to personal space",
   "buttons.back": "Back",
 };

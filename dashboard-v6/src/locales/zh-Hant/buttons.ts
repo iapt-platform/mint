@@ -118,7 +118,7 @@ const items = {
   "buttons.get_template": "獲取引用模版",
   "buttons.duplicate": "建立副本",
   "buttons.word_count": "字數統計",
-  "buttons.teamspace.switch": "切換到團隊空間",
+  "buttons.account.switch": "切換帳號",
   "buttons.teamspace.leave": "切回個人空間",
   "buttons.back": "返回",
 };

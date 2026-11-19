@@ -1,0 +1,28 @@
+/* 账号名过长时省略，角色标签与当前标记始终可见 */
+.account-item {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+.account-item__name {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+}
+.account-item__name .ant-space {
+  display: flex;
+  min-width: 0;
+}
+.account-item__name .ant-space-item:last-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.account-item__name .ant-space-item:last-child .ant-typography {
+  white-space: nowrap;
+}
+.account-item > .ant-tag,
+.account-item > .anticon {
+  flex: none;
+}

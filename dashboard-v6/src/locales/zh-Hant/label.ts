@@ -177,7 +177,6 @@ const items = {
   "labels.pagination.total": "結果: {total}",
   "labels.channel.select": "版本選擇",
   "labels.teamspace": "團隊空間",
-  "labels.teamspace.current": "團隊空間：{name}",
   "labels.teamspace.personal-only": "個人專屬功能，團隊空間下不可用",
   "labels.teamspace.unsupported": "該模組暫不支援團隊空間",
   "labels.group.role.owner": "擁有者",

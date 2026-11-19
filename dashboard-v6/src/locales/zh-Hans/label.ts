@@ -177,7 +177,6 @@ const items = {
   "labels.pagination.total": "结果: {total}",
   "labels.channel.select": "版本选择",
   "labels.teamspace": "团队空间",
-  "labels.teamspace.current": "团队空间：{name}",
   "labels.teamspace.personal-only": "个人专属功能，团队空间下不可用",
   "labels.teamspace.unsupported": "该模块暂不支持团队空间",
   "labels.group.role.owner": "拥有者",

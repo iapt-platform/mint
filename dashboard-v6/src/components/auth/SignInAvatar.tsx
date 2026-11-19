@@ -1,7 +1,7 @@
 import { useIntl } from "react-intl";
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { Divider, Menu, Typography } from "antd";
+import { Divider, Menu, Tag, Typography } from "antd";
 import { Avatar } from "antd";
 import { Popover } from "antd";
 
@@ -30,12 +30,22 @@ import User from "./User";
 import { fullUrl } from "../../utils";
 import Studio from "./Studio";
 import LoginButton from "./LoginButton";
+import "./SignInAvatar.css";
+import { getAvatarColor } from "./utils";
 
 const { Title, Paragraph, Text } = Typography;
 
 /** 账户列表里个人空间与各团队空间的菜单 key */
 const PERSONAL_KEY = "space:personal";
 const TEAMSPACE_PREFIX = "space:team:";
+
+/** 团队角色标签的颜色（antd 预设色：浅色底、同色边框与文字） */
+const ROLE_COLOR: Record<string, string> = {
+  owner: "gold",
+  manager: "blue",
+  editor: "green",
+  reader: "default",
+};
 
 interface IWidget {
   placement?: TooltipPlacement;
@@ -57,20 +67,52 @@ const SignInAvatar = ({
   const studios = useAppSelector(studioList);
   const teamspace = useAppSelector(currentStudio);
 
-  console.debug("user", user);
-
   const canManage =
     user?.roles?.includes("root") || user?.roles?.includes("administrator");
 
   if (typeof user === "undefined") {
     return <LoginButton />;
   } else {
+    /** 团队角色的显示名；没有对应文案的（如旧数据里的 member）原样显示 */
+    const roleLabel = (role?: string) =>
+      role
+        ? intl.formatMessage({
+            id: `labels.group.role.${role}`,
+            defaultMessage: role,
+          })
+        : undefined;
+
+    // 当前账号：团队空间里是团队，否则是登录用户本人
+    const activeName = teamspace ? teamspace.nickName : user.nickName;
+    const activeAvatar = teamspace ? teamspace.avatar : user.avatar;
+
     const welcome = (
       <Paragraph>
-        <Title level={3} style={{ fontSize: 22 }}>
-          {user.nickName}
+        <Title
+          level={3}
+          style={{ fontSize: 22 }}
+          ellipsis={{ tooltip: activeName }}
+        >
+          {activeName}
         </Title>
-        <Text type="secondary">账户名 {user.realName}</Text>
+        {teamspace ? (
+          teamspace.role && (
+            <Tag
+              data-testid="account-role"
+              color={ROLE_COLOR[teamspace.role] ?? "default"}
+            >
+              {roleLabel(teamspace.role)}
+            </Tag>
+          )
+        ) : (
+          <Text
+            type="secondary"
+            style={{ display: "block" }}
+            ellipsis={{ tooltip: user.realName }}
+          >
+            账户名 {user.realName}
+          </Text>
+        )}
         <Paragraph style={{ textAlign: "right", paddingTop: 30 }}>
           {intl.formatMessage({
             id: "buttons.welcome",
@@ -80,14 +122,19 @@ const SignInAvatar = ({
     );
 
     const current = <CheckOutlined style={{ marginLeft: 8 }} />;
-    let userList = [
+    type AccountItem =
+      | { key: string; label: React.ReactNode }
+      | { type: "divider"; key: string };
+    let userList: AccountItem[] = [
       {
         key: PERSONAL_KEY,
         label: (
-          <>
-            <User {...user} />
+          <span className="account-item" data-testid="account-personal">
+            <span className="account-item__name">
+              <User {...user} />
+            </span>
             {!teamspace && current}
-          </>
+          </span>
         ),
       },
     ];
@@ -95,15 +142,24 @@ const SignInAvatar = ({
       return {
         key: TEAMSPACE_PREFIX + item.id,
         label: (
-          <>
-            <Studio data={item} />
+          <span className="account-item">
+            <span className="account-item__name">
+              <Studio data={item} />
+            </span>
+            {item.role && (
+              <Tag style={{ marginInlineStart: 8 }}>{roleLabel(item.role)}</Tag>
+            )}
             {teamspace?.id === item.id && current}
-          </>
+          </span>
         ),
       };
     });
-    if (studioList) {
-      userList = [...userList, ...studioList];
+    if (studioList?.length) {
+      userList = [
+        ...userList,
+        { type: "divider", key: "space:divider" },
+        ...studioList,
+      ];
     }
     return (
       <>
@@ -121,7 +177,7 @@ const SignInAvatar = ({
                     {
                       key: "account",
                       label: intl.formatMessage({
-                        id: "buttons.teamspace.switch",
+                        id: "buttons.account.switch",
                       }),
                       icon: <SwapOutlined />,
                       children: userList,
@@ -194,16 +250,43 @@ const SignInAvatar = ({
           }
           placement={placement}
         >
-          <span style={style}>
+          <span
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              flex: "0 1 auto",
+              minWidth: 0,
+              ...style,
+            }}
+            data-testid="active-account"
+          >
             <Avatar
-              style={{ backgroundColor: "#87d068" }}
-              icon={<UserOutlined />}
-              src={user?.avatar}
+              style={{
+                flex: "none",
+                backgroundColor: teamspace
+                  ? getAvatarColor(activeName)
+                  : "#87d068",
+              }}
+              icon={teamspace ? undefined : <UserOutlined />}
+              src={activeAvatar}
               size="small"
             >
-              {user.nickName?.slice(0, 2)}
+              {activeName?.slice(0, 2)}
             </Avatar>
-            {!hideName && user.nickName}
+            {!hideName && (
+              <span
+                style={{
+                  marginInlineStart: 8,
+                  minWidth: 0,
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+                title={activeName}
+              >
+                {activeName}
+              </span>
+            )}
           </span>
         </Popover>
         <SettingModal

@@ -11,7 +11,6 @@ import { useAuth } from "../../hooks/useAuth";
 import UiLangSelect from "../../components/general/UiLangSelect";
 import SentCart from "../../components/sentence/SentCart";
 import NotificationIcon from "../../components/notification/NotificationIcon";
-import TeamspaceBadge from "../../features/teamspace/TeamspaceBadge";
 import TeamspaceGuard from "../../features/teamspace/TeamspaceGuard";
 import {
   WORKSPACE_CONTENT_PADDING,
@@ -73,6 +72,7 @@ const Widget = () => {
           <SignInAvatar hideName={collapsed} />
           <Button
             type="text"
+            style={{ flex: "none" }}
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             onClick={toggleCollapsed}
           />
@@ -96,7 +96,6 @@ const Widget = () => {
         >
           <HeaderBreadcrumb />
           <Space size="middle">
-            <TeamspaceBadge />
             <SentCart />
             <NotificationIcon />
             <NetworkStatus />
