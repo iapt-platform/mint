@@ -113,6 +113,8 @@ class AnthologyReadController extends Controller
                 'id' => $anthologyId,
                 'title' => $col['title'] ?? '',
             ],
+            // 目录栏标题（book.read 视图无条件读取）：文集阅读页的「书」就是文集本身
+            'book_title' => $col['title'] ?? '',
             'categories' => [],
             'tags' => [],
             'downloads' => [],
