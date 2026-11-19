@@ -56,7 +56,7 @@ const UserSelectWidget = ({
           const userList: RequestOptionsType[] = json.data.rows.map((item) => {
             return {
               value: item.id,
-              label: `${item.nickName}`,
+              label: `${item.nickName} @${item.userName}`,
             };
           });
           console.log("json", userList);
