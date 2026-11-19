@@ -5,10 +5,11 @@ get:
     - search
   operationId: get_api_v3_search
   description: |-
-    支持 fuzzy / exact / semantic / hybrid 四种检索模式，底层走 OpenSearch。
-    同样的参数也可以用 POST /v3/search 提交（参数多、URL 放不下时用）。
+    底层走 OpenSearch。同样的参数也可以用 `POST /v3/search` 放在请求体里提交。
+    翻页深度受 OpenSearch 限制：`page × per_page` 不能超过 10000，超出 422。
+    搜索服务连不上或超时回 503（`search-unavailable`）。
 
-    实现：`V3\SearchPlusController@index`
+    实现：`V3\SearchController@index`
   security:
     - {  }
     -
@@ -19,23 +20,8 @@ get:
       in: query
       schema:
         type: string
-        default: ''
-      description: 搜索关键词
+      description: 检索词
       required: true
-    -
-      name: page
-      in: query
-      schema:
-        type: integer
-        default: 1
-      description: 页码
-    -
-      name: page_size
-      in: query
-      schema:
-        type: integer
-        default: 20
-      description: '每页数量，上限 100'
     -
       name: search_mode
       in: query
@@ -48,20 +34,17 @@ get:
           - hybrid
           - definition
         default: fuzzy
-      description: 检索模式
+      description: '检索模式：fuzzy 多词模糊（默认）、exact 词形精确、semantic 语义向量、hybrid 模糊 + 语义、definition 黑体定义优先'
     -
       name: resource_type
       in: query
       schema:
         type: string
         enum:
-          - article
+          - tipitaka
+          - original_text
           - term
-          - dictionary
-          - translation
-          - origin_text
-          - nissaya
-      description: 资源类型
+      description: '资源类型：tipitaka 三藏（段落与整章）、original_text 原文分段、term 术语'
     -
       name: resource_id
       in: query
@@ -76,40 +59,34 @@ get:
         enum:
           - book
           - chapter
-          - sutta
-          - section
+          - session
           - paragraph
-          - sentence
       description: 文档颗粒度
     -
       name: language
       in: query
       schema:
         type: string
-      description: 语言
-      example: zh-Hans
+      description: '文档语言，如 pi、zh、en'
     -
       name: category
       in: query
       schema:
         type: string
-        enum:
-          - pali
-          - commentary
-          - subcommentary
-      description: 文档分类，逗号分隔
+      description: 分类，逗号分隔，须全部命中
+      example: 'sutta,mūla'
     -
       name: tags
       in: query
       schema:
         type: string
-      description: 标签过滤，逗号分隔
+      description: 标签，逗号分隔，命中任一
     -
       name: page_refs
       in: query
       schema:
         type: array
-      description: 页码标记
+      description: 页码标记，命中任一
       example:
         - V3.81
         - M3.58
@@ -118,22 +95,42 @@ get:
       in: query
       schema:
         type: array
-      description: '关联 id'
+      description: '关联 id（经文段落是 `{book}-{para}`），命中任一'
       example:
-        - chapter_93-5
-        - 'm.n. 38'
+        - 93-5
     -
       name: author
       in: query
       schema:
         type: string
-      description: 按作者或译者过滤
+      description: 作者或译者
     -
       name: channel
       in: query
       schema:
         type: string
-      description: '按来源 channel 过滤'
+      description: '来源 channel 的 uuid'
+    -
+      name: facets
+      in: query
+      schema:
+        type: boolean
+        default: false
+      description: '是否在 `meta.facets` 里返回按 resource_type / language / category / granularity 的分面计数'
+    -
+      name: page
+      in: query
+      schema:
+        type: integer
+        default: 1
+      description: 页码
+    -
+      name: per_page
+      in: query
+      schema:
+        type: integer
+        default: 20
+      description: '每页条数，上限 100'
   responses:
     200:
       description: 成功
@@ -146,20 +143,92 @@ get:
                 type: array
                 items:
                   type: object
+                  properties:
+                    id:
+                      type: string
+                    resource_type:
+                      type: string
+                    resource_id:
+                      type: string
+                      nullable: true
+                    granularity:
+                      type: string
+                      nullable: true
+                    language:
+                      type: string
+                      nullable: true
+                    related_id:
+                      type: string
+                      nullable: true
+                    score:
+                      type: number
+                      nullable: true
+                    title:
+                      type: string
+                    content:
+                      type: string
+                    highlight:
+                      type: string
+                      nullable: true
+                    bold:
+                      type: array
+                      items: { type: string }
+                    path:
+                      type: string
+                      nullable: true
+                    category:
+                      type: array
+                      items: { type: string }
+                    tags:
+                      type: array
+                      items: { type: string }
+                    updated_at:
+                      type: string
+                      nullable: true
+                    display:
+                      type: string
+                      description: 仅在部分查询口径下返回。
               meta:
-                $ref: '../../main.yaml#/components/schemas/PaginationMeta'
+                type: object
+                properties:
+                  current_page:
+                    type: integer
+                    description: 当前页
+                  per_page:
+                    type: integer
+                    description: 每页条数
+                  total:
+                    type: integer
+                    description: '命中总数（total_relation 为 gte 时是下限）'
+                  total_relation:
+                    type: string
+                    description: 'eq 精确，gte 表示「至少这么多」（OpenSearch 只精确计数到 10000）'
+                  last_page:
+                    type: integer
+                    description: 最后一页（受翻页深度限制）
+                  facets:
+                    type: object
+                    description: '分面计数，只在 facets=true 时出现。键是 resource_type / language / category / granularity'
+                    additionalProperties:
+                      type: array
+                      items: { type: object, required: [key, count], properties: { key: { type: string }, count: { type: integer } } }
     422:
       $ref: '../../main.yaml#/components/responses/ProblemValidation'
+    503:
+      description: 搜索服务暂不可用
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
 post:
   summary: 全文检索（POST）
   tags:
     - search
   operationId: post_api_v3_search
   description: |-
-    与 `GET /v3/search` 完全等价，只是把参数放在请求体里——参数多、
-    尤其是 page_refs / related_id 这类数组时，URL 放不下。
+    与 `GET /v3/search` 完全等价，参数放在 JSON 请求体里（数组参数多、URL 放不下时用）。
 
-    实现：`V3\SearchPlusController@store`
+    实现：`V3\SearchController@store`
   security:
     - {  }
     -
@@ -173,7 +242,7 @@ post:
           properties:
             q:
               type: string
-              description: 搜索关键词
+              description: 检索词
             search_mode:
               type: string
               description: 检索模式
@@ -187,37 +256,53 @@ post:
             resource_type:
               type: string
               description: 资源类型
+              enum:
+                - tipitaka
+                - original_text
+                - term
+            resource_id:
+              type: string
+              description: '限定某个资源 id'
             granularity:
               type: string
               description: 文档颗粒度
+              enum:
+                - book
+                - chapter
+                - session
+                - paragraph
             language:
               type: string
-              description: 语言
+              description: 文档语言
             category:
               type: string
-              description: 文档分类，逗号分隔
+              description: 分类，逗号分隔，须全部命中
             tags:
               type: string
-              description: 标签，逗号分隔
+              description: 标签，逗号分隔，命中任一
             page_refs:
               type: array
-              description: 页码标记
+              description: 页码标记，命中任一
             related_id:
               type: array
-              description: '关联 id'
+              description: '关联 id，命中任一'
             author:
               type: string
               description: 作者或译者
             channel:
               type: string
-              description: '来源 channel'
+              description: '来源 channel 的 uuid'
+            facets:
+              type: boolean
+              description: 是否返回分面计数
+              default: false
             page:
               type: integer
               description: 页码
               default: 1
-            page_size:
+            per_page:
               type: integer
-              description: '每页数量，上限 100'
+              description: '每页条数，上限 100'
               default: 20
           required:
             - q
@@ -230,6 +315,83 @@ post:
             type: object
             properties:
               data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    resource_type:
+                      type: string
+                    resource_id:
+                      type: string
+                      nullable: true
+                    granularity:
+                      type: string
+                      nullable: true
+                    language:
+                      type: string
+                      nullable: true
+                    related_id:
+                      type: string
+                      nullable: true
+                    score:
+                      type: number
+                      nullable: true
+                    title:
+                      type: string
+                    content:
+                      type: string
+                    highlight:
+                      type: string
+                      nullable: true
+                    bold:
+                      type: array
+                      items: { type: string }
+                    path:
+                      type: string
+                      nullable: true
+                    category:
+                      type: array
+                      items: { type: string }
+                    tags:
+                      type: array
+                      items: { type: string }
+                    updated_at:
+                      type: string
+                      nullable: true
+                    display:
+                      type: string
+                      description: 仅在部分查询口径下返回。
+              meta:
                 type: object
+                properties:
+                  current_page:
+                    type: integer
+                    description: 当前页
+                  per_page:
+                    type: integer
+                    description: 每页条数
+                  total:
+                    type: integer
+                    description: '命中总数（total_relation 为 gte 时是下限）'
+                  total_relation:
+                    type: string
+                    description: 'eq 精确，gte 表示「至少这么多」'
+                  last_page:
+                    type: integer
+                    description: 最后一页（受翻页深度限制）
+                  facets:
+                    type: object
+                    description: '分面计数，只在 facets=true 时出现。键是 resource_type / language / category / granularity'
+                    additionalProperties:
+                      type: array
+                      items: { type: object, required: [key, count], properties: { key: { type: string }, count: { type: integer } } }
     422:
       $ref: '../../main.yaml#/components/responses/ProblemValidation'
+    503:
+      description: 搜索服务暂不可用
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'

@@ -1,0 +1,46 @@
+# 手写补充：/v3/search 的 meta.facets 结构。
+# meta 其余字段由控制器 @meta 注解生成；@meta 只能声明到 object，桶的形状在这里补。
+get:
+  responses:
+    200:
+      content:
+        application/json:
+          schema:
+            properties:
+              meta:
+                properties:
+                  facets:
+                    type: object
+                    description: 分面计数，只在 facets=true 时出现。键是 resource_type / language / category / granularity
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: object
+                        required: [key, count]
+                        properties:
+                          key:
+                            type: string
+                          count:
+                            type: integer
+post:
+  responses:
+    200:
+      content:
+        application/json:
+          schema:
+            properties:
+              meta:
+                properties:
+                  facets:
+                    type: object
+                    description: 分面计数，只在 facets=true 时出现。键是 resource_type / language / category / granularity
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: object
+                        required: [key, count]
+                        properties:
+                          key:
+                            type: string
+                          count:
+                            type: integer

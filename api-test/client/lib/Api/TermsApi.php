@@ -458,11 +458,11 @@ class TermsApi
      * 按词查术语
      *
      * @param  string $word 巴利词，逗号分隔，最多 50 个 (required)
+     * @param  bool|null $with_body 每条都带渲染后的正文 &#x60;body&#x60; (optional)
      * @param  int|null $per_page 每页条数，最大 200 (optional, default to 20)
      * @param  string|null $tag 义项；传空串只要没有义项的 (optional)
      * @param  string|null $channel 只要这个 channel 的 (optional)
      * @param  string|null $language 只要这个语言的 (optional)
-     * @param  bool|null $with_body 每条都带渲染后的正文 &#x60;body&#x60; (optional)
      * @param  int|null $page 页码 (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3Terms'] to see the possible values for this operation
      *
@@ -470,9 +470,9 @@ class TermsApi
      * @throws \InvalidArgumentException
      * @return \WikipaliApi\Model\GetApiV3ChannelsChannelTerms200Response|\WikipaliApi\Model\ProblemDetails
      */
-    public function getApiV3Terms($word, $per_page = 20, $tag = null, $channel = null, $language = null, $with_body = null, $page = null, string $contentType = self::contentTypes['getApiV3Terms'][0])
+    public function getApiV3Terms($word, $with_body = null, $per_page = 20, $tag = null, $channel = null, $language = null, $page = null, string $contentType = self::contentTypes['getApiV3Terms'][0])
     {
-        list($response) = $this->getApiV3TermsWithHttpInfo($word, $per_page, $tag, $channel, $language, $with_body, $page, $contentType);
+        list($response) = $this->getApiV3TermsWithHttpInfo($word, $with_body, $per_page, $tag, $channel, $language, $page, $contentType);
         return $response;
     }
 
@@ -482,11 +482,11 @@ class TermsApi
      * 按词查术语
      *
      * @param  string $word 巴利词，逗号分隔，最多 50 个 (required)
+     * @param  bool|null $with_body 每条都带渲染后的正文 &#x60;body&#x60; (optional)
      * @param  int|null $per_page 每页条数，最大 200 (optional, default to 20)
      * @param  string|null $tag 义项；传空串只要没有义项的 (optional)
      * @param  string|null $channel 只要这个 channel 的 (optional)
      * @param  string|null $language 只要这个语言的 (optional)
-     * @param  bool|null $with_body 每条都带渲染后的正文 &#x60;body&#x60; (optional)
      * @param  int|null $page 页码 (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3Terms'] to see the possible values for this operation
      *
@@ -494,9 +494,9 @@ class TermsApi
      * @throws \InvalidArgumentException
      * @return array of \WikipaliApi\Model\GetApiV3ChannelsChannelTerms200Response|\WikipaliApi\Model\ProblemDetails, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getApiV3TermsWithHttpInfo($word, $per_page = 20, $tag = null, $channel = null, $language = null, $with_body = null, $page = null, string $contentType = self::contentTypes['getApiV3Terms'][0])
+    public function getApiV3TermsWithHttpInfo($word, $with_body = null, $per_page = 20, $tag = null, $channel = null, $language = null, $page = null, string $contentType = self::contentTypes['getApiV3Terms'][0])
     {
-        $request = $this->getApiV3TermsRequest($word, $per_page, $tag, $channel, $language, $with_body, $page, $contentType);
+        $request = $this->getApiV3TermsRequest($word, $with_body, $per_page, $tag, $channel, $language, $page, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -587,20 +587,20 @@ class TermsApi
      * 按词查术语
      *
      * @param  string $word 巴利词，逗号分隔，最多 50 个 (required)
+     * @param  bool|null $with_body 每条都带渲染后的正文 &#x60;body&#x60; (optional)
      * @param  int|null $per_page 每页条数，最大 200 (optional, default to 20)
      * @param  string|null $tag 义项；传空串只要没有义项的 (optional)
      * @param  string|null $channel 只要这个 channel 的 (optional)
      * @param  string|null $language 只要这个语言的 (optional)
-     * @param  bool|null $with_body 每条都带渲染后的正文 &#x60;body&#x60; (optional)
      * @param  int|null $page 页码 (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3Terms'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function getApiV3TermsAsync($word, $per_page = 20, $tag = null, $channel = null, $language = null, $with_body = null, $page = null, string $contentType = self::contentTypes['getApiV3Terms'][0])
+    public function getApiV3TermsAsync($word, $with_body = null, $per_page = 20, $tag = null, $channel = null, $language = null, $page = null, string $contentType = self::contentTypes['getApiV3Terms'][0])
     {
-        return $this->getApiV3TermsAsyncWithHttpInfo($word, $per_page, $tag, $channel, $language, $with_body, $page, $contentType)
+        return $this->getApiV3TermsAsyncWithHttpInfo($word, $with_body, $per_page, $tag, $channel, $language, $page, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -614,21 +614,21 @@ class TermsApi
      * 按词查术语
      *
      * @param  string $word 巴利词，逗号分隔，最多 50 个 (required)
+     * @param  bool|null $with_body 每条都带渲染后的正文 &#x60;body&#x60; (optional)
      * @param  int|null $per_page 每页条数，最大 200 (optional, default to 20)
      * @param  string|null $tag 义项；传空串只要没有义项的 (optional)
      * @param  string|null $channel 只要这个 channel 的 (optional)
      * @param  string|null $language 只要这个语言的 (optional)
-     * @param  bool|null $with_body 每条都带渲染后的正文 &#x60;body&#x60; (optional)
      * @param  int|null $page 页码 (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3Terms'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function getApiV3TermsAsyncWithHttpInfo($word, $per_page = 20, $tag = null, $channel = null, $language = null, $with_body = null, $page = null, string $contentType = self::contentTypes['getApiV3Terms'][0])
+    public function getApiV3TermsAsyncWithHttpInfo($word, $with_body = null, $per_page = 20, $tag = null, $channel = null, $language = null, $page = null, string $contentType = self::contentTypes['getApiV3Terms'][0])
     {
         $returnType = '\WikipaliApi\Model\GetApiV3ChannelsChannelTerms200Response';
-        $request = $this->getApiV3TermsRequest($word, $per_page, $tag, $channel, $language, $with_body, $page, $contentType);
+        $request = $this->getApiV3TermsRequest($word, $with_body, $per_page, $tag, $channel, $language, $page, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -670,18 +670,18 @@ class TermsApi
      * Create request for operation 'getApiV3Terms'
      *
      * @param  string $word 巴利词，逗号分隔，最多 50 个 (required)
+     * @param  bool|null $with_body 每条都带渲染后的正文 &#x60;body&#x60; (optional)
      * @param  int|null $per_page 每页条数，最大 200 (optional, default to 20)
      * @param  string|null $tag 义项；传空串只要没有义项的 (optional)
      * @param  string|null $channel 只要这个 channel 的 (optional)
      * @param  string|null $language 只要这个语言的 (optional)
-     * @param  bool|null $with_body 每条都带渲染后的正文 &#x60;body&#x60; (optional)
      * @param  int|null $page 页码 (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3Terms'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function getApiV3TermsRequest($word, $per_page = 20, $tag = null, $channel = null, $language = null, $with_body = null, $page = null, string $contentType = self::contentTypes['getApiV3Terms'][0])
+    public function getApiV3TermsRequest($word, $with_body = null, $per_page = 20, $tag = null, $channel = null, $language = null, $page = null, string $contentType = self::contentTypes['getApiV3Terms'][0])
     {
 
         // verify the required parameter 'word' is set
@@ -705,6 +705,15 @@ class TermsApi
         $httpBody = '';
         $multipart = false;
 
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $with_body,
+            'with_body', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
         // query params
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
             $per_page,
@@ -746,15 +755,6 @@ class TermsApi
             $language,
             'language', // param base name
             'string', // openApiType
-            'form', // style
-            true, // explode
-            false // required
-        ) ?? []);
-        // query params
-        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
-            $with_body,
-            'with_body', // param base name
-            'boolean', // openApiType
             'form', // style
             true, // explode
             false // required

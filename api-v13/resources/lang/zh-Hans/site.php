@@ -20,6 +20,7 @@ return [
     // 停机维护开关（.stop 文件）触发时，API 的 RFC 9457 detail 文案
     'maintenance' => '服务已进入停机维护状态',
     'not_found' => '请求的资源不存在',
+    'search_unavailable' => '搜索服务暂时不可用，请稍后再试',
     'forbidden' => '你没有执行该操作的权限',
     'invalid_parameter' => '参数不合法',
     'author.name' => 'iapt',

@@ -1,16 +1,15 @@
 # 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-search-search.yaml
 get:
-  summary: '按 id 取单条检索结果'
+  summary: '按 id 取单条检索文档'
   tags:
     - search
   operationId: get_api_v3_search_search_
   description: |-
-    直接从 OpenSearch 按文档 id 取回，不走检索。取不到返回 404。
+    直接从 OpenSearch 按文档 id 取回，带阅读用的 `display` HTML。
     整章正文文档（`tipitaka_chapter_{book}-{para}_{channel}`）按它所属 channel 判权限：
-    私有 channel 只有拥有者、团队成员、被共享的人能读（要带 token）。索引里收了所有 channel，
-    不在这里挡的话拼出 id 就能读到私有正文。
+    私有 channel 只有拥有者、团队成员、被共享的人能读（要带 token）。
 
-    实现：`V3\SearchPlusController@show`
+    实现：`V3\SearchController@show`
   security:
     - {  }
     -
@@ -33,6 +32,54 @@ get:
             properties:
               data:
                 type: object
+                properties:
+                  id:
+                    type: string
+                  resource_type:
+                    type: string
+                  resource_id:
+                    type: string
+                    nullable: true
+                  granularity:
+                    type: string
+                    nullable: true
+                  language:
+                    type: string
+                    nullable: true
+                  related_id:
+                    type: string
+                    nullable: true
+                  score:
+                    type: number
+                    nullable: true
+                  title:
+                    type: string
+                  content:
+                    type: string
+                  highlight:
+                    type: string
+                    nullable: true
+                  bold:
+                    type: array
+                    items:
+                      type: string
+                  path:
+                    type: string
+                    nullable: true
+                  category:
+                    type: array
+                    items:
+                      type: string
+                  tags:
+                    type: array
+                    items:
+                      type: string
+                  updated_at:
+                    type: string
+                    nullable: true
+                  display:
+                    type: string
+                    description: 仅在部分查询口径下返回。
     403:
       description: '整章正文所属的 channel 是私有的，且当前身份看不见'
       content:
@@ -41,3 +88,9 @@ get:
             $ref: '../../main.yaml#/components/schemas/ProblemDetails'
     422:
       $ref: '../../main.yaml#/components/responses/ProblemValidation'
+    503:
+      description: 搜索服务暂不可用
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'

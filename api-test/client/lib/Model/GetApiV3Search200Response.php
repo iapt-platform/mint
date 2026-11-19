@@ -57,8 +57,8 @@ class GetApiV3Search200Response implements ModelInterface, ArrayAccess, \JsonSer
      * @var string[]
      */
     protected static $openAPITypes = [
-        'success' => 'bool',
-        'data' => 'object'
+        'data' => '\WikipaliApi\Model\GetApiV3Search200ResponseDataInner[]',
+        'meta' => '\WikipaliApi\Model\GetApiV3Search200ResponseMeta'
     ];
 
     /**
@@ -69,8 +69,8 @@ class GetApiV3Search200Response implements ModelInterface, ArrayAccess, \JsonSer
      * @psalm-var array<string, string|null>
      */
     protected static $openAPIFormats = [
-        'success' => null,
-        'data' => null
+        'data' => null,
+        'meta' => null
     ];
 
     /**
@@ -79,8 +79,8 @@ class GetApiV3Search200Response implements ModelInterface, ArrayAccess, \JsonSer
      * @var boolean[]
      */
     protected static array $openAPINullables = [
-        'success' => false,
-        'data' => false
+        'data' => false,
+        'meta' => false
     ];
 
     /**
@@ -169,8 +169,8 @@ class GetApiV3Search200Response implements ModelInterface, ArrayAccess, \JsonSer
      * @var string[]
      */
     protected static $attributeMap = [
-        'success' => 'success',
-        'data' => 'data'
+        'data' => 'data',
+        'meta' => 'meta'
     ];
 
     /**
@@ -179,8 +179,8 @@ class GetApiV3Search200Response implements ModelInterface, ArrayAccess, \JsonSer
      * @var string[]
      */
     protected static $setters = [
-        'success' => 'setSuccess',
-        'data' => 'setData'
+        'data' => 'setData',
+        'meta' => 'setMeta'
     ];
 
     /**
@@ -189,8 +189,8 @@ class GetApiV3Search200Response implements ModelInterface, ArrayAccess, \JsonSer
      * @var string[]
      */
     protected static $getters = [
-        'success' => 'getSuccess',
-        'data' => 'getData'
+        'data' => 'getData',
+        'meta' => 'getMeta'
     ];
 
     /**
@@ -250,8 +250,8 @@ class GetApiV3Search200Response implements ModelInterface, ArrayAccess, \JsonSer
      */
     public function __construct(?array $data = null)
     {
-        $this->setIfExists('success', $data ?? [], null);
         $this->setIfExists('data', $data ?? [], null);
+        $this->setIfExists('meta', $data ?? [], null);
     }
 
     /**
@@ -297,36 +297,9 @@ class GetApiV3Search200Response implements ModelInterface, ArrayAccess, \JsonSer
 
 
     /**
-     * Gets success
-     *
-     * @return bool|null
-     */
-    public function getSuccess()
-    {
-        return $this->container['success'];
-    }
-
-    /**
-     * Sets success
-     *
-     * @param bool|null $success success
-     *
-     * @return self
-     */
-    public function setSuccess($success)
-    {
-        if (is_null($success)) {
-            throw new \InvalidArgumentException('non-nullable success cannot be null');
-        }
-        $this->container['success'] = $success;
-
-        return $this;
-    }
-
-    /**
      * Gets data
      *
-     * @return object|null
+     * @return \WikipaliApi\Model\GetApiV3Search200ResponseDataInner[]|null
      */
     public function getData()
     {
@@ -336,7 +309,7 @@ class GetApiV3Search200Response implements ModelInterface, ArrayAccess, \JsonSer
     /**
      * Sets data
      *
-     * @param object|null $data data
+     * @param \WikipaliApi\Model\GetApiV3Search200ResponseDataInner[]|null $data data
      *
      * @return self
      */
@@ -346,6 +319,33 @@ class GetApiV3Search200Response implements ModelInterface, ArrayAccess, \JsonSer
             throw new \InvalidArgumentException('non-nullable data cannot be null');
         }
         $this->container['data'] = $data;
+
+        return $this;
+    }
+
+    /**
+     * Gets meta
+     *
+     * @return \WikipaliApi\Model\GetApiV3Search200ResponseMeta|null
+     */
+    public function getMeta()
+    {
+        return $this->container['meta'];
+    }
+
+    /**
+     * Sets meta
+     *
+     * @param \WikipaliApi\Model\GetApiV3Search200ResponseMeta|null $meta meta
+     *
+     * @return self
+     */
+    public function setMeta($meta)
+    {
+        if (is_null($meta)) {
+            throw new \InvalidArgumentException('non-nullable meta cannot be null');
+        }
+        $this->container['meta'] = $meta;
 
         return $this;
     }

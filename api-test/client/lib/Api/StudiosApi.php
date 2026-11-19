@@ -626,11 +626,11 @@ class StudiosApi
      * studio 的术语列表
      *
      * @param  string $studio 用户或团队的 uuid (required)
+     * @param  bool|null $general 只要 studio 级术语（不属于任何 channel） (optional)
      * @param  int|null $per_page 每页条数，最大 200 (optional, default to 20)
      * @param  string|null $search 按词、释义搜索 (optional)
      * @param  string|null $quality 质量；pending 含未评级的 (optional)
      * @param  string|null $category 百科分类 (optional)
-     * @param  bool|null $general 只要 studio 级术语（不属于任何 channel） (optional)
      * @param  string|null $order 排序字段 (optional, default to 'updated_at')
      * @param  string|null $dir 排序方向 (optional)
      * @param  int|null $page 页码 (optional)
@@ -640,9 +640,9 @@ class StudiosApi
      * @throws \InvalidArgumentException
      * @return \WikipaliApi\Model\GetApiV3ChannelsChannelTerms200Response|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails
      */
-    public function getApiV3StudiosStudioTerms($studio, $per_page = 20, $search = null, $quality = null, $category = null, $general = null, $order = 'updated_at', $dir = null, $page = null, string $contentType = self::contentTypes['getApiV3StudiosStudioTerms'][0])
+    public function getApiV3StudiosStudioTerms($studio, $general = null, $per_page = 20, $search = null, $quality = null, $category = null, $order = 'updated_at', $dir = null, $page = null, string $contentType = self::contentTypes['getApiV3StudiosStudioTerms'][0])
     {
-        list($response) = $this->getApiV3StudiosStudioTermsWithHttpInfo($studio, $per_page, $search, $quality, $category, $general, $order, $dir, $page, $contentType);
+        list($response) = $this->getApiV3StudiosStudioTermsWithHttpInfo($studio, $general, $per_page, $search, $quality, $category, $order, $dir, $page, $contentType);
         return $response;
     }
 
@@ -652,11 +652,11 @@ class StudiosApi
      * studio 的术语列表
      *
      * @param  string $studio 用户或团队的 uuid (required)
+     * @param  bool|null $general 只要 studio 级术语（不属于任何 channel） (optional)
      * @param  int|null $per_page 每页条数，最大 200 (optional, default to 20)
      * @param  string|null $search 按词、释义搜索 (optional)
      * @param  string|null $quality 质量；pending 含未评级的 (optional)
      * @param  string|null $category 百科分类 (optional)
-     * @param  bool|null $general 只要 studio 级术语（不属于任何 channel） (optional)
      * @param  string|null $order 排序字段 (optional, default to 'updated_at')
      * @param  string|null $dir 排序方向 (optional)
      * @param  int|null $page 页码 (optional)
@@ -666,9 +666,9 @@ class StudiosApi
      * @throws \InvalidArgumentException
      * @return array of \WikipaliApi\Model\GetApiV3ChannelsChannelTerms200Response|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getApiV3StudiosStudioTermsWithHttpInfo($studio, $per_page = 20, $search = null, $quality = null, $category = null, $general = null, $order = 'updated_at', $dir = null, $page = null, string $contentType = self::contentTypes['getApiV3StudiosStudioTerms'][0])
+    public function getApiV3StudiosStudioTermsWithHttpInfo($studio, $general = null, $per_page = 20, $search = null, $quality = null, $category = null, $order = 'updated_at', $dir = null, $page = null, string $contentType = self::contentTypes['getApiV3StudiosStudioTerms'][0])
     {
-        $request = $this->getApiV3StudiosStudioTermsRequest($studio, $per_page, $search, $quality, $category, $general, $order, $dir, $page, $contentType);
+        $request = $this->getApiV3StudiosStudioTermsRequest($studio, $general, $per_page, $search, $quality, $category, $order, $dir, $page, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -787,11 +787,11 @@ class StudiosApi
      * studio 的术语列表
      *
      * @param  string $studio 用户或团队的 uuid (required)
+     * @param  bool|null $general 只要 studio 级术语（不属于任何 channel） (optional)
      * @param  int|null $per_page 每页条数，最大 200 (optional, default to 20)
      * @param  string|null $search 按词、释义搜索 (optional)
      * @param  string|null $quality 质量；pending 含未评级的 (optional)
      * @param  string|null $category 百科分类 (optional)
-     * @param  bool|null $general 只要 studio 级术语（不属于任何 channel） (optional)
      * @param  string|null $order 排序字段 (optional, default to 'updated_at')
      * @param  string|null $dir 排序方向 (optional)
      * @param  int|null $page 页码 (optional)
@@ -800,9 +800,9 @@ class StudiosApi
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function getApiV3StudiosStudioTermsAsync($studio, $per_page = 20, $search = null, $quality = null, $category = null, $general = null, $order = 'updated_at', $dir = null, $page = null, string $contentType = self::contentTypes['getApiV3StudiosStudioTerms'][0])
+    public function getApiV3StudiosStudioTermsAsync($studio, $general = null, $per_page = 20, $search = null, $quality = null, $category = null, $order = 'updated_at', $dir = null, $page = null, string $contentType = self::contentTypes['getApiV3StudiosStudioTerms'][0])
     {
-        return $this->getApiV3StudiosStudioTermsAsyncWithHttpInfo($studio, $per_page, $search, $quality, $category, $general, $order, $dir, $page, $contentType)
+        return $this->getApiV3StudiosStudioTermsAsyncWithHttpInfo($studio, $general, $per_page, $search, $quality, $category, $order, $dir, $page, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -816,11 +816,11 @@ class StudiosApi
      * studio 的术语列表
      *
      * @param  string $studio 用户或团队的 uuid (required)
+     * @param  bool|null $general 只要 studio 级术语（不属于任何 channel） (optional)
      * @param  int|null $per_page 每页条数，最大 200 (optional, default to 20)
      * @param  string|null $search 按词、释义搜索 (optional)
      * @param  string|null $quality 质量；pending 含未评级的 (optional)
      * @param  string|null $category 百科分类 (optional)
-     * @param  bool|null $general 只要 studio 级术语（不属于任何 channel） (optional)
      * @param  string|null $order 排序字段 (optional, default to 'updated_at')
      * @param  string|null $dir 排序方向 (optional)
      * @param  int|null $page 页码 (optional)
@@ -829,10 +829,10 @@ class StudiosApi
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function getApiV3StudiosStudioTermsAsyncWithHttpInfo($studio, $per_page = 20, $search = null, $quality = null, $category = null, $general = null, $order = 'updated_at', $dir = null, $page = null, string $contentType = self::contentTypes['getApiV3StudiosStudioTerms'][0])
+    public function getApiV3StudiosStudioTermsAsyncWithHttpInfo($studio, $general = null, $per_page = 20, $search = null, $quality = null, $category = null, $order = 'updated_at', $dir = null, $page = null, string $contentType = self::contentTypes['getApiV3StudiosStudioTerms'][0])
     {
         $returnType = '\WikipaliApi\Model\GetApiV3ChannelsChannelTerms200Response';
-        $request = $this->getApiV3StudiosStudioTermsRequest($studio, $per_page, $search, $quality, $category, $general, $order, $dir, $page, $contentType);
+        $request = $this->getApiV3StudiosStudioTermsRequest($studio, $general, $per_page, $search, $quality, $category, $order, $dir, $page, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -874,11 +874,11 @@ class StudiosApi
      * Create request for operation 'getApiV3StudiosStudioTerms'
      *
      * @param  string $studio 用户或团队的 uuid (required)
+     * @param  bool|null $general 只要 studio 级术语（不属于任何 channel） (optional)
      * @param  int|null $per_page 每页条数，最大 200 (optional, default to 20)
      * @param  string|null $search 按词、释义搜索 (optional)
      * @param  string|null $quality 质量；pending 含未评级的 (optional)
      * @param  string|null $category 百科分类 (optional)
-     * @param  bool|null $general 只要 studio 级术语（不属于任何 channel） (optional)
      * @param  string|null $order 排序字段 (optional, default to 'updated_at')
      * @param  string|null $dir 排序方向 (optional)
      * @param  int|null $page 页码 (optional)
@@ -887,7 +887,7 @@ class StudiosApi
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function getApiV3StudiosStudioTermsRequest($studio, $per_page = 20, $search = null, $quality = null, $category = null, $general = null, $order = 'updated_at', $dir = null, $page = null, string $contentType = self::contentTypes['getApiV3StudiosStudioTerms'][0])
+    public function getApiV3StudiosStudioTermsRequest($studio, $general = null, $per_page = 20, $search = null, $quality = null, $category = null, $order = 'updated_at', $dir = null, $page = null, string $contentType = self::contentTypes['getApiV3StudiosStudioTerms'][0])
     {
 
         // verify the required parameter 'studio' is set
@@ -913,6 +913,15 @@ class StudiosApi
         $httpBody = '';
         $multipart = false;
 
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $general,
+            'general', // param base name
+            'boolean', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
         // query params
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
             $per_page,
@@ -945,15 +954,6 @@ class StudiosApi
             $category,
             'category', // param base name
             'string', // openApiType
-            'form', // style
-            true, // explode
-            false // required
-        ) ?? []);
-        // query params
-        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
-            $general,
-            'general', // param base name
-            'boolean', // openApiType
             'form', // style
             true, // explode
             false // required

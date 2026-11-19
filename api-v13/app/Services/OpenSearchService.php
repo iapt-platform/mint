@@ -434,6 +434,7 @@ class OpenSearchService
      * @type string|array $relatedId    按关联 ID 过滤（数组时命中任一）
      * @type string $author             按作者过滤
      * @type string $channel            按频道过滤（channel uuid）
+     * @type bool $aggregations       是否计算分面聚合，默认 true
      * @type array $highlight_pre_tags 高亮前置标签，默认 ['<mark>']
      * @type array $highlight_post_tags 高亮后置标签，默认 ['</mark>']
      *             }
@@ -564,7 +565,10 @@ class OpenSearchService
                     ],
                 ]
                 : $query,
-            'aggs' => [
+        ];
+
+        if ($params['aggregations'] ?? true) {
+            $dsl['aggs'] = [
                 'resource_type' => [
                     'terms' => ['field' => 'resource_type'],
                 ],
@@ -577,8 +581,8 @@ class OpenSearchService
                 'granularity' => [
                     'terms' => ['field' => 'granularity'],
                 ],
-            ],
-        ];
+            ];
+        }
 
         // 只有有搜索词时才开启高亮；字段按语种路由，避免把巴利文喂给中文分词器
         if ($queryText !== '') {

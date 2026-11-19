@@ -138,7 +138,7 @@ class SearchSuggestApi
      *
      * @throws \WikipaliApi\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \WikipaliApi\Model\GetApiV3Search200Response|\WikipaliApi\Model\ProblemDetails
+     * @return \WikipaliApi\Model\GetApiV3SearchSuggest200Response|\WikipaliApi\Model\ProblemDetails
      */
     public function getApiV3SearchSuggest($q, $fields = null, $language = null, $limit = 10, string $contentType = self::contentTypes['getApiV3SearchSuggest'][0])
     {
@@ -159,7 +159,7 @@ class SearchSuggestApi
      *
      * @throws \WikipaliApi\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \WikipaliApi\Model\GetApiV3Search200Response|\WikipaliApi\Model\ProblemDetails, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \WikipaliApi\Model\GetApiV3SearchSuggest200Response|\WikipaliApi\Model\ProblemDetails, HTTP status code, HTTP response headers (array of strings)
      */
     public function getApiV3SearchSuggestWithHttpInfo($q, $fields = null, $language = null, $limit = 10, string $contentType = self::contentTypes['getApiV3SearchSuggest'][0])
     {
@@ -191,7 +191,7 @@ class SearchSuggestApi
             switch($statusCode) {
                 case 200:
                     return $this->handleResponseWithDataType(
-                        '\WikipaliApi\Model\GetApiV3Search200Response',
+                        '\WikipaliApi\Model\GetApiV3SearchSuggest200Response',
                         $request,
                         $response,
                     );
@@ -219,7 +219,7 @@ class SearchSuggestApi
             }
 
             return $this->handleResponseWithDataType(
-                '\WikipaliApi\Model\GetApiV3Search200Response',
+                '\WikipaliApi\Model\GetApiV3SearchSuggest200Response',
                 $request,
                 $response,
             );
@@ -228,7 +228,7 @@ class SearchSuggestApi
                 case 200:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        '\WikipaliApi\Model\GetApiV3Search200Response',
+                        '\WikipaliApi\Model\GetApiV3SearchSuggest200Response',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -288,7 +288,7 @@ class SearchSuggestApi
      */
     public function getApiV3SearchSuggestAsyncWithHttpInfo($q, $fields = null, $language = null, $limit = 10, string $contentType = self::contentTypes['getApiV3SearchSuggest'][0])
     {
-        $returnType = '\WikipaliApi\Model\GetApiV3Search200Response';
+        $returnType = '\WikipaliApi\Model\GetApiV3SearchSuggest200Response';
         $request = $this->getApiV3SearchSuggestRequest($q, $fields, $language, $limit, $contentType);
 
         return $this->client

@@ -9044,19 +9044,19 @@ export interface paths {
         };
         /**
          * 全文检索
-         * @description 支持 fuzzy / exact / semantic / hybrid 四种检索模式，底层走 OpenSearch。
-         *     同样的参数也可以用 POST /v3/search 提交（参数多、URL 放不下时用）。
+         * @description 底层走 OpenSearch。同样的参数也可以用 `POST /v3/search` 放在请求体里提交。
+         *     翻页深度受 OpenSearch 限制：`page × per_page` 不能超过 10000，超出 422。
+         *     搜索服务连不上或超时回 503（`search-unavailable`）。
          *
-         *     实现：`V3\SearchPlusController@index`
+         *     实现：`V3\SearchController@index`
          */
         get: operations["get_api_v3_search"];
         put?: never;
         /**
          * 全文检索（POST）
-         * @description 与 `GET /v3/search` 完全等价，只是把参数放在请求体里——参数多、
-         *     尤其是 page_refs / related_id 这类数组时，URL 放不下。
+         * @description 与 `GET /v3/search` 完全等价，参数放在 JSON 请求体里（数组参数多、URL 放不下时用）。
          *
-         *     实现：`V3\SearchPlusController@store`
+         *     实现：`V3\SearchController@store`
          */
         post: operations["post_api_v3_search"];
         delete?: never;
@@ -9096,13 +9096,12 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * 按 id 取单条检索结果
-         * @description 直接从 OpenSearch 按文档 id 取回，不走检索。取不到返回 404。
+         * 按 id 取单条检索文档
+         * @description 直接从 OpenSearch 按文档 id 取回，带阅读用的 `display` HTML。
          *     整章正文文档（`tipitaka_chapter_{book}-{para}_{channel}`）按它所属 channel 判权限：
-         *     私有 channel 只有拥有者、团队成员、被共享的人能读（要带 token）。索引里收了所有 channel，
-         *     不在这里挡的话拼出 id 就能读到私有正文。
+         *     私有 channel 只有拥有者、团队成员、被共享的人能读（要带 token）。
          *
-         *     实现：`V3\SearchPlusController@show`
+         *     实现：`V3\SearchController@show`
          */
         get: operations["get_api_v3_search_search_"];
         put?: never;
@@ -40243,31 +40242,27 @@ export interface operations {
     get_api_v3_search: {
         parameters: {
             query: {
-                /** @description 搜索关键词 */
+                /** @description 检索词 */
                 q: string;
-                /** @description 页码 */
-                page?: number;
-                /** @description 每页数量，上限 100 */
-                page_size?: number;
-                /** @description 检索模式 */
+                /** @description 检索模式：fuzzy 多词模糊（默认）、exact 词形精确、semantic 语义向量、hybrid 模糊 + 语义、definition 黑体定义优先 */
                 search_mode?: "fuzzy" | "exact" | "semantic" | "hybrid" | "definition";
-                /** @description 资源类型 */
-                resource_type?: "article" | "term" | "dictionary" | "translation" | "origin_text" | "nissaya";
+                /** @description 资源类型：tipitaka 三藏（段落与整章）、original_text 原文分段、term 术语 */
+                resource_type?: "tipitaka" | "original_text" | "term";
                 /** @description 限定某个资源 id */
                 resource_id?: string;
                 /** @description 文档颗粒度 */
-                granularity?: "book" | "chapter" | "sutta" | "section" | "paragraph" | "sentence";
-                /**
-                 * @description 语言
-                 * @example zh-Hans
-                 */
+                granularity?: "book" | "chapter" | "session" | "paragraph";
+                /** @description 文档语言，如 pi、zh、en */
                 language?: string;
-                /** @description 文档分类，逗号分隔 */
-                category?: "pali" | "commentary" | "subcommentary";
-                /** @description 标签过滤，逗号分隔 */
+                /**
+                 * @description 分类，逗号分隔，须全部命中
+                 * @example sutta,mūla
+                 */
+                category?: string;
+                /** @description 标签，逗号分隔，命中任一 */
                 tags?: string;
                 /**
-                 * @description 页码标记
+                 * @description 页码标记，命中任一
                  * @example [
                  *       "V3.81",
                  *       "M3.58"
@@ -40275,17 +40270,22 @@ export interface operations {
                  */
                 page_refs?: unknown[];
                 /**
-                 * @description 关联 id
+                 * @description 关联 id（经文段落是 `{book}-{para}`），命中任一
                  * @example [
-                 *       "chapter_93-5",
-                 *       "m.n. 38"
+                 *       "93-5"
                  *     ]
                  */
                 related_id?: unknown[];
-                /** @description 按作者或译者过滤 */
+                /** @description 作者或译者 */
                 author?: string;
-                /** @description 按来源 channel 过滤 */
+                /** @description 来源 channel 的 uuid */
                 channel?: string;
+                /** @description 是否在 `meta.facets` 里返回按 resource_type / language / category / granularity 的分面计数 */
+                facets?: boolean;
+                /** @description 页码 */
+                page?: number;
+                /** @description 每页条数，上限 100 */
+                per_page?: number;
             };
             header?: never;
             path?: never;
@@ -40300,12 +40300,57 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: Record<string, never>[];
-                        meta?: components["schemas"]["PaginationMeta"];
+                        data?: {
+                            id?: string;
+                            resource_type?: string;
+                            resource_id?: string | null;
+                            granularity?: string | null;
+                            language?: string | null;
+                            related_id?: string | null;
+                            score?: number | null;
+                            title?: string;
+                            content?: string;
+                            highlight?: string | null;
+                            bold?: string[];
+                            path?: string | null;
+                            category?: string[];
+                            tags?: string[];
+                            updated_at?: string | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            display?: string;
+                        }[];
+                        meta?: {
+                            /** @description 当前页 */
+                            current_page?: number;
+                            /** @description 每页条数 */
+                            per_page?: number;
+                            /** @description 命中总数（total_relation 为 gte 时是下限） */
+                            total?: number;
+                            /** @description eq 精确，gte 表示「至少这么多」（OpenSearch 只精确计数到 10000） */
+                            total_relation?: string;
+                            /** @description 最后一页（受翻页深度限制） */
+                            last_page?: number;
+                            /** @description 分面计数，只在 facets=true 时出现。键是 resource_type / language / category / granularity */
+                            facets?: {
+                                [key: string]: {
+                                    key: string;
+                                    count: number;
+                                }[];
+                            };
+                        };
                     };
                 };
             };
             422: components["responses"]["ProblemValidation"];
+            /** @description 搜索服务暂不可用 */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
         };
     };
     post_api_v3_search: {
@@ -40318,7 +40363,7 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": {
-                    /** @description 搜索关键词 */
+                    /** @description 检索词 */
                     q: string;
                     /**
                      * @description 检索模式
@@ -40326,34 +40371,47 @@ export interface operations {
                      * @enum {string}
                      */
                     search_mode?: "fuzzy" | "exact" | "semantic" | "hybrid" | "definition";
-                    /** @description 资源类型 */
-                    resource_type?: string;
-                    /** @description 文档颗粒度 */
-                    granularity?: string;
-                    /** @description 语言 */
+                    /**
+                     * @description 资源类型
+                     * @enum {string}
+                     */
+                    resource_type?: "tipitaka" | "original_text" | "term";
+                    /** @description 限定某个资源 id */
+                    resource_id?: string;
+                    /**
+                     * @description 文档颗粒度
+                     * @enum {string}
+                     */
+                    granularity?: "book" | "chapter" | "session" | "paragraph";
+                    /** @description 文档语言 */
                     language?: string;
-                    /** @description 文档分类，逗号分隔 */
+                    /** @description 分类，逗号分隔，须全部命中 */
                     category?: string;
-                    /** @description 标签，逗号分隔 */
+                    /** @description 标签，逗号分隔，命中任一 */
                     tags?: string;
-                    /** @description 页码标记 */
+                    /** @description 页码标记，命中任一 */
                     page_refs?: unknown[];
-                    /** @description 关联 id */
+                    /** @description 关联 id，命中任一 */
                     related_id?: unknown[];
                     /** @description 作者或译者 */
                     author?: string;
-                    /** @description 来源 channel */
+                    /** @description 来源 channel 的 uuid */
                     channel?: string;
+                    /**
+                     * @description 是否返回分面计数
+                     * @default false
+                     */
+                    facets?: boolean;
                     /**
                      * @description 页码
                      * @default 1
                      */
                     page?: number;
                     /**
-                     * @description 每页数量，上限 100
+                     * @description 每页条数，上限 100
                      * @default 20
                      */
-                    page_size?: number;
+                    per_page?: number;
                 };
             };
         };
@@ -40365,11 +40423,57 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: Record<string, never>;
+                        data?: {
+                            id?: string;
+                            resource_type?: string;
+                            resource_id?: string | null;
+                            granularity?: string | null;
+                            language?: string | null;
+                            related_id?: string | null;
+                            score?: number | null;
+                            title?: string;
+                            content?: string;
+                            highlight?: string | null;
+                            bold?: string[];
+                            path?: string | null;
+                            category?: string[];
+                            tags?: string[];
+                            updated_at?: string | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            display?: string;
+                        }[];
+                        meta?: {
+                            /** @description 当前页 */
+                            current_page?: number;
+                            /** @description 每页条数 */
+                            per_page?: number;
+                            /** @description 命中总数（total_relation 为 gte 时是下限） */
+                            total?: number;
+                            /** @description eq 精确，gte 表示「至少这么多」 */
+                            total_relation?: string;
+                            /** @description 最后一页（受翻页深度限制） */
+                            last_page?: number;
+                            /** @description 分面计数，只在 facets=true 时出现。键是 resource_type / language / category / granularity */
+                            facets?: {
+                                [key: string]: {
+                                    key: string;
+                                    count: number;
+                                }[];
+                            };
+                        };
                     };
                 };
             };
             422: components["responses"]["ProblemValidation"];
+            /** @description 搜索服务暂不可用 */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
         };
     };
     get_api_v3_search_suggest: {
@@ -40427,7 +40531,25 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: Record<string, never>;
+                        data?: {
+                            id?: string;
+                            resource_type?: string;
+                            resource_id?: string | null;
+                            granularity?: string | null;
+                            language?: string | null;
+                            related_id?: string | null;
+                            score?: number | null;
+                            title?: string;
+                            content?: string;
+                            highlight?: string | null;
+                            bold?: string[];
+                            path?: string | null;
+                            category?: string[];
+                            tags?: string[];
+                            updated_at?: string | null;
+                            /** @description 仅在部分查询口径下返回。 */
+                            display?: string;
+                        };
                     };
                 };
             };
@@ -40441,6 +40563,15 @@ export interface operations {
                 };
             };
             422: components["responses"]["ProblemValidation"];
+            /** @description 搜索服务暂不可用 */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
         };
     };
     post_api_v3_sessions: {
