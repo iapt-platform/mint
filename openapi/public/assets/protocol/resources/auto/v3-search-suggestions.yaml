@@ -1,0 +1,85 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-search-suggestions.yaml
+get:
+  summary: 搜索建议
+  tags:
+    - search-suggestions
+  operationId: get_api_v3_search_suggestions
+  description: |-
+    按已输入的前缀给出补全候选，各字段合并后按分数排序、同一个词只出现一次。
+    搜索服务连不上或超时回 503（`search-unavailable`）。
+
+    实现：`V3\SearchSuggestionController@__invoke`
+  security:
+    - {  }
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: q
+      in: query
+      schema:
+        type: string
+      description: 已输入的前缀
+      required: true
+    -
+      name: fields
+      in: query
+      schema:
+        type: string
+      description: '在哪些字段上补全，逗号分隔，可选 title_pali、title_zh、content_pali、content_zh；不传则全部'
+      example: 'title_pali,content_pali'
+    -
+      name: limit
+      in: query
+      schema:
+        type: integer
+        default: 10
+      description: '最多返回几条，上限 50'
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    text:
+                      type: string
+                    source:
+                      type: string
+                    score:
+                      type: number
+                    doc_id:
+                      type: string
+                      nullable: true
+                    resource_type:
+                      type: string
+                      nullable: true
+                    language:
+                      type: string
+                      nullable: true
+                    granularity:
+                      type: string
+                      nullable: true
+                    category:
+                      type: array
+                      items: { type: string }
+              meta:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                    description: 本次返回的条数
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'
+    503:
+      description: 搜索服务暂不可用
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'

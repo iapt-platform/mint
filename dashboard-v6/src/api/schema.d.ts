@@ -9065,7 +9065,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v3/search-suggest": {
+    "/v3/search-suggestions": {
         parameters: {
             query?: never;
             header?: never;
@@ -9073,13 +9073,13 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * 搜索建议（自动补全）
-         * @description 按前缀给出补全候选，供搜索框实时提示。每个字段各自返回一组建议。
-         *     q 为空时返回 400。
+         * 搜索建议
+         * @description 按已输入的前缀给出补全候选，各字段合并后按分数排序、同一个词只出现一次。
+         *     搜索服务连不上或超时回 503（`search-unavailable`）。
          *
-         *     实现：`V3\SearchSuggestController@index`
+         *     实现：`V3\SearchSuggestionController@__invoke`
          */
-        get: operations["get_api_v3_search_suggest"];
+        get: operations["get_api_v3_search_suggestions"];
         put?: never;
         post?: never;
         delete?: never;
@@ -40476,19 +40476,17 @@ export interface operations {
             };
         };
     };
-    get_api_v3_search_suggest: {
+    get_api_v3_search_suggestions: {
         parameters: {
             query: {
-                /** @description 已输入的查询文本 */
+                /** @description 已输入的前缀 */
                 q: string;
-                /** @description 在哪些字段上补全，逗号分隔；不传则全查 */
-                fields?: "title" | "content" | "page_refs";
                 /**
-                 * @description 语言过滤
-                 * @example pali
+                 * @description 在哪些字段上补全，逗号分隔，可选 title_pali、title_zh、content_pali、content_zh；不传则全部
+                 * @example title_pali,content_pali
                  */
-                language?: string;
-                /** @description 每个字段返回的建议数，上限 50 */
+                fields?: string;
+                /** @description 最多返回几条，上限 50 */
                 limit?: number;
             };
             header?: never;
@@ -40504,12 +40502,33 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: Record<string, never>[];
-                        meta?: components["schemas"]["PaginationMeta"];
+                        data?: {
+                            text?: string;
+                            source?: string;
+                            score?: number;
+                            doc_id?: string | null;
+                            resource_type?: string | null;
+                            language?: string | null;
+                            granularity?: string | null;
+                            category?: string[];
+                        }[];
+                        meta?: {
+                            /** @description 本次返回的条数 */
+                            total?: number;
+                        };
                     };
                 };
             };
             422: components["responses"]["ProblemValidation"];
+            /** @description 搜索服务暂不可用 */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
         };
     };
     get_api_v3_search_search_: {

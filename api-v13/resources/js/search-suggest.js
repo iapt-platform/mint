@@ -1,3 +1,15 @@
+// 搜索框的前缀补全，调 GET /api/v3/search-suggestions（{data: [{text, resource_type, …}], meta}）
+
+/** 候选文本来自索引内容，插进 HTML 前必须转义 */
+const escapeHtml = (value) =>
+    String(value ?? "").replace(/[&<>"']/g, (ch) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;",
+    })[ch]);
+
 document.addEventListener("DOMContentLoaded", () => {
     const inputs = document.querySelectorAll(".search-input");
 
@@ -29,11 +41,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 const res = await fetch(url, {
                     signal: controller.signal,
+                    headers: { Accept: "application/json" },
                 });
+
+                // 补全只是辅助：失败（422 / 503 …）就不显示下拉，不打断输入
+                if (!res.ok) {
+                    dropdown.classList.remove("show");
+                    return;
+                }
 
                 const json = await res.json();
 
-                renderSuggestions(json.data.suggestions || []);
+                renderSuggestions(json.data || []);
             } catch (e) {
                 if (e.name !== "AbortError") {
                     console.error(e);
@@ -49,14 +68,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
             dropdown.innerHTML = list
                 .map((item) => {
+                    const text = escapeHtml(item.text);
                     return `
                     <button type="button"
                         class="dropdown-item"
-                        data-text="${item.text}">
+                        data-text="${text}">
 
                         <div class="d-flex justify-content-between">
-                            <span>${item.text}</span>
-                            <small class="text-muted">${item.resource_type}</small>
+                            <span>${text}</span>
+                            <small class="text-muted">${escapeHtml(item.resource_type)}</small>
                         </div>
                     </button>
                 `;

@@ -32,7 +32,7 @@
                 value="{{ $value }}"
                 placeholder="{{ $placeholder }}"
                 autocomplete="off"
-                data-suggest-url="/api/v3/search-suggest"
+                data-suggest-url="/api/v3/search-suggestions"
                 {{ $autofocus ? 'autofocus' : '' }} />
         </div>
 

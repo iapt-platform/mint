@@ -137,16 +137,12 @@ function normalizeArraySchemas(mixed &$node): void
     unset($value);
 }
 
-/** 修正 search-suggest / upgrade 的 200 响应 schema，使其与实现一致（/v3/search 已于 2026-11-19 对齐，不再打补丁） */
+/** 修正 upgrade 的 200 响应 schema，使其与实现一致（/v3/search 与 search-suggestions 已于 2026-11-19 对齐，不再打补丁） */
 function applyDriftPatches(array &$spec): void
 {
     $object = ['type' => 'object'];
     $dataObject = ['type' => 'object', 'properties' => ['data' => $object]];
-    $successData = ['type' => 'object', 'properties' => ['success' => ['type' => 'boolean'], 'data' => $object]];
 
-    if (isset($spec['paths']['/v3/search-suggest']['get']['responses']['200']['content']['application/json']['schema'])) {
-        $spec['paths']['/v3/search-suggest']['get']['responses']['200']['content']['application/json']['schema'] = $successData;
-    }
     if (isset($spec['paths']['/v3/upgrade']['get']['responses']['200']['content']['application/json']['schema'])) {
         $spec['paths']['/v3/upgrade']['get']['responses']['200']['content']['application/json']['schema'] = $dataObject;
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * GetApiV3SearchSuggest200Response
+ * GetApiV3SearchSuggestions200ResponseDataInner
  *
  * PHP version 8.1
  *
@@ -32,7 +32,7 @@ use \ArrayAccess;
 use \WikipaliApi\ObjectSerializer;
 
 /**
- * GetApiV3SearchSuggest200Response Class Doc Comment
+ * GetApiV3SearchSuggestions200ResponseDataInner Class Doc Comment
  *
  * @category Class
  * @package  WikipaliApi
@@ -40,7 +40,7 @@ use \WikipaliApi\ObjectSerializer;
  * @link     https://openapi-generator.tech
  * @implements \ArrayAccess<string, mixed>
  */
-class GetApiV3SearchSuggest200Response implements ModelInterface, ArrayAccess, \JsonSerializable
+class GetApiV3SearchSuggestions200ResponseDataInner implements ModelInterface, ArrayAccess, \JsonSerializable
 {
     public const DISCRIMINATOR = null;
 
@@ -49,7 +49,7 @@ class GetApiV3SearchSuggest200Response implements ModelInterface, ArrayAccess, \
      *
      * @var string
      */
-    protected static $openAPIModelName = 'get_api_v3_search_suggest_200_response';
+    protected static $openAPIModelName = 'get_api_v3_search_suggestions_200_response_data_inner';
 
     /**
      * Array of property to type mappings. Used for (de)serialization
@@ -57,8 +57,14 @@ class GetApiV3SearchSuggest200Response implements ModelInterface, ArrayAccess, \
      * @var string[]
      */
     protected static $openAPITypes = [
-        'success' => 'bool',
-        'data' => 'object'
+        'text' => 'string',
+        'source' => 'string',
+        'score' => 'float',
+        'doc_id' => 'string',
+        'resource_type' => 'string',
+        'language' => 'string',
+        'granularity' => 'string',
+        'category' => 'string[]'
     ];
 
     /**
@@ -69,8 +75,14 @@ class GetApiV3SearchSuggest200Response implements ModelInterface, ArrayAccess, \
      * @psalm-var array<string, string|null>
      */
     protected static $openAPIFormats = [
-        'success' => null,
-        'data' => null
+        'text' => null,
+        'source' => null,
+        'score' => null,
+        'doc_id' => null,
+        'resource_type' => null,
+        'language' => null,
+        'granularity' => null,
+        'category' => null
     ];
 
     /**
@@ -79,8 +91,14 @@ class GetApiV3SearchSuggest200Response implements ModelInterface, ArrayAccess, \
      * @var boolean[]
      */
     protected static array $openAPINullables = [
-        'success' => false,
-        'data' => false
+        'text' => false,
+        'source' => false,
+        'score' => false,
+        'doc_id' => true,
+        'resource_type' => true,
+        'language' => true,
+        'granularity' => true,
+        'category' => false
     ];
 
     /**
@@ -169,8 +187,14 @@ class GetApiV3SearchSuggest200Response implements ModelInterface, ArrayAccess, \
      * @var string[]
      */
     protected static $attributeMap = [
-        'success' => 'success',
-        'data' => 'data'
+        'text' => 'text',
+        'source' => 'source',
+        'score' => 'score',
+        'doc_id' => 'doc_id',
+        'resource_type' => 'resource_type',
+        'language' => 'language',
+        'granularity' => 'granularity',
+        'category' => 'category'
     ];
 
     /**
@@ -179,8 +203,14 @@ class GetApiV3SearchSuggest200Response implements ModelInterface, ArrayAccess, \
      * @var string[]
      */
     protected static $setters = [
-        'success' => 'setSuccess',
-        'data' => 'setData'
+        'text' => 'setText',
+        'source' => 'setSource',
+        'score' => 'setScore',
+        'doc_id' => 'setDocId',
+        'resource_type' => 'setResourceType',
+        'language' => 'setLanguage',
+        'granularity' => 'setGranularity',
+        'category' => 'setCategory'
     ];
 
     /**
@@ -189,8 +219,14 @@ class GetApiV3SearchSuggest200Response implements ModelInterface, ArrayAccess, \
      * @var string[]
      */
     protected static $getters = [
-        'success' => 'getSuccess',
-        'data' => 'getData'
+        'text' => 'getText',
+        'source' => 'getSource',
+        'score' => 'getScore',
+        'doc_id' => 'getDocId',
+        'resource_type' => 'getResourceType',
+        'language' => 'getLanguage',
+        'granularity' => 'getGranularity',
+        'category' => 'getCategory'
     ];
 
     /**
@@ -250,8 +286,14 @@ class GetApiV3SearchSuggest200Response implements ModelInterface, ArrayAccess, \
      */
     public function __construct(?array $data = null)
     {
-        $this->setIfExists('success', $data ?? [], null);
-        $this->setIfExists('data', $data ?? [], null);
+        $this->setIfExists('text', $data ?? [], null);
+        $this->setIfExists('source', $data ?? [], null);
+        $this->setIfExists('score', $data ?? [], null);
+        $this->setIfExists('doc_id', $data ?? [], null);
+        $this->setIfExists('resource_type', $data ?? [], null);
+        $this->setIfExists('language', $data ?? [], null);
+        $this->setIfExists('granularity', $data ?? [], null);
+        $this->setIfExists('category', $data ?? [], null);
     }
 
     /**
@@ -297,55 +339,245 @@ class GetApiV3SearchSuggest200Response implements ModelInterface, ArrayAccess, \
 
 
     /**
-     * Gets success
+     * Gets text
      *
-     * @return bool|null
+     * @return string|null
      */
-    public function getSuccess()
+    public function getText()
     {
-        return $this->container['success'];
+        return $this->container['text'];
     }
 
     /**
-     * Sets success
+     * Sets text
      *
-     * @param bool|null $success success
+     * @param string|null $text text
      *
      * @return self
      */
-    public function setSuccess($success)
+    public function setText($text)
     {
-        if (is_null($success)) {
-            throw new \InvalidArgumentException('non-nullable success cannot be null');
+        if (is_null($text)) {
+            throw new \InvalidArgumentException('non-nullable text cannot be null');
         }
-        $this->container['success'] = $success;
+        $this->container['text'] = $text;
 
         return $this;
     }
 
     /**
-     * Gets data
+     * Gets source
      *
-     * @return object|null
+     * @return string|null
      */
-    public function getData()
+    public function getSource()
     {
-        return $this->container['data'];
+        return $this->container['source'];
     }
 
     /**
-     * Sets data
+     * Sets source
      *
-     * @param object|null $data data
+     * @param string|null $source source
      *
      * @return self
      */
-    public function setData($data)
+    public function setSource($source)
     {
-        if (is_null($data)) {
-            throw new \InvalidArgumentException('non-nullable data cannot be null');
+        if (is_null($source)) {
+            throw new \InvalidArgumentException('non-nullable source cannot be null');
         }
-        $this->container['data'] = $data;
+        $this->container['source'] = $source;
+
+        return $this;
+    }
+
+    /**
+     * Gets score
+     *
+     * @return float|null
+     */
+    public function getScore()
+    {
+        return $this->container['score'];
+    }
+
+    /**
+     * Sets score
+     *
+     * @param float|null $score score
+     *
+     * @return self
+     */
+    public function setScore($score)
+    {
+        if (is_null($score)) {
+            throw new \InvalidArgumentException('non-nullable score cannot be null');
+        }
+        $this->container['score'] = $score;
+
+        return $this;
+    }
+
+    /**
+     * Gets doc_id
+     *
+     * @return string|null
+     */
+    public function getDocId()
+    {
+        return $this->container['doc_id'];
+    }
+
+    /**
+     * Sets doc_id
+     *
+     * @param string|null $doc_id doc_id
+     *
+     * @return self
+     */
+    public function setDocId($doc_id)
+    {
+        if (is_null($doc_id)) {
+            array_push($this->openAPINullablesSetToNull, 'doc_id');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('doc_id', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+        $this->container['doc_id'] = $doc_id;
+
+        return $this;
+    }
+
+    /**
+     * Gets resource_type
+     *
+     * @return string|null
+     */
+    public function getResourceType()
+    {
+        return $this->container['resource_type'];
+    }
+
+    /**
+     * Sets resource_type
+     *
+     * @param string|null $resource_type resource_type
+     *
+     * @return self
+     */
+    public function setResourceType($resource_type)
+    {
+        if (is_null($resource_type)) {
+            array_push($this->openAPINullablesSetToNull, 'resource_type');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('resource_type', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+        $this->container['resource_type'] = $resource_type;
+
+        return $this;
+    }
+
+    /**
+     * Gets language
+     *
+     * @return string|null
+     */
+    public function getLanguage()
+    {
+        return $this->container['language'];
+    }
+
+    /**
+     * Sets language
+     *
+     * @param string|null $language language
+     *
+     * @return self
+     */
+    public function setLanguage($language)
+    {
+        if (is_null($language)) {
+            array_push($this->openAPINullablesSetToNull, 'language');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('language', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+        $this->container['language'] = $language;
+
+        return $this;
+    }
+
+    /**
+     * Gets granularity
+     *
+     * @return string|null
+     */
+    public function getGranularity()
+    {
+        return $this->container['granularity'];
+    }
+
+    /**
+     * Sets granularity
+     *
+     * @param string|null $granularity granularity
+     *
+     * @return self
+     */
+    public function setGranularity($granularity)
+    {
+        if (is_null($granularity)) {
+            array_push($this->openAPINullablesSetToNull, 'granularity');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('granularity', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+        $this->container['granularity'] = $granularity;
+
+        return $this;
+    }
+
+    /**
+     * Gets category
+     *
+     * @return string[]|null
+     */
+    public function getCategory()
+    {
+        return $this->container['category'];
+    }
+
+    /**
+     * Sets category
+     *
+     * @param string[]|null $category category
+     *
+     * @return self
+     */
+    public function setCategory($category)
+    {
+        if (is_null($category)) {
+            throw new \InvalidArgumentException('non-nullable category cannot be null');
+        }
+        $this->container['category'] = $category;
 
         return $this;
     }

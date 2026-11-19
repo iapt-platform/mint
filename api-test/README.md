@@ -187,18 +187,17 @@ php run.php --username=<username> --password=<password> --server=staging
 
 | 端点                     | spec 说                                          | 实际                                                                        | 处理                                                                                   |
 | ------------------------ | ------------------------------------------------ | --------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| `GET /v3/search-suggest` | 200 `{data:数组, meta}`；空 q 422                | 200 `{success, data:{query,suggestions}}`；空 q 400 `{success:false,error}` | 同上修 schema；空 q 用例按实际 400 断言                                                |
 | `GET /v3/upgrade`        | 200 `{data:数组, meta}`                          | 200 `{data:{status:"ok"}}`                                                  | 修 schema 为 `{data:对象}`                                                             |
 
-根因是这两个控制器还没迁到 v3 的 Resource 信封（`{data}` 原生形状、错误体 RFC 9457
+根因是这个控制器还没迁到 v3 的 Resource 信封（`{data}` 原生形状、错误体 RFC 9457
 Problem Details、成败只看状态码）。正确的长期修法在 api-v13 侧，这里只让测试客户端能用、
-把漂移显式记录。`filter-v3.php` 里的 `applyDriftPatches()` 就是这两处补丁，改对齐后可删。（`/v3/search` 已于 2026-11-19 对齐，补丁已删。）
+把漂移显式记录。`filter-v3.php` 里的 `applyDriftPatches()` 就是这处补丁，改对齐后可删。（`/v3/search`、`/v3/search-suggestions` 已于 2026-11-19 对齐，补丁已删。）
 
 ## 环境注意
 
 - **pspell / xdebug 启动警告**：本机 PHP CLI 的 pspell 扩展与 PHP 版本不匹配，每次 `php`
   都会在 stderr 打警告，与测试无关，可忽略。
-- **staging 的 OpenSearch**：`/v3/search?facets=true`、`/v3/search-suggest` 在 staging 会 500
+- **staging 的 OpenSearch**：`/v3/search?facets=true`、`/v3/search-suggestions` 在 staging 会 500
   （索引 mapping 与代码不一致：`resource_type` 是 text 不能聚合、`content.suggest.pali` 不是 completion）。
   `/v3/search` 默认不再算聚合，不带 facets 时不受影响。
   这是 staging 环境问题，本地跑这几条是绿的。

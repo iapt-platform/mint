@@ -10,9 +10,9 @@
 */
 
 use App\Http\Controllers\V3\SearchController;
-use App\Http\Controllers\V3\SearchSuggestController;
+use App\Http\Controllers\V3\SearchSuggestionController;
 use Illuminate\Support\Facades\Route;
 
 // 只注册真正实现了的动作——空方法会在 OpenAPI 里变成幽灵端点
 Route::apiResource('search', SearchController::class)->only(['index', 'store', 'show']);
-Route::apiResource('search-suggest', SearchSuggestController::class)->only(['index']);
+Route::get('search-suggestions', SearchSuggestionController::class)->name('search-suggestions.index');

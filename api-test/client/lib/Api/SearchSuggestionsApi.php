@@ -1,6 +1,6 @@
 <?php
 /**
- * SearchSuggestApi
+ * SearchSuggestionsApi
  * PHP version 8.1
  *
  * @category Class
@@ -43,14 +43,14 @@ use WikipaliApi\HeaderSelector;
 use WikipaliApi\ObjectSerializer;
 
 /**
- * SearchSuggestApi Class Doc Comment
+ * SearchSuggestionsApi Class Doc Comment
  *
  * @category Class
  * @package  WikipaliApi
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech
  */
-class SearchSuggestApi
+class SearchSuggestionsApi
 {
     /**
      * @var ClientInterface
@@ -74,7 +74,7 @@ class SearchSuggestApi
 
     /** @var string[] $contentTypes **/
     public const contentTypes = [
-        'getApiV3SearchSuggest' => [
+        'getApiV3SearchSuggestions' => [
             'application/json',
         ],
     ];
@@ -126,44 +126,42 @@ class SearchSuggestApi
     }
 
     /**
-     * Operation getApiV3SearchSuggest
+     * Operation getApiV3SearchSuggestions
      *
-     * 搜索建议（自动补全）
+     * 搜索建议
      *
-     * @param  string $q 已输入的查询文本 (required)
-     * @param  string|null $fields 在哪些字段上补全，逗号分隔；不传则全查 (optional)
-     * @param  string|null $language 语言过滤 (optional)
-     * @param  int|null $limit 每个字段返回的建议数，上限 50 (optional, default to 10)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3SearchSuggest'] to see the possible values for this operation
+     * @param  string $q 已输入的前缀 (required)
+     * @param  string|null $fields 在哪些字段上补全，逗号分隔，可选 title_pali、title_zh、content_pali、content_zh；不传则全部 (optional)
+     * @param  int|null $limit 最多返回几条，上限 50 (optional, default to 10)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3SearchSuggestions'] to see the possible values for this operation
      *
      * @throws \WikipaliApi\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \WikipaliApi\Model\GetApiV3SearchSuggest200Response|\WikipaliApi\Model\ProblemDetails
+     * @return \WikipaliApi\Model\GetApiV3SearchSuggestions200Response|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails
      */
-    public function getApiV3SearchSuggest($q, $fields = null, $language = null, $limit = 10, string $contentType = self::contentTypes['getApiV3SearchSuggest'][0])
+    public function getApiV3SearchSuggestions($q, $fields = null, $limit = 10, string $contentType = self::contentTypes['getApiV3SearchSuggestions'][0])
     {
-        list($response) = $this->getApiV3SearchSuggestWithHttpInfo($q, $fields, $language, $limit, $contentType);
+        list($response) = $this->getApiV3SearchSuggestionsWithHttpInfo($q, $fields, $limit, $contentType);
         return $response;
     }
 
     /**
-     * Operation getApiV3SearchSuggestWithHttpInfo
+     * Operation getApiV3SearchSuggestionsWithHttpInfo
      *
-     * 搜索建议（自动补全）
+     * 搜索建议
      *
-     * @param  string $q 已输入的查询文本 (required)
-     * @param  string|null $fields 在哪些字段上补全，逗号分隔；不传则全查 (optional)
-     * @param  string|null $language 语言过滤 (optional)
-     * @param  int|null $limit 每个字段返回的建议数，上限 50 (optional, default to 10)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3SearchSuggest'] to see the possible values for this operation
+     * @param  string $q 已输入的前缀 (required)
+     * @param  string|null $fields 在哪些字段上补全，逗号分隔，可选 title_pali、title_zh、content_pali、content_zh；不传则全部 (optional)
+     * @param  int|null $limit 最多返回几条，上限 50 (optional, default to 10)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3SearchSuggestions'] to see the possible values for this operation
      *
      * @throws \WikipaliApi\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \WikipaliApi\Model\GetApiV3SearchSuggest200Response|\WikipaliApi\Model\ProblemDetails, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \WikipaliApi\Model\GetApiV3SearchSuggestions200Response|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getApiV3SearchSuggestWithHttpInfo($q, $fields = null, $language = null, $limit = 10, string $contentType = self::contentTypes['getApiV3SearchSuggest'][0])
+    public function getApiV3SearchSuggestionsWithHttpInfo($q, $fields = null, $limit = 10, string $contentType = self::contentTypes['getApiV3SearchSuggestions'][0])
     {
-        $request = $this->getApiV3SearchSuggestRequest($q, $fields, $language, $limit, $contentType);
+        $request = $this->getApiV3SearchSuggestionsRequest($q, $fields, $limit, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -191,11 +189,17 @@ class SearchSuggestApi
             switch($statusCode) {
                 case 200:
                     return $this->handleResponseWithDataType(
-                        '\WikipaliApi\Model\GetApiV3SearchSuggest200Response',
+                        '\WikipaliApi\Model\GetApiV3SearchSuggestions200Response',
                         $request,
                         $response,
                     );
                 case 422:
+                    return $this->handleResponseWithDataType(
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $request,
+                        $response,
+                    );
+                case 503:
                     return $this->handleResponseWithDataType(
                         '\WikipaliApi\Model\ProblemDetails',
                         $request,
@@ -219,7 +223,7 @@ class SearchSuggestApi
             }
 
             return $this->handleResponseWithDataType(
-                '\WikipaliApi\Model\GetApiV3SearchSuggest200Response',
+                '\WikipaliApi\Model\GetApiV3SearchSuggestions200Response',
                 $request,
                 $response,
             );
@@ -228,12 +232,20 @@ class SearchSuggestApi
                 case 200:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        '\WikipaliApi\Model\GetApiV3SearchSuggest200Response',
+                        '\WikipaliApi\Model\GetApiV3SearchSuggestions200Response',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
                     throw $e;
                 case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 503:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
                         '\WikipaliApi\Model\ProblemDetails',
@@ -249,22 +261,21 @@ class SearchSuggestApi
     }
 
     /**
-     * Operation getApiV3SearchSuggestAsync
+     * Operation getApiV3SearchSuggestionsAsync
      *
-     * 搜索建议（自动补全）
+     * 搜索建议
      *
-     * @param  string $q 已输入的查询文本 (required)
-     * @param  string|null $fields 在哪些字段上补全，逗号分隔；不传则全查 (optional)
-     * @param  string|null $language 语言过滤 (optional)
-     * @param  int|null $limit 每个字段返回的建议数，上限 50 (optional, default to 10)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3SearchSuggest'] to see the possible values for this operation
+     * @param  string $q 已输入的前缀 (required)
+     * @param  string|null $fields 在哪些字段上补全，逗号分隔，可选 title_pali、title_zh、content_pali、content_zh；不传则全部 (optional)
+     * @param  int|null $limit 最多返回几条，上限 50 (optional, default to 10)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3SearchSuggestions'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function getApiV3SearchSuggestAsync($q, $fields = null, $language = null, $limit = 10, string $contentType = self::contentTypes['getApiV3SearchSuggest'][0])
+    public function getApiV3SearchSuggestionsAsync($q, $fields = null, $limit = 10, string $contentType = self::contentTypes['getApiV3SearchSuggestions'][0])
     {
-        return $this->getApiV3SearchSuggestAsyncWithHttpInfo($q, $fields, $language, $limit, $contentType)
+        return $this->getApiV3SearchSuggestionsAsyncWithHttpInfo($q, $fields, $limit, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -273,23 +284,22 @@ class SearchSuggestApi
     }
 
     /**
-     * Operation getApiV3SearchSuggestAsyncWithHttpInfo
+     * Operation getApiV3SearchSuggestionsAsyncWithHttpInfo
      *
-     * 搜索建议（自动补全）
+     * 搜索建议
      *
-     * @param  string $q 已输入的查询文本 (required)
-     * @param  string|null $fields 在哪些字段上补全，逗号分隔；不传则全查 (optional)
-     * @param  string|null $language 语言过滤 (optional)
-     * @param  int|null $limit 每个字段返回的建议数，上限 50 (optional, default to 10)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3SearchSuggest'] to see the possible values for this operation
+     * @param  string $q 已输入的前缀 (required)
+     * @param  string|null $fields 在哪些字段上补全，逗号分隔，可选 title_pali、title_zh、content_pali、content_zh；不传则全部 (optional)
+     * @param  int|null $limit 最多返回几条，上限 50 (optional, default to 10)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3SearchSuggestions'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function getApiV3SearchSuggestAsyncWithHttpInfo($q, $fields = null, $language = null, $limit = 10, string $contentType = self::contentTypes['getApiV3SearchSuggest'][0])
+    public function getApiV3SearchSuggestionsAsyncWithHttpInfo($q, $fields = null, $limit = 10, string $contentType = self::contentTypes['getApiV3SearchSuggestions'][0])
     {
-        $returnType = '\WikipaliApi\Model\GetApiV3SearchSuggest200Response';
-        $request = $this->getApiV3SearchSuggestRequest($q, $fields, $language, $limit, $contentType);
+        $returnType = '\WikipaliApi\Model\GetApiV3SearchSuggestions200Response';
+        $request = $this->getApiV3SearchSuggestionsRequest($q, $fields, $limit, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -328,32 +338,30 @@ class SearchSuggestApi
     }
 
     /**
-     * Create request for operation 'getApiV3SearchSuggest'
+     * Create request for operation 'getApiV3SearchSuggestions'
      *
-     * @param  string $q 已输入的查询文本 (required)
-     * @param  string|null $fields 在哪些字段上补全，逗号分隔；不传则全查 (optional)
-     * @param  string|null $language 语言过滤 (optional)
-     * @param  int|null $limit 每个字段返回的建议数，上限 50 (optional, default to 10)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3SearchSuggest'] to see the possible values for this operation
+     * @param  string $q 已输入的前缀 (required)
+     * @param  string|null $fields 在哪些字段上补全，逗号分隔，可选 title_pali、title_zh、content_pali、content_zh；不传则全部 (optional)
+     * @param  int|null $limit 最多返回几条，上限 50 (optional, default to 10)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3SearchSuggestions'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function getApiV3SearchSuggestRequest($q, $fields = null, $language = null, $limit = 10, string $contentType = self::contentTypes['getApiV3SearchSuggest'][0])
+    public function getApiV3SearchSuggestionsRequest($q, $fields = null, $limit = 10, string $contentType = self::contentTypes['getApiV3SearchSuggestions'][0])
     {
 
         // verify the required parameter 'q' is set
         if ($q === null || (is_array($q) && count($q) === 0)) {
             throw new \InvalidArgumentException(
-                'Missing the required parameter $q when calling getApiV3SearchSuggest'
+                'Missing the required parameter $q when calling getApiV3SearchSuggestions'
             );
         }
 
 
 
 
-
-        $resourcePath = '/v3/search-suggest';
+        $resourcePath = '/v3/search-suggestions';
         $formParams = [];
         $queryParams = [];
         $headerParams = [];
@@ -373,15 +381,6 @@ class SearchSuggestApi
         $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
             $fields,
             'fields', // param base name
-            'string', // openApiType
-            'form', // style
-            true, // explode
-            false // required
-        ) ?? []);
-        // query params
-        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
-            $language,
-            'language', // param base name
             'string', // openApiType
             'form', // style
             true, // explode

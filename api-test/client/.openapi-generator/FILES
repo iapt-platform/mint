@@ -27,7 +27,7 @@ docs/Api/ProgressApi.md
 docs/Api/ReactionsApi.md
 docs/Api/ReadingTimeApi.md
 docs/Api/SearchApi.md
-docs/Api/SearchSuggestApi.md
+docs/Api/SearchSuggestionsApi.md
 docs/Api/SessionsApi.md
 docs/Api/StudiosApi.md
 docs/Api/TermsApi.md
@@ -137,7 +137,9 @@ docs/Model/GetApiV3Search200ResponseDataInner.md
 docs/Model/GetApiV3Search200ResponseMeta.md
 docs/Model/GetApiV3Search200ResponseMetaFacetsValueInner.md
 docs/Model/GetApiV3SearchSearch200Response.md
-docs/Model/GetApiV3SearchSuggest200Response.md
+docs/Model/GetApiV3SearchSuggestions200Response.md
+docs/Model/GetApiV3SearchSuggestions200ResponseDataInner.md
+docs/Model/GetApiV3SearchSuggestions200ResponseMeta.md
 docs/Model/GetApiV3TipitakaChannels200Response.md
 docs/Model/GetApiV3TipitakaChannels200ResponseDataInner.md
 docs/Model/GetApiV3TipitakaChapterChannelsBookPara200Response.md
@@ -253,7 +255,7 @@ lib/Api/ProgressApi.php
 lib/Api/ReactionsApi.php
 lib/Api/ReadingTimeApi.php
 lib/Api/SearchApi.php
-lib/Api/SearchSuggestApi.php
+lib/Api/SearchSuggestionsApi.php
 lib/Api/SessionsApi.php
 lib/Api/StudiosApi.php
 lib/Api/TermsApi.php
@@ -367,7 +369,9 @@ lib/Model/GetApiV3Search200ResponseDataInner.php
 lib/Model/GetApiV3Search200ResponseMeta.php
 lib/Model/GetApiV3Search200ResponseMetaFacetsValueInner.php
 lib/Model/GetApiV3SearchSearch200Response.php
-lib/Model/GetApiV3SearchSuggest200Response.php
+lib/Model/GetApiV3SearchSuggestions200Response.php
+lib/Model/GetApiV3SearchSuggestions200ResponseDataInner.php
+lib/Model/GetApiV3SearchSuggestions200ResponseMeta.php
 lib/Model/GetApiV3TipitakaChannels200Response.php
 lib/Model/GetApiV3TipitakaChannels200ResponseDataInner.php
 lib/Model/GetApiV3TipitakaChapterChannelsBookPara200Response.php
@@ -485,7 +489,7 @@ test/Api/ProgressApiTest.php
 test/Api/ReactionsApiTest.php
 test/Api/ReadingTimeApiTest.php
 test/Api/SearchApiTest.php
-test/Api/SearchSuggestApiTest.php
+test/Api/SearchSuggestionsApiTest.php
 test/Api/SessionsApiTest.php
 test/Api/StudiosApiTest.php
 test/Api/TermsApiTest.php
@@ -595,7 +599,9 @@ test/Model/GetApiV3Search200ResponseMetaFacetsValueInnerTest.php
 test/Model/GetApiV3Search200ResponseMetaTest.php
 test/Model/GetApiV3Search200ResponseTest.php
 test/Model/GetApiV3SearchSearch200ResponseTest.php
-test/Model/GetApiV3SearchSuggest200ResponseTest.php
+test/Model/GetApiV3SearchSuggestions200ResponseDataInnerTest.php
+test/Model/GetApiV3SearchSuggestions200ResponseMetaTest.php
+test/Model/GetApiV3SearchSuggestions200ResponseTest.php
 test/Model/GetApiV3TipitakaChannels200ResponseDataInnerTest.php
 test/Model/GetApiV3TipitakaChannels200ResponseTest.php
 test/Model/GetApiV3TipitakaChapterChannelsBookPara200ResponseDataInnerChannelTest.php

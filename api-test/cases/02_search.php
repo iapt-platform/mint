@@ -1,7 +1,7 @@
 <?php
 
 use \WikipaliApi\Api\SearchApi;
-use \WikipaliApi\Api\SearchSuggestApi;
+use \WikipaliApi\Api\SearchSuggestionsApi;
 use \WikipaliApi\Model\PostApiV3SearchRequest;
 
 /** 一条命中必须有的字段（v3 归一化后的形状，不再透出 OpenSearch 的 _source） */
@@ -78,14 +78,26 @@ test('GET /v3/search/{id} → 404（不存在的文档）', function () {
     assert_problem($res, 'search show 404');
 });
 
-test('GET /v3/search-suggest?q=dukkha → 200', function () {
-    $res = request(fn () => api(SearchSuggestApi::class)->getApiV3SearchSuggestWithHttpInfo(fixtures()['search_q']));
-    assert_status(200, $res, 'search-suggest');
-    assert_has_key('data', $res['body'], 'search-suggest');
+test('GET /v3/search-suggestions?q=dukkha → 200 {data, meta}', function () {
+    $res = request(fn () => api(SearchSuggestionsApi::class)->getApiV3SearchSuggestionsWithHttpInfo(fixtures()['search_q'], null, 5));
+    assert_status(200, $res, 'search-suggestions');
+    assert_has_key('data', $res['body'], 'search-suggestions');
+    assert_has_key('total', $res['body']['meta'] ?? null, 'search-suggestions meta');
+    if (count($res['body']['data']) > 5) {
+        fail('search-suggestions：limit=5 却返回了 '.count($res['body']['data']).' 条');
+    }
+    $texts = array_map(fn ($s) => mb_strtolower($s['text']), $res['body']['data']);
+    if (count($texts) !== count(array_unique($texts))) {
+        fail('search-suggestions：同一个词出现了不止一次');
+    }
+    foreach ($res['body']['data'] as $s) {
+        foreach (['text', 'source', 'score', 'doc_id', 'resource_type', 'language', 'granularity', 'category'] as $key) {
+            assert_has_key($key, $s, 'search-suggestions 条目');
+        }
+    }
 });
 
-test('GET /v3/search-suggest?q= → 400（空查询）', function () {
-    // 描述里写明「q 为空返回 400」；spec 只登记了 422，这里按实际 400 断言。
-    $res = raw('GET', '/v3/search-suggest', ['q' => '']);
-    assert_status(400, $res, 'search-suggest 空 q');
+test('GET /v3/search-suggestions（缺 q / 未知字段）→ 422', function () {
+    assert_field_error('q', raw('GET', '/v3/search-suggestions', ['q' => '']), 'search-suggestions 空 q');
+    assert_field_error('fields', raw('GET', '/v3/search-suggestions', ['q' => 'd', 'fields' => 'title']), 'search-suggestions 未知字段');
 });

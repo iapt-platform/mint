@@ -1363,8 +1363,14 @@ class OpenSearchService
             ];
         }
 
-        $dsl = ['suggest' => $suggests];
+        // 每条候选只带出处的元数据，不把整篇文档（正文、向量）拉回来
+        $dsl = [
+            '_source' => ['resource_type', 'language', 'granularity', 'category'],
+            'suggest' => $suggests,
+        ];
 
+        // FIXME: completion suggester 会忽略 query，这个语言过滤从来没生效过（v3 已不再传）。
+        // 真要按语言过滤得给 *.suggest.* 字段配 completion context 并重建索引。
         if ($language) {
             $dsl['query'] = ['term' => ['language' => $language]];
         }

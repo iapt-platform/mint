@@ -4,6 +4,7 @@ namespace App\Services\V3;
 
 use App\Exceptions\BusinessException;
 use App\Http\Requests\V3\IndexSearchRequest;
+use App\Http\Requests\V3\IndexSearchSuggestionRequest;
 use App\Services\OpenSearchService;
 use Closure;
 use OpenSearch\Exception\NotFoundHttpException;
@@ -13,7 +14,7 @@ use OpenSearch\Exception\TooManyRequestsHttpException;
 use Psr\Http\Client\ClientExceptionInterface;
 
 /**
- * v3 全文检索：把 OpenSearch 的原始命中归一化成对外的扁平结构。
+ * v3 全文检索与搜索建议：把 OpenSearch 的原始结果归一化成对外的扁平结构。
  *
  * 查询 DSL 仍由共享的 OpenSearchService 构造（Library 检索页与 AITermService 也在用），
  * 这里只负责入参映射、异常分类和输出形状——不暴露 `_source` / `hits.hits` 这类 OpenSearch 内部结构。
@@ -106,6 +107,50 @@ class SearchService
         }
 
         return self::hit($raw);
+    }
+
+    /**
+     * 搜索框的前缀补全。
+     *
+     * 各字段的候选合在一起按分数排，同一个词只留分数最高的一条，最多 limit 条
+     * （共享 Service 的 size 是按字段算的，这里每个字段取满 limit 再统一截断）。
+     *
+     * @param  array<string, mixed>  $input  IndexSearchSuggestionRequest::validated()
+     * @return list<array{text: string, source: string, score: float, doc_id: string|null, resource_type: string|null, language: string|null, granularity: string|null, category: list<string>}>
+     */
+    public function suggest(array $input): array
+    {
+        $limit = (int) ($input['limit'] ?? 10);
+        $fields = isset($input['fields'])
+            ? IndexSearchSuggestionRequest::splitFields($input['fields'])
+            : IndexSearchSuggestionRequest::FIELDS;
+
+        $raw = $this->call(fn () => $this->search->suggest($input['q'], $fields, null, $limit));
+
+        $items = [];
+        foreach ($raw as $option) {
+            $text = (string) ($option['text'] ?? '');
+            $key = mb_strtolower($text);
+            if ($text === '' || isset($items[$key])) {
+                continue;   // 已按分数降序，先到的分数最高
+            }
+            $source = $option['doc_source'] ?? [];
+            $items[$key] = [
+                'text' => $text,
+                'source' => (string) $option['source'],
+                'score' => round((float) ($option['score'] ?? 0), 2),
+                'doc_id' => isset($option['doc_id']) ? (string) $option['doc_id'] : null,
+                'resource_type' => isset($source['resource_type']) ? (string) $source['resource_type'] : null,
+                'language' => isset($source['language']) ? (string) $source['language'] : null,
+                'granularity' => isset($source['granularity']) ? (string) $source['granularity'] : null,
+                'category' => array_values((array) ($source['category'] ?? [])),
+            ];
+            if (count($items) >= $limit) {
+                break;
+            }
+        }
+
+        return array_values($items);
     }
 
     /**

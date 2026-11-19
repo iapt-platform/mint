@@ -853,8 +853,8 @@ paths:
     $ref: ./resources/auto/v3-reactions-tally.yaml
   /v3/search:
     $ref: ./resources/auto/v3-search.yaml
-  /v3/search-suggest:
-    $ref: ./resources/auto/v3-search-suggest.yaml
+  /v3/search-suggestions:
+    $ref: ./resources/auto/v3-search-suggestions.yaml
   '/v3/search/{search}':
     $ref: ./resources/auto/v3-search-search.yaml
   /v3/sessions:
