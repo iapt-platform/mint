@@ -84,6 +84,12 @@ export interface SplitLayoutProps {
    * 传 0 或负数表示不限制（占满可用宽度）。
    */
   contentMaxWidth?: number;
+
+  /**
+   * 右边栏吸顶时距视口顶部的距离（px），默认 0。
+   * 外层布局有吸顶的顶部工具栏时传它的高度，右边栏停在工具栏下面。
+   */
+  stickyTop?: number;
 }
 
 // ─────────────────────────────────────────────
@@ -100,6 +106,7 @@ export default function SplitLayout({
   minRightSize = 280,
   maxRightSize = 800,
   contentMaxWidth = 1000,
+  stickyTop = 0,
 }: SplitLayoutProps) {
   // ── 左侧收起状态（持久化）──
   const [collapsed, setCollapsed] = useState<boolean>(() => {
@@ -270,8 +277,9 @@ export default function SplitLayout({
                 resizable={rightOpen}
                 className={styles.rightAreaPanel}
               >
-                <Affix offsetTop={0}>
+                <Affix offsetTop={stickyTop}>
                   <RightToolbar
+                    stickyTop={stickyTop}
                     tabs={rightTabs!}
                     activeKey={rightActiveKey}
                     onTabClick={onRightTabClick}

@@ -18,6 +18,7 @@ import type { IChannel } from "../../api/channel";
 import { useAppSelector } from "../../hooks";
 import { openPanel, rightPanel } from "../../reducers/right-panel";
 import store from "../../store";
+import { WORKSPACE_STICKY_TOP } from "../../layouts/workspace/constants";
 
 /**
  * redux openPanel 面板名 → 右边栏 tab key。
@@ -174,6 +175,7 @@ export default function Editor({
       sidebar={sidebar}
       rightTabs={rightTabs}
       openRequest={openRequest}
+      stickyTop={WORKSPACE_STICKY_TOP}
     >
       {({ expandButton }) => children({ expandButton })}
     </SplitLayout>
