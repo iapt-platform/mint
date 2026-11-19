@@ -5,25 +5,18 @@ use \WikipaliApi\Api\TipitakaChapterChannelsApi;
 /*
  * 一章有哪些 channel 及完成度：GET /v3/tipitaka-chapter-channels/{book}/{para}
  *
- * 只读、无写操作。章节坐标从 fixture channel 自己的进度里取（各服务器数据不同），
- * 再核对这一章的列表里有它。fixture channel 是公开的，匿名就看得到。
+ * 只读、无写操作。章节坐标取 fixtures.php 的 chapter_channels_book / chapter_channels_para
+ * （与 server 无关），核对这一章能匿名列出版本、行的形状与排序对。
  * 可见性矩阵（私有 / 共享 / 群组）、排序、N+1 由 api-v13 的 TipitakaChapterChannelV3Test 覆盖。
  */
 
-/** fixture channel 有进度的某一章的 [book, para] */
+/** 有若干译文版本的某一章的 [book, para] */
 function chapter_channel_coord(): array
 {
-    $res = raw('GET', '/v3/progress', ['channels' => fixtures()['channel'], 'per_page' => 1]);
-    assert_status(200, $res, '取 fixture channel 的章节进度');
-    $row = $res['body']['data'][0] ?? null;
-    if (! $row) {
-        skip('fixture channel 在这台服务器上没有章节进度');
-    }
-
-    return [(int) $row['book'], (int) $row['para']];
+    return [(int) fixtures()['chapter_channels_book'], (int) fixtures()['chapter_channels_para']];
 }
 
-test('GET /v3/tipitaka-chapter-channels/{book}/{para} → 200，含 fixture channel', function () {
+test('GET /v3/tipitaka-chapter-channels/{book}/{para} → 200，列出版本', function () {
     [$book, $para] = chapter_channel_coord();
     $res = request(fn () => api(TipitakaChapterChannelsApi::class)
         ->getApiV3TipitakaChapterChannelsBookParaWithHttpInfo($book, $para, 200));
@@ -31,19 +24,15 @@ test('GET /v3/tipitaka-chapter-channels/{book}/{para} → 200，含 fixture chan
     assert_has_key('data', $res['body'], 'tipitaka-chapter-channels');
     assert_has_key('meta', $res['body'], 'tipitaka-chapter-channels');
 
-    $hit = null;
+    if ($res['body']['data'] === []) {
+        fail('tipitaka-chapter-channels：应返回至少一个版本');
+    }
     foreach ($res['body']['data'] as $row) {
-        if (($row['channel']['id'] ?? null) === fixtures()['channel']) {
-            $hit = $row;
+        assert_eq($book, $row['book'] ?? null, 'book');
+        assert_eq($para, $row['para'] ?? null, 'para');
+        foreach (['id', 'progress', 'views', 'updated_at', 'channel', 'studio'] as $key) {
+            assert_has_key($key, $row, 'tipitaka-chapter-channels 行');
         }
-    }
-    if (! $hit) {
-        fail('tipitaka-chapter-channels：应包含 fixture channel');
-    }
-    assert_eq($book, $hit['book'] ?? null, 'book');
-    assert_eq($para, $hit['para'] ?? null, 'para');
-    foreach (['id', 'progress', 'views', 'updated_at', 'studio'] as $key) {
-        assert_has_key($key, $hit, 'tipitaka-chapter-channels 行');
     }
 
     // 按完成度降序

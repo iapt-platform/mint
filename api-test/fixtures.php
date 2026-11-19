@@ -12,6 +12,10 @@ return [
     // 一个 translation 类型、有翻译进度与译文数据的 channel
     'channel' => '4414c96e-4903-11ef-af72-571c3fee08e6',
 
+    // tipitaka-chapter-channels 用的章节坐标：一章有若干译文版本即可，与 server 无关
+    'chapter_channels_book' => 93,
+    'chapter_channels_para' => 5,
+
     // reactions / reactions/tally 用的 target（collection）
     'target_id' => '5b4511c1-c99f-47e7-9798-97b9e5229e18',
 

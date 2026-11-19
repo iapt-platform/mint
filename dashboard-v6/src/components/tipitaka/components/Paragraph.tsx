@@ -22,7 +22,7 @@ const Paragraph = ({
   para,
   mode,
   channels,
-  sentenceIds,
+  sentences,
   children,
   loading,
   onModeChange,
@@ -52,6 +52,11 @@ const Paragraph = ({
       return false;
     }
   }, [book, focus, para]);
+
+  const sentenceIds = useMemo(
+    () => (sentences ?? []).map((item) => item.join("-")),
+    [sentences]
+  );
 
   const borderColor = isFocus ? "#e35f00bd " : "rgba(128, 128, 128, 0.3)";
 

@@ -172,7 +172,8 @@ export interface IParagraphNode {
   para: number;
   mode?: ArticleMode;
   channels?: string[];
-  sentenceIds: string[];
+  /** 段落内的句子坐标 [book, para, wordStart, wordEnd] */
+  sentences: [number, number, number, number][];
   children?: IWidgetSentEditInner[];
 }
 

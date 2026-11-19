@@ -29,6 +29,8 @@ interface RightToolbarProps {
   activeKey: string | null;
   onTabClick: (key: string) => void;
   onClose: () => void;
+  /** 吸顶时距视口顶部的距离（px），面板高度相应减去它 */
+  stickyTop?: number;
 }
 
 export default function RightToolbar({
@@ -36,6 +38,7 @@ export default function RightToolbar({
   activeKey,
   onTabClick,
   onClose,
+  stickyTop = 0,
 }: RightToolbarProps) {
   // 记录哪些 tab 曾经被打开过（懒创建：首次点击后才挂载 DOM）
   // 使用模块级 WeakMap 不行，用组件内 Set ref 也可以，
@@ -56,7 +59,10 @@ export default function RightToolbar({
   const panelOpen = activeKey !== null && !!activeTab?.content;
 
   return (
-    <div className={styles.container}>
+    <div
+      className={styles.container}
+      style={{ "--right-toolbar-top": `${stickyTop}px` } as React.CSSProperties}
+    >
       {/* ── 面板内容区 ── */}
       {panelOpen && (
         <div className={styles.panel}>

@@ -7,7 +7,8 @@
 .container {
   display: flex;
   flex-direction: row;
-  height: 100vh;
+  /* 吸顶时让出外层顶部工具栏的高度（由 RightToolbar 的 stickyTop 设置） */
+  height: calc(100vh - var(--right-toolbar-top, 0px));
   overflow: hidden;
 }
 
@@ -53,7 +54,7 @@
 .panelBody {
   overflow-y: scroll;
   overflow-x: hidden;
-  height: calc(100vh - 40px);
+  height: calc(100vh - var(--right-toolbar-top, 0px) - 40px);
   /* display:contents 的子项可直接撑满 */
   display: flex;
   flex-direction: column;
@@ -61,7 +62,7 @@
 
 /* 面板自带顶栏（hideHeader）时占满整个高度 */
 .panelBodyFull {
-  height: 100vh;
+  height: calc(100vh - var(--right-toolbar-top, 0px));
 }
 
 /* ── 纵向图标工具栏 ── */

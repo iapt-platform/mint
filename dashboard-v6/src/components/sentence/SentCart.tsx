@@ -23,10 +23,12 @@ const SentCartWidget = () => {
   // Derive count directly — no need for a separate state
   const count = sentences.length || undefined;
 
-  // Sync sentences → localStorage whenever it changes
-  useEffect(() => {
-    localStorage.setItem("cart/text", JSON.stringify(sentences));
-  }, [sentences]);
+  // 只在用户清空 / 删除时写回 localStorage。不能用「sentences 变了就写」的 effect：
+  // 挂载时它先于下面的读取执行，会用初始的空数组把购物车覆盖掉（刷新即清空）
+  const save = (next: ISentCart[]) => {
+    localStorage.setItem("cart/text", JSON.stringify(next));
+    setSentences(next);
+  };
 
   // Poll localStorage for external changes (e.g. another tab / component)
   useEffect(() => {
@@ -68,7 +70,7 @@ const SentCartWidget = () => {
                     type="link"
                     danger
                     icon={<DeleteOutlined />}
-                    onClick={() => setSentences([])}
+                    onClick={() => save([])}
                   />
                 </Tooltip>
               </div>
@@ -86,9 +88,7 @@ const SentCartWidget = () => {
                       danger
                       icon={<DeleteOutlined />}
                       onClick={() => {
-                        setSentences((prev) =>
-                          prev.filter((_, i) => i !== index)
-                        );
+                        save(sentences.filter((_, i) => i !== index));
                       }}
                     />
                   </List.Item>
