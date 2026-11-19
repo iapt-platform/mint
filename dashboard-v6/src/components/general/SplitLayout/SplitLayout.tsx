@@ -90,6 +90,12 @@ export interface SplitLayoutProps {
    * 外层布局有吸顶的顶部工具栏时传它的高度，右边栏停在工具栏下面。
    */
   stickyTop?: number;
+
+  /**
+   * 右边栏未吸顶时（页面刚打开、还没滚到吸顶位置）距视口顶部的距离（px），默认等于 stickyTop。
+   * 外层内容区有上内边距时它比 stickyTop 大；右边栏未吸顶时按它算高度，底部不会超出视口。
+   */
+  restTop?: number;
 }
 
 // ─────────────────────────────────────────────
@@ -107,6 +113,7 @@ export default function SplitLayout({
   maxRightSize = 800,
   contentMaxWidth = 1000,
   stickyTop = 0,
+  restTop = stickyTop,
 }: SplitLayoutProps) {
   // ── 左侧收起状态（持久化）──
   const [collapsed, setCollapsed] = useState<boolean>(() => {
@@ -159,6 +166,9 @@ export default function SplitLayout({
   }, []);
 
   const closeRightPanel = useCallback(() => setRightActiveKey(null), []);
+
+  // 右边栏是否已吸顶：吸顶时顶边在 stickyTop，未吸顶时在 restTop，高度随之不同
+  const [affixed, setAffixed] = useState(false);
 
   // ── 外部打开请求（去重后打开对应 tab）──
   // 采用 React 官方推荐的「render 阶段调整 state」方式，避免 effect 内同步 setState。
@@ -277,9 +287,12 @@ export default function SplitLayout({
                 resizable={rightOpen}
                 className={styles.rightAreaPanel}
               >
-                <Affix offsetTop={stickyTop}>
+                <Affix
+                  offsetTop={stickyTop}
+                  onChange={(value) => setAffixed(!!value)}
+                >
                   <RightToolbar
-                    stickyTop={stickyTop}
+                    stickyTop={affixed ? stickyTop : restTop}
                     tabs={rightTabs!}
                     activeKey={rightActiveKey}
                     onTabClick={onRightTabClick}
