@@ -74,7 +74,7 @@ test('语法手册弹窗：检索与选中的术语带进新标签页 /grammar-b
 
 for (const [name, path] of [
   ['用户字典', '/pcd-v2026/workspace/dict'],
-  ['标签', '/pcd-v2026/workspace/tag'],
+  ['标签', '/pcd-v2026/workspace/tags'],
   ['网盘', '/pcd-v2026/workspace/driver'],
 ] as const) {
   test(`${name}弹窗 → ${path}`, async ({ page }) => {

@@ -76,12 +76,12 @@ const ToolsModals = ({ tool, onClose }: IWidget) => {
         open={tool === "tool:tag"}
         onClose={onClose}
         title={intl.formatMessage({ id: "columns.studio.tag.title" })}
-        url="/workspace/tag"
+        url="/workspace/tags"
       >
         <TagList
           studioName={studioName}
           onSelect={(tag) =>
-            window.open(fullUrl(`/workspace/tag/${tag.id}`), "_blank")
+            window.open(fullUrl(`/workspace/tags/${tag.id}`), "_blank")
           }
         />
       </ToolModal>

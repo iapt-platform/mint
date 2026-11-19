@@ -9,8 +9,8 @@ const WorkspaceTagEdit = lazy(() => import("../pages/workspace/tag/edit"));
 
 const channelRoutes: RouteObject[] = [
   {
-    path: "tag",
-    handle: { id: "workspace.tag", crumb: "tag" },
+    path: "tags",
+    handle: { id: "workspace.tag", crumb: "tags" },
     children: [
       {
         index: true,
