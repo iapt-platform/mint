@@ -1,9 +1,8 @@
-import { CommentOutlined, SearchOutlined } from "@ant-design/icons";
+import { CommentOutlined } from "@ant-design/icons";
 import { useEffect, useState, type ReactNode } from "react";
 import SplitLayout, { type RightToolbarTab } from "../general/SplitLayout";
 import ChannelPanel from "./panels/ChannelPanel";
 import DictPanel from "./panels/DictPanel";
-import SearchPanel from "./panels/SearchPanel";
 import {
   ChannelIcon,
   DictIcon,
@@ -112,12 +111,6 @@ export default function Editor({
   // ── 右边栏 tabs（固定业务定义）──
   // content 用独立组件而非内联 JSX，保证 articleId 等 props 变化时正常 re-render
   const rightTabs: RightToolbarTab[] = [
-    {
-      key: "search",
-      icon: <SearchOutlined />,
-      label: "搜索",
-      content: <SearchPanel articleId={articleId} anthologyId={anthologyId} />,
-    },
     {
       key: "dict",
       icon: <DictIcon />,
