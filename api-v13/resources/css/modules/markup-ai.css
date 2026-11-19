@@ -1,0 +1,78 @@
+/* resources/css/modules/markup-ai.css
+   {{ai}} AI 生成内容提示（App\Services\Markup\Templates\AiTemplate 的 html 输出）。
+   不限定容器：阅读页（reader.css）与 wiki 条目页（wiki.css）共用。
+   全是 span，block 样式靠 display 显示成块。
+   wikipali-mobile 的阅读页（ReaderLayerPane.tsx）有一份同样的规则，改这里记得同步。
+*/
+
+.markup-ai {
+    --markup-ai-bg: #fffbe6;
+    --markup-ai-border: #ffe58f;
+    --markup-ai-icon: #faad14;
+}
+.dark-mode .markup-ai {
+    --markup-ai-bg: #2b2111;
+    --markup-ai-border: #594214;
+    --markup-ai-icon: #d89614;
+}
+.markup-ai-icon {
+    color: var(--markup-ai-icon);
+    flex: none;
+}
+.markup-ai-title {
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+    font-weight: 600;
+}
+.markup-ai-message {
+    display: block;
+}
+.markup-ai-block {
+    display: block;
+    margin: 1rem 0;
+    padding: 0.6rem 1rem;
+    background: var(--markup-ai-bg);
+    border-left: 3px solid var(--markup-ai-border);
+    border-radius: 4px;
+}
+.markup-ai-block .markup-ai-message {
+    margin-top: 0.25rem;
+}
+.markup-ai-tag {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2em;
+    padding: 0 0.35em;
+    font-size: 0.8em;
+    line-height: 1.5;
+    background: var(--markup-ai-bg);
+    border: 1px solid var(--markup-ai-border);
+    border-radius: 4px;
+    cursor: help;
+    vertical-align: 0.1em;
+}
+.markup-ai-popup {
+    display: none;
+    position: absolute;
+    z-index: 10;
+    left: 0;
+    top: 100%;
+    margin-top: 4px;
+    width: max-content;
+    max-width: 20rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+    font-weight: normal;
+    background: var(--markup-ai-bg);
+    border: 1px solid var(--markup-ai-border);
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    cursor: auto;
+}
+.markup-ai-tag:hover .markup-ai-popup,
+.markup-ai-tag:focus .markup-ai-popup,
+.markup-ai-tag:focus-within .markup-ai-popup {
+    display: block;
+}

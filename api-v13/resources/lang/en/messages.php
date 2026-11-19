@@ -49,6 +49,8 @@ return [
     'agent_quota_insufficient_user' => 'Not enough credits for this question today. Reading the texts earns more credits.',
     'agent_quota_insufficient_guest' => 'You have used today\'s free questions. Sign in to get more each day.',
     'agent_quota_ip_cap' => 'Too many questions from this network today. Please sign in to continue.',
+    'credit_user_not_found' => 'No user with this ID, username or email.',
+    'credit_balance_negative' => 'The balance would drop below zero (current balance: :balance).',
     'reading_time_day_out_of_range' => 'Reading time can only be reported for today or the past 2 days.',
     'stats_range_too_long' => 'The date range can be at most :days days.',
     'agent_feedback_tags' => 'These tags do not match the rating.',

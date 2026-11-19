@@ -70,9 +70,9 @@ abstract class Template
     public function collect(Call $call, Resolver $resolver): void {}
 
     /**
-     * html 输出是块级元素（目录的 nav、mermaid 的 pre）：段落里只有它时不包 `<p>`。
+     * html 输出是块级元素（目录的 nav、mermaid 的 pre、`{{ai}}` 的 block 样式）：段落里只有它时不包 `<p>`。
      */
-    public function block(): bool
+    public function block(Call $call): bool
     {
         return false;
     }

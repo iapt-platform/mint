@@ -409,14 +409,43 @@ describe('templates without data', function () {
         expect(markupRender('{{quality|draft}}', Format::Html))->toBe('<span><span class="tag-quality draft">draft</span></span>');
     });
 
-    it('renders category, para, dict-pref and ai', function () {
+    it('renders category, para and dict-pref', function () {
         expect(markupTree('{{category|vinaya}}')[0])->toMatchArray(['name' => 'category', 'props' => ['name' => 'vinaya']]);
         expect(markupTree('{{para|id=160-9|title=aa|style=card}}', ['channels' => ['c1', 'c2']])[0]['props'])
             ->toBe(['id' => '160-9', 'title' => 'aa', 'style' => 'card', 'channel' => 'c1_c2']);
         expect(markupTree('{{dict-pref|2}}')[0]['props'])->toBe(['currPage' => 2, 'pageSize' => 100]);
-        expect(markupTree('{{ai|gpt}}')[0]['props'])->toBe(['model' => 'gpt']);
-        expect(markupRender('x{{ai|gpt}}', Format::Prompt))->toBe('x');
-        expect(markupRender('x{{ai|gpt}}', Format::Text))->toBe('xai');
+    });
+
+    it('renders the ai notice with default title, positional title and markdown message', function () {
+        $default = markupTemplates(markupTree('{{ai}}', ['lang' => 'zh-Hans']))[0];
+        expect($default['name'])->toBe('ai');
+        expect($default['props'])->toBe(['title' => 'AI 生成内容', 'style' => 'block']);
+
+        expect(markupTemplates(markupTree('{{ai|机器翻译}}'))[0]['props'])->toBe(['title' => '机器翻译', 'style' => 'block']);
+
+        $full = markupTemplates(markupTree('{{ai|title=草稿|message=未经**校对**|style=tag}}'))[0];
+        expect($full['props'])->toBe(['title' => '草稿', 'style' => 'tag']);
+        expect(json_encode($full['children'], JSON_UNESCAPED_UNICODE))->toContain('校对');
+
+        // 未知 style 按 block
+        expect(markupTemplates(markupTree('{{ai|style=bogus}}', ['lang' => 'en']))[0]['props'])
+            ->toBe(['title' => 'AI-generated content', 'style' => 'block']);
+    });
+
+    it('renders the ai notice in html, text and prompt', function () {
+        // 单段文档整体按行内输出（外层 span）；多段时块级模板独占一段不包 <p>
+        $block = markupRender("前文\n\n{{ai|草稿|未经校对}}", Format::Html);
+        expect($block)->toContain('<p>前文</p><span class="markup-ai markup-ai-block"')
+            ->toContain('<span class="markup-ai-title"><svg')
+            ->toContain('草稿')
+            ->toContain('<span class="markup-ai-message"><span>未经校对</span></span>');
+
+        $tag = markupRender('文字{{ai|草稿|未经校对|style=tag}}', Format::Html);
+        expect($tag)->toContain('文字<span class="markup-ai markup-ai-tag"')
+            ->toContain('AI<span class="markup-ai-popup" role="tooltip">');
+
+        expect(markupRender('x{{ai|草稿|未经校对}}', Format::Text))->toBe('x[草稿] 未经校对');
+        expect(markupRender('x{{ai|草稿}}', Format::Prompt))->toBe('x');
     });
 
     it('renders video and strips unsafe urls', function () {

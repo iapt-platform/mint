@@ -7,6 +7,8 @@ import {
   STUDENT_PASS,
   ASSISTANT_USER,
   ASSISTANT_PASS,
+  ADMIN_USER,
+  ADMIN_PASS,
 } from "../lib/env.js";
 
 export const AUTH_FILE = authFile("user");
@@ -39,4 +41,10 @@ setup("登录学生账号（E2E_STUDENT_USER）", async ({ page }) => {
 setup("登录助教账号（E2E_ASSISTANT_USER）", async ({ page }) => {
   setup.skip(!ASSISTANT_USER || !ASSISTANT_PASS, "未配置 E2E_ASSISTANT_USER / E2E_ASSISTANT_PASS");
   await signIn(page, ASSISTANT_USER, ASSISTANT_PASS, "assistant");
+});
+
+/* 管理后台测试（admin-credits.spec）用的管理员账号：可选 */
+setup("登录管理员账号（E2E_ADMIN_USER）", async ({ page }) => {
+  setup.skip(!ADMIN_USER || !ADMIN_PASS, "未配置 E2E_ADMIN_USER / E2E_ADMIN_PASS");
+  await signIn(page, ADMIN_USER, ADMIN_PASS, "admin");
 });

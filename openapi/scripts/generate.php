@@ -986,6 +986,11 @@ function buildOperation(array $route, string $httpMethod): array
                 ],
             ]
             : ['type' => 'object', 'properties' => ['data' => $data]];
+        // 单个资源用 additional(['meta' => …]) 补了服务端才算得出的值（如调整后的余额）时，
+        // 控制器用 @meta 声明，这里才输出 meta；没声明就保持 {data} 一个键
+        if (! $isList && ! empty($info['tags']['meta'])) {
+            $success['properties']['meta'] = metaSchema($info);
+        }
 
         // 声明了 204 就不再输出默认的 200——控制器 return response()->noContent()
         // 的端点没有 200 这个口径，留着会让前端以为可以读 body

@@ -13,7 +13,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
  * 登录态缓存。`user` 是 E2E_USER（auth.setup 必登），
  * `student` / `assistant` 是可选的第二、第三个账号（配了 E2E_STUDENT_* / E2E_ASSISTANT_* 才会登录）。
  */
-export type Account = 'user' | 'student' | 'assistant';
+export type Account = 'user' | 'student' | 'assistant' | 'admin';
 
 export const authFile = (who: Account = 'user') =>
   path.join(__dirname, `../../playwright/.auth/${who}.json`);

@@ -28,7 +28,7 @@ final class TocTemplate extends Template
 
     protected string $component = 'toc';
 
-    public function block(): bool
+    public function block(Call $call): bool
     {
         return true;
     }

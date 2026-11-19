@@ -9,6 +9,7 @@ return [
     'similar' => 'Parallels',
     'toc' => 'Contents',
     'references' => 'References',
+    'ai_generated' => 'AI-generated content',
 
     'script_convertor' => 'Pāli Script Converter',
     'input_script' => 'Input Script',

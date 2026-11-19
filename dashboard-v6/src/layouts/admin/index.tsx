@@ -8,6 +8,7 @@ import {
   BarChartOutlined,
   BookOutlined,
   DashboardOutlined,
+  DollarOutlined,
   FontSizeOutlined,
   MailOutlined,
   MenuFoldOutlined,
@@ -39,6 +40,7 @@ const MENU_PATHS = [
   "/admin/users",
   "/admin/invite",
   "/admin/ai-models",
+  "/admin/credits",
 ];
 
 /**
@@ -99,6 +101,7 @@ const AdminLayout = () => {
         { key: "/admin/users", icon: <TeamOutlined />, label: link("/admin/users", "admin.menu.users") },
         { key: "/admin/invite", icon: <MailOutlined />, label: link("/admin/invite", "admin.menu.invite") },
         { key: "/admin/ai-models", icon: <ApiOutlined />, label: link("/admin/ai-models", "admin.menu.ai-models") },
+        { key: "/admin/credits", icon: <DollarOutlined />, label: link("/admin/credits", "admin.menu.credits") },
       ],
     },
   ];

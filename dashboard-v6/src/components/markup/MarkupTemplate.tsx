@@ -2,6 +2,7 @@ import { Tag, Typography } from "antd";
 import type { ReactNode } from "react";
 
 import Mermaid from "../general/Mermaid";
+import { AiCtl } from "../template/Ai";
 import { ArticleCtl } from "../template/Article";
 import { GrammarTermLookupCtl } from "../template/GrammarTermLookup";
 import { NissayaCtl } from "../template/Nissaya";
@@ -74,6 +75,15 @@ const TEMPLATES: Record<string, TemplateRenderer> = {
       {children}
     </nav>
   ),
+  // AI 生成内容提示：block 黄底引用块 / tag 行内小标签；children 是说明文字
+  ai: (p, children) => (
+    <AiCtl
+      title={p.title as string | undefined}
+      style={p.style === "tag" ? "tag" : "block"}
+    >
+      {children}
+    </AiCtl>
+  ),
   // 用户自定义模板：正文已由后端渲染成 children
   tpl: (_, children) => <>{children}</>,
 };
@@ -85,7 +95,7 @@ interface IWidget {
 }
 
 /**
- * 一个模板节点。没有对应组件的（exercise、dict-pref、ai 等 v6 还没有界面的，或后端不认识的）
+ * 一个模板节点。没有对应组件的（exercise、dict-pref 等 v6 还没有界面的，或后端不认识的）
  * 显示后端给的源码 / 子节点，不吞内容。
  */
 const MarkupTemplate = ({ node, children }: IWidget) => {

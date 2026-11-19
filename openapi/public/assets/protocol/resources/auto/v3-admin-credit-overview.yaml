@@ -1,0 +1,62 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-admin-credit-overview.yaml
+get:
+  summary: 积分概览
+  tags:
+    - admin
+  operationId: get_api_v3_admin_credit_overview
+  description: |-
+    当前策略、全站合计（登录用户的积分余额总和、累计赚取、累计手工调整、今天的消耗）、
+    最近 14 天每天结算出的积分，以及最近一次结算任务（每日任务或后台手工触发）的结果。
+
+    实现：`V3\AdminCreditOverviewController@__invoke`
+  security:
+    -
+      bearerAuth: []
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  today:
+                    type: string
+                  earn_since:
+                    type: string
+                  policy_version:
+                    type: integer
+                  policy:
+                    type: object
+                  totals:
+                    type: object
+                    properties:
+                      user_accounts: { type: integer }
+                      guest_accounts: { type: integer }
+                      outstanding_balance: { type: integer }
+                      earned_total: { type: integer }
+                      adjusted_total: { type: integer }
+                      spent_today: { type: integer }
+                  recent_days:
+                    type: array
+                    items:
+                      type: object
+                      properties: { day: { type: string }, users: { type: integer }, reading: { type: integer }, editing: { type: integer } }
+                  last_settlement:
+                    type: object
+                    properties:
+                      mode: { type: string }
+                      from: { type: string }
+                      to: { type: string }
+                      users: { type: integer }
+                      pairs: { type: integer }
+                      trigger: { type: string }
+                      operator: { type: string }
+                      ran_at: { type: string }
+                      seconds: { type: number }
+                    nullable: true
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
