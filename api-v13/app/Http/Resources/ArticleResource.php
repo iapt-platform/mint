@@ -143,6 +143,9 @@ class ArticleResource extends JsonResource
                 }
             }
             if (count($channels) === 0) {
+                // FIXME: ->get() 返回的集合永远为真，作者名下没有译文 channel 时 $studioChannel[0] 直接报错
+                // （Undefined array key 0 → 500，文集阅读页与 v2 文章接口都会中）；下面的系统 channel 回退分支
+                // 永远走不到。迁 article 到 v3 时修：用 ->value('uid') 判空，取不到再回退系统 channel。
                 // 查找用户默认channel
                 $studioChannel = Channel::where('owner_uid', $this->owner)
                     ->where('type', 'translation')
