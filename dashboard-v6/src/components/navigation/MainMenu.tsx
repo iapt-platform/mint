@@ -22,6 +22,8 @@ import {
 import React, { useState } from "react";
 import RecentModal from "../recent/RecentModal.tsx";
 import SettingModal from "../setting/SettingModal.tsx";
+import ToolsModals from "./ToolsModals";
+import { isToolKey, type ToolKey } from "./tools";
 import { useIntl } from "react-intl";
 import { fullUrl } from "../../utils";
 import { useActiveStudio } from "../../hooks/useActiveStudio";
@@ -186,6 +188,7 @@ const Widget = ({ onSearch }: Props) => {
 
   const [recentOpen, setRecentOpen] = useState(false);
   const [openSetting, setOpenSetting] = useState(false);
+  const [tool, setTool] = useState<ToolKey>();
 
   /* ================= 菜单配置 ================= */
 
@@ -341,37 +344,36 @@ const Widget = ({ onSearch }: Props) => {
       key: "/workspace/tools",
       icon: <ToolOutlined />,
       label: intl.formatMessage({ id: "labels.tools" }),
+      // 子项都打开弹窗（ToolsModals），弹窗里可「在新标签页打开」对应页面
       children: [
         {
-          key: "/workspace/dictionary",
+          key: "tool:dictionary",
           label: intl.formatMessage({
             id: "columns.library.dict.title",
           }),
-          activeId: "workspace.dictionary",
         },
         {
-          key: "/workspace/grammar-book",
+          key: "tool:grammar-book",
           label: intl.formatMessage({
             id: "columns.library.palihandbook.title",
           }),
-          activeId: "workspace.grammar-book",
         },
         {
-          key: "/workspace/dict",
+          key: "tool:dict",
           label: intl.formatMessage({
             id: "columns.studio.userdict.title",
           }),
           activeId: "workspace.dict",
         },
         {
-          key: "/workspace/tag",
+          key: "tool:tag",
           label: intl.formatMessage({
             id: "columns.studio.tag.title",
           }),
           activeId: "workspace.tag",
         },
         {
-          key: "/workspace/driver",
+          key: "tool:driver",
           label: intl.formatMessage({
             id: "columns.studio.attachment.title",
           }),
@@ -434,6 +436,9 @@ const Widget = ({ onSearch }: Props) => {
     } else if (key === "/workspace/setting") {
       setOpenSetting(true);
       return;
+    } else if (isToolKey(key)) {
+      setTool(key);
+      return;
     }
     navigate(key);
   };
@@ -458,6 +463,7 @@ const Widget = ({ onSearch }: Props) => {
         }}
       />
       <SettingModal open={openSetting} onClose={() => setOpenSetting(false)} />
+      <ToolsModals tool={tool} onClose={() => setTool(undefined)} />
     </>
   );
 };

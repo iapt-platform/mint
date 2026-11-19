@@ -48,6 +48,8 @@ const router = createBrowserRouter(
       Component: RootLayout,
       children: [
         { index: true, Component: Home },
+        // 字典、语法手册：/dictionary、/grammar-book
+        ...dictionaryRoutes,
         {
           path: "anonymous",
           Component: AnonymousLayout,
@@ -116,7 +118,6 @@ const router = createBrowserRouter(
             ...tagRoutes,
             ...driverRoutes,
             ...dictRoutes,
-            ...dictionaryRoutes,
             ...courseRoutes,
             ...nissayaRoutes,
             ...discussionRoutes,

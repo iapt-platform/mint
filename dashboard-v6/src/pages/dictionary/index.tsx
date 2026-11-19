@@ -1,17 +1,20 @@
 import { useEffect, useRef } from "react";
+import { theme } from "antd";
 import { useIntl } from "react-intl";
 import { useNavigate, useParams } from "react-router";
 
-import Dictionary from "../../../components/dict/Dictionary";
-import { useAppSelector } from "../../../hooks";
-import { lookupWord } from "../../../reducers/command";
+import Dictionary from "../../components/dict/Dictionary";
+import { useAppSelector } from "../../hooks";
+import { lookupWord } from "../../reducers/command";
 
 /**
  * 字典（独立页面）
- * 查的词放在路由里（/workspace/dictionary/:word），刷新、分享、前进后退都能重入。
+ * 查的词放在路由里（/dictionary/:word），刷新、分享、前进后退都能重入。
+ * 不在 workspace 布局里；主导航「工具 → 字典」弹窗的「在新标签页打开」跳到这里。
  */
 const Widget = () => {
   const intl = useIntl();
+  const { token } = theme.useToken();
   const navigate = useNavigate();
   const { word } = useParams();
 
@@ -24,7 +27,7 @@ const Widget = () => {
   const search = (value?: string) => {
     if (!value || value === lastWord.current) return;
     lastWord.current = value;
-    navigate(`/workspace/dictionary/${encodeURIComponent(value)}`);
+    navigate(`/dictionary/${encodeURIComponent(value)}`);
   };
 
   // 结果里的巴利词点击查词走的是 redux 的 lookup，这里跟上它。
@@ -39,11 +42,11 @@ const Widget = () => {
   }, [lookup]);
 
   return (
-    <>
+    <div style={{ minHeight: "100vh", background: token.colorBgContainer }}>
       {/* React 19 的 <title> 只接受单个字符串子节点 */}
       <title>{`${word ? `${word} - ` : ""}${intl.formatMessage({ id: "columns.library.dict.title" })}`}</title>
       <Dictionary word={word} onSearch={search} />
-    </>
+    </div>
   );
 };
 

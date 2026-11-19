@@ -15,7 +15,7 @@ test('词典词卡的语法点：悬停显示 v3 的语法说明，不再请求 
   });
 
   // 词典释义正文里嵌的 grammar-pop 模板（如【阳】→ m）渲染成 GrammarPop
-  await page.goto('workspace/dictionary/buddha', { waitUntil: 'networkidle' });
+  await page.goto('dictionary/buddha', { waitUntil: 'networkidle' });
   const grammarLinks = page.locator('a.ant-typography').filter({ hasText: /^【.+】$/ });
   await expect(grammarLinks.first()).toBeVisible({ timeout: 15_000 });
   const count = await grammarLinks.count();
