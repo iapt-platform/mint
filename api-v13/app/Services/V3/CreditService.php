@@ -289,8 +289,10 @@ class CreditService
 
     /**
      * 手工加减积分（积分余额池）。ref 由调用方给，同一 ref 只生效一次。
+     *
+     * @param  string|null  $operatorUid  操作的管理员（管理后台调整时给；命令行为 null）
      */
-    public function adjust(AgentAccount $account, int $delta, string $ref, ?string $note): CreditLedgerEntry
+    public function adjust(AgentAccount $account, int $delta, string $ref, ?string $note, ?string $operatorUid = null): CreditLedgerEntry
     {
         return CreditLedgerEntry::createOrFirst([
             ...$account->columns(),
@@ -303,6 +305,7 @@ class CreditService
             'day' => $this->today()->toDateString(),
             'policy_version' => $this->policy()['version'],
             'note' => $note,
+            'operator_uid' => $operatorUid,
         ]);
     }
 

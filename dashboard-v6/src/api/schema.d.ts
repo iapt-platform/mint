@@ -7838,6 +7838,122 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v3/admin/credit-accounts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 列出积分账号
+         * @description 有积分流水的账号（登录用户与游客设备），每行是该账号的汇总：积分余额、累计赚取、累计手工调整、
+         *     累计消耗、今天用掉的赠送额度。最近有动静的在前。没有任何流水的用户不在列表里，
+         *     但仍可以直接给他加积分（`POST /v3/admin/credit-adjustments`）。
+         *
+         *     实现：`V3\AdminCreditAccountController@index`
+         */
+        get: operations["get_api_v3_admin_credit_accounts"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/admin/credit-adjustments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 手工加减积分
+         * @description 加到登录用户的积分余额（不过期）。负数为扣减，扣减后余额不能为负。
+         *     同一 `ref` 只入账一次：重复提交返回原来那条（200），新入账是 201。
+         *
+         *     实现：`V3\AdminCreditAdjustmentController@store`
+         */
+        post: operations["post_api_v3_admin_credit_adjustments"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/admin/credit-ledger": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 列出积分流水
+         * @description 最新的在前。包括结算赚取（earn）、提问扣减（spend）、出错退回（refund）与手工调整（adjust）。
+         *
+         *     实现：`V3\AdminCreditLedgerController@index`
+         */
+        get: operations["get_api_v3_admin_credit_ledger"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/admin/credit-overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 积分概览
+         * @description 当前策略、全站合计（登录用户的积分余额总和、累计赚取、累计手工调整、今天的消耗）、
+         *     最近 14 天每天结算出的积分，以及最近一次结算任务（每日任务或后台手工触发）的结果。
+         *
+         *     实现：`V3\AdminCreditOverviewController@__invoke`
+         */
+        get: operations["get_api_v3_admin_credit_overview"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/admin/credit-settlements": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 手工结算积分
+         * @description 把登录用户的读经、编辑时长结算成积分。可重复执行：同一用户同一天的积分是覆盖不是累加，不会重复入账。
+         *     不给 `date`：从积分上线日到昨天，补齐所有漏结算的「用户 + 日」（与每日任务相同）；
+         *     给 `date`：按当前策略重算那一天的所有用户。同步执行。
+         *
+         *     实现：`V3\AdminCreditSettlementController@store`
+         */
+        post: operations["post_api_v3_admin_credit_settlements"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v3/admin/reading-stats": {
         parameters: {
             query?: never;
@@ -36100,6 +36216,391 @@ export interface operations {
                                 earned_editing?: number;
                                 adjusted?: number;
                             };
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    get_api_v3_admin_credit_accounts: {
+        parameters: {
+            query?: {
+                /** @description 每页数量，最大 100 */
+                per_page?: number;
+                /** @description 账号类型 */
+                "filter[account_type]"?: "user" | "guest";
+                /** @description 登录用户按用户名 / 昵称 / 邮箱模糊匹配，游客按设备 id 前缀匹配 */
+                "filter[q]"?: string;
+                /** @description 页码 */
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @enum {string} */
+                            account_type?: "user" | "guest";
+                            account_id?: string;
+                            user?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            earned_balance?: number;
+                            earned_total?: number;
+                            adjusted_total?: number;
+                            spent_total?: number;
+                            free_used_today?: number;
+                            daily_free?: number;
+                            last_activity_at?: string | null;
+                        }[];
+                        meta?: components["schemas"]["PaginationMeta"];
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    post_api_v3_admin_credit_adjustments: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description 加减多少积分，非零，绝对值最大 1000000 */
+                    delta: number;
+                    /** @description 用户 uuid、用户名或邮箱 */
+                    user: string;
+                    /** @description 原因（记进流水备注） */
+                    note: string;
+                    /** @description 调整单号（uuid），防重复提交；不给由服务端生成 */
+                    ref?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @enum {string} */
+                            account_type?: "user" | "guest";
+                            account_id?: string;
+                            user?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            delta?: number;
+                            /** @enum {string} */
+                            kind?: "earn" | "spend" | "refund" | "adjust";
+                            /** @enum {string} */
+                            bucket?: "free" | "earned";
+                            /** @enum {string} */
+                            source?: "reading" | "editing" | "agent_run" | "admin";
+                            ref?: string;
+                            day?: string;
+                            policy_version?: number;
+                            client_ip?: string | null;
+                            note?: string | null;
+                            operator?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            created_at?: string;
+                            updated_at?: string;
+                        };
+                        meta?: {
+                            /** @description 这次是否新入账 */
+                            created?: boolean;
+                            /** @description 该用户调整后的积分余额 */
+                            earned_balance?: number;
+                        };
+                    };
+                };
+            };
+            /** @description 新入账。响应体与 200 同形（200 是同一 ref 已经入账过，返回原来那条） */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @enum {string} */
+                            account_type?: "user" | "guest";
+                            account_id?: string;
+                            user?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            delta?: number;
+                            /** @enum {string} */
+                            kind?: "earn" | "spend" | "refund" | "adjust";
+                            /** @enum {string} */
+                            bucket?: "free" | "earned";
+                            /** @enum {string} */
+                            source?: "reading" | "editing" | "agent_run" | "admin";
+                            ref?: string;
+                            day?: string;
+                            policy_version?: number;
+                            client_ip?: string | null;
+                            note?: string | null;
+                            operator?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            created_at?: string;
+                            updated_at?: string;
+                        };
+                        meta?: {
+                            /** @description 这次是否新入账 */
+                            created?: boolean;
+                            /** @description 该用户调整后的积分余额 */
+                            earned_balance?: number;
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    get_api_v3_admin_credit_ledger: {
+        parameters: {
+            query?: {
+                /** @description 每页数量，最大 100 */
+                per_page?: number;
+                /** @description 账号类型；给 account_id 时必填 */
+                "filter[account_type]"?: "user" | "guest";
+                /** @description 账号 id（用户 uuid 或游客设备 id） */
+                "filter[account_id]"?: string;
+                /** @description 流水类型 */
+                "filter[kind]"?: "earn" | "spend" | "refund" | "adjust";
+                /** @description 池子：free 每日赠送 / earned 积分余额 */
+                "filter[bucket]"?: "free" | "earned";
+                /** @description 来源 */
+                "filter[source]"?: "reading" | "editing" | "agent_run" | "admin";
+                /** @description 起始日（UTC，Y-m-d，按流水归属日） */
+                "filter[from]"?: string;
+                /** @description 结束日（UTC，Y-m-d，含当天） */
+                "filter[to]"?: string;
+                /** @description 页码 */
+                page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @enum {string} */
+                            account_type?: "user" | "guest";
+                            account_id?: string;
+                            user?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            delta?: number;
+                            /** @enum {string} */
+                            kind?: "earn" | "spend" | "refund" | "adjust";
+                            /** @enum {string} */
+                            bucket?: "free" | "earned";
+                            /** @enum {string} */
+                            source?: "reading" | "editing" | "agent_run" | "admin";
+                            ref?: string;
+                            day?: string;
+                            policy_version?: number;
+                            client_ip?: string | null;
+                            note?: string | null;
+                            operator?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            created_at?: string;
+                            updated_at?: string;
+                        }[];
+                        meta?: components["schemas"]["PaginationMeta"];
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    get_api_v3_admin_credit_overview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            today?: string;
+                            earn_since?: string;
+                            policy_version?: number;
+                            policy?: Record<string, never>;
+                            totals?: {
+                                user_accounts?: number;
+                                guest_accounts?: number;
+                                outstanding_balance?: number;
+                                earned_total?: number;
+                                adjusted_total?: number;
+                                spent_today?: number;
+                            };
+                            recent_days?: {
+                                day?: string;
+                                users?: number;
+                                reading?: number;
+                                editing?: number;
+                            }[];
+                            last_settlement?: {
+                                mode?: string;
+                                from?: string;
+                                to?: string;
+                                users?: number;
+                                pairs?: number;
+                                trigger?: string;
+                                operator?: string;
+                                ran_at?: string;
+                                seconds?: number;
+                            } | null;
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+        };
+    };
+    post_api_v3_admin_credit_settlements: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    /** @description 只重算这一天（UTC，Y-m-d），不早于积分上线日、不晚于今天 */
+                    date?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @enum {string} */
+                            mode?: "day" | "missing";
+                            from?: string;
+                            to?: string;
+                            users?: number;
+                            pairs?: number | null;
+                            /** @enum {string} */
+                            trigger?: "cli" | "admin";
+                            operator?: string | null;
+                            ran_at?: string;
+                            seconds?: number;
+                        };
+                    };
+                };
+            };
+            /** @description 结算完成。响应体与 200 同形 */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** @enum {string} */
+                            mode?: "day" | "missing";
+                            from?: string;
+                            to?: string;
+                            users?: number;
+                            pairs?: number | null;
+                            /** @enum {string} */
+                            trigger?: "cli" | "admin";
+                            operator?: string | null;
+                            ran_at?: string;
+                            seconds?: number;
                         };
                     };
                 };

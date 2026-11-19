@@ -38,6 +38,13 @@ export const HAS_STUDENT = !!(STUDENT_USER && STUDENT_PASS);
 export const HAS_ASSISTANT = !!(ASSISTANT_USER && ASSISTANT_PASS);
 
 /**
+ * 管理后台测试（admin-credits.spec）用的管理员账号（user_infos.role 含 administrator）。可选——没配就跳过。
+ */
+export const ADMIN_USER = process.env.E2E_ADMIN_USER || '';
+export const ADMIN_PASS = process.env.E2E_ADMIN_PASS || '';
+export const HAS_ADMIN = !!(ADMIN_USER && ADMIN_PASS);
+
+/**
  * 课程用的教材与标准答案。默认是本机开发库里的「初级班课本范例」文集（公开），
  * 其中「练习一」一篇只有一个句子 168-916-2-9；标准答案 channel 在这一段上有逐词解析与译文。
  * 换环境时四项一起覆盖。

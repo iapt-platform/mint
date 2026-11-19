@@ -16,6 +16,7 @@ const Users = lazy(() => import("../pages/admin/users/index"));
 const UsersShow = lazy(() => import("../pages/admin/users/show"));
 const Invite = lazy(() => import("../pages/admin/invite"));
 const AiModels = lazy(() => import("../pages/admin/ai-models"));
+const Credits = lazy(() => import("../pages/admin/credits"));
 
 const adminRoutes: RouteObject[] = [
   { index: true, loader: () => redirect("/admin/stats/reading") },
@@ -56,6 +57,7 @@ const adminRoutes: RouteObject[] = [
   },
   { path: "invite", Component: Invite, handle: { id: "admin.invite", crumb: "invite" } },
   { path: "ai-models", Component: AiModels, handle: { id: "admin.ai-models", crumb: "ai-models" } },
+  { path: "credits", Component: Credits, handle: { id: "admin.credits", crumb: "credits" } },
 ];
 
 export default adminRoutes;

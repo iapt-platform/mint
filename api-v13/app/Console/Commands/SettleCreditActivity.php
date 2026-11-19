@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Services\V3\CreditService;
+use App\Services\V3\CreditAdminService;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
@@ -20,20 +20,15 @@ use Illuminate\Console\Command;
 #[Description('把读经、编辑时长结算成 AI 对话积分（默认补齐上线以来所有漏结算的日子）')]
 class SettleCreditActivity extends Command
 {
-    public function handle(CreditService $credits): int
+    public function handle(CreditAdminService $credits): int
     {
-        if ($this->option('date')) {
-            $day = now('UTC')->parse((string) $this->option('date'))->startOfDay();
-            $users = $credits->settleDay($day);
-            $this->info("{$day->toDateString()}：结算了 {$users} 位用户。");
+        // 与管理后台「手工结算」同一入口，最近一次运行记录也一起写（后台概览显示）
+        $day = $this->option('date') ? now('UTC')->parse((string) $this->option('date')) : null;
+        $result = $credits->settle($day);
 
-            return self::SUCCESS;
-        }
-
-        $since = now('UTC')->parse((string) config('mint.credits.earn_since'))->startOfDay();
-        $until = now('UTC')->subDay()->startOfDay();
-        ['pairs' => $pairs, 'users' => $users] = $credits->settleMissing($since, $until);
-        $this->info("{$since->toDateString()} ~ {$until->toDateString()}：补结算了 {$users} 位用户的 {$pairs} 个「用户 + 日」。");
+        $this->info($result['mode'] === 'day'
+            ? "{$result['from']}：结算了 {$result['users']} 位用户。"
+            : "{$result['from']} ~ {$result['to']}：补结算了 {$result['users']} 位用户的 {$result['pairs']} 个「用户 + 日」。");
 
         return self::SUCCESS;
     }

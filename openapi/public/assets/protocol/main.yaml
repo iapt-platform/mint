@@ -759,6 +759,16 @@ paths:
     $ref: ./resources/auto/v3-admin-agent-runs-run.yaml
   /v3/admin/agent-stats:
     $ref: ./resources/auto/v3-admin-agent-stats.yaml
+  /v3/admin/credit-accounts:
+    $ref: ./resources/auto/v3-admin-credit-accounts.yaml
+  /v3/admin/credit-adjustments:
+    $ref: ./resources/auto/v3-admin-credit-adjustments.yaml
+  /v3/admin/credit-ledger:
+    $ref: ./resources/auto/v3-admin-credit-ledger.yaml
+  /v3/admin/credit-overview:
+    $ref: ./resources/auto/v3-admin-credit-overview.yaml
+  /v3/admin/credit-settlements:
+    $ref: ./resources/auto/v3-admin-credit-settlements.yaml
   /v3/admin/reading-stats:
     $ref: ./resources/auto/v3-admin-reading-stats.yaml
   /v3/agent-charges:

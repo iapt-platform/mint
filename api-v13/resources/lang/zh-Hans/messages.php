@@ -49,6 +49,8 @@ return [
     'agent_quota_insufficient_user' => '今天的积分不够这次提问了。读经可以赚取积分。',
     'agent_quota_insufficient_guest' => '今天的免费提问次数用完了。登录后每天有更多次数。',
     'agent_quota_ip_cap' => '今天同一网络下的提问太多了，请登录后继续。',
+    'credit_user_not_found' => '找不到这个用户（可填用户 ID、用户名或邮箱）。',
+    'credit_balance_negative' => '扣减后余额会变成负数（当前余额 :balance）。',
     'reading_time_day_out_of_range' => '读经时长只能上报今天或 2 天内的。',
     'stats_range_too_long' => '时间范围最多 :days 天。',
     'agent_feedback_tags' => '标签和评价不配套。',

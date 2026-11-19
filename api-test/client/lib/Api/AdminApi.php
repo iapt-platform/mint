@@ -89,7 +89,22 @@ class AdminApi
         'getApiV3AdminAgentStats' => [
             'application/json',
         ],
+        'getApiV3AdminCreditAccounts' => [
+            'application/json',
+        ],
+        'getApiV3AdminCreditLedger' => [
+            'application/json',
+        ],
+        'getApiV3AdminCreditOverview' => [
+            'application/json',
+        ],
         'getApiV3AdminReadingStats' => [
+            'application/json',
+        ],
+        'postApiV3AdminCreditAdjustments' => [
+            'application/json',
+        ],
+        'postApiV3AdminCreditSettlements' => [
             'application/json',
         ],
     ];
@@ -1911,6 +1926,1039 @@ class AdminApi
     }
 
     /**
+     * Operation getApiV3AdminCreditAccounts
+     *
+     * 列出积分账号
+     *
+     * @param  int|null $per_page 每页数量，最大 100 (optional, default to 20)
+     * @param  string|null $filter_account_type 账号类型 (optional)
+     * @param  string|null $filter_q 登录用户按用户名 / 昵称 / 邮箱模糊匹配，游客按设备 id 前缀匹配 (optional)
+     * @param  int|null $page 页码 (optional, default to 1)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3AdminCreditAccounts'] to see the possible values for this operation
+     *
+     * @throws \WikipaliApi\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return \WikipaliApi\Model\GetApiV3AdminCreditAccounts200Response|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails
+     */
+    public function getApiV3AdminCreditAccounts($per_page = 20, $filter_account_type = null, $filter_q = null, $page = 1, string $contentType = self::contentTypes['getApiV3AdminCreditAccounts'][0])
+    {
+        list($response) = $this->getApiV3AdminCreditAccountsWithHttpInfo($per_page, $filter_account_type, $filter_q, $page, $contentType);
+        return $response;
+    }
+
+    /**
+     * Operation getApiV3AdminCreditAccountsWithHttpInfo
+     *
+     * 列出积分账号
+     *
+     * @param  int|null $per_page 每页数量，最大 100 (optional, default to 20)
+     * @param  string|null $filter_account_type 账号类型 (optional)
+     * @param  string|null $filter_q 登录用户按用户名 / 昵称 / 邮箱模糊匹配，游客按设备 id 前缀匹配 (optional)
+     * @param  int|null $page 页码 (optional, default to 1)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3AdminCreditAccounts'] to see the possible values for this operation
+     *
+     * @throws \WikipaliApi\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of \WikipaliApi\Model\GetApiV3AdminCreditAccounts200Response|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function getApiV3AdminCreditAccountsWithHttpInfo($per_page = 20, $filter_account_type = null, $filter_q = null, $page = 1, string $contentType = self::contentTypes['getApiV3AdminCreditAccounts'][0])
+    {
+        $request = $this->getApiV3AdminCreditAccountsRequest($per_page, $filter_account_type, $filter_q, $page, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    return $this->handleResponseWithDataType(
+                        '\WikipaliApi\Model\GetApiV3AdminCreditAccounts200Response',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $request,
+                        $response,
+                    );
+            }
+
+            
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            return $this->handleResponseWithDataType(
+                '\WikipaliApi\Model\GetApiV3AdminCreditAccounts200Response',
+                $request,
+                $response,
+            );
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\WikipaliApi\Model\GetApiV3AdminCreditAccounts200Response',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+            }
+        
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation getApiV3AdminCreditAccountsAsync
+     *
+     * 列出积分账号
+     *
+     * @param  int|null $per_page 每页数量，最大 100 (optional, default to 20)
+     * @param  string|null $filter_account_type 账号类型 (optional)
+     * @param  string|null $filter_q 登录用户按用户名 / 昵称 / 邮箱模糊匹配，游客按设备 id 前缀匹配 (optional)
+     * @param  int|null $page 页码 (optional, default to 1)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3AdminCreditAccounts'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function getApiV3AdminCreditAccountsAsync($per_page = 20, $filter_account_type = null, $filter_q = null, $page = 1, string $contentType = self::contentTypes['getApiV3AdminCreditAccounts'][0])
+    {
+        return $this->getApiV3AdminCreditAccountsAsyncWithHttpInfo($per_page, $filter_account_type, $filter_q, $page, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation getApiV3AdminCreditAccountsAsyncWithHttpInfo
+     *
+     * 列出积分账号
+     *
+     * @param  int|null $per_page 每页数量，最大 100 (optional, default to 20)
+     * @param  string|null $filter_account_type 账号类型 (optional)
+     * @param  string|null $filter_q 登录用户按用户名 / 昵称 / 邮箱模糊匹配，游客按设备 id 前缀匹配 (optional)
+     * @param  int|null $page 页码 (optional, default to 1)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3AdminCreditAccounts'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function getApiV3AdminCreditAccountsAsyncWithHttpInfo($per_page = 20, $filter_account_type = null, $filter_q = null, $page = 1, string $contentType = self::contentTypes['getApiV3AdminCreditAccounts'][0])
+    {
+        $returnType = '\WikipaliApi\Model\GetApiV3AdminCreditAccounts200Response';
+        $request = $this->getApiV3AdminCreditAccountsRequest($per_page, $filter_account_type, $filter_q, $page, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'getApiV3AdminCreditAccounts'
+     *
+     * @param  int|null $per_page 每页数量，最大 100 (optional, default to 20)
+     * @param  string|null $filter_account_type 账号类型 (optional)
+     * @param  string|null $filter_q 登录用户按用户名 / 昵称 / 邮箱模糊匹配，游客按设备 id 前缀匹配 (optional)
+     * @param  int|null $page 页码 (optional, default to 1)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3AdminCreditAccounts'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function getApiV3AdminCreditAccountsRequest($per_page = 20, $filter_account_type = null, $filter_q = null, $page = 1, string $contentType = self::contentTypes['getApiV3AdminCreditAccounts'][0])
+    {
+
+
+
+
+
+
+        $resourcePath = '/v3/admin/credit-accounts';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $per_page,
+            'per_page', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $filter_account_type,
+            'filter[account_type]', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $filter_q,
+            'filter[q]', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $page,
+            'page', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+
+
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', 'application/problem+json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+        // this endpoint requires Bearer authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'GET',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation getApiV3AdminCreditLedger
+     *
+     * 列出积分流水
+     *
+     * @param  int|null $per_page 每页数量，最大 100 (optional, default to 20)
+     * @param  string|null $filter_account_type 账号类型；给 account_id 时必填 (optional)
+     * @param  string|null $filter_account_id 账号 id（用户 uuid 或游客设备 id） (optional)
+     * @param  string|null $filter_kind 流水类型 (optional)
+     * @param  string|null $filter_bucket 池子：free 每日赠送 / earned 积分余额 (optional)
+     * @param  string|null $filter_source 来源 (optional)
+     * @param  string|null $filter_from 起始日（UTC，Y-m-d，按流水归属日） (optional)
+     * @param  string|null $filter_to 结束日（UTC，Y-m-d，含当天） (optional)
+     * @param  int|null $page 页码 (optional, default to 1)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3AdminCreditLedger'] to see the possible values for this operation
+     *
+     * @throws \WikipaliApi\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return \WikipaliApi\Model\GetApiV3AdminCreditLedger200Response|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails
+     */
+    public function getApiV3AdminCreditLedger($per_page = 20, $filter_account_type = null, $filter_account_id = null, $filter_kind = null, $filter_bucket = null, $filter_source = null, $filter_from = null, $filter_to = null, $page = 1, string $contentType = self::contentTypes['getApiV3AdminCreditLedger'][0])
+    {
+        list($response) = $this->getApiV3AdminCreditLedgerWithHttpInfo($per_page, $filter_account_type, $filter_account_id, $filter_kind, $filter_bucket, $filter_source, $filter_from, $filter_to, $page, $contentType);
+        return $response;
+    }
+
+    /**
+     * Operation getApiV3AdminCreditLedgerWithHttpInfo
+     *
+     * 列出积分流水
+     *
+     * @param  int|null $per_page 每页数量，最大 100 (optional, default to 20)
+     * @param  string|null $filter_account_type 账号类型；给 account_id 时必填 (optional)
+     * @param  string|null $filter_account_id 账号 id（用户 uuid 或游客设备 id） (optional)
+     * @param  string|null $filter_kind 流水类型 (optional)
+     * @param  string|null $filter_bucket 池子：free 每日赠送 / earned 积分余额 (optional)
+     * @param  string|null $filter_source 来源 (optional)
+     * @param  string|null $filter_from 起始日（UTC，Y-m-d，按流水归属日） (optional)
+     * @param  string|null $filter_to 结束日（UTC，Y-m-d，含当天） (optional)
+     * @param  int|null $page 页码 (optional, default to 1)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3AdminCreditLedger'] to see the possible values for this operation
+     *
+     * @throws \WikipaliApi\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of \WikipaliApi\Model\GetApiV3AdminCreditLedger200Response|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function getApiV3AdminCreditLedgerWithHttpInfo($per_page = 20, $filter_account_type = null, $filter_account_id = null, $filter_kind = null, $filter_bucket = null, $filter_source = null, $filter_from = null, $filter_to = null, $page = 1, string $contentType = self::contentTypes['getApiV3AdminCreditLedger'][0])
+    {
+        $request = $this->getApiV3AdminCreditLedgerRequest($per_page, $filter_account_type, $filter_account_id, $filter_kind, $filter_bucket, $filter_source, $filter_from, $filter_to, $page, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    return $this->handleResponseWithDataType(
+                        '\WikipaliApi\Model\GetApiV3AdminCreditLedger200Response',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $request,
+                        $response,
+                    );
+            }
+
+            
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            return $this->handleResponseWithDataType(
+                '\WikipaliApi\Model\GetApiV3AdminCreditLedger200Response',
+                $request,
+                $response,
+            );
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\WikipaliApi\Model\GetApiV3AdminCreditLedger200Response',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+            }
+        
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation getApiV3AdminCreditLedgerAsync
+     *
+     * 列出积分流水
+     *
+     * @param  int|null $per_page 每页数量，最大 100 (optional, default to 20)
+     * @param  string|null $filter_account_type 账号类型；给 account_id 时必填 (optional)
+     * @param  string|null $filter_account_id 账号 id（用户 uuid 或游客设备 id） (optional)
+     * @param  string|null $filter_kind 流水类型 (optional)
+     * @param  string|null $filter_bucket 池子：free 每日赠送 / earned 积分余额 (optional)
+     * @param  string|null $filter_source 来源 (optional)
+     * @param  string|null $filter_from 起始日（UTC，Y-m-d，按流水归属日） (optional)
+     * @param  string|null $filter_to 结束日（UTC，Y-m-d，含当天） (optional)
+     * @param  int|null $page 页码 (optional, default to 1)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3AdminCreditLedger'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function getApiV3AdminCreditLedgerAsync($per_page = 20, $filter_account_type = null, $filter_account_id = null, $filter_kind = null, $filter_bucket = null, $filter_source = null, $filter_from = null, $filter_to = null, $page = 1, string $contentType = self::contentTypes['getApiV3AdminCreditLedger'][0])
+    {
+        return $this->getApiV3AdminCreditLedgerAsyncWithHttpInfo($per_page, $filter_account_type, $filter_account_id, $filter_kind, $filter_bucket, $filter_source, $filter_from, $filter_to, $page, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation getApiV3AdminCreditLedgerAsyncWithHttpInfo
+     *
+     * 列出积分流水
+     *
+     * @param  int|null $per_page 每页数量，最大 100 (optional, default to 20)
+     * @param  string|null $filter_account_type 账号类型；给 account_id 时必填 (optional)
+     * @param  string|null $filter_account_id 账号 id（用户 uuid 或游客设备 id） (optional)
+     * @param  string|null $filter_kind 流水类型 (optional)
+     * @param  string|null $filter_bucket 池子：free 每日赠送 / earned 积分余额 (optional)
+     * @param  string|null $filter_source 来源 (optional)
+     * @param  string|null $filter_from 起始日（UTC，Y-m-d，按流水归属日） (optional)
+     * @param  string|null $filter_to 结束日（UTC，Y-m-d，含当天） (optional)
+     * @param  int|null $page 页码 (optional, default to 1)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3AdminCreditLedger'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function getApiV3AdminCreditLedgerAsyncWithHttpInfo($per_page = 20, $filter_account_type = null, $filter_account_id = null, $filter_kind = null, $filter_bucket = null, $filter_source = null, $filter_from = null, $filter_to = null, $page = 1, string $contentType = self::contentTypes['getApiV3AdminCreditLedger'][0])
+    {
+        $returnType = '\WikipaliApi\Model\GetApiV3AdminCreditLedger200Response';
+        $request = $this->getApiV3AdminCreditLedgerRequest($per_page, $filter_account_type, $filter_account_id, $filter_kind, $filter_bucket, $filter_source, $filter_from, $filter_to, $page, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'getApiV3AdminCreditLedger'
+     *
+     * @param  int|null $per_page 每页数量，最大 100 (optional, default to 20)
+     * @param  string|null $filter_account_type 账号类型；给 account_id 时必填 (optional)
+     * @param  string|null $filter_account_id 账号 id（用户 uuid 或游客设备 id） (optional)
+     * @param  string|null $filter_kind 流水类型 (optional)
+     * @param  string|null $filter_bucket 池子：free 每日赠送 / earned 积分余额 (optional)
+     * @param  string|null $filter_source 来源 (optional)
+     * @param  string|null $filter_from 起始日（UTC，Y-m-d，按流水归属日） (optional)
+     * @param  string|null $filter_to 结束日（UTC，Y-m-d，含当天） (optional)
+     * @param  int|null $page 页码 (optional, default to 1)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3AdminCreditLedger'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function getApiV3AdminCreditLedgerRequest($per_page = 20, $filter_account_type = null, $filter_account_id = null, $filter_kind = null, $filter_bucket = null, $filter_source = null, $filter_from = null, $filter_to = null, $page = 1, string $contentType = self::contentTypes['getApiV3AdminCreditLedger'][0])
+    {
+
+
+
+
+
+
+
+
+
+
+
+        $resourcePath = '/v3/admin/credit-ledger';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $per_page,
+            'per_page', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $filter_account_type,
+            'filter[account_type]', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $filter_account_id,
+            'filter[account_id]', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $filter_kind,
+            'filter[kind]', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $filter_bucket,
+            'filter[bucket]', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $filter_source,
+            'filter[source]', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $filter_from,
+            'filter[from]', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $filter_to,
+            'filter[to]', // param base name
+            'string', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $page,
+            'page', // param base name
+            'integer', // openApiType
+            'form', // style
+            true, // explode
+            false // required
+        ) ?? []);
+
+
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', 'application/problem+json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+        // this endpoint requires Bearer authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'GET',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation getApiV3AdminCreditOverview
+     *
+     * 积分概览
+     *
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3AdminCreditOverview'] to see the possible values for this operation
+     *
+     * @throws \WikipaliApi\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return \WikipaliApi\Model\GetApiV3AdminCreditOverview200Response|\WikipaliApi\Model\ProblemDetails
+     */
+    public function getApiV3AdminCreditOverview(string $contentType = self::contentTypes['getApiV3AdminCreditOverview'][0])
+    {
+        list($response) = $this->getApiV3AdminCreditOverviewWithHttpInfo($contentType);
+        return $response;
+    }
+
+    /**
+     * Operation getApiV3AdminCreditOverviewWithHttpInfo
+     *
+     * 积分概览
+     *
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3AdminCreditOverview'] to see the possible values for this operation
+     *
+     * @throws \WikipaliApi\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of \WikipaliApi\Model\GetApiV3AdminCreditOverview200Response|\WikipaliApi\Model\ProblemDetails, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function getApiV3AdminCreditOverviewWithHttpInfo(string $contentType = self::contentTypes['getApiV3AdminCreditOverview'][0])
+    {
+        $request = $this->getApiV3AdminCreditOverviewRequest($contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    return $this->handleResponseWithDataType(
+                        '\WikipaliApi\Model\GetApiV3AdminCreditOverview200Response',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $request,
+                        $response,
+                    );
+            }
+
+            
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            return $this->handleResponseWithDataType(
+                '\WikipaliApi\Model\GetApiV3AdminCreditOverview200Response',
+                $request,
+                $response,
+            );
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\WikipaliApi\Model\GetApiV3AdminCreditOverview200Response',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+            }
+        
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation getApiV3AdminCreditOverviewAsync
+     *
+     * 积分概览
+     *
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3AdminCreditOverview'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function getApiV3AdminCreditOverviewAsync(string $contentType = self::contentTypes['getApiV3AdminCreditOverview'][0])
+    {
+        return $this->getApiV3AdminCreditOverviewAsyncWithHttpInfo($contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation getApiV3AdminCreditOverviewAsyncWithHttpInfo
+     *
+     * 积分概览
+     *
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3AdminCreditOverview'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function getApiV3AdminCreditOverviewAsyncWithHttpInfo(string $contentType = self::contentTypes['getApiV3AdminCreditOverview'][0])
+    {
+        $returnType = '\WikipaliApi\Model\GetApiV3AdminCreditOverview200Response';
+        $request = $this->getApiV3AdminCreditOverviewRequest($contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'getApiV3AdminCreditOverview'
+     *
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getApiV3AdminCreditOverview'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function getApiV3AdminCreditOverviewRequest(string $contentType = self::contentTypes['getApiV3AdminCreditOverview'][0])
+    {
+
+
+        $resourcePath = '/v3/admin/credit-overview';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', 'application/problem+json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+        // this endpoint requires Bearer authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'GET',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
      * Operation getApiV3AdminReadingStats
      *
      * 阅读统计
@@ -2233,6 +3281,642 @@ class AdminApi
         $query = ObjectSerializer::buildQuery($queryParams);
         return new Request(
             'GET',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation postApiV3AdminCreditAdjustments
+     *
+     * 手工加减积分
+     *
+     * @param  \WikipaliApi\Model\PostApiV3AdminCreditAdjustmentsRequest $post_api_v3_admin_credit_adjustments_request post_api_v3_admin_credit_adjustments_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['postApiV3AdminCreditAdjustments'] to see the possible values for this operation
+     *
+     * @throws \WikipaliApi\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return \WikipaliApi\Model\PostApiV3AdminCreditAdjustments200Response|\WikipaliApi\Model\PostApiV3AdminCreditAdjustments200Response|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails
+     */
+    public function postApiV3AdminCreditAdjustments($post_api_v3_admin_credit_adjustments_request, string $contentType = self::contentTypes['postApiV3AdminCreditAdjustments'][0])
+    {
+        list($response) = $this->postApiV3AdminCreditAdjustmentsWithHttpInfo($post_api_v3_admin_credit_adjustments_request, $contentType);
+        return $response;
+    }
+
+    /**
+     * Operation postApiV3AdminCreditAdjustmentsWithHttpInfo
+     *
+     * 手工加减积分
+     *
+     * @param  \WikipaliApi\Model\PostApiV3AdminCreditAdjustmentsRequest $post_api_v3_admin_credit_adjustments_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['postApiV3AdminCreditAdjustments'] to see the possible values for this operation
+     *
+     * @throws \WikipaliApi\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of \WikipaliApi\Model\PostApiV3AdminCreditAdjustments200Response|\WikipaliApi\Model\PostApiV3AdminCreditAdjustments200Response|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function postApiV3AdminCreditAdjustmentsWithHttpInfo($post_api_v3_admin_credit_adjustments_request, string $contentType = self::contentTypes['postApiV3AdminCreditAdjustments'][0])
+    {
+        $request = $this->postApiV3AdminCreditAdjustmentsRequest($post_api_v3_admin_credit_adjustments_request, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    return $this->handleResponseWithDataType(
+                        '\WikipaliApi\Model\PostApiV3AdminCreditAdjustments200Response',
+                        $request,
+                        $response,
+                    );
+                case 201:
+                    return $this->handleResponseWithDataType(
+                        '\WikipaliApi\Model\PostApiV3AdminCreditAdjustments200Response',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $request,
+                        $response,
+                    );
+            }
+
+            
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            return $this->handleResponseWithDataType(
+                '\WikipaliApi\Model\PostApiV3AdminCreditAdjustments200Response',
+                $request,
+                $response,
+            );
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\WikipaliApi\Model\PostApiV3AdminCreditAdjustments200Response',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 201:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\WikipaliApi\Model\PostApiV3AdminCreditAdjustments200Response',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+            }
+        
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation postApiV3AdminCreditAdjustmentsAsync
+     *
+     * 手工加减积分
+     *
+     * @param  \WikipaliApi\Model\PostApiV3AdminCreditAdjustmentsRequest $post_api_v3_admin_credit_adjustments_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['postApiV3AdminCreditAdjustments'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function postApiV3AdminCreditAdjustmentsAsync($post_api_v3_admin_credit_adjustments_request, string $contentType = self::contentTypes['postApiV3AdminCreditAdjustments'][0])
+    {
+        return $this->postApiV3AdminCreditAdjustmentsAsyncWithHttpInfo($post_api_v3_admin_credit_adjustments_request, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation postApiV3AdminCreditAdjustmentsAsyncWithHttpInfo
+     *
+     * 手工加减积分
+     *
+     * @param  \WikipaliApi\Model\PostApiV3AdminCreditAdjustmentsRequest $post_api_v3_admin_credit_adjustments_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['postApiV3AdminCreditAdjustments'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function postApiV3AdminCreditAdjustmentsAsyncWithHttpInfo($post_api_v3_admin_credit_adjustments_request, string $contentType = self::contentTypes['postApiV3AdminCreditAdjustments'][0])
+    {
+        $returnType = '\WikipaliApi\Model\PostApiV3AdminCreditAdjustments200Response';
+        $request = $this->postApiV3AdminCreditAdjustmentsRequest($post_api_v3_admin_credit_adjustments_request, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'postApiV3AdminCreditAdjustments'
+     *
+     * @param  \WikipaliApi\Model\PostApiV3AdminCreditAdjustmentsRequest $post_api_v3_admin_credit_adjustments_request (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['postApiV3AdminCreditAdjustments'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function postApiV3AdminCreditAdjustmentsRequest($post_api_v3_admin_credit_adjustments_request, string $contentType = self::contentTypes['postApiV3AdminCreditAdjustments'][0])
+    {
+
+        // verify the required parameter 'post_api_v3_admin_credit_adjustments_request' is set
+        if ($post_api_v3_admin_credit_adjustments_request === null || (is_array($post_api_v3_admin_credit_adjustments_request) && count($post_api_v3_admin_credit_adjustments_request) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $post_api_v3_admin_credit_adjustments_request when calling postApiV3AdminCreditAdjustments'
+            );
+        }
+
+
+        $resourcePath = '/v3/admin/credit-adjustments';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', 'application/problem+json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (isset($post_api_v3_admin_credit_adjustments_request)) {
+            if (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the body
+                try {
+                    $httpBody = json_encode(ObjectSerializer::sanitizeForSerialization($post_api_v3_admin_credit_adjustments_request), JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
+            } else {
+                $httpBody = $post_api_v3_admin_credit_adjustments_request;
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+        // this endpoint requires Bearer authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'POST',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation postApiV3AdminCreditSettlements
+     *
+     * 手工结算积分
+     *
+     * @param  \WikipaliApi\Model\PostApiV3AdminCreditSettlementsRequest|null $post_api_v3_admin_credit_settlements_request post_api_v3_admin_credit_settlements_request (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['postApiV3AdminCreditSettlements'] to see the possible values for this operation
+     *
+     * @throws \WikipaliApi\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return \WikipaliApi\Model\PostApiV3AdminCreditSettlements200Response|\WikipaliApi\Model\PostApiV3AdminCreditSettlements200Response|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails
+     */
+    public function postApiV3AdminCreditSettlements($post_api_v3_admin_credit_settlements_request = null, string $contentType = self::contentTypes['postApiV3AdminCreditSettlements'][0])
+    {
+        list($response) = $this->postApiV3AdminCreditSettlementsWithHttpInfo($post_api_v3_admin_credit_settlements_request, $contentType);
+        return $response;
+    }
+
+    /**
+     * Operation postApiV3AdminCreditSettlementsWithHttpInfo
+     *
+     * 手工结算积分
+     *
+     * @param  \WikipaliApi\Model\PostApiV3AdminCreditSettlementsRequest|null $post_api_v3_admin_credit_settlements_request (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['postApiV3AdminCreditSettlements'] to see the possible values for this operation
+     *
+     * @throws \WikipaliApi\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of \WikipaliApi\Model\PostApiV3AdminCreditSettlements200Response|\WikipaliApi\Model\PostApiV3AdminCreditSettlements200Response|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function postApiV3AdminCreditSettlementsWithHttpInfo($post_api_v3_admin_credit_settlements_request = null, string $contentType = self::contentTypes['postApiV3AdminCreditSettlements'][0])
+    {
+        $request = $this->postApiV3AdminCreditSettlementsRequest($post_api_v3_admin_credit_settlements_request, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    return $this->handleResponseWithDataType(
+                        '\WikipaliApi\Model\PostApiV3AdminCreditSettlements200Response',
+                        $request,
+                        $response,
+                    );
+                case 201:
+                    return $this->handleResponseWithDataType(
+                        '\WikipaliApi\Model\PostApiV3AdminCreditSettlements200Response',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $request,
+                        $response,
+                    );
+            }
+
+            
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            return $this->handleResponseWithDataType(
+                '\WikipaliApi\Model\PostApiV3AdminCreditSettlements200Response',
+                $request,
+                $response,
+            );
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\WikipaliApi\Model\PostApiV3AdminCreditSettlements200Response',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 201:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\WikipaliApi\Model\PostApiV3AdminCreditSettlements200Response',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\WikipaliApi\Model\ProblemDetails',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+            }
+        
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation postApiV3AdminCreditSettlementsAsync
+     *
+     * 手工结算积分
+     *
+     * @param  \WikipaliApi\Model\PostApiV3AdminCreditSettlementsRequest|null $post_api_v3_admin_credit_settlements_request (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['postApiV3AdminCreditSettlements'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function postApiV3AdminCreditSettlementsAsync($post_api_v3_admin_credit_settlements_request = null, string $contentType = self::contentTypes['postApiV3AdminCreditSettlements'][0])
+    {
+        return $this->postApiV3AdminCreditSettlementsAsyncWithHttpInfo($post_api_v3_admin_credit_settlements_request, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation postApiV3AdminCreditSettlementsAsyncWithHttpInfo
+     *
+     * 手工结算积分
+     *
+     * @param  \WikipaliApi\Model\PostApiV3AdminCreditSettlementsRequest|null $post_api_v3_admin_credit_settlements_request (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['postApiV3AdminCreditSettlements'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function postApiV3AdminCreditSettlementsAsyncWithHttpInfo($post_api_v3_admin_credit_settlements_request = null, string $contentType = self::contentTypes['postApiV3AdminCreditSettlements'][0])
+    {
+        $returnType = '\WikipaliApi\Model\PostApiV3AdminCreditSettlements200Response';
+        $request = $this->postApiV3AdminCreditSettlementsRequest($post_api_v3_admin_credit_settlements_request, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'postApiV3AdminCreditSettlements'
+     *
+     * @param  \WikipaliApi\Model\PostApiV3AdminCreditSettlementsRequest|null $post_api_v3_admin_credit_settlements_request (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['postApiV3AdminCreditSettlements'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function postApiV3AdminCreditSettlementsRequest($post_api_v3_admin_credit_settlements_request = null, string $contentType = self::contentTypes['postApiV3AdminCreditSettlements'][0])
+    {
+
+
+
+        $resourcePath = '/v3/admin/credit-settlements';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', 'application/problem+json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (isset($post_api_v3_admin_credit_settlements_request)) {
+            if (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the body
+                try {
+                    $httpBody = json_encode(ObjectSerializer::sanitizeForSerialization($post_api_v3_admin_credit_settlements_request), JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
+            } else {
+                $httpBody = $post_api_v3_admin_credit_settlements_request;
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+        // this endpoint requires Bearer authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'POST',
             $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
             $headers,
             $httpBody

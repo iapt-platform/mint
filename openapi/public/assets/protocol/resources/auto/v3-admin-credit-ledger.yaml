@@ -1,0 +1,145 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-admin-credit-ledger.yaml
+get:
+  summary: 列出积分流水
+  tags:
+    - admin
+  operationId: get_api_v3_admin_credit_ledger
+  description: |-
+    最新的在前。包括结算赚取（earn）、提问扣减（spend）、出错退回（refund）与手工调整（adjust）。
+
+    实现：`V3\AdminCreditLedgerController@index`
+  security:
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: per_page
+      in: query
+      schema:
+        type: integer
+        default: 20
+      description: '每页数量，最大 100'
+    -
+      name: 'filter[account_type]'
+      in: query
+      schema:
+        type: string
+        enum:
+          - user
+          - guest
+      description: '账号类型；给 account_id 时必填'
+    -
+      name: 'filter[account_id]'
+      in: query
+      schema:
+        type: string
+      description: '账号 id（用户 uuid 或游客设备 id）'
+    -
+      name: 'filter[kind]'
+      in: query
+      schema:
+        type: string
+        enum:
+          - earn
+          - spend
+          - refund
+          - adjust
+      description: 流水类型
+    -
+      name: 'filter[bucket]'
+      in: query
+      schema:
+        type: string
+        enum:
+          - free
+          - earned
+      description: '池子：free 每日赠送 / earned 积分余额'
+    -
+      name: 'filter[source]'
+      in: query
+      schema:
+        type: string
+        enum:
+          - reading
+          - editing
+          - agent_run
+          - admin
+      description: 来源
+    -
+      name: 'filter[from]'
+      in: query
+      schema:
+        type: string
+      description: 起始日（UTC，Y-m-d，按流水归属日）
+    -
+      name: 'filter[to]'
+      in: query
+      schema:
+        type: string
+      description: 结束日（UTC，Y-m-d，含当天）
+    -
+      name: page
+      in: query
+      schema:
+        type: integer
+        default: 1
+      description: 页码
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    account_type:
+                      type: string
+                      enum: [user, guest]
+                    account_id:
+                      type: string
+                    user:
+                      type: object
+                      properties: { id: { type: string }, nickName: { type: string }, userName: { type: string }, realName: { type: string }, sn: { type: integer }, avatar: { type: string }, roles: { type: array, items: { type: string } } }
+                      nullable: true
+                    delta:
+                      type: integer
+                    kind:
+                      type: string
+                      enum: [earn, spend, refund, adjust]
+                    bucket:
+                      type: string
+                      enum: [free, earned]
+                    source:
+                      type: string
+                      enum: [reading, editing, agent_run, admin]
+                    ref:
+                      type: string
+                    day:
+                      type: string
+                    policy_version:
+                      type: integer
+                    client_ip:
+                      type: string
+                      nullable: true
+                    note:
+                      type: string
+                      nullable: true
+                    operator:
+                      type: object
+                      properties: { id: { type: string }, nickName: { type: string }, userName: { type: string }, realName: { type: string }, sn: { type: integer }, avatar: { type: string }, roles: { type: array, items: { type: string } } }
+                      nullable: true
+                    created_at:
+                      type: string
+                    updated_at:
+                      type: string
+              meta:
+                $ref: '../../main.yaml#/components/schemas/PaginationMeta'
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

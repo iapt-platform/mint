@@ -26,14 +26,14 @@ import {
   type ReadingStatsQuery,
 } from "../api/adminStats";
 
-interface AsyncState<T> {
+export interface AsyncState<T> {
   data: T | null;
   loading: boolean;
   error: unknown;
   refresh: () => void;
 }
 
-const useAsync = <T>(load: (() => Promise<T>) | null, key: string): AsyncState<T> => {
+export const useAsync = <T>(load: (() => Promise<T>) | null, key: string): AsyncState<T> => {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<unknown>(null);
