@@ -111,7 +111,7 @@ final class HtmlRenderer implements Renderer
             if ($node instanceof Text && trim($node->value) === '') {
                 continue;
             }
-            if (! $node instanceof Call || ! $node->template->block()) {
+            if (! $node instanceof Call || ! $node->template->block($node)) {
                 return false;
             }
             $found = true;

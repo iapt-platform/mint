@@ -1,7 +1,9 @@
 <?php
+
 return [
     'toc' => '目錄',
     'references' => '參考文獻',
+    'ai_generated' => 'AI 生成內容',
     'home' => '首页',
     'translation' => '譯文',
     'original' => '原文',

@@ -15,7 +15,7 @@ final class MermaidTemplate extends Template
 {
     protected string $component = 'mermaid';
 
-    public function block(): bool
+    public function block(Call $call): bool
     {
         return true;
     }
