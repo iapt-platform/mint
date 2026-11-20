@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\V3\IndexGlossaryRequest;
 use App\Http\Resources\V3\GlossaryEntryResource;
 use App\Services\V3\GlossaryService;
+use Illuminate\Http\Response;
 
 /**
  * 术语词汇表：语法术语表 / 社区译名表（只读）。
@@ -31,16 +32,32 @@ class GlossaryController extends Controller
      *
      * @meta kind string 哪张表
      * @meta lang string 实际用到的语言（没有该语言的表时是 en）
+     * community 表带 `ETag`（`Cache-Control: public, no-cache`）：浏览器下次自动带 `If-None-Match`，
+     * 表没变就回 304、不带正文。ETag 在社区术语任务每次跑完时更换。grammar 表暂不带。
      * @meta total integer 条数
      */
     public function __invoke(IndexGlossaryRequest $request, string $kind)
     {
-        $result = $this->glossaries->entries($kind, $request->validated('lang') ?? app()->getLocale());
+        $lang = $request->validated('lang') ?? app()->getLocale();
+        $etag = $this->glossaries->etag($kind, $lang);
+        $withEtag = fn ($response) => $etag === null ? $response : $response
+            ->setEtag($etag)
+            ->header('Cache-Control', 'public, no-cache');
 
-        return GlossaryEntryResource::collection($result['items'])->additional(['meta' => [
+        // 表没变：在查整表之前就回 304（isNotModified 按 RFC 9110 弱比较，nginx 压缩后的 W/"…" 也认）
+        if ($etag !== null) {
+            $probe = $withEtag(new Response);
+            if ($probe->isNotModified($request)) {
+                return $probe;
+            }
+        }
+
+        $result = $this->glossaries->entries($kind, $lang);
+
+        return $withEtag(GlossaryEntryResource::collection($result['items'])->additional(['meta' => [
             'kind' => $kind,
             'lang' => $result['lang'],
             'total' => $result['items']->count(),
-        ]]);
+        ]])->response());
     }
 }

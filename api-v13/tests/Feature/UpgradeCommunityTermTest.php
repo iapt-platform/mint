@@ -2,6 +2,7 @@
 
 use App\Models\Channel;
 use App\Models\DhammaTerm;
+use App\Services\V3\GlossaryService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 
@@ -97,6 +98,16 @@ it('never takes the note from an AI-generated channel, but still counts its mean
     $term = DhammaTerm::where('channal', $this->community)->sole();
     expect($term->meaning)->toBe('法')
         ->and((string) $term->note)->toBe('');
+});
+
+it('rotates the community glossary ETag after each run', function () {
+    communityTerm($this->user, 'dhamma', null);
+    $glossaries = app(GlossaryService::class);
+    $before = $glossaries->etag('community', 'zh-Hans');
+
+    $this->artisan('upgrade:community.term', ['lang' => 'zh-Hans'])->assertSuccessful();
+
+    expect($glossaries->etag('community', 'zh-Hans'))->not->toBe($before);
 });
 
 it('only touches the given word when one is passed', function () {

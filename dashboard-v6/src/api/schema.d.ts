@@ -8565,6 +8565,8 @@ export interface paths {
          * 术语词汇表
          * @description 整表返回、不分页（客户端启动时拉一次，本地查词）。`meta.lang` 是实际用到的语言：
          *     该语言没有这张表时回退到英文。条目的 `id`（术语 guid）只有 grammar 表给，community 表不给（省流量）。
+         *     community 表带 `ETag`（`Cache-Control: public, no-cache`）：浏览器下次自动带 `If-None-Match`，
+         *     表没变就回 304、不带正文。ETag 在社区术语任务每次跑完时更换。grammar 表暂不带。
          *
          *     实现：`V3\GlossaryController@__invoke`
          */

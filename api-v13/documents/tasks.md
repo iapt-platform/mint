@@ -53,7 +53,7 @@ start at: 16:00 UTC
 # 更新单词首选意思
 php artisan upgrade:dict.default.meaning
 
-# 社区术语表
+# 社区术语表（这个 channel 只由本任务维护；跑完会换 /v3/glossaries/community 的 ETag）
 php artisan upgrade:community.term zh-Hans
 
 # 导出离线数据

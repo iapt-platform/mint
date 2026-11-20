@@ -7,6 +7,7 @@ use App\Models\DhammaTerm;
 use App\Models\Sentence;
 use App\Models\UserOperationDaily;
 use App\Services\ChannelService;
+use App\Services\V3\GlossaryService;
 use App\Tools\Tools;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
@@ -32,7 +33,7 @@ class UpgradeCommunityTerm extends Command
      *
      * @return int
      */
-    public function handle(ChannelService $channels)
+    public function handle(ChannelService $channels, GlossaryService $glossaries)
     {
         if (Tools::isStop()) {
             return 0;
@@ -205,6 +206,9 @@ class UpgradeCommunityTerm extends Command
         $stale = $existing->flatten();
         $stale->each->delete();
         $this->info("done: {$total} terms, {$stale->count()} stale rows removed");
+
+        // 表可能变了：换 ETag，客户端（/v3/glossaries/community）下次请求拿新数据
+        $glossaries->rotateEtag($localTerm);
 
         return 0;
     }
