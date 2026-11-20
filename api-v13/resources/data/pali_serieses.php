@@ -1738,6 +1738,11 @@ return [
             'abbr_pts' => 'VjbT',
             'abbr_wp' => 'vajira.ṭī.pāci.',
         ],
+        1433 => [
+            'abbr_my' => 'vajira-ṭī',
+            'abbr_pts' => 'VjbT',
+            'abbr_wp' => 'vajira.ṭī.bhikkhunī.',
+        ],
         1708 => [
             'abbr_my' => 'vajira-ṭī',
             'abbr_pts' => 'VjbT',
