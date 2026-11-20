@@ -1,0 +1,71 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-markup-previews.yaml
+post:
+  summary: 预览一段源码
+  tags:
+    - markup-previews
+  operationId: post_api_v3_markup_previews
+  description: |-
+    把还没保存的 markdown 渲染成节点树（与术语、批注的 `body` 同形），不写库，所以是 200 而不是 201。
+    口径同阅读页的读模式：术语按第一个 channel 查，句子模板缺省读这些 channel 的译文。
+    给了 `channels` 的，每个都要有读权限：不存在 404，看不见 403。
+
+    实现：`V3\MarkupPreviewController@__invoke`
+  security:
+    -
+      bearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            content:
+              type: string
+              description: '源码，最多 20000 字'
+            content_type:
+              type: string
+              description: 方言
+              enum:
+                - markdown
+                - markdown-e2
+              default: markdown
+            channels:
+              type: array
+              description: '内容所属的 channel uid，最多 10 个'
+            lang:
+              type: string
+              description: '没给 channel 时用的语言，如 zh-Hans。缺省用界面语言（Accept-Language 协商的结果）'
+          required:
+            - content
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  body:
+                    type: array
+                    items:
+                      $ref: '../../main.yaml#/components/schemas/MarkupNode'
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    403:
+      description: '给的 channel 没有读权限'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+    404:
+      description: '给的 channel 不存在'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

@@ -8818,6 +8818,30 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v3/markup-previews": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 预览一段源码
+         * @description 把还没保存的 markdown 渲染成节点树（与术语、批注的 `body` 同形），不写库，所以是 200 而不是 201。
+         *     口径同阅读页的读模式：术语按第一个 channel 查，句子模板缺省读这些 channel 的译文。
+         *     给了 `channels` 的，每个都要有读权限：不存在 404，看不见 403。
+         *
+         *     实现：`V3\MarkupPreviewController@__invoke`
+         */
+        post: operations["post_api_v3_markup_previews"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v3/me": {
         parameters: {
             query?: never;
@@ -39941,6 +39965,67 @@ export interface operations {
                 };
             };
             /** @description 邀请不存在或已被使用 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    post_api_v3_markup_previews: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description 源码，最多 20000 字 */
+                    content: string;
+                    /**
+                     * @description 方言
+                     * @default markdown
+                     * @enum {string}
+                     */
+                    content_type?: "markdown" | "markdown-e2";
+                    /** @description 内容所属的 channel uid，最多 10 个 */
+                    channels?: unknown[];
+                    /** @description 没给 channel 时用的语言，如 zh-Hans。缺省用界面语言（Accept-Language 协商的结果） */
+                    lang?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            body?: components["schemas"]["MarkupNode"][];
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            /** @description 给的 channel 没有读权限 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description 给的 channel 不存在 */
             404: {
                 headers: {
                     [name: string]: unknown;
