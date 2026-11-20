@@ -13,6 +13,7 @@ import pages from "./en-US/pages";
 import admin from "./en-US/admin";
 import adminStats from "./en-US/admin-stats";
 import search from "./en-US/search";
+import tplBuilder from "./en-US/tpl-builder";
 
 const items = {
   "columns.library.title": "Library",
@@ -79,6 +80,7 @@ const items = {
   ...admin,
   ...adminStats,
   ...search,
+  ...tplBuilder,
 };
 
 export default items;
