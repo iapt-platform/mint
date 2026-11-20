@@ -13,7 +13,7 @@ use \WikipaliApi\Model\PostApiV3StudiosStudioChannelsRequest;
  */
 
 test('GET /v3/terms?word= → 200；缺 word → 422', function () {
-    $res = request(fn () => api(TermsApi::class)->getApiV3TermsWithHttpInfo('dhamma', 5));
+    $res = request(fn () => api(TermsApi::class)->getApiV3TermsWithHttpInfo('dhamma', per_page: 5));
     assert_status(200, $res, 'terms lookup');
     assert_has_key('meta', $res['body'], 'terms lookup');
 

@@ -330,7 +330,7 @@ class GetApiV3GlossariesKind200ResponseDataInner implements ModelInterface, Arra
     /**
      * Sets id
      *
-     * @param string|null $id id
+     * @param string|null $id 仅在部分查询口径下返回。
      *
      * @return self
      */
