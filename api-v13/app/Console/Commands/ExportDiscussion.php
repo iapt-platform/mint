@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Api\ChannelApi;
+use App\Services\ChannelService;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
@@ -33,14 +33,14 @@ class ExportDiscussion extends Command
     /**
      * Execute the console command.
      */
-    public function handle(): int
+    public function handle(ChannelService $channelService): int
     {
         $editorUid = $this->argument('editor');
 
         $this->info("Fetching discussions for editor: {$editorUid}");
 
         // 1. 获取巴利原文 channel_uid
-        $this->orgChannelId = ChannelApi::getSysChannel('_System_Pali_VRI_');
+        $this->orgChannelId = $channelService->systemUid('_System_Pali_VRI_');
         if (! $this->orgChannelId) {
             $this->error('Failed to retrieve Pali source channel ID.');
 

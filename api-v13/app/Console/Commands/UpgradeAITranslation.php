@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use App\Facades\RedisCache;
 use App\Helpers\LlmResponseParser;
-use App\Http\Api\ChannelApi;
 use App\Http\Resources\AiModelResource;
 use App\Models\PaliText;
 use App\Models\Sentence;
@@ -12,6 +11,7 @@ use App\Services\AIAssistant\NissayaTranslateService;
 use App\Services\AIAssistant\PaliTranslateService;
 use App\Services\AIModelService;
 use App\Services\AuthService;
+use App\Services\ChannelService;
 use App\Services\OpenAIService;
 use App\Services\SentenceService;
 use Illuminate\Console\Command;
@@ -74,6 +74,7 @@ class UpgradeAITranslation extends Command
      * @return void
      */
     public function __construct(
+        protected ChannelService $channelService,
         protected AIModelService $modelService,
         protected SentenceService $sentenceService,
         protected OpenAIService $openAIService,
@@ -108,7 +109,7 @@ class UpgradeAITranslation extends Command
         $this->modelToken = AuthService::getUserToken($this->model['uid']);
 
         // channel
-        $this->workChannel = ChannelApi::getById($this->argument('channel'));
+        $this->workChannel = $this->channelService->summary($this->argument('channel'));
         // 需要判断输入channel 与翻译类型是否一致 nissaya -> nissaya channel
         if ($this->workChannel['type'] !== $this->argument('type')) {
             $this->error('channel type not match request '.$this->argument('type').' input is '.$this->workChannel['type']);
@@ -265,7 +266,7 @@ class UpgradeAITranslation extends Command
 
         直接输出jsonl, 无需其他内容
         md;
-        $channelId = ChannelApi::getSysChannel('_System_Wbw_VRI_');
+        $channelId = $this->channelService->systemUid('_System_Wbw_VRI_');
         $sentences = Sentence::where('channel_uid', $channelId)
             ->where('book_id', $book)
             ->where('paragraph', $para)

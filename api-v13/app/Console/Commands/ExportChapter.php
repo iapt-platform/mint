@@ -2,11 +2,11 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Api\ChannelApi;
 use App\Http\Api\MdRender;
 use App\Models\PaliText;
 use App\Models\ProgressChapter;
 use App\Models\Sentence;
+use App\Services\ChannelService;
 use App\Tools\Export;
 use App\Tools\ExportDownload;
 use App\Tools\Tools;
@@ -47,7 +47,7 @@ class ExportChapter extends Command
      *
      * @return int
      */
-    public function handle()
+    public function handle(ChannelService $channelService)
     {
         $this->info('task export chapter start');
         Log::debug('task export chapter start');
@@ -79,7 +79,7 @@ class ExportChapter extends Command
         $renderFormat = 'markdown';
 
         // 获取原文channel
-        $orgChannelId = ChannelApi::getSysChannel('_System_Pali_VRI_');
+        $orgChannelId = $channelService->systemUid('_System_Pali_VRI_');
 
         $tranChannelsId = explode('_', $this->argument('channel'));
 
@@ -88,8 +88,8 @@ class ExportChapter extends Command
         $channels = [];
         $channelsIndex = [];
         foreach ($channelsId as $key => $id) {
-            $channels[] = ChannelApi::getById($id);
-            $channelsIndex[$id] = ChannelApi::getById($id);
+            $channels[] = $channelService->summary($id);
+            $channelsIndex[$id] = $channelService->summary($id);
         }
 
         $bookMeta = [];

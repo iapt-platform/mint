@@ -3,10 +3,10 @@
 namespace App\Console\Commands;
 
 use App\Facades\RedisCache;
-use App\Http\Api\ChannelApi;
 use App\Models\PaliText;
 use App\Models\ProgressChapter;
 use App\Models\Sentence;
+use App\Services\ChannelService;
 use App\Services\OpenSearchService;
 use App\Services\PaliContentService;
 use App\Services\SearchPaliDataService;
@@ -49,6 +49,7 @@ class IndexTipitaka extends Command
      * @return void
      */
     public function __construct(
+        protected ChannelService $channelService,
         protected SearchPaliDataService $searchPaliDataService,
         protected OpenSearchService $openSearchService,
         protected SummaryService $summaryService,
@@ -307,7 +308,7 @@ class IndexTipitaka extends Command
             foreach ($channels as $channel) {
                 $display = [];
                 $content = [];
-                $channelInfo = ChannelApi::getById($channel->channel_uid);
+                $channelInfo = $this->channelService->summary($channel->channel_uid);
                 if (! $channelInfo) {
                     Log::error('invalid channel', ['id' => $channel->channel_uid]);
 
@@ -364,7 +365,7 @@ class IndexTipitaka extends Command
             ->where('para', $param['para'])
             ->where('channel_id', $param['channel'])
             ->first();
-        $channel = ChannelApi::getById($param['channel']);
+        $channel = $this->channelService->summary($param['channel']);
         $docId = "tipitaka_chapter_{$param['book']}-{$param['para']}_{$param['channel']}";
         $document = [
             'id' => $docId,
