@@ -17,7 +17,7 @@ test('GET /v3/glossaries/community?lang=zh-Hans → 200，整表带 meta', funct
     assert_eq(count($res['body']['data']), $res['body']['meta']['total'], '整表不分页：total 与条数相等');
     $first = $res['body']['data'][0] ?? null;
     if ($first) {
-        assert_eq(['id', 'word', 'tag', 'meaning', 'other_meaning'], array_keys($first), '条目字段');
+        assert_eq(['word', 'tag', 'meaning', 'other_meaning'], array_keys($first), '条目字段（community 不给 id）');
     }
 });
 
@@ -25,6 +25,10 @@ test('GET /v3/glossaries/grammar?lang=xx（没有这种语言的表）→ 200，
     $res = raw('GET', '/v3/glossaries/grammar', ['lang' => 'xx']);
     assert_status(200, $res, 'grammar glossary 回退');
     assert_eq('en', $res['body']['meta']['lang'] ?? null, '回退语言');
+    $first = $res['body']['data'][0] ?? null;
+    if ($first) {
+        assert_has_key('id', $first, 'grammar 条目带 id（v6 凭它取术语正文）');
+    }
 });
 
 test('GET /v3/glossaries/{非法 kind} → 404；lang 格式不对 → 422', function () {

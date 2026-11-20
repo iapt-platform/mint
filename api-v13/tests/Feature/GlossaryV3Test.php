@@ -78,12 +78,18 @@ it('rejects an unknown kind or a malformed language', function () {
         ->assertUnprocessable()->assertJsonValidationErrors('lang');
 });
 
-it('never exposes the auto-increment id of the terms', function () {
-    $zh = makeChannel(config('mint.admin.root_uuid'), '_community_term_zh-hans_');
-    $term = glossaryTerm($zh, 'dhamma');
+it('gives the term guid only in the grammar glossary, and never the auto-increment id', function () {
+    $root = config('mint.admin.root_uuid');
+    $grammar = glossaryTerm(makeChannel($root, '_System_Grammar_Term_zh-hans_'), 'vibhatti');
+    $community = glossaryTerm(makeChannel($root, '_community_term_zh-hans_'), 'dhamma');
+
+    $row = $this->getJson('/api/v3/glossaries/grammar?lang=zh-Hans')->json('data.0');
+    expect(array_keys($row))->toBe(['id', 'word', 'tag', 'meaning', 'other_meaning'])
+        ->and($row['id'])->toBe($grammar->guid)
+        ->and(json_encode($row))->not->toContain((string) $grammar->id);
 
     $row = $this->getJson('/api/v3/glossaries/community?lang=zh-Hans')->json('data.0');
-    expect(array_keys($row))->toBe(['id', 'word', 'tag', 'meaning', 'other_meaning'])
-        ->and($row['id'])->toBe($term->guid)
-        ->and(json_encode($row))->not->toContain((string) $term->id);
+    expect(array_keys($row))->toBe(['word', 'tag', 'meaning', 'other_meaning'])
+        ->and(json_encode($row))->not->toContain($community->guid)
+        ->and(json_encode($row))->not->toContain((string) $community->id);
 });

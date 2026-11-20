@@ -8564,7 +8564,7 @@ export interface paths {
         /**
          * 术语词汇表
          * @description 整表返回、不分页（客户端启动时拉一次，本地查词）。`meta.lang` 是实际用到的语言：
-         *     该语言没有这张表时回退到英文。
+         *     该语言没有这张表时回退到英文。条目的 `id`（术语 guid）只有 grammar 表给，community 表不给（省流量）。
          *
          *     实现：`V3\GlossaryController@__invoke`
          */
@@ -39162,6 +39162,7 @@ export interface operations {
                 content: {
                     "application/json": {
                         data?: {
+                            /** @description 仅在部分查询口径下返回。 */
                             id?: string;
                             word?: string;
                             tag?: string | null;
