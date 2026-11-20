@@ -680,6 +680,19 @@ v3 端点可以自由改：v4 那两处 v3 引用（`ChatInput.tsx:127`、`agent
    `$this->postJson($url, $data, ['Accept-Language' => 'zh-Hans'])`，范例见
    `tests/Feature/LocaleV3Test.php`。
 
+12. **日志级别按「生产上要不要留」选，临时日志不进提交。**
+
+   | 用途 | 级别 |
+   | --- | --- |
+   | 生产上需要留存、出事要靠它排查的 | `error` / `warning` / `info` |
+   | 只在本地开发时看的 | `debug`（生产 `.env` 须 `LOG_LEVEL=info`；`config/logging.php` 缺省是 debug） |
+   | 临时排查用的 | 调试完就删 |
+
+   `info` 只给低频、有业务意义的事件，**不准放在逐句、逐段、逐请求的热路径上**，
+   也不准把整段正文写进日志。反例：阅读页的 `reading-annotations: inject`
+   （`Log::info` 逐句写整句译文，2026-11-19 线上 46 秒 91 条，已删）。
+   提交前的检查见「验收」。
+
 ## 路由怎么设计
 
 ### 先过四道判据
@@ -1172,6 +1185,14 @@ cd dashboard-v6 && npm run build                                  # 前端类型
 
 三条都要过。**没有这三道闸，上面所有规范半年内都会腐化**——这比任何文档都重要。
 （`tests/Feature/ExampleTest.php` 是历史遗留失败，可忽略。）
+
+提交前再查一遍新增的日志（硬规范第 12 条）：
+
+```bash
+git diff --cached -U0 | grep -nE 'Log::|logger\(|\b(dd|dump|ray)\('
+```
+
+新增的每一条都要对得上级别表；临时日志、`dd()`、`dump()` 删掉再提交。
 
 ## 禁止事项
 

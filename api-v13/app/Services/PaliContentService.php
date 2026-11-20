@@ -867,12 +867,6 @@ class PaliContentService
         $result['notes'] = array_map(fn ($id) => $footnotes[$id], $layout['notes']);
         $result['assessed'] = $assessment !== null;
 
-        Log::info('reading-annotations: inject', [
-            'sid' => "{$row->book_id}-{$row->paragraph}-{$row->word_start}-{$row->word_end}",
-            'count' => $records->count(),
-            'content' => $result['content'],
-        ]);
-
         return $result;
     }
 
