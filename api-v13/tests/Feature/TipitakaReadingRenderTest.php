@@ -32,9 +32,10 @@ it('renders every sentence of a paragraph wrapped in divs', function () {
     // 默认只输出 display
     expect($data)->not->toHaveKey('sentences');
     expect($data['display'])
-        ->toContain("<div id='para-1' class='translation' data-para='1'>")
-        ->toContain("<div class='sentence' data-sid='9001-1-1-1'>")
-        ->toContain("<div class='sentence' data-sid='9001-1-2-2'>")
+        // 段落 class 后面拼 pali_texts.class，这里为空，所以允许末尾空白
+        ->toMatch("/<div id='para-1' class='translation\\s*' data-para='1'>/")
+        ->toContain("<div class='sentence' lang='zh-Hans' data-sid='9001-1-1-1'>")
+        ->toContain("<div class='sentence' lang='zh-Hans' data-sid='9001-1-2-2'>")
         ->toContain("<div class='para-block'>");
 });
 
