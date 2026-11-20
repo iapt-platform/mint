@@ -2,10 +2,11 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Api\ChannelApi;
+use App\Models\Channel;
 use App\Models\DhammaTerm;
 use App\Models\Sentence;
 use App\Models\UserOperationDaily;
+use App\Services\ChannelService;
 use App\Tools\Tools;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
@@ -24,64 +25,89 @@ class UpgradeCommunityTerm extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
-
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    protected $description = '由各用户的术语生成社区术语表（_community_term_{lang}_）：每个 word + tag 一条，取最常见的译名与得分最高的注释';
 
     /**
      * Execute the console command.
      *
      * @return int
      */
-    public function handle()
+    public function handle(ChannelService $channels)
     {
         if (Tools::isStop()) {
             return 0;
         }
         $lang = strtolower($this->argument('lang'));
         $langFamily = explode('-', $lang)[0];
-        $localTerm = ChannelApi::getSysChannel("_community_term_{$lang}_");
+        $localTerm = $channels->systemUid("_community_term_{$lang}_");
         if (! $localTerm) {
             return 1;
         }
 
-        $channelId = ChannelApi::getSysChannel('_System_Pali_VRI_');
+        $channelId = $channels->systemUid('_System_Pali_VRI_');
         if ($channelId === false) {
             $this->error('no channel');
 
             return 1;
         }
-        $table = DhammaTerm::select(['word', 'tag'])
-            ->whereIn('language', [$this->argument('lang'), $lang, $langFamily])
-            ->groupBy(['word', 'tag']);
+        $langs = [$this->argument('lang'), $lang, $langFamily];
+        $wordArg = $this->argument('word');
 
-        if ($this->argument('word')) {
-            $table = $table->where('word', $this->argument('word'));
+        // 来源：该语言的全部术语，但不含社区 channel 自己——
+        // 否则社区里的每一行都会作为来源把自己续命，坏行永远清不掉。
+        $sources = fn () => DhammaTerm::query()
+            ->whereIn('language', $langs)
+            ->where(fn ($q) => $q->whereNull('channal')->orWhere('channal', '<>', $localTerm));
+
+        // 要生成的 (word, tag)。tag 的 NULL、''、纯空白都算「无 tag」，归成一组。
+        $pairs = $sources()
+            ->select(['word', 'tag'])
+            ->whereNotNull('word')
+            ->where('word', '<>', '')
+            ->distinct()
+            ->when($wordArg, fn ($q) => $q->where('word', $wordArg))
+            ->get()
+            ->map(fn ($row) => (object) ['word' => $row->word, 'tag' => self::normalizeTag($row->tag)])
+            ->unique(fn ($row) => self::pairKey($row->word, $row->tag))
+            ->values();
+
+        if ($pairs->isEmpty()) {
+            // 来源查空了多半是出了问题，不要据此清空整个社区 channel
+            $this->error('no source terms');
+
+            return 1;
         }
-        $words = $table->get();
-        $bar = $this->output->createProgressBar(count($words));
-        foreach ($words as $key => $word) {
+
+        // 社区 channel 里现有的行，按同样的口径分组；处理一组就取走一组，最后剩下的都是该删的
+        $existing = DhammaTerm::where('channal', $localTerm)
+            ->when($wordArg, fn ($q) => $q->where('word', $wordArg))
+            ->orderBy('create_time')
+            ->orderBy('guid')
+            ->get()
+            ->groupBy(fn ($row) => self::pairKey($row->word, self::normalizeTag($row->tag)));
+
+        $aiChannels = Channel::where('source_type', 'ai')->pluck('uid')->flip();
+
+        $total = $pairs->count();
+        foreach ($pairs as $index => $word) {
             /**
              * 最优算法
              * 1. 找到最常见的意思
              * 2. 找到分数最高的
              */
             $bestNote = '';
-            $allTerm = DhammaTerm::where('word', $word->word)
-                ->where('tag', $word->tag)
-                ->whereIn('language', [$this->argument('lang'), $lang, $langFamily])
-                ->get();
+            $allTerm = $sources()
+                ->where('word', $word->word)
+                ->get()
+                ->filter(fn ($term) => self::normalizeTag($term->tag) === $word->tag)
+                ->values();
             $score = [];
             // $term_exp = [];
             foreach ($allTerm as $key => $term) {
+                // AI 生成的 channel（source_type=ai）里的注释不参与评选；译名统计仍算它们
+                if ($term->channal !== null && isset($aiChannels[$term->channal])) {
+                    continue;
+                }
                 // 获取经验值
                 $exp = UserOperationDaily::where('user_id', $term->editor_id)
                     ->where('date_int', '<=', date_timestamp_get(date_create($term->updated_at)) * 1000)
@@ -133,9 +159,10 @@ class UpgradeCommunityTerm extends Command
             }
 
             // 需要过滤掉system_term的数量，把count(*)替换为经验值加合作为基础得分，（基础经验得分之和转化为标准活动周，再加上最近的更新时间，为最终得分）
-            $hotMeaning = DhammaTerm::selectRaw('meaning,count(*) as co')
+            // FIXME: 只按 word 统计、不看 tag，同词不同义项会被写成同一个译名
+            $hotMeaning = $sources()
+                ->selectRaw('meaning,count(*) as co')
                 ->where('word', $word->word)
-                ->whereIn('language', [$this->argument('lang'), $lang, $langFamily])
                 ->groupBy('meaning')
                 ->orderBy('co', 'desc')
                 ->first();
@@ -146,33 +173,52 @@ class UpgradeCommunityTerm extends Command
                     $bestNote = $allTerm[(int) key($score)]->note;
                 }
 
-                $term = DhammaTerm::where('channal', $localTerm)->firstOrNew(
-                    [
-                        'word' => $word->word,
-                        'tag' => $word->tag,
-                        'channal' => $localTerm,
-                    ],
-                    [
-                        'id' => app('snowflake')->id(),
-                        'guid' => Str::uuid(),
-                        'word_en' => Tools::getWordEn($word->word),
-                        'meaning' => '',
-                        'language' => $this->argument('lang'),
-                        'owner' => config('mint.admin.root_uuid'),
-                        'editor_id' => 0,
-                        'create_time' => time() * 1000,
-                    ]
-                );
+                // 同一组若有多行（历史上 NULL / '' / 空白 tag 各建了一行），留最早建的那行，其余删掉
+                $rows = $existing->pull(self::pairKey($word->word, $word->tag)) ?? collect();
+                $term = $rows->shift() ?? new DhammaTerm([
+                    'id' => app('snowflake')->id(),
+                    'guid' => Str::uuid(),
+                    'word' => $word->word,
+                    'word_en' => Tools::getWordEn($word->word),
+                    'meaning' => '',
+                    'channal' => $localTerm,
+                    'language' => $this->argument('lang'),
+                    'owner' => config('mint.admin.root_uuid'),
+                    'editor_id' => 0,
+                    'create_time' => time() * 1000,
+                ]);
+                $rows->each->delete();
+
                 $term->tag = $word->tag;
                 $term->meaning = $hotMeaning->meaning;
                 $term->note = $bestNote;
                 $term->modify_time = time() * 1000;
                 $term->save();
             }
-            $bar->advance();
+            $done = $index + 1;
+            if ($done % 100 === 0 || $done === $total) {
+                $this->info("{$done}/{$total}");
+            }
         }
-        $bar->finish();
+
+        // 没有来源支撑的行（来源术语已删，或历史重复行）：这个 channel 只由本任务维护，一并删除（软删）
+        $stale = $existing->flatten();
+        $stale->each->delete();
+        $this->info("done: {$total} terms, {$stale->count()} stale rows removed");
 
         return 0;
+    }
+
+    /** tag 的 NULL、''、纯空白都当作「无 tag」（null） */
+    private static function normalizeTag(?string $tag): ?string
+    {
+        $tag = trim((string) $tag);
+
+        return $tag === '' ? null : $tag;
+    }
+
+    private static function pairKey(?string $word, ?string $tag): string
+    {
+        return ($word ?? '')."\0".($tag ?? '');
     }
 }
