@@ -20,6 +20,11 @@ $servers = [
         'username' => 'test',
         'password' => null,
         'token' => null,                       // 填了就直接用，跳过登录
+        // 管理员账号：只给 /v3/admin/* 用例用，与上面的测试账号分开；不配则 SKIP。
+        // 生产上只跑只读用例，写入用例只在 config.php 的 admin_write_servers 上跑。
+        'admin_username' => null,
+        'admin_password' => null,
+        'admin_token' => null,
         'fixtures' => [
             // 讨论写用例挂的句子：必须在测试账号自己的 channel 里、由测试账号编辑过
             // 'discussion_sentence' => 'ee5259be-5d1e-4408-a2a6-566a5773eef1',
@@ -61,6 +66,8 @@ $servers = [
     'next-cn' => [
         'username' => null,
         'password' => null,
+        'admin_username' => null,
+        'admin_password' => null,
         'token' => null,
         'fixtures' => [],
     ],

@@ -88,6 +88,14 @@ php run.php --username=alice --password=secret                 # 调 /v3/session
   所以跑全量前要带 `--token=` 或 `--username/--password`。
 - **写操作在所有服务器上都真实执行**（POST 建 / DELETE 删，用垃圾 target_id，测完即删），
   包括 prod。会产生少量垃圾数据，由测试账号定期清理。
+- **管理员用例（`/v3/admin/*`）用单独的管理员账号**，不用上面的测试账号（测试账号会写垃圾数据，
+  不给它管理员权限）。在 `config.local.php` 的 `servers[alias]` 里配 `admin_username` /
+  `admin_password`（或 `admin_token`），也可以用 `--admin-username= --admin-password=` /
+  `--admin-token=` 或环境变量 `API_TEST_ADMIN_*`。没配就 SKIP；配了但账号没有
+  administrator / root 角色就 FAIL。只在跑到管理员用例时才登录。
+  - **管理员在生产上只读**：admin 路由的写入用例（POST，含 422 校验）只在 `config.php` 的
+    `admin_write_servers` 白名单（默认 `local`、`staging`）上跑，其余服务器（含 next / next-cn
+    与未登记的完整 URL）一律 SKIP。401 / 403 用例仍用普通测试账号，各服务器都跑。
 - 登录接口 `POST /v3/sessions {login, password}`：`login` 可以是用户名或邮箱；成功 201
   `{data:{token, user}}`，账号或密码不对 422。**目标服务器还没部署 v3 登录时**，
   改用 `--token=` 直接给 token（v2 / v3 签的 token 一样，可以从 v4 登录后拿）。
