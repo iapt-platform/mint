@@ -16,6 +16,7 @@ use \WikipaliApi\Model\PostApiV3AdminCreditSettlementsRequest;
 function credit_admin(string $token): bool
 {
     $me = raw('GET', '/v3/me', null, null, $token);
+    assert_status(200, $me, 'me');
     $roles = $me['body']['data']['roles'] ?? [];
 
     return (bool) array_intersect(['administrator', 'root'], $roles);
@@ -106,7 +107,9 @@ test('POST /v3/admin/credit-settlements（未来日期）→ 422', function () {
 
 test('POST /v3/admin/credit-adjustments：给自己 +1 再 -1（固定 ref，只入账一次）', function () {
     $token = admin_token_or_skip();
-    $me = raw('GET', '/v3/me', null, null, $token)['body']['data']['id'];
+    $me = raw('GET', '/v3/me', null, null, $token);
+    assert_status(200, $me, 'me');
+    $me = $me['body']['data']['id'];
     foreach ([['8f0b5a52-3c1e-4e0a-9d7a-5b1f0c2e0001', 1], ['8f0b5a52-3c1e-4e0a-9d7a-5b1f0c2e0002', -1]] as [$ref, $delta]) {
         $body = new PostApiV3AdminCreditAdjustmentsRequest();
         $body->setUser($me);

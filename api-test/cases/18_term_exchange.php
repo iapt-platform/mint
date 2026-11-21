@@ -23,6 +23,7 @@ test('POST /v3/channels/{channel}/terms/imports（无 token）→ 401', function
 test('术语导出 → 原样导入一轮：xlsx 200 → 导入 200（未变 1）→ 坏文件 422', function () {
     $token = required_token();
     $me = raw('GET', '/v3/me', null, null, $token);
+    assert_status(200, $me, 'me');
     $body = new PostApiV3StudiosStudioChannelsRequest();
     $body->setName('e2e-tmp-exchange-'.time());
     $body->setType('translation');
