@@ -26,7 +26,7 @@ return [
     'cs_para'   => 4,
 
     // 搜索关键词（search/{id} 的 200 用例从它的检索结果里取文档 id）
-    'search_q'       => 'dukkha',
+    'search_q'       => 'nama',
 
     // discussions 写用例挂的句子：放在测试账号自己的 channel 里、由测试账号编辑，
     // 这样即便有通知也只发给自己（用例本身还会带 notify=false）。换环境时按需覆盖。
