@@ -22,7 +22,7 @@ const submit = async (page: Page, method: 'POST' | 'PATCH') => {
   const saved = page.waitForResponse(
     (r) => /\/api\/v3\/(channels\/[^/]+\/terms|terms\/[^/?]+)$/.test(new URL(r.url()).pathname) && r.request().method() === method,
   );
-  await modal(page).getByRole('button', { name: /提 *交/ }).click();
+  await modal(page).getByRole('button', { name: /^保\s*存/ }).click();
   return saved;
 };
 
@@ -54,10 +54,13 @@ test('channel 的术语：新建、编辑、并发修改提示、删除', async 
       await expect(modal(page)).toBeVisible();
       await field(page, '词头').locator('input').fill(word);
       await field(page, '意思').locator('input').fill('测试释义');
-      await field(page, '所属版本').count(); // 版本下拉已预选本版本
+      await field(page, '注解').locator('textarea').fill('第一段。\n\n{{category|e2e分类}}');
+      // 版本、语言、质量、正文格式、重定向在「设置」页签
+      await modal(page).getByRole('tab', { name: '设置' }).click();
+      await expect(field(page, '所属版本')).toBeVisible(); // 版本下拉已预选本版本
       await field(page, '质量').locator('.ant-select').click();
       await page.locator('.ant-select-dropdown:visible .ant-select-item-option').filter({ hasText: '草稿' }).click();
-      await field(page, '注解').locator('textarea').fill('第一段。\n\n{{category|e2e分类}}');
+      await expect(modal(page).getByRole('button', { name: /^提\s*交$|^重\s*置$/ })).toHaveCount(0);
       const res = await submit(page, 'POST');
       expect(res.status()).toBe(201);
       const data = (await res.json()).data;
@@ -83,9 +86,53 @@ test('channel 的术语：新建、编辑、并发修改提示、删除', async 
       await shot(page, '03-edited');
     });
 
+    await test.step('3b. 编辑页：右上角取消 / 保存，脏文档提示，另存为弹出版本选择', async () => {
+      await page.goto(`workspace/term/${termId}/edit`, { waitUntil: 'networkidle' });
+      const meaning = page.locator('.ant-form-item').filter({ has: page.locator('label', { hasText: /^意思$/ }) }).locator('input');
+      await expect(meaning).toHaveValue('改过的释义');
+      // 没改就取消：直接回预览
+      await page.getByRole('button', { name: /^取\s*消$/ }).click();
+      await expect(page).toHaveURL(new RegExp(`/workspace/term/${termId}$`));
+
+      // 从预览页点「编辑」站内进入，这样后退是路由跳转而不是整页离开
+      await page.getByText(/^编\s*辑$/).first().click();
+      await expect(page).toHaveURL(/\/edit$/);
+      await expect(meaning).toHaveValue('改过的释义');
+      await meaning.fill('在页面上改的');
+      // 改了再取消：提示保存，选「继续编辑」留在原页
+      await page.getByRole('button', { name: /^取\s*消$/ }).click();
+      const confirm = page.locator('.ant-modal-confirm:not(.ant-zoom-leave)');
+      await expect(confirm).toContainText('有未保存的修改');
+      await confirm.getByRole('button', { name: '继续编辑' }).click();
+      await expect(page).toHaveURL(/\/edit$/);
+      // 浏览器后退也被拦下
+      await page.goBack();
+      await expect(confirm).toContainText('有未保存的修改');
+      await confirm.getByRole('button', { name: '继续编辑' }).click();
+      await expect(page).toHaveURL(/\/edit$/);
+
+      // 另存为：下拉里点「另存为」弹出版本选择，取消不保存
+      await page.locator('.ant-space-compact .ant-btn-icon-only').click();
+      await page.locator('.ant-dropdown:visible .ant-dropdown-menu-item').filter({ hasText: '另存为' }).click();
+      const saveAs = page.locator('.ant-modal:visible').filter({ hasText: '另存为' });
+      await expect(saveAs.locator('label', { hasText: '所属版本' })).toBeVisible();
+      await shot(page, '03b-save-as');
+      await saveAs.getByRole('button', { name: /^取\s*消$/ }).click();
+      await expect(saveAs).toHaveCount(0);
+
+      // 保存：回到预览
+      const saved = page.waitForResponse((r) => r.url().endsWith(`/api/v3/terms/${termId}`) && r.request().method() === 'PATCH');
+      await page.getByRole('button', { name: /^保\s*存/ }).click();
+      expect((await saved).status()).toBe(200);
+      await expect(page).toHaveURL(new RegExp(`/workspace/term/${termId}$`));
+      await page.goto(`workspace/channel/${channel}`, { waitUntil: 'networkidle' });
+      await page.getByRole('tab', { name: 'term' }).click();
+      await expect(pane(page).locator('.ant-table-row').filter({ hasText: '在页面上改的' })).toBeVisible();
+    });
+
     await test.step('4. 编辑期间被别人改过：提示 412，不覆盖', async () => {
       await pane(page).locator('.ant-table-row').filter({ hasText: word }).getByText('编辑').click();
-      await expect(field(page, '意思').locator('input')).toHaveValue('改过的释义');
+      await expect(field(page, '意思').locator('input')).toHaveValue('在页面上改的');
       // 别人（这里用同一账号的另一个请求）先改了一次
       const fresh = (await call(request, 'GET', `/v3/terms/${termId}`)).body.data;
       const other = await call(request, 'PATCH', `/v3/terms/${termId}`, { meaning: '别人改的' }, 'user', { 'If-Match': fresh.etag });
@@ -97,7 +144,11 @@ test('channel 的术语：新建、编辑、并发修改提示、删除', async 
       await expect(page.getByText(/被别人改过/).first()).toBeVisible();
       expect((await call(request, 'GET', `/v3/terms/${termId}`)).body.data.meaning).toBe('别人改的');
       await shot(page, '04-conflict');
+      // 没保存成功、表单还是脏的：Esc（同 ×）先提示，选「不保存」才关
       await page.keyboard.press('Escape');
+      const confirm = page.locator('.ant-modal-confirm:not(.ant-zoom-leave)');
+      await expect(confirm).toContainText('有未保存的修改');
+      await confirm.getByRole('button', { name: '不保存' }).click();
       await expect(modal(page)).toHaveCount(0);
     });
 
