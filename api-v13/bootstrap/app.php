@@ -40,6 +40,11 @@ return Application::configure(basePath: dirname(__DIR__))
             SetLocale::class,
         ]);
 
+        // 界面语言 cookie 不加密：前端 JS 要直接读 document.cookie
+        $middleware->encryptCookies(except: [
+            'language',
+        ]);
+
         $middleware->alias([
             'ops.token' => OpsToken::class,
             // v3 的登录闸。只认 bearer，未登录在进控制器前就 401——
