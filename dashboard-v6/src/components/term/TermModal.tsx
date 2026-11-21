@@ -1,6 +1,7 @@
 import { Modal, Space } from "antd";
 import { Link } from "react-router";
-import TermEdit from "./TermEdit";
+import { useRef } from "react";
+import TermEdit, { type TermEditHandle } from "./TermEdit";
 import type { Term } from "../../api/Term";
 import useMergedState from "../../hooks/useMergedState"; // 确保路径正确
 
@@ -37,6 +38,7 @@ const TermModalWidget = (props: IWidget) => {
     },
   });
 
+  const editRef = useRef<TermEditHandle>(null);
   const close = () => setIsModalOpen(false);
   const show = () => setIsModalOpen(true);
 
@@ -65,11 +67,14 @@ const TermModalWidget = (props: IWidget) => {
         mask={{ closable: false }}
         destroyOnHidden // 关闭时销毁内部组件，防止数据残留
         open={isModalOpen}
-        onCancel={close}
+        // × 与 Esc 走编辑组件的「取消」：有未保存的修改先提示
+        onCancel={() => (editRef.current ? editRef.current.cancel() : close())}
       >
         <TermEdit
+          ref={editRef}
           {...restEditProps}
           studioName={studioName}
+          onCancel={close}
           onUpdate={(value: Term) => {
             close();
             onUpdate?.(value);

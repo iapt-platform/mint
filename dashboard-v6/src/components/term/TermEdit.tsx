@@ -1,18 +1,36 @@
 import { useIntl } from "react-intl";
 import {
+  ModalForm,
   ProForm,
-  ProFormCheckbox,
   ProFormDependency,
   type ProFormInstance,
   ProFormSelect,
-  ProFormSwitch,
   ProFormText,
 } from "@ant-design/pro-components";
 
 import LangSelect from "../general/LangSelect";
 import ChannelSelect from "../channel/ChannelSelect";
-import { Alert, App, AutoComplete, Form, Space, Tag } from "antd";
-import { useEffect, useRef, useState } from "react";
+import {
+  Alert,
+  App,
+  AutoComplete,
+  Button,
+  Dropdown,
+  Form,
+  Space,
+  Tabs,
+  Tag,
+} from "antd";
+import { DownOutlined } from "@ant-design/icons";
+import {
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+  type Ref,
+  type RefObject,
+} from "react";
+import { useBlocker } from "react-router";
 import {
   createChannelTerm,
   createStudioTerm,
@@ -52,11 +70,16 @@ interface IFormValues {
   redirect?: string;
   channelId?: string;
   lang?: string;
-  save_as?: boolean;
+}
+
+/** 另存为对话框的字段 */
+interface ISaveAsValues {
   copy_channel?: string[];
   copy_lang?: string;
-  pr?: boolean;
 }
+
+/** 有未保存修改时用户的选择 */
+type LeaveChoice = "save" | "discard" | "stay";
 
 interface IWidget {
   id?: string;
@@ -68,8 +91,69 @@ interface IWidget {
   parentChannelId?: string;
   parentStudioId?: string;
   community?: boolean;
+  /** 拦截路由跳转与关闭 / 刷新标签页（独立编辑页用；Modal 里不开，一个 router 只能有一个 blocker） */
+  blockNavigation?: boolean;
   onUpdate?: (data: Term) => void;
+  onCancel?: () => void;
+  /** 外层容器（如 Modal 的 ×、Esc）要关闭时调 `ref.current.cancel()`，走同一套未保存提示 */
+  ref?: Ref<TermEditHandle>;
 }
+
+export interface TermEditHandle {
+  /** 同点「取消」：有未保存的修改先提示，确认后调 onCancel / onUpdate */
+  cancel: () => void;
+}
+
+/**
+ * 有未保存修改时拦截离开：站内跳转弹出保存提示，关闭 / 刷新标签页走浏览器自带的提示。
+ * 单独成组件，只在 `blockNavigation` 时挂载，免得 Modal 里的实例也注册 blocker。
+ */
+const LeaveGuard = ({
+  dirtyRef,
+  confirmLeave,
+  save,
+}: {
+  dirtyRef: RefObject<boolean>;
+  confirmLeave: () => Promise<LeaveChoice>;
+  save: () => Promise<Term | undefined>;
+}) => {
+  const blocker = useBlocker(() => dirtyRef.current);
+  const handlers = useRef({ confirmLeave, save });
+  useEffect(() => {
+    handlers.current = { confirmLeave, save };
+  });
+
+  useEffect(() => {
+    if (blocker.state !== "blocked") {
+      return;
+    }
+    handlers.current.confirmLeave().then(async (choice) => {
+      if (choice === "stay") {
+        blocker.reset();
+        return;
+      }
+      if (choice === "save" && !(await handlers.current.save())) {
+        blocker.reset();
+        return;
+      }
+      dirtyRef.current = false;
+      blocker.proceed();
+    });
+  }, [blocker, dirtyRef]);
+
+  useEffect(() => {
+    const onBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (dirtyRef.current) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => window.removeEventListener("beforeunload", onBeforeUnload);
+  }, [dirtyRef]);
+
+  return null;
+};
 
 /**
  * 术语编辑 / 新建（v3）。
@@ -79,6 +163,9 @@ interface IWidget {
  * - 词头与标签建立后不能改（引用方写 `[[word@tag]]`）；要改就新建一条，把旧的重定向过去
  * - 新建：选了版本就建在版本里（语言跟版本），选「通用于此 studio」就建 studio 级术语（要选语言）
  * - 分类写在正文的 `{{category|…}}` 里，由后端抽取
+ * - 右上角「取消」「保存」，保存的下拉是「另存为」（弹出版本选择，复制成一条新术语）；
+ *   两者完成后都调回调，由调用方决定去哪（编辑页回到预览）
+ * - 有未保存的修改时，取消 / 离开会提示保存
  */
 const TermEditWidget = ({
   id,
@@ -88,23 +175,35 @@ const TermEditWidget = ({
   parentChannelId,
   parentStudioId,
   community = false,
+  blockNavigation = false,
   onUpdate,
+  onCancel,
+  ref,
 }: IWidget) => {
   const intl = useIntl();
   const [meaningOptions, setMeaningOptions] = useState<ValueType[]>([]);
   const [readonly, setReadonly] = useState(false);
-  const [isSaveAs, setIsSaveAs] = useState(false);
+  const [saveAsOpen, setSaveAsOpen] = useState(false);
+  const [copyToChannel, setCopyToChannel] = useState<string[]>([]);
+  const [saving, setSaving] = useState(false);
+  const [dirty, setDirtyState] = useState(false);
+  const dirtyRef = useRef(false);
   const [currChannel, setCurrChannel] = useState<ValueType[]>([]);
   const [etag, setEtag] = useState<string>();
   const [isGeneral, setIsGeneral] = useState(false);
   const user = useAppSelector(_currentUser);
   const { studioId: activeStudioId } = useActiveStudio();
-  const { message } = App.useApp();
+  const { message, modal } = App.useApp();
 
   const [form] = Form.useForm<IFormValues>();
   const formRef = useRef<ProFormInstance | undefined>(undefined);
   const isEdit = typeof id !== "undefined" && !community;
   const label = (key: string) => intl.formatMessage({ id: key });
+
+  const setDirty = (value: boolean) => {
+    dirtyRef.current = value;
+    setDirtyState(value);
+  };
 
   useEffect(() => {
     if (!word) {
@@ -152,8 +251,168 @@ const TermEditWidget = ({
     return createStudioTerm(studio, { ...body, language: language ?? "" });
   };
 
+  /**
+   * 校验并保存。`saveAs` 给了就复制成新术语建到所选版本；否则编辑时改原条、新建时按「版本」字段建。
+   * 校验不过（会自动切不到别的 tab，字段下面有红字）或保存失败返回 undefined。
+   */
+  const save = async (saveAs?: ISaveAsValues): Promise<Term | undefined> => {
+    let values: IFormValues;
+    try {
+      values = await form.validateFields();
+    } catch {
+      return undefined;
+    }
+    if (!values.word || !values.meaning) {
+      return undefined;
+    }
+    const content: TermPatch = {
+      meaning: values.meaning,
+      other_meaning: values.meaning2?.join() || null,
+      note: values.note || null,
+      summary: values.summary || null,
+      quality: (values.quality || null) as TermPatch["quality"],
+      content_type: values.content_type as TermPatch["content_type"],
+      redirect: values.redirect || null,
+    };
+
+    setSaving(true);
+    let saved: Term | undefined;
+    try {
+      if (isEdit && !saveAs && id) {
+        if (!etag) {
+          return undefined;
+        }
+        saved = await updateTerm(
+          id,
+          etag,
+          isGeneral && values.lang
+            ? { ...content, language: values.lang }
+            : content,
+        );
+      } else {
+        const target = saveAs
+          ? (saveAs.copy_channel?.[saveAs.copy_channel.length - 1] ?? "")
+          : (values.channelId ?? "");
+        saved = await create(target, saveAs ? saveAs.copy_lang : values.lang, {
+          ...content,
+          meaning: values.meaning,
+          word: values.word,
+          tag: values.tag || null,
+        });
+      }
+    } finally {
+      setSaving(false);
+    }
+    if (!saved) {
+      return undefined;
+    }
+    message.success(label("term.edit.saved"));
+    setEtag(saved.etag);
+    setDirty(false);
+    store.dispatch(
+      push({ word: saved.word ?? "", meaning: saved.meaning ?? "" }),
+    );
+    return saved;
+  };
+
+  /** 有未保存的修改时问用户：保存 / 不保存 / 继续编辑 */
+  const confirmLeave = () =>
+    new Promise<LeaveChoice>((resolve) => {
+      const instance = modal.confirm({
+        title: label("term.edit.unsaved.title"),
+        content: label("term.edit.unsaved.content"),
+        okText: label("buttons.save"),
+        cancelText: label("term.edit.unsaved.keep"),
+        onOk: () => resolve("save"),
+        onCancel: () => resolve("stay"),
+        footer: (_, { OkBtn, CancelBtn }) => (
+          <>
+            <CancelBtn />
+            <Button
+              danger
+              onClick={() => {
+                instance.destroy();
+                resolve("discard");
+              }}
+            >
+              {label("term.edit.unsaved.discard")}
+            </Button>
+            <OkBtn />
+          </>
+        ),
+      });
+    });
+
+  const handleSave = async () => {
+    const saved = await save();
+    if (saved) {
+      onUpdate?.(saved);
+    }
+  };
+
+  const handleCancel = async () => {
+    if (!dirtyRef.current) {
+      onCancel?.();
+      return;
+    }
+    const choice = await confirmLeave();
+    if (choice === "save") {
+      const saved = await save();
+      if (saved) {
+        onUpdate?.(saved);
+      }
+    } else if (choice === "discard") {
+      setDirty(false);
+      onCancel?.();
+    }
+  };
+
+  useImperativeHandle(ref, () => ({ cancel: handleCancel }));
+
   return (
     <>
+      {blockNavigation && (
+        <LeaveGuard
+          dirtyRef={dirtyRef}
+          confirmLeave={confirmLeave}
+          save={save}
+        />
+      )}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          marginBottom: 12,
+        }}
+      >
+        <Space>
+          <Button onClick={handleCancel}>{label("buttons.cancel")}</Button>
+          <Space.Compact>
+            <Button
+              type="primary"
+              loading={saving}
+              disabled={isEdit && readonly}
+              onClick={handleSave}
+            >
+              {label("buttons.save")}
+              {dirty ? " *" : ""}
+            </Button>
+            <Dropdown
+              trigger={["click"]}
+              menu={{
+                items: [{ key: "save-as", label: label("term.edit.save-as") }],
+                onClick: () => setSaveAsOpen(true),
+              }}
+            >
+              <Button
+                type="primary"
+                icon={<DownOutlined />}
+                disabled={saving}
+              />
+            </Dropdown>
+          </Space.Compact>
+        </Space>
+      </div>
       {community ? (
         <Alert
           title="该资源为社区数据，您可以修改并保存到一个您有修改权限的版本中。"
@@ -162,7 +421,7 @@ const TermEditWidget = ({
         />
       ) : readonly ? (
         <Alert
-          title="该资源为只读，如果需要修改，请联络拥有者分配权限。或者您可以在下面的版本选择中选择另一个版本，将该术语保存到一个您有修改权限的版本中。"
+          title="该资源为只读，如果需要修改，请联络拥有者分配权限。或者您可以用「另存为」将该术语保存到一个您有修改权限的版本中。"
           type="warning"
           closable
         />
@@ -171,58 +430,8 @@ const TermEditWidget = ({
         form={form}
         formRef={formRef}
         autoFocusFirstInput={true}
-        onFinish={async (values: IFormValues) => {
-          if (!values.word || !values.meaning) {
-            return;
-          }
-          const content: TermPatch = {
-            meaning: values.meaning,
-            other_meaning: values.meaning2?.join() || null,
-            note: values.note || null,
-            summary: values.summary || null,
-            quality: (values.quality || null) as TermPatch["quality"],
-            content_type: values.content_type as TermPatch["content_type"],
-            redirect: values.redirect || null,
-          };
-
-          let saved: Term | undefined;
-          if (isEdit && !values.save_as && id) {
-            if (!etag) {
-              return;
-            }
-            saved = await updateTerm(
-              id,
-              etag,
-              isGeneral && values.lang
-                ? { ...content, language: values.lang }
-                : content,
-            );
-          } else {
-            const target = values.save_as
-              ? (values.copy_channel?.[values.copy_channel.length - 1] ?? "")
-              : (values.channelId ?? "");
-            saved = await create(
-              target,
-              values.save_as ? values.copy_lang : values.lang,
-              {
-                ...content,
-                meaning: values.meaning,
-                word: values.word,
-                tag: values.tag || null,
-              },
-            );
-          }
-          if (!saved) {
-            return;
-          }
-          message.success("提交成功");
-          setEtag(saved.etag);
-          store.dispatch(
-            push({ word: saved.word ?? "", meaning: saved.meaning ?? "" }),
-          );
-          onUpdate?.(saved);
-          return true;
-        }}
+        submitter={false}
+        onValuesChange={() => setDirty(true)}
         request={async () => {
           let data: IFormValues = {
             word: word ? word : "",
@@ -235,7 +444,6 @@ const TermEditWidget = ({
             content_type: TERM_CONTENT_TYPES[0],
             redirect: "",
             lang: "",
-            copy_channel: [],
           };
           if (typeof id !== "undefined") {
             // 编辑：从服务器拉取
@@ -250,11 +458,10 @@ const TermEditWidget = ({
                 { label: term.channel.name, value: term.channel.id ?? "" },
               ]);
             }
-            let copyToChannel: string[] = [];
             if (parentChannelId) {
-              copyToChannel = user?.roles?.includes("basic")
-                ? [parentChannelId]
-                : [""];
+              setCopyToChannel(
+                user?.roles?.includes("basic") ? [parentChannelId] : [""],
+              );
             }
             data = {
               id: community ? undefined : term.id,
@@ -271,7 +478,6 @@ const TermEditWidget = ({
               channelId: community
                 ? (parentChannelId ?? "")
                 : (term.channel_id ?? ""),
-              copy_channel: copyToChannel,
             };
             if (!community && !term.abilities?.update) {
               setReadonly(true);
@@ -284,19 +490,17 @@ const TermEditWidget = ({
              */
             const channel = await fetchChannel(parentChannelId);
             let target = "";
-            let copyToChannel: string[] = [];
             if (user?.roles?.includes("basic")) {
               target = parentChannelId;
-              copyToChannel = [parentChannelId];
+              setCopyToChannel([parentChannelId]);
             } else {
               target = user?.id === parentStudioId ? "" : parentChannelId;
-              copyToChannel = [channel?.owner?.id ?? "", parentChannelId];
+              setCopyToChannel([channel?.owner?.id ?? "", parentChannelId]);
             }
             data = {
               ...data,
               lang: channel?.lang ?? "",
               channelId: target,
-              copy_channel: copyToChannel,
             };
           } else if (channelId) {
             // 从版本的术语列表新建
@@ -305,192 +509,223 @@ const TermEditWidget = ({
           return data;
         }}
       >
-        <ProForm.Group>
-          <ProFormText width="md" name="id" hidden />
+        <Tabs
+          items={[
+            {
+              key: "content",
+              label: label("term.edit.tab.content"),
+              forceRender: true,
+              children: (
+                <>
+                  <ProForm.Group>
+                    <ProFormText width="md" name="id" hidden />
 
-          <ProFormText
-            width="md"
-            name="word"
-            initialValue={word}
-            required
-            disabled={isEdit}
-            tooltip={
-              isEdit ? label("term.fields.immutable.tooltip") : undefined
-            }
-            label={label("term.fields.word.label")}
-            rules={[{ required: true }]}
-            fieldProps={{ showCount: true, maxLength: 128 }}
-          />
-          <ProFormText
-            width="md"
-            name="tag"
-            disabled={isEdit}
-            tooltip={
-              isEdit
-                ? label("term.fields.immutable.tooltip")
-                : label("term.fields.description.tooltip")
-            }
-            label={label("term.fields.description.label")}
-            rules={[{ pattern: /^[^@]*$/, message: "@" }]}
-          />
-        </ProForm.Group>
-        <ProForm.Group>
-          <ProForm.Item
-            width="md"
-            name="meaning"
-            label={label("term.fields.meaning.label")}
-            rules={[{ required: true }]}
-          >
-            <AutoComplete
-              options={meaningOptions}
-              style={{ width: "328px" }}
-              allowClear
-              maxLength={128}
-            />
-          </ProForm.Item>
+                    <ProFormText
+                      width="md"
+                      name="word"
+                      initialValue={word}
+                      required
+                      disabled={isEdit}
+                      tooltip={
+                        isEdit
+                          ? label("term.fields.immutable.tooltip")
+                          : undefined
+                      }
+                      label={label("term.fields.word.label")}
+                      rules={[{ required: true }]}
+                      fieldProps={{ showCount: true, maxLength: 128 }}
+                    />
+                    <ProFormText
+                      width="md"
+                      name="tag"
+                      disabled={isEdit}
+                      tooltip={
+                        isEdit
+                          ? label("term.fields.immutable.tooltip")
+                          : label("term.fields.description.tooltip")
+                      }
+                      label={label("term.fields.description.label")}
+                      rules={[{ pattern: /^[^@]*$/, message: "@" }]}
+                    />
+                  </ProForm.Group>
+                  <ProForm.Group>
+                    <ProForm.Item
+                      width="md"
+                      name="meaning"
+                      label={label("term.fields.meaning.label")}
+                      rules={[{ required: true }]}
+                    >
+                      <AutoComplete
+                        options={meaningOptions}
+                        style={{ width: "328px" }}
+                        allowClear
+                        maxLength={128}
+                      />
+                    </ProForm.Item>
 
-          <ProFormSelect
-            width="md"
-            name="meaning2"
-            label={label("term.fields.meaning2.label")}
-            fieldProps={{ mode: "tags", tokenSeparators: [",", "，"] }}
-            placeholder="Please select other meanings"
-            rules={[{ type: "array" }]}
-          />
-        </ProForm.Group>
-        <ProForm.Group>
-          <ProFormSelect
-            name="channelId"
-            allowClear
-            label="版本(已经建立的术语，版本不可修改。可以选择另存为复制到另一个版本。)"
-            width="md"
-            placeholder={label("term.general-in-studio")}
-            disabled={channelDisable}
-            options={[
-              {
-                value: "",
-                label: label("term.general-in-studio"),
-                disabled:
-                  (parentStudioId !== undefined &&
-                    user?.id !== parentStudioId) ||
-                  user?.roles?.includes("basic"),
-              },
-              ...((parentChannelId ?? channelId)
-                ? [
-                    {
-                      value: parentChannelId ?? channelId ?? "",
-                      label: "仅用于此版本",
-                      disabled: !community && readonly,
-                    },
-                  ]
-                : []),
-              ...currChannel,
-            ]}
-          />
+                    <ProFormSelect
+                      width="md"
+                      name="meaning2"
+                      label={label("term.fields.meaning2.label")}
+                      fieldProps={{
+                        mode: "tags",
+                        tokenSeparators: [",", "，"],
+                      }}
+                      placeholder="Please select other meanings"
+                      rules={[{ type: "array" }]}
+                    />
+                  </ProForm.Group>
+                  <ProForm.Group>
+                    <Form.Item
+                      style={{ width: "100%" }}
+                      name="summary"
+                      label={label("term.fields.summary.label")}
+                      tooltip={label("term.fields.summary.tooltip")}
+                    >
+                      <MDEditor height={120} preview="edit" />
+                    </Form.Item>
+                  </ProForm.Group>
+                  <ProForm.Group>
+                    <Form.Item
+                      style={{ width: "100%" }}
+                      name="note"
+                      label={label("forms.fields.note.label")}
+                    >
+                      <MDEditor />
+                    </Form.Item>
+                  </ProForm.Group>
+                </>
+              ),
+            },
+            {
+              key: "settings",
+              label: label("term.edit.tab.settings"),
+              forceRender: true,
+              children: (
+                <>
+                  <ProForm.Group>
+                    <ProFormSelect
+                      name="channelId"
+                      allowClear
+                      label={label("term.fields.channel.label")}
+                      tooltip={label("term.edit.channel.tooltip")}
+                      width="md"
+                      placeholder={label("term.general-in-studio")}
+                      disabled={channelDisable}
+                      options={[
+                        {
+                          value: "",
+                          label: label("term.general-in-studio"),
+                          disabled:
+                            (parentStudioId !== undefined &&
+                              user?.id !== parentStudioId) ||
+                            user?.roles?.includes("basic"),
+                        },
+                        ...((parentChannelId ?? channelId)
+                          ? [
+                              {
+                                value: parentChannelId ?? channelId ?? "",
+                                label: "仅用于此版本",
+                                disabled: !community && readonly,
+                              },
+                            ]
+                          : []),
+                        ...currChannel,
+                      ]}
+                    />
 
-          <ProFormDependency name={["channelId"]}>
-            {({ channelId }) => {
-              const hasChannel = !!channelId;
-              return (
-                <LangSelect
-                  disabled={hasChannel || (channelDisable && !isGeneral)}
-                  required={!hasChannel}
-                />
-              );
-            }}
-          </ProFormDependency>
-        </ProForm.Group>
-        <ProForm.Group>
-          <ProFormSelect
-            width="sm"
-            name="quality"
-            allowClear
-            label={label("term.fields.quality.label")}
-            placeholder={label("term.fields.quality.pending")}
-            options={TERM_QUALITIES.map((q) => ({
-              value: q,
-              label: label(`term.fields.quality.${q}`),
-            }))}
-          />
-          <ProFormSelect
-            width="sm"
-            name="content_type"
-            label={label("term.fields.content_type.label")}
-            allowClear={false}
-            options={TERM_CONTENT_TYPES.map((t) => ({ value: t, label: t }))}
-          />
-          <ProFormText
-            width="md"
-            name="redirect"
-            label={label("term.fields.redirect.label")}
-            tooltip={label("term.fields.redirect.tooltip")}
-          />
-        </ProForm.Group>
-        <ProForm.Group>
-          <Form.Item
-            style={{ width: "100%" }}
-            name="summary"
-            label={label("term.fields.summary.label")}
-            tooltip={label("term.fields.summary.tooltip")}
-          >
-            <MDEditor height={120} preview="edit" />
-          </Form.Item>
-        </ProForm.Group>
-        <ProForm.Group>
-          <Form.Item
-            style={{ width: "100%" }}
-            name="note"
-            label={label("forms.fields.note.label")}
-          >
-            <MDEditor />
-          </Form.Item>
-        </ProForm.Group>
-        <ProForm.Group>
-          <ProFormSwitch
-            name="save_as"
-            label="另存为"
-            fieldProps={{
-              onChange: (checked: boolean) => {
-                setIsSaveAs(checked);
-              },
-            }}
-          />
-        </ProForm.Group>
-        <ProForm.Group style={{ display: isSaveAs ? "block" : "none" }}>
-          <ChannelSelect
-            channelId={channelId}
-            parentChannelId={parentChannelId}
-            parentStudioId={parentStudioId}
-            width="md"
-            name="copy_channel"
-            placeholder={label("term.general-in-studio")}
-            allowClear={user?.roles?.includes("basic") ? false : true}
-            tooltip={label("term.fields.channel.tooltip")}
-            label={label("term.fields.channel.label")}
-          />
-          <ProFormDependency name={["copy_channel"]}>
-            {({ copy_channel }) => {
-              const hasChannel = copy_channel
-                ? copy_channel.length === 0 || copy_channel[0] === ""
-                  ? false
-                  : true
-                : false;
-              return (
-                <LangSelect
-                  name="copy_lang"
-                  disabled={hasChannel}
-                  required={isSaveAs && !hasChannel}
-                />
-              );
-            }}
-          </ProFormDependency>
-        </ProForm.Group>
-        <ProForm.Group style={{ display: isSaveAs ? "block" : "none" }}>
-          <ProFormCheckbox disabled name="pr">
-            同时提交修改建议
-          </ProFormCheckbox>
-        </ProForm.Group>
+                    <ProFormDependency name={["channelId"]}>
+                      {({ channelId }) => {
+                        const hasChannel = !!channelId;
+                        return (
+                          <LangSelect
+                            disabled={
+                              hasChannel || (channelDisable && !isGeneral)
+                            }
+                            required={!hasChannel}
+                          />
+                        );
+                      }}
+                    </ProFormDependency>
+                  </ProForm.Group>
+                  <ProForm.Group>
+                    <ProFormSelect
+                      width="sm"
+                      name="quality"
+                      allowClear
+                      label={label("term.fields.quality.label")}
+                      placeholder={label("term.fields.quality.pending")}
+                      options={TERM_QUALITIES.map((q) => ({
+                        value: q,
+                        label: label(`term.fields.quality.${q}`),
+                      }))}
+                    />
+                    <ProFormSelect
+                      width="sm"
+                      name="content_type"
+                      label={label("term.fields.content_type.label")}
+                      allowClear={false}
+                      options={TERM_CONTENT_TYPES.map((t) => ({
+                        value: t,
+                        label: t,
+                      }))}
+                    />
+                    <ProFormText
+                      width="md"
+                      name="redirect"
+                      label={label("term.fields.redirect.label")}
+                      tooltip={label("term.fields.redirect.tooltip")}
+                    />
+                  </ProForm.Group>
+                </>
+              ),
+            },
+          ]}
+        />
       </ProForm>
+      <ModalForm<ISaveAsValues>
+        title={label("term.edit.save-as.title")}
+        width={480}
+        open={saveAsOpen}
+        onOpenChange={setSaveAsOpen}
+        modalProps={{ destroyOnHidden: true }}
+        initialValues={{ copy_channel: copyToChannel }}
+        onFinish={async (values) => {
+          const saved = await save(values);
+          if (!saved) {
+            return false;
+          }
+          onUpdate?.(saved);
+          return true;
+        }}
+      >
+        <ChannelSelect
+          channelId={channelId}
+          parentChannelId={parentChannelId}
+          parentStudioId={parentStudioId}
+          width="md"
+          name="copy_channel"
+          placeholder={label("term.general-in-studio")}
+          allowClear={user?.roles?.includes("basic") ? false : true}
+          tooltip={label("term.fields.channel.tooltip")}
+          label={label("term.fields.channel.label")}
+        />
+        <ProFormDependency name={["copy_channel"]}>
+          {({ copy_channel }) => {
+            const hasChannel =
+              !!copy_channel &&
+              copy_channel.length > 0 &&
+              copy_channel[0] !== "";
+            return (
+              <LangSelect
+                name="copy_lang"
+                disabled={hasChannel}
+                required={!hasChannel}
+              />
+            );
+          }}
+        </ProFormDependency>
+      </ModalForm>
     </>
   );
 };
