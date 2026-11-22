@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 /**
  * 表 `discussions`。
@@ -224,16 +225,21 @@ class Discussion extends Model
             if ($discussion->res_type !== 'sentence' || empty($discussion->res_id)) {
                 return;
             }
-            $sentence = Sentence::where('uid', $discussion->res_id)
-                ->first(['book_id', 'paragraph', 'channel_uid']);
-            if (! $sentence) {
-                return;
-            }
-            PaliContentService::forgetParagraph(
-                (int) $sentence->book_id,
-                (int) $sentence->paragraph,
-                (string) $sentence->channel_uid
-            );
+            $sentenceId = $discussion->res_id;
+            // 提交之后才清，免得并发的读在提交前把旧数据写回缓存
+            DB::afterCommit(function () use ($sentenceId) {
+                $sentence = Sentence::where('uid', $sentenceId)
+                    ->first(['book_id', 'paragraph', 'channel_uid']);
+                if (! $sentence) {
+                    return;
+                }
+                // 只删段落成品；批注不影响内容索引
+                PaliContentService::forgetParagraph(
+                    (int) $sentence->book_id,
+                    (int) $sentence->paragraph,
+                    (string) $sentence->channel_uid
+                );
+            });
         };
         static::saved($forget);
         static::deleted($forget);

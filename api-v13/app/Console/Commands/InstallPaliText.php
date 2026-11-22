@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\PaliText;
+use App\Services\V3\PaliTextService;
 use App\Tools\Tools;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -143,6 +144,8 @@ class InstallPaliText extends Command
                 }
 
             });
+            // 阅读、导出缓存的 pali_texts（按书缓存一个月）
+            app(PaliTextService::class)->forgetBook((int) $from);
 
             $bar->advance();
         }

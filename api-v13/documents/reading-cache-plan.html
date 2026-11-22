@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>段落缓存方案</title>
+<style>
+:root{
+  --bg:#f6f8fb; --surface:#fff; --surface-2:#f1f4f8; --border:#dfe5ec; --text:#1d2733; --muted:#5f6f83;
+  --primary:#066fd1; --primary-lt:#e7f1fc; --ok:#2f9e44; --ok-lt:#e8f6eb; --warn:#e67700; --warn-lt:#fff3e0;
+  --danger:#d63939; --danger-lt:#fdecec; --violet:#7048e8; --violet-lt:#f0ebff;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#11161d; --surface:#18202a; --surface-2:#1f2935; --border:#2c3746; --text:#e4e9f0; --muted:#97a6b8;
+  --primary:#4c9bf0; --primary-lt:#1a2f4d; --ok:#51cf66; --ok-lt:#16301d; --warn:#ffa94d; --warn-lt:#3a2a12;
+  --danger:#ff6b6b; --danger-lt:#3a1a1a; --violet:#9775fa; --violet-lt:#271f45;
+}}
+:root[data-theme="dark"]{
+  --bg:#11161d; --surface:#18202a; --surface-2:#1f2935; --border:#2c3746; --text:#e4e9f0; --muted:#97a6b8;
+  --primary:#4c9bf0; --primary-lt:#1a2f4d; --ok:#51cf66; --ok-lt:#16301d; --warn:#ffa94d; --warn-lt:#3a2a12;
+  --danger:#ff6b6b; --danger-lt:#3a1a1a; --violet:#9775fa; --violet-lt:#271f45;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:28px 16px 80px}
+h1{font-size:26px;margin:0 0 4px}
+.sub{color:var(--muted);margin:0 0 24px}
+h2{font-size:19px;margin:40px 0 12px;padding-bottom:6px;border-bottom:2px solid var(--border)}
+h3{font-size:16px;margin:22px 0 8px}
+p{margin:0 0 12px}
+code{font:13px var(--mono);background:var(--surface-2);padding:1px 5px;border-radius:4px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin:12px 0}
+table{border-collapse:collapse;width:100%;font-size:14px;background:var(--surface)}
+th,td{border:1px solid var(--border);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:var(--surface-2);font-weight:600}
+td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tbl{overflow-x:auto;margin:10px 0}
+.pill{display:inline-block;font-size:12px;padding:0 8px;border-radius:10px;font-weight:600}
+.l0{background:var(--violet-lt);color:var(--violet)}
+.l1{background:var(--ok-lt);color:var(--ok)}
+.l2{background:var(--primary-lt);color:var(--primary)}
+.l3{background:var(--ok-lt);color:var(--ok)}
+.l4{background:var(--violet-lt);color:var(--violet)}
+.gen{background:var(--warn-lt);color:var(--warn)}
+.cold{background:var(--danger-lt);color:var(--danger)}
+.bad{color:var(--danger);font-weight:600}
+.good{color:var(--ok);font-weight:600}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:14px 0}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px}
+.kpi b{display:block;font-size:24px;line-height:1.2}
+.kpi span{color:var(--muted);font-size:13px}
+@media(max-width:720px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.diagram{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px;overflow-x:auto}
+.diagram svg{display:block;min-width:900px;width:100%;height:auto}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:13px;color:var(--muted);margin:10px 4px 0}
+.legend i{display:inline-block;width:26px;height:0;border-top:3px solid;vertical-align:middle;margin-right:6px}
+ol li,ul li{margin:4px 0}
+.note{border-left:4px solid var(--warn);background:var(--warn-lt);padding:10px 14px;border-radius:6px;margin:12px 0}
+.decide{border-left:4px solid var(--primary);background:var(--primary-lt);padding:10px 14px;border-radius:6px;margin:12px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>阅读段落：冷启动与缓存</h1>
+<p class="sub">范围：<code>/v3/tipitaka-reading</code>、Laravel library 阅读器、三藏下载打包（含 mobile 离线包）。两大块：<b>A. 冷启动</b>（没命中时一块只查几次库）与 <b>B. 缓存</b>（命中时不查库）。2026-11-22，方案稿，未动代码。</p>
+
+<h2>现状（实测）</h2>
+<p>同一块 200 段（book 213），<code>TipitakaReadingService::page()</code>：</p>
+<div class="kpis">
+  <div class="kpi"><b class="bad">1954</b><span>cs6 冷启动查询 · 1215 ms</span></div>
+  <div class="kpi"><b class="bad">2009</b><span>元亨寺·CBETA 冷启动查询 · 1384 ms（库 617 ms）</span></div>
+  <div class="kpi"><b class="bad">403</b><span>cs6 缓存全部命中仍要查 · 164 ms</span></div>
+  <div class="kpi"><b class="good">≈4 / 0</b><span>目标：冷启动 / 命中时查询次数</span></div>
+</div>
+
+<h3>冷启动（没命中）在查什么</h3>
+<div class="tbl"><table>
+<tr><th>查询</th><th>cs6</th><th>CBETA</th><th>为什么这么多</th></tr>
+<tr><td><code>discussions</code>（挂在句子上的批注）</td><td class="num">1151</td><td class="num">1207（343 ms）</td><td><code>injectAnnotationNotes()</code> <b>逐句</b>查一次</td></tr>
+<tr><td><code>sentences</code>（该段句子）</td><td class="num">200</td><td class="num">200</td><td><code>renderReadSentences()</code> 逐段查</td></tr>
+<tr><td><code>channels</code>（同一个 channel）</td><td class="num">200</td><td class="num">200</td><td>逐段把同一行查 200 遍</td></tr>
+<tr><td><code>pali_texts.level</code> / <code>.class</code></td><td class="num">400</td><td class="num">399</td><td>逐段两次，经文静态数据</td></tr>
+<tr><td><code>page()</code> 候选段 + 两次 count</td><td class="num">3</td><td class="num">3</td><td>每块</td></tr>
+</table></div>
+<p>CBETA 那块 1384 ms 里数据库占 617 ms，其余约 770 ms 是 PHP 渲染与写缓存。另外两处这两个样本没触发、但模板多的 channel 会放大：</p>
+<ul>
+<li><b>Markup 的取数是「一次 <code>renderMany</code> 一批」</b>（术语 <code>TermLoader</code>、引用句子 <code>SentenceLoader</code>、channel 名 <code>ChannelDirectory</code>、<code>QaLoader</code>、<code>TplLoader</code> 都是 <code>whereIn</code>），但现在一段调用一次 <code>renderMany</code>，所以是<b>每段一批</b>：200 段带术语就是 200 次术语查询。</li>
+<li><b>批注正文逐条渲染</b>：<code>renderAnnotationNote()</code> 每条批注单独调一次 <code>MarkupService::render()</code>，批注里有术语就每条各查一次。</li>
+</ul>
+
+<h3>命中时还在查什么</h3>
+<div class="tbl"><table>
+<tr><th>查询</th><th>次数 / 200 段</th><th>出处</th><th>性质</th></tr>
+<tr><td><code>pali_texts.level</code>（是不是标题段）</td><td class="num">200</td><td><code>readParagraph()</code> 进缓存前的 <code>paragraphLevel()</code></td><td>经文静态数据</td></tr>
+<tr><td><code>pali_texts.class</code>（段落外壳的 class）</td><td class="num">200</td><td><code>readParagraph()</code> 命中后拼外壳</td><td>经文静态数据</td></tr>
+<tr><td><code>distinct (book_id, paragraph)</code> 候选段</td><td class="num">1</td><td><code>page()</code></td><td>随译文变化</td></tr>
+<tr><td><code>count(distinct …)</code> 进度 total / remaining</td><td class="num">2</td><td><code>page()</code> 的 <code>progressMeta()</code></td><td>随译文变化</td></tr>
+<tr><td>（字节模式）<code>pali_texts.lenght</code></td><td class="num">每书 1</td><td><code>page()</code> 的 <code>paragraphLengths()</code></td><td>经文静态数据</td></tr>
+</table></div>
+<ul>
+<li><b>Laravel 阅读器</b>按章读：<code>resolveDisplayRange()</code> 算区间，<code>fetchRangeContent()</code> 对 <code>range($start, $end)</code> 逐段调 <code>readParagraph()</code>，整章一次，不切块。实测 213-34（下钻后 27 段）：第一次 384 次查询（批注 247 次），第二次 83 次（正文 51 次 + 页面外围约 32 次）。</li>
+<li><b>TTL</b> 用的是通用的 <code>mint.cache.expire</code>：本地 10 秒、默认 10 小时，过期就整段重渲。</li>
+<li>一块 200 段就是 200 次 Redis 往返（本机看不出，生产上乘以网络延迟）。</li>
+</ul>
+
+<h2>A. 冷启动：按块渲染，一块只查几次库</h2>
+
+<div class="card">
+<p><span class="pill cold">A1 批量渲染</span> &nbsp;<code>PaliContentService</code> 新增 <code>readParagraphs(int $book, array $paras, string $channel, string $format)</code>，单段的 <code>readParagraph()</code> 改为调它（传一段）——<b>只有一份渲染逻辑</b>。没命中的那些段一起渲染：</p>
+<ol>
+<li><b>channel 查一次</b>（现在每段一次）。</li>
+<li><b>句子查一次</b>：<code>where book, channel, paragraph in (未命中的段) order by paragraph, word_start</code>。</li>
+<li><b>批注查一次</b>：所有句子的 uid 一次 <code>whereIn('res_id', …)</code>，在 PHP 里按句分组；<code>injectAnnotationNotes()</code> 改为接收已取好的批注，不再自己查。</li>
+<li><b>标题级别与 class 查 L0</b>（见 B 部分），不落库。</li>
+<li><b>一次 <code>renderManyAs()</code> 渲染全部句子</b>：Resolver 收集整块的术语 / 引用 / 模板，各类只查一次。</li>
+<li><b>批注正文也合并成一次 <code>renderMany()</code></b>（现在每条批注一次 <code>render()</code>）。</li>
+</ol>
+<p>结果：200 段从约 2000 次查询降到<b>约 4 次</b>（channel、句子、批注、<code>page()</code> 的候选），外加每类模板数据各一次。CBETA 那块的 617 ms 库时间预计降到几十 ms；剩下的是渲染本身的 CPU，改完再量。</p>
+</div>
+
+<div class="card">
+<p><span class="pill cold">A2 谁受益</span></p>
+<ul>
+<li><code>page()</code>：一块里没命中的段交给 <code>readParagraphs()</code> 一次渲染（与 B 的批量读同一个入口）。</li>
+<li>阅读器：L3 章节缓存没命中时，整章的段一次交给 <code>readParagraphs()</code>。</li>
+<li>下载打包：经 <code>page()</code> 自动受益。cs6 整 channel html 打包 2286 s，大部分花在逐句批注与逐段查询上，这一步对它影响最大。</li>
+</ul>
+<p>注意：批量取句子时要保持现有口径——<code>strlen &gt; 0</code>、句子按 <code>word_start</code> 排、段内「有评估的句子之外补灰色对勾」的规则按段计算，不能变成按块计算。</p>
+</div>
+
+<h2>B. 缓存</h2>
+<h3>B 的方案：五块缓存，只给 readParagraph 改内部、不套外层</h3>
+
+<p>两个调用形状不同，缓存也分开：</p>
+<ul>
+<li><b>阅读器</b>按章读：<code>resolveDisplayRange()</code> 算出整章区间，<code>fetchRangeContent()</code> 一次拼完，<b>不切块</b>。区间只由经文静态数据决定，同一章每次都一样 → 缓存整章成品，一次 GET。</li>
+<li><b><code>/v3/tipitaka-reading</code> 与下载打包</b>按块读：块的边界取决于调用方的 <code>page_size</code> / <code>unit</code> / 游标，各不相同 → 缓存段落与索引，按块现拼。</li>
+</ul>
+
+<div class="card">
+<p><span class="pill l0">L0 书目元数据</span> &nbsp;<code>pali_texts</code> 的静态列按书缓存：<code>para → [level, class, lenght, chapter_len, chapter_strlen, toc]</code>。</p>
+<ul>
+<li>key：<code>/pali-meta/{book}/v{N}</code>，<b>30 天</b>；经文重新导入时把代码里的 <code>N</code> 加一（与 <code>TipitakaCatalogService::CACHE_KEY</code> 同一做法）。同一进程内再用数组记住。</li>
+<li>使用方：<code>readParagraph()</code> 未命中时取标题级别与 class；<code>page()</code> 的字节模式；阅读器的 <code>resolveDisplayRange()</code>（现在每次查本书全部章节行）；导出的 <code>headingLevels()</code>。</li>
+</ul>
+</div>
+
+<div class="card">
+<p><span class="pill l1">L1 段落成品</span> &nbsp;<code>readParagraph()</code> 直接缓存<b>完整结果</b>（含外壳 <code>&lt;div id='para-N'&gt;</code> / <code>&lt;hN&gt;</code> 与段后脚注列表）。</p>
+<ul>
+<li>外壳只依赖 L0 的 level / class（经文静态数据），放进缓存不会过时，所以<b>不需要外层</b>：把那两次查询挪进缓存闭包、改查 L0，签名与返回形状不变。</li>
+<li>key：<code>/read-para/v4/{book}-{para}/{channel}/{format}</code>（换版本号，旧 key 自然过期）。没有译文的段也缓存（空 display）。</li>
+<li>失效：沿用 <code>forgetParagraph()</code>（句子、批注的模型事件已接好），改成删新 key。TTL 改用专门配置 <code>mint.cache.read_paragraph_ttl</code>（见「需要你定的」）。</li>
+</ul>
+</div>
+
+<div class="card">
+<p><span class="pill gen">版本号</span> &nbsp;每个 (channel, book) 一个递增计数 <code>/read-gen/{channel}/{book}</code>（<code>RedisCache::increment</code>，不过期）。</p>
+<ul>
+<li>句子、批注的模型事件里，在 <code>forgetParagraph()</code> 旁边加一次 <code>increment</code>：这本书的译文变了。</li>
+<li>L2、L3 的 key 都带上它。版本一变，旧 key 不再被读到、自然过期，<b>不用去找「哪些章包含这一段」再逐个删</b>（父章、子章、下钻后的区间互相重叠，精确删除很难）。</li>
+<li>代价：一次多读一个小 key；编辑某本书时只有这本书的索引和章节缓存失效，别的书不受影响。</li>
+</ul>
+</div>
+
+<div class="card">
+<p><span class="pill l2">L2 内容索引</span> &nbsp;「某 channel 哪些段有译文」，给 <code>page()</code> 用：</p>
+<ul>
+<li><code>/read-index/{channel}/books/g…</code>：有译文的书号；<code>/read-index/{channel}/{book}/g{gen}</code>：该书有译文的段号（升序）。书号列表用 channel 级版本号（同样在句子事件里加一）。</li>
+<li><code>page()</code> 的候选段、游标、<code>total</code> / <code>remaining</code> 全在 PHP 里对这个数组算，<b>命中时 0 查询</b>；游标格式 <code>{book}-{para}</code> 与响应不变。</li>
+<li>重建只需一条 <code>select distinct paragraph</code>；cs6 最大的一本书一万多段，几十 KB；TTL 7 天。</li>
+</ul>
+</div>
+
+<div class="card">
+<p><span class="pill l3">L3 章节成品</span> &nbsp;给阅读器：整章拼好的 HTML 一次存、一次取。</p>
+<ul>
+<li>key：<code>/read-chapter/{channel}/{book}-{start}-{end}/g{gen}</code>，值 <code>{display, title}</code>。<code>start</code> / <code>end</code> 由 <code>resolveDisplayRange()</code> 算（查 L0，不落库）。</li>
+<li>命中：读版本号 1 次 + 读章节 1 次，<b>正文部分 0 查询</b>。未命中才逐段 <code>readParagraph()</code>（各段多半已在 L1）拼好回写。</li>
+<li>只动 <code>BookController::fetchRangeContent()</code> 这一个方法：先查 L3，没有再走原来的拼接。</li>
+<li><code>?comm=</code> 注释注入（<code>injectNoteMarkers</code>）在取出后做，不进缓存，不影响命中。</li>
+</ul>
+</div>
+
+<div class="card">
+<p><span class="pill l4">L4 批量读</span> &nbsp;只给 <code>page()</code>：一块最多 200 段，逐段 GET 是 200 次往返。</p>
+<ul>
+<li><code>RedisCache</code> 加 <code>many()</code>（phpredis 的 <code>RedisCluster::mget</code>，按 slot 拆到各节点）；<code>readParagraph</code> 加批量版 <code>readParagraphs()</code>：先 <code>many()</code> 拿命中的，没命中的逐段渲染回写。</li>
+<li>已在开发集群验证：200 个 key 落在 200 个 slot，<code>mget</code> 全部取对。本机往返近乎为零，看不出差别；收益与生产上 PHP 到 Redis 的往返延迟成正比（1 ms 往返时一块省约 200 ms）。</li>
+<li><b>阅读器不需要它</b>：整章已有 L3。可以放到最后做，或先测生产延迟再决定。</li>
+</ul>
+</div>
+
+<h2>数据流（冷启动 + 缓存）</h2>
+<div class="diagram">
+<svg viewBox="0 0 1060 600" role="img" aria-labelledby="t d">
+<title id="t">段落数据流</title>
+<desc id="d">mobile 与下载打包经 TipitakaReadingService 读内容索引 L2 与段落成品 L1；阅读器经 BookController 读章节成品 L3，未命中才落到 L2 与 L1；L1 未命中才渲染、查 L0 与数据库；写入事件删 L1 并给本书版本号加一，L2、L3 的 key 带版本号。</desc>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--muted)"/></marker>
+<marker id="ahg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--ok)"/></marker>
+<marker id="ahr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--danger)"/></marker>
+<marker id="ahw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--warn)"/></marker>
+</defs>
+<style>
+.bx{fill:var(--surface);stroke:var(--border);stroke-width:1.5}
+.tx{fill:var(--text);font:600 14px -apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+.sm{fill:var(--muted);font:12px -apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+.mono{fill:var(--muted);font:11px ui-monospace,Menlo,monospace}
+.ln{stroke:var(--muted);stroke-width:1.6;fill:none}
+.hit{stroke:var(--ok);stroke-width:2.4;fill:none}
+.miss{stroke:var(--danger);stroke-width:1.8;fill:none;stroke-dasharray:6 4}
+.inv{stroke:var(--warn);stroke-width:1.6;fill:none;stroke-dasharray:3 4}
+</style>
+
+<text x="20" y="26" class="sm">调用方</text>
+<rect class="bx" x="20" y="40" width="200" height="54" rx="8"/><text class="tx" x="34" y="63">mobile / v6</text><text class="mono" x="34" y="82">GET /v3/tipitaka-reading</text>
+<rect class="bx" x="20" y="106" width="200" height="54" rx="8"/><text class="tx" x="34" y="129">下载打包 worker</text><text class="mono" x="34" y="148">TipitakaExportBuilder</text>
+<rect class="bx" x="20" y="200" width="200" height="54" rx="8"/><text class="tx" x="34" y="223">Laravel 阅读器</text><text class="mono" x="34" y="242">按章，整章一次</text>
+
+<!-- B 列 -->
+<rect class="bx" x="270" y="50" width="220" height="80" rx="8"/>
+<text class="tx" x="284" y="76">TipitakaReadingService</text><text class="mono" x="284" y="96">::page() 按块</text><text class="sm" x="284" y="116">候选 / 游标 / 进度 → L2</text>
+<line class="ln" x1="220" y1="67" x2="268" y2="80" marker-end="url(#ah)"/>
+<line class="ln" x1="220" y1="133" x2="268" y2="108" marker-end="url(#ah)"/>
+
+<rect class="bx" x="270" y="190" width="220" height="74" rx="8"/>
+<text class="tx" x="284" y="216">BookController</text><text class="mono" x="284" y="236">fetchRangeContent()</text><text class="sm" x="284" y="254">区间由 L0 算</text>
+<line class="ln" x1="220" y1="227" x2="268" y2="227" marker-end="url(#ah)"/>
+
+<rect x="270" y="300" width="220" height="86" rx="8" fill="var(--ok-lt)" stroke="var(--ok)" stroke-width="1.5"/>
+<text class="tx" x="284" y="324">L3 章节成品</text><text class="mono" x="284" y="344">/read-chapter/{ch}/</text><text class="mono" x="284" y="360">{book}-{start}-{end}/g{gen}</text><text class="sm" x="284" y="378">命中：整章 1 次 GET</text>
+<line class="hit" x1="380" y1="264" x2="380" y2="298" marker-end="url(#ahg)"/>
+
+<rect x="270" y="450" width="220" height="80" rx="8" fill="var(--warn-lt)" stroke="var(--warn)" stroke-width="1.5"/>
+<text class="tx" x="284" y="474">本书版本号</text><text class="mono" x="284" y="494">/read-gen/{ch}/{book}</text><text class="sm" x="284" y="514">INCR，不过期</text>
+
+<!-- C 列 -->
+<rect x="540" y="40" width="220" height="78" rx="8" fill="var(--primary-lt)" stroke="var(--primary)" stroke-width="1.5"/>
+<text class="tx" x="554" y="64">L2 内容索引</text><text class="mono" x="554" y="84">/read-index/{ch}/books</text><text class="mono" x="554" y="102">/read-index/{ch}/{book}/g{gen}</text>
+<line class="hit" x1="490" y1="80" x2="538" y2="78" marker-end="url(#ahg)"/>
+
+<rect x="540" y="170" width="220" height="96" rx="8" fill="var(--ok-lt)" stroke="var(--ok)" stroke-width="1.5"/>
+<text class="tx" x="554" y="194">L1 段落成品</text><text class="mono" x="554" y="214">/read-para/v4/{b}-{p}/</text><text class="mono" x="554" y="230">{ch}/{fmt}</text><text class="sm" x="554" y="252">含外壳与脚注，空段也存</text>
+<path class="hit" d="M490,112 C516,112 516,200 538,204" marker-end="url(#ahg)"/>
+<path class="miss" d="M490,340 C516,340 516,250 538,248" marker-end="url(#ahr)"/>
+<text class="sm" x="284" y="406" style="fill:var(--danger)">L3 未命中 → 逐段取 L1，拼好回写</text>
+
+<rect class="bx" x="540" y="320" width="220" height="86" rx="8"/>
+<text class="tx" x="554" y="344">A1 批量渲染</text><text class="sm" x="554" y="364">未命中的段一起：句子 1 次、</text><text class="sm" x="554" y="382">批注 1 次、renderMany 1 次</text><text class="sm" x="554" y="400">回写 L1</text>
+<line class="miss" x1="650" y1="266" x2="650" y2="318" marker-end="url(#ahr)"/>
+<text class="sm" x="658" y="312" style="fill:var(--danger)">L1 未命中</text>
+
+<!-- D 列 -->
+<rect x="820" y="170" width="220" height="96" rx="8" fill="var(--violet-lt)" stroke="var(--violet)" stroke-width="1.5"/>
+<text class="tx" x="834" y="194">L4 批量读（仅 page）</text><text class="mono" x="834" y="214">RedisCache::many()</text><text class="sm" x="834" y="234">一块 200 段 = 1 次 MGET</text><text class="sm" x="834" y="252">（按节点拆）</text>
+<line class="hit" x1="760" y1="218" x2="818" y2="218" marker-end="url(#ahg)"/>
+
+<rect x="820" y="320" width="220" height="86" rx="8" fill="var(--violet-lt)" stroke="var(--violet)" stroke-width="1.5"/>
+<text class="tx" x="834" y="344">L0 书目元数据</text><text class="mono" x="834" y="364">/pali-meta/{book}/v{N}</text><text class="sm" x="834" y="384">level · class · chapter_len…</text>
+<line class="miss" x1="760" y1="363" x2="818" y2="363" marker-end="url(#ahr)"/>
+<path class="ln" d="M490,240 H504 V292 H880 V318" marker-end="url(#ah)" style="stroke-dasharray:2 3"/>
+<text class="sm" x="780" y="286">章节区间</text>
+
+<rect x="540" y="470" width="500" height="66" rx="8" fill="var(--danger-lt)" stroke="var(--danger)" stroke-width="1.5"/>
+<text class="tx" x="554" y="495">PostgreSQL</text><text class="mono" x="554" y="516">sentences · discussions · channels · terms · pali_texts</text>
+<line class="miss" x1="650" y1="406" x2="650" y2="468" marker-end="url(#ahr)"/>
+<line class="miss" x1="930" y1="406" x2="930" y2="468" marker-end="url(#ahr)"/>
+<path class="miss" d="M760,58 H1048 V503 H1044" marker-end="url(#ahr)"/>
+<text class="sm" x="800" y="52" style="fill:var(--danger)">L2 未命中：select distinct</text>
+
+<!-- 写入 -->
+<rect class="bx" x="20" y="450" width="200" height="80" rx="8"/>
+<text class="tx" x="34" y="474">写入事件</text><text class="mono" x="34" y="494">Sentence saved/deleted…</text><text class="mono" x="34" y="512">Discussion saved/deleted</text>
+<line class="inv" x1="220" y1="480" x2="268" y2="480" marker-end="url(#ahw)"/>
+<text class="sm" x="226" y="470" style="fill:var(--warn)">+1</text>
+<line class="inv" x1="380" y1="450" x2="380" y2="388" marker-end="url(#ahw)"/>
+<path class="inv" d="M490,470 H516 V100 H538" marker-end="url(#ahw)"/>
+<path class="inv" d="M220,520 H528 V260 H538" marker-end="url(#ahw)"/>
+<text class="sm" x="226" y="548" style="fill:var(--warn)">删 L1（forgetParagraph）；版本号 +1 → L2、L3 换 key</text>
+</svg>
+</div>
+<div class="legend">
+<span><i style="border-color:var(--ok)"></i>命中路径（0 次查询）</span>
+<span><i style="border-color:var(--danger);border-top-style:dashed"></i>未命中才走</span>
+<span><i style="border-color:var(--warn);border-top-style:dotted"></i>失效</span>
+<span><i style="border-color:var(--muted)"></i>调用</span>
+</div>
+
+<h2>改完后的效果</h2>
+<div class="tbl"><table>
+<tr><th></th><th>现在</th><th>改后</th></tr>
+<tr><td><code>page()</code> 一块 200 段：<b>冷启动</b>数据库</td><td class="num bad">≈2000 次（CBETA 库 617 ms）</td><td class="num good">≈4 次 + 每类模板数据 1 次</td></tr>
+<tr><td>阅读器打开一章（27 段）：<b>冷启动</b>正文</td><td class="num bad">约 330 次</td><td class="num good">≈3 次</td></tr>
+<tr><td><code>page()</code> 一块 200 段：<b>命中</b>数据库</td><td class="num bad">403 次</td><td class="num good">0</td></tr>
+<tr><td><code>page()</code> 一块 200 段：Redis</td><td class="num">200 次 GET</td><td class="num">版本号 + 索引 2～3 次，段落 1 次 MGET（做了 L4）或 200 次 GET（没做）</td></tr>
+<tr><td>阅读器打开一章（213-34，27 段）：正文部分</td><td class="num bad">51 次查询 + 27 次 GET</td><td class="num good">0 查询 + 2 次 GET</td></tr>
+<tr><td>阅读器打开一章：整页</td><td class="num">83 次查询（实测）</td><td class="num">约 32 次：目录、翻页、版本列表、标题等外围，不在本方案内</td></tr>
+</table></div>
+
+<h2>改动清单</h2>
+<div class="tbl"><table>
+<tr><th>文件</th><th>改什么</th><th>规模</th></tr>
+<tr><td><code>Services/PaliContentService.php</code>（冷启动）</td><td><span class="pill cold">A1</span> 新 <code>readParagraphs()</code>：channel / 句子 / 批注各查一次，整块一次 <code>renderManyAs()</code>；<code>injectAnnotationNotes()</code> 接收预取的批注；批注正文合并渲染；<code>readParagraph()</code> 改为调它</td><td>中～大</td></tr>
+<tr><td>新 <code>Services/PaliTextMetaService.php</code>（根命名空间，纯能力）</td><td><span class="pill l0">L0</span> 按书取静态列，进程内记住</td><td>小</td></tr>
+<tr><td><code>Services/PaliContentService.php</code></td><td><span class="pill l1">L1</span> <code>readParagraph()</code> 缓存完整结果、level / class 改查 L0、key 换 v4、TTL 用新配置；<code>forgetParagraph()</code> 删新 key；<code>paragraphLevel()</code> 改查 L0</td><td>中</td></tr>
+<tr><td><code>Models/Sentence.php</code>、<code>Models/Discussion.php</code></td><td><span class="pill gen">版本号</span> 事件里在 <code>forgetParagraph()</code> 旁边加 <code>increment</code>（句子改 book 时新旧两本都加）</td><td>小</td></tr>
+<tr><td>新 <code>Services/ParagraphIndexService.php</code>（根命名空间，纯能力）</td><td><span class="pill l2">L2</span> 书号列表、段号列表（带版本号）、按游标切片、total / remaining</td><td>中</td></tr>
+<tr><td><code>Services/V3/TipitakaReadingService.php</code></td><td><code>page()</code> 的 candidates / applyCursor / progressMeta / paragraphLengths 改用 L2 + L0；对外响应不变</td><td>中</td></tr>
+<tr><td><code>Http/Controllers/Library/BookController.php</code></td><td><span class="pill l3">L3</span> <code>fetchRangeContent()</code> 先查章节缓存；<code>resolveDisplayRange()</code> 改查 L0（只动这两个方法）</td><td>小</td></tr>
+<tr><td><code>Services/RedisCache.php</code> + Fake + 门面</td><td><span class="pill l4">L4</span> <code>many()</code>；<code>PaliContentService::readParagraphs()</code> 批量版</td><td>小</td></tr>
+<tr><td><code>Services/V3/TipitakaExportBuilder.php</code></td><td><code>headingLevels()</code> / <code>headings()</code> 改查 L0；取段经 <code>page()</code> 自动受益</td><td>小</td></tr>
+<tr><td><code>Console/Commands/InitCommentary.php</code></td><td>批量 <code>delete()</code> 绕过模型事件，删完后给涉及的 (channel, book) 版本号加一</td><td>小</td></tr>
+<tr><td><code>config/mint.php</code></td><td><code>cache.read_paragraph_ttl</code>、<code>cache.read_index_ttl</code>、<code>cache.read_chapter_ttl</code></td><td>小</td></tr>
+<tr><td>测试</td><td>命中时 0 查询（<code>DB::enableQueryLog</code> 断言）；句子 / 批注增删改后 L1 删除、版本号加一、L2 / L3 读到新内容；游标、total / remaining 与改前一致；阅读器同一章第二次打开正文 0 查询</td><td>中</td></tr>
+</table></div>
+<p>不改的：v2 的 <code>chapter-content</code> / <code>paragraph-content</code>（走 <code>makeContentObj()</code>，v4 下线前不动）；<code>tipitaka-reading</code> 的响应形状与游标格式；阅读器页面外围的查询。</p>
+
+<h2>风险与需要你定的</h2>
+<div class="decide">
+<p><b>待定 1：L1、L3 的 TTL。</b>段落与章节成品除了句子与批注（有精确失效），还依赖<b>没有失效信号的数据</b>：术语释义（<code>{{term}}</code>）、引用的其他句子（<code>{{sent}}</code>、义注对应）、channel 名称等。它们改了，缓存会旧到过期为止。</p>
+<ul>
+<li>A（推荐）：<b>24 小时</b>。现在默认是 10 小时，旧内容最多多留半天；命中率大幅提高。</li>
+<li>B：7 天，另加一个全局「渲染代号」，术语保存时加一，所有段落与章节按需重渲。术语编辑很频繁时会反复整库失效。</li>
+<li>C：维持现状（跟 <code>mint.cache.expire</code>）。</li>
+</ul>
+</div>
+<div class="decide">
+<p><b>待定 2：L4 做不做。</b>阅读器不需要；只对 <code>page()</code> 有用，收益取决于生产上 PHP 到 Redis 的往返延迟。可以先上 L0–L3，量一下生产延迟再定。</p>
+</div>
+<div class="note">
+<ul>
+<li><b>绕过模型事件的写入</b>：全仓库只找到 <code>InitCommentary</code> 一处对 sentences 批量 <code>delete()</code>；以后新增批量写入要手动加版本号，在 <code>ParagraphIndexService</code> 类注释里写明。</li>
+<li><b>Redis 占用</b>：L1 key 数与现在相同，只是活得更久；L3 每个被打开过的 (channel, 章) 一个 key，正文几十 KB；版本号每个 (channel, book) 一个小 key、不过期；L0 共 217 个。</li>
+<li><b>v4</b>：v2 不读这些缓存，不受影响。</li>
+</ul>
+</div>
+
+<h2>分步实施</h2>
+<ol>
+<li><span class="pill l0">L0</span> 书目元数据（A、B 都要用）。</li>
+<li><span class="pill cold">A1</span> 批量渲染 <code>readParagraphs()</code>：冷启动从约 2000 次降到约 4 次；同时它就是 B 的批量入口。</li>
+<li><span class="pill l1">L1</span> 段落成品（含外壳）：命中时 <code>page()</code> 403 → 3，阅读器正文 51 → 0。</li>
+<li><span class="pill gen">版本号</span> + <span class="pill l3">L3</span> 章节成品：阅读器整章一次 GET。</li>
+<li><span class="pill l2">L2</span> 内容索引：<code>page()</code> 命中 3 → 0。</li>
+<li>（视生产延迟）<span class="pill l4">L4</span> 批量读。</li>
+</ol>
+<p>每步单独可测、可回退。</p>
+
+</div>
+</body>
+</html>

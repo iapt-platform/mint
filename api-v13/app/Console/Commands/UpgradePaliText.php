@@ -9,6 +9,7 @@ namespace App\Console\Commands;
 
 use App\Models\BookTitle;
 use App\Models\PaliText;
+use App\Services\V3\PaliTextService;
 use App\Tools\Tools;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -243,6 +244,8 @@ class UpgradePaliText extends Command
                     $paragraph_info[] = [$book, $paragraph, $length, $prev, $next, $parent];
                 }
             }
+            // 阅读、导出缓存的 pali_texts（按书缓存一个月）
+            app(PaliTextService::class)->forgetBook($from);
         }
 
         $this->info('all done in '.time() - $startTime.'s');

@@ -3,7 +3,6 @@
 namespace App\Services\V3;
 
 use App\Models\Channel;
-use App\Models\PaliText;
 use App\Services\TipitakaCatalogService;
 use DOMDocument;
 use DOMXPath;
@@ -30,6 +29,7 @@ class TipitakaExportBuilder
     public function __construct(
         private readonly TipitakaReadingService $reading,
         private readonly TipitakaCatalogService $catalog,
+        private readonly PaliTextService $paliTexts,
     ) {}
 
     /**
@@ -160,12 +160,7 @@ class TipitakaExportBuilder
      */
     private function headingLevels(array $work): array
     {
-        return PaliText::where('book', $work['book'])
-            ->whereBetween('paragraph', [$work['para'], $work['end']])
-            ->where('level', '<', 8)
-            ->pluck('level', 'paragraph')
-            ->map(fn ($level) => (int) $level)
-            ->all();
+        return array_map(fn (array $heading) => $heading['level'], $this->headingsIn($work));
     }
 
     /**
@@ -176,13 +171,22 @@ class TipitakaExportBuilder
      */
     private function headings(array $work): array
     {
-        return PaliText::where('book', $work['book'])
-            ->whereBetween('paragraph', [$work['para'], $work['end']])
-            ->where('level', '<', 8)
-            ->orderBy('paragraph')
-            ->get(['paragraph', 'level', 'toc'])
-            ->mapWithKeys(fn ($row) => [(int) $row->paragraph => [(int) $row->level, (string) $row->toc]])
-            ->all();
+        return array_map(fn (array $heading) => [$heading['level'], $heading['toc']], $this->headingsIn($work));
+    }
+
+    /**
+     * 作品区间里的标题段（缓存的经文静态数据），按段落号升序。
+     *
+     * @param  array<string, mixed>  $work
+     * @return array<int, array{level: int, chapter_len: int, chapter_strlen: int, parent: int, toc: string}>
+     */
+    private function headingsIn(array $work): array
+    {
+        return array_filter(
+            $this->paliTexts->headings((int) $work['book']),
+            fn (int $para) => $para >= $work['para'] && $para <= $work['end'],
+            ARRAY_FILTER_USE_KEY,
+        );
     }
 
     /**

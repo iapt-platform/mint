@@ -4,6 +4,7 @@ use App\Facades\RedisCache;
 use App\Models\PaliText;
 use App\Models\Sentence;
 use App\Services\PaliContentService;
+use App\Services\V3\PaliTextService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 
@@ -52,6 +53,8 @@ it('wraps a chapter title paragraph in a heading', function () {
         'pcd_book_id' => 0,
         'uid' => (string) Str::uuid(),
     ])->save();
+    // pali_texts 按书缓存；生产上只有导入命令改它，导入后同样要 forgetBook()
+    app(PaliTextService::class)->forgetBook(9001);
 
     $display = $this->getJson("/api/v3/tipitaka-reading/{$channel}?book=9001&para=1")
         ->assertOk()
