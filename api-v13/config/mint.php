@@ -122,9 +122,9 @@ return [
     'cache' => [
         // 这个值prod,staging无需设置
         'expire' => env('CACHE_EXPIRE', 36000),
-        // 阅读段落成品（PaliContentService::readParagraph）：句子、批注改动有精确失效，
+        // 阅读段落成品与章节缓存（PaliContentService::readParagraphs / readChapters）：句子、批注改动有精确失效，
         // 术语释义、引用句子、channel 名称等没有，改了最多旧这么久
-        'read_paragraph_ttl' => env('CACHE_READ_PARAGRAPH_TTL', 86400),
+        'read_paragraph_ttl' => env('CACHE_READ_PARAGRAPH_TTL', 7 * 86400),
         // 有译文的书号 / 段号索引（ReadingIndexService）：随句子改动失效，过期只为回收空间
         'read_index_ttl' => env('CACHE_READ_INDEX_TTL', 7 * 86400),
     ],
