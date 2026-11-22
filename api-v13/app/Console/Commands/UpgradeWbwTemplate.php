@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Api\ChannelApi;
 use App\Models\PaliSentence;
 use App\Models\Sentence;
 use App\Models\WbwTemplate;
+use App\Services\ChannelService;
 use App\Tools\Tools;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
@@ -42,7 +42,7 @@ class UpgradeWbwTemplate extends Command
      *
      * @return int
      */
-    public function handle()
+    public function handle(ChannelService $channelService)
     {
         if (Tools::isStop()) {
             return 0;
@@ -56,7 +56,7 @@ class UpgradeWbwTemplate extends Command
             $pali = $pali->where('paragraph', $this->argument('para'));
         }
         $bar = $this->output->createProgressBar($pali->count());
-        $channelId = ChannelApi::getSysChannel('_System_Wbw_VRI_');
+        $channelId = $channelService->systemUid('_System_Wbw_VRI_');
         if ($channelId === false) {
             $this->error('no channel');
 

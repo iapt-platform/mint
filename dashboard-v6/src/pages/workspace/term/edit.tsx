@@ -19,7 +19,12 @@ const Widget = () => {
       <title>{name ? `${prefix}-${name}` : prefix}</title>
       <TermEdit
         id={id}
-        onUpdate={() => {
+        blockNavigation
+        onUpdate={(saved) => {
+          // 另存为会建出一条新术语，回到新那条的预览
+          navigate(`/workspace/term/${saved.id ?? id}`);
+        }}
+        onCancel={() => {
           navigate(`/workspace/term/${id}`);
         }}
       />

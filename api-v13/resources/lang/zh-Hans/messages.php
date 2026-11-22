@@ -91,4 +91,10 @@ return [
     'term_import_unreadable' => '读不了这个文件，请上传 xlsx 格式的表格。',
     'term_import_header_required' => '表格第一行要有列名，至少包含 word 与 meaning。',
     'term_import_too_many' => '一次最多导入 :max 行。',
+
+    // 三藏下载（/v3/tipitaka-exports）
+    'export_not_found' => '这个下载不存在或已过期，请重新发起。',
+    'export_too_large' => '范围太大，无法导出。',
+    'export_failed' => '文件生成失败，请稍后重试。',
+    'export_offline_work_only' => '离线包只能按作品下载。',
 ];

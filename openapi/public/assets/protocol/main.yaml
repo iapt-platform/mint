@@ -833,6 +833,8 @@ paths:
     $ref: ./resources/auto/v3-invites.yaml
   '/v3/invites/{invite}':
     $ref: ./resources/auto/v3-invites-invite.yaml
+  /v3/markup-previews:
+    $ref: ./resources/auto/v3-markup-previews.yaml
   /v3/me:
     $ref: ./resources/auto/v3-me.yaml
   /v3/me/agent-threads:
@@ -889,6 +891,12 @@ paths:
     $ref: ./resources/auto/v3-tipitaka-chapter-channels-book-para.yaml
   '/v3/tipitaka-discussions/{channel}':
     $ref: ./resources/auto/v3-tipitaka-discussions-channel.yaml
+  /v3/tipitaka-exports:
+    $ref: ./resources/auto/v3-tipitaka-exports.yaml
+  '/v3/tipitaka-exports/{export}':
+    $ref: ./resources/auto/v3-tipitaka-exports-export.yaml
+  '/v3/tipitaka-exports/{export}/file':
+    $ref: ./resources/auto/v3-tipitaka-exports-export-file.yaml
   '/v3/tipitaka-page-numbers/{page}':
     $ref: ./resources/auto/v3-tipitaka-page-numbers-page.yaml
   '/v3/tipitaka-paragraph-channels/{book}/{para}':

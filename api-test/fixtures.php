@@ -26,7 +26,7 @@ return [
     'cs_para'   => 4,
 
     // 搜索关键词（search/{id} 的 200 用例从它的检索结果里取文档 id）
-    'search_q'       => 'dukkha',
+    'search_q'       => 'nama',
 
     // discussions 写用例挂的句子：放在测试账号自己的 channel 里、由测试账号编辑，
     // 这样即便有通知也只发给自己（用例本身还会带 notify=false）。换环境时按需覆盖。
@@ -41,6 +41,11 @@ return [
     // 第二个账号用户名按环境覆盖；留空则加人 / 改角色 / 移人那一轮 SKIP。
     'group_name' => 'api-test 团队',
     'group_member_username' => 'test162',
+
+    // tipitaka-exports（三藏下载）：一个公开 channel 与它收录的一部小作品（library 作品页 URL 里的 sn）。
+    // 用例会真的排队生成并等 worker 做完（mq:export.tipitaka 要在跑），文件留在 Redis 里 7 天，不清理
+    'export_channel' => 'a19eaf75-c63f-4b84-8125-1bce18311e23',
+    'export_work' => 276,
 
     // 一个已注册账号的邮箱（email-certifications 的「已注册」用例；只校验、不发信）。
     // 留空则该用例 SKIP。

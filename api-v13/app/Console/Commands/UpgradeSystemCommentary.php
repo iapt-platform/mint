@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use App\Facades\RedisCache;
 use App\Helpers\LlmResponseParser;
-use App\Http\Api\ChannelApi;
 use App\Http\Resources\AiModelResource;
 use App\Models\BookTitle;
 use App\Models\PaliSentence;
@@ -13,6 +12,7 @@ use App\Models\RelatedParagraph;
 use App\Models\Tag;
 use App\Models\TagMap;
 use App\Services\AIModelService;
+use App\Services\ChannelService;
 use App\Services\OpenAIService;
 use App\Services\SearchPaliDataService;
 use App\Services\SentenceService;
@@ -99,7 +99,7 @@ class UpgradeSystemCommentary extends Command
      *
      * @return int
      */
-    public function handle()
+    public function handle(ChannelService $channelService)
     {
         if ($this->option('list')) {
             $result = RelatedParagraph::whereNotNull('book_name')
@@ -145,7 +145,7 @@ class UpgradeSystemCommentary extends Command
             $skipPatterns = array_values(array_filter(array_map('trim', explode(',', $this->option('skip')))));
         }
 
-        $channel = ChannelApi::getChannelByName('_System_commentary_');
+        $channel = $channelService->byNameOrFail('_System_commentary_');
 
         $books = [];
         if ($this->option('book')) {

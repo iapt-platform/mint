@@ -1,0 +1,9 @@
+/* 三藏下载 epub 的样式（pandoc --css）。阅读器大多会覆盖字体与字号，这里只定基本排版。 */
+body { font-family: "Noto Serif SC", "Noto Serif", serif; line-height: 1.8; }
+h1, h2, h3, h4, h5, h6 { line-height: 1.35; font-weight: 600; page-break-after: avoid; }
+h1 { font-size: 1.5em; margin: 1.2em 0 .8em; text-align: center; }
+h2 { font-size: 1.25em; margin: 1.4em 0 .6em; }
+h3 { font-size: 1.1em; margin: 1.2em 0 .5em; }
+p { margin: 0 0 .9em; text-align: justify; }
+section.footnotes, aside.footnote { font-size: .88em; }
+nav#toc ol { list-style: none; padding-left: 1em; }

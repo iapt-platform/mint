@@ -164,6 +164,61 @@ function required_token(): string
     return $token;
 }
 
+/**
+ * 取管理员 token（/v3/admin/* 用例专用，与测试账号分开）。
+ * 没配管理员账号 → SKIP；配了但登录不上、或 /v3/me 的 roles 里没有 administrator / root → FAIL。
+ * 第一次调用时才登录，结果缓存到本次运行结束。
+ */
+function admin_token(): string
+{
+    static $token = null, $error = null;
+    if ($token !== null) {
+        return $token;
+    }
+    if ($error !== null) {
+        throw $error;   // 登录失败只试一次，免得每条用例都去撞登录限流
+    }
+    try {
+        return $token = resolve_admin_token();
+    } catch (Fail|Skip $e) {
+        throw $error = $e;
+    }
+}
+
+function resolve_admin_token(): string
+{
+    $cfg = config();
+    $candidate = $cfg['admin_token'] ?? null;
+    if (! $candidate) {
+        if (! ($cfg['admin_username'] ?? null) || ! ($cfg['admin_password'] ?? null)) {
+            skip('没配管理员账号（admin_username/admin_password 或 admin_token）');
+        }
+        $candidate = login($cfg['admin_username'], $cfg['admin_password']);
+    }
+    $me = raw('GET', '/v3/me', null, null, $candidate);
+    assert_status(200, $me, '管理员账号 /v3/me');
+    $roles = $me['body']['data']['roles'] ?? [];
+    if (! array_intersect(['administrator', 'root'], $roles)) {
+        fail('配置的管理员账号没有 administrator / root 角色');
+    }
+
+    return $candidate;
+}
+
+/**
+ * 取管理员 token，用于 admin 路由的写入用例。
+ * 目标服务器不在 config.php 的 admin_write_servers 白名单里（生产等）→ SKIP，管理员在那里只读。
+ */
+function admin_write_token(): string
+{
+    $cfg = config();
+    if (! in_array($cfg['server_key'] ?? null, $cfg['admin_write_servers'] ?? [], true)) {
+        skip('该服务器禁止 admin 写入（只在 ' . implode(' / ', $cfg['admin_write_servers'] ?? []) . ' 上跑）');
+    }
+
+    return admin_token();
+}
+
 /* ---- 断言 ---- */
 
 function assert_status(int $expected, array $res, string $what): void

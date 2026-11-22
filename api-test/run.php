@@ -4,7 +4,8 @@
  * api-test 入口：装配配置 → 加载用例 → 运行 → 报告。
  *
  * 用法：
- *   php run.php [--server=<alias|URL>] [--token=<bearer>] [--username=<u> --password=<p>] [--filter=<子串>] [--list]
+ *   php run.php [--server=<alias|URL>] [--token=<bearer>] [--username=<u> --password=<p>]
+ *               [--admin-token=<bearer>] [--admin-username=<u> --admin-password=<p>] [--filter=<子串>] [--list]
  *
  * 例：
  *   php run.php                          # 默认 local
@@ -72,12 +73,19 @@ if (is_array($localServers) && $serverKey !== null && isset($localServers[$serve
     $config['username'] = $block['username'] ?? $config['username'];
     $config['password'] = $block['password'] ?? $config['password'];
     $config['fixtures'] = $block['fixtures'] ?? $config['fixtures'];
+    foreach (['admin_token', 'admin_username', 'admin_password'] as $key) {
+        $config[$key] = $block[$key] ?? $config[$key];
+    }
 }
+$config['server_key'] = $serverKey;
 
 // 环境变量覆盖（高于 config.local.php，低于命令行）
 $config['token'] = getenv('API_TEST_TOKEN') ?: $config['token'];
 $config['username'] = getenv('API_TEST_USERNAME') ?: $config['username'];
 $config['password'] = getenv('API_TEST_PASSWORD') ?: $config['password'];
+$config['admin_token'] = getenv('API_TEST_ADMIN_TOKEN') ?: $config['admin_token'];
+$config['admin_username'] = getenv('API_TEST_ADMIN_USERNAME') ?: $config['admin_username'];
+$config['admin_password'] = getenv('API_TEST_ADMIN_PASSWORD') ?: $config['admin_password'];
 
 // 命令行覆盖（最高优先级）
 if (is_string($opts['token'] ?? null) && $opts['token'] !== '') {
@@ -88,6 +96,12 @@ if (is_string($opts['username'] ?? null) && $opts['username'] !== '') {
 }
 if (is_string($opts['password'] ?? null) && $opts['password'] !== '') {
     $config['password'] = $opts['password'];
+}
+foreach (['admin_token', 'admin_username', 'admin_password'] as $key) {
+    $flag = str_replace('_', '-', $key);
+    if (is_string($opts[$flag] ?? null) && $opts[$flag] !== '') {
+        $config[$key] = $opts[$flag];
+    }
 }
 
 $GLOBALS['config'] = $config;

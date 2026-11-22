@@ -4,10 +4,10 @@ namespace App\Console\Commands;
 
 use App\Facades\RedisCache;
 use App\Helpers\LlmResponseParser;
-use App\Http\Api\ChannelApi;
 use App\Http\Resources\AiModelResource;
 use App\Models\PaliText;
 use App\Services\AIModelService;
+use App\Services\ChannelService;
 use App\Services\OpenAIService;
 use App\Services\SentenceService;
 use App\Services\TermService;
@@ -69,6 +69,7 @@ class ExtractPaliTerm extends Command
     protected ?bool $thinking = null;
 
     public function __construct(
+        protected ChannelService $channelService,
         protected AIModelService $modelService,
         protected OpenAIService $openAIService,
         protected SentenceService $sentenceService,
@@ -97,13 +98,13 @@ class ExtractPaliTerm extends Command
         }
 
         // ---------- 保存目标 channel ----------
-        $channelId = ChannelApi::getSysChannel('_system_glossary_');
+        $channelId = $this->channelService->systemUid('_system_glossary_');
         if (! $channelId) {
             $this->error('system glossary channel "_system_glossary_" not found');
 
             return 1;
         }
-        $this->glossaryChannel = ChannelApi::getById($channelId);
+        $this->glossaryChannel = $this->channelService->summary($channelId);
         Log::info('extract:pali.term glossary channel', ['channel' => $channelId]);
 
         // ---------- 完整术语表（一次性加载，所有 chapter 共用）----------

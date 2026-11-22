@@ -5,8 +5,8 @@ namespace App\Services;
 /**
  * RedisCache 的内存实现，供测试使用（相当于 Laravel Cache 的 array store）。
  *
- * 只替换四个存取原语，序列化、TTL 换算、null 语义仍走 RedisCache 本身，
- * 所以测试覆盖到的是真实逻辑。通过 App\Facades\RedisCache::fake() 启用。
+ * 只替换存取原语，序列化、TTL 换算、null 语义仍走 RedisCache 本身，
+ * 所以测试覆盖到的是真实逻辑。二进制的 length / range 两个原语也在这里覆盖。通过 App\Facades\RedisCache::fake() 启用。
  */
 class RedisCacheFake extends RedisCache
 {
@@ -59,5 +59,22 @@ class RedisCacheFake extends RedisCache
         ];
 
         return $next;
+    }
+
+    protected function length(string $key): ?int
+    {
+        $value = $this->read($key);
+
+        return $value === null ? null : strlen($value);
+    }
+
+    protected function range(string $key, int $start, int $end): string
+    {
+        $value = $this->read($key) ?? '';
+        if ($start >= strlen($value) || $end < $start) {
+            return '';
+        }
+
+        return substr($value, $start, $end - $start + 1);
     }
 }

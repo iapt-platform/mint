@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Api\ChannelApi;
 use App\Http\Api\MdRender;
 use App\Models\Channel;
 use App\Models\Sentence;
+use App\Services\ChannelService;
 use App\Tools\Markdown;
 use App\Tools\Tools;
 use Illuminate\Console\Command;
@@ -43,7 +43,7 @@ class ExportSentence extends Command
      *
      * @return int
      */
-    public function handle()
+    public function handle(ChannelService $channelService)
     {
         Log::debug('task export offline sentence-table start');
         if (Tools::isStop()) {
@@ -59,7 +59,7 @@ class ExportSentence extends Command
             $channel_type = $this->option('type');
             $file_suf = $channel_type;
             if ($channel_type === 'original') {
-                $pali_channel = ChannelApi::getSysChannel('_System_Pali_VRI_');
+                $pali_channel = $channelService->systemUid('_System_Pali_VRI_');
                 if ($pali_channel === false) {
                     return 0;
                 }
@@ -112,7 +112,7 @@ class ExportSentence extends Command
         ])->cursor();
         foreach ($srcDb as $sent) {
             if (Str::isUuid($sent->channel_uid)) {
-                $channel = ChannelApi::getById($sent->channel_uid);
+                $channel = $channelService->summary($sent->channel_uid);
                 $currData = [
                     $sent->book_id,
                     $sent->paragraph,

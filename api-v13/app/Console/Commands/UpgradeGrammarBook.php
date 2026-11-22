@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Api\ChannelApi;
 use App\Models\DhammaTerm;
 use App\Models\Relation;
+use App\Services\ChannelService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 
@@ -40,10 +40,10 @@ class UpgradeGrammarBook extends Command
      *
      * @return int
      */
-    public function handle()
+    public function handle(ChannelService $channelService)
     {
         $lang = 'zh-Hans';
-        $channelId = ChannelApi::getSysChannel('_System_Grammar_Term_'.strtolower($lang).'_');
+        $channelId = $channelService->systemUid('_System_Grammar_Term_'.strtolower($lang).'_');
         if ($channelId === false) {
             $this->error('no channel');
 
@@ -120,7 +120,7 @@ class UpgradeGrammarBook extends Command
             if (empty($caseLocal)) {
                 $caseLocal = $key;
             }
-            $owner = ChannelApi::getById($channelId);
+            $owner = $channelService->summary($channelId);
             if (! $owner) {
                 $this->error('channel id error '.$channelId);
 

@@ -12,6 +12,7 @@ use App\Services\ChapterService;
 use App\Services\PaliContentService;
 use App\Services\PaliTextService;
 use App\Services\TipitakaCatalogService;
+use App\Services\V3\PaliTextService as PaliTexts;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
@@ -39,6 +40,7 @@ class BookController extends Controller
         protected PaliTextService $paliTextService,
         protected PaliContentService $paliContentService,
         protected TipitakaCatalogService $catalog,
+        protected PaliTexts $paliTexts,
     ) {}
 
     /**
@@ -267,43 +269,45 @@ class BookController extends Controller
      */
     private function resolveDisplayRange(int $book, int $para): array
     {
-        $currBook = $this->bookStart($book, $para);
+        // 标题段取自缓存的经文静态数据（V3\PaliTextService），不查库
+        $currBook = $this->paliTexts->bookStart($book, $para);
         abort_if($currBook === null, 404);
-        $bookStart = $currBook->paragraph;
-        $bookEnd = $currBook->paragraph + $currBook->chapter_len - 1;
+        $bookStart = $currBook['para'];
+        $bookEnd = $currBook['para'] + $currBook['chapter_len'] - 1;
 
         // 本书内全部 chapter 节点（level < 8，即 book/chapter/subhead 等可导航节点）
-        $paragraphs = PaliText::where('book', $book)
-            ->whereBetween('paragraph', [$bookStart, $bookEnd])
-            ->where('level', '<', 8)
-            ->orderBy('paragraph')
-            ->get();
+        $paragraphs = [];
+        foreach ($this->paliTexts->headings($book) as $paragraph => $heading) {
+            if ($paragraph >= $bookStart && $paragraph <= $bookEnd) {
+                $paragraphs[] = ['paragraph' => $paragraph] + $heading;
+            }
+        }
 
-        $curr = $paragraphs->firstWhere('paragraph', $para);
+        $curr = collect($paragraphs)->firstWhere('paragraph', $para);
         // 选中的不是可导航的 chapter 节点（如正文段落 level=100）
         abort_if($curr === null, 404);
-        $endParagraph = $curr->paragraph + $curr->chapter_len - 1;
+        $endParagraph = $curr['paragraph'] + $curr['chapter_len'] - 1;
 
-        if ($curr->chapter_strlen > $this->maxChapterStrlen) {
+        if ($curr['chapter_strlen'] > $this->maxChapterStrlen) {
             // 选中节点过大：向后下钻，找到第一个不超过阈值的子 chapter
             foreach ($paragraphs as $key => $paragraph) {
-                if ($paragraph->paragraph <= $curr->paragraph) {
+                if ($paragraph['paragraph'] <= $curr['paragraph']) {
                     continue;
                 }
-                if ($paragraph->chapter_strlen <= $this->maxChapterStrlen) {
-                    $endParagraph = $paragraph->paragraph + $paragraph->chapter_len - 1;
+                if ($paragraph['chapter_strlen'] <= $this->maxChapterStrlen) {
+                    $endParagraph = $paragraph['paragraph'] + $paragraph['chapter_len'] - 1;
                     break;
                 }
-                if ($paragraph->level <= $curr->level) {
+                if ($paragraph['level'] <= $curr['level']) {
                     // 已离开选中节点的子树，无法继续下钻，止步于上一个节点
-                    $endParagraph = $paragraphs[$key - 1]->paragraph + $paragraphs[$key - 1]->chapter_len - 1;
+                    $endParagraph = $paragraphs[$key - 1]['paragraph'] + $paragraphs[$key - 1]['chapter_len'] - 1;
                     break;
                 }
             }
         }
 
         return [
-            'start' => $curr->paragraph,
+            'start' => $curr['paragraph'],
             'end' => $endParagraph,
         ];
     }
@@ -311,31 +315,21 @@ class BookController extends Controller
     /**
      * 聚合区间内全部段落的阅读模式 HTML。
      *
-     * 与 TipitakaReadParaController 一致，逐段调用 PaliContentService::readParagraph
-     * 获取 HTML 并按段落顺序拼接；缺失或获取失败的段落跳过。章节标题优先取
-     * ProgressChapter.title，回退到 PaliText.toc。
+     * 交给 PaliContentService::readChapters()：按平铺章节缓存，命中时每章一次 GET、不查库，
+     * 没命中的一起渲染。章节标题不进缓存：优先取 ProgressChapter.title，回退到巴利标题（toc）。
      *
      * @return array{display: string, title: string, category: array}
      */
     private function fetchRangeContent(int $book, string $channelId, int $start, int $end, int $selectedPara): array
     {
-        $display = '';
-        foreach (range($start, $end) as $para) {
-            $paragraph = $this->paliContentService->readParagraph($book, $para, $channelId, 'html');
-            if (empty($paragraph['display'])) {
-                continue;
-            }
-            $display .= $paragraph['display'];
-        }
+        $display = $this->paliContentService->readChapters($book, $start, $end, $channelId, 'html');
 
         $title = ProgressChapter::where('book', $book)
             ->where('para', $selectedPara)
             ->where('channel_id', $channelId)
             ->value('title');
         if (empty($title)) {
-            $title = PaliText::where('book', $book)
-                ->where('paragraph', $selectedPara)
-                ->value('toc');
+            $title = $this->paliTexts->heading($book, $selectedPara)['toc'] ?? null;
         }
 
         return [

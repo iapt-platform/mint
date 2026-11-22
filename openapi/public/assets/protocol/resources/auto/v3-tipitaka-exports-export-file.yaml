@@ -1,0 +1,99 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-tipitaka-exports-export-file.yaml
+get:
+  summary: 下载文件
+  tags:
+    - tipitaka-exports
+  operationId: get_api_v3_tipitaka_exports_export_file
+  description: |-
+    支持 `Range`（206，断点续传）与 `If-None-Match`（304，ETag 就是导出 id）。
+    离线包（offline）是 NDJSON，带 `Content-Encoding: gzip`，HTTP 客户端会自动解压。
+    签名无效或过期 403，文件已过期 404。
+
+    实现：`V3\TipitakaExportFileController@__invoke`
+  security:
+    - {  }
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: export
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '导出 id'
+    -
+      name: expires
+      in: query
+      schema:
+        type: integer
+      description: '签名的过期时间（download_url 里自带）'
+      required: true
+    -
+      name: signature
+      in: query
+      schema:
+        type: string
+      description: '签名（download_url 里自带）'
+      required: true
+  responses:
+    200:
+      description: 成功
+      content:
+        application/zip:
+          schema:
+            type: string
+            format: binary
+        application/epub+zip:
+          schema:
+            type: string
+            format: binary
+        application/vnd.openxmlformats-officedocument.wordprocessingml.document:
+          schema:
+            type: string
+            format: binary
+        application/x-ndjson:
+          schema:
+            type: string
+            format: binary
+    206:
+      description: 'Range 请求的部分内容'
+      content:
+        application/zip:
+          schema:
+            type: string
+            format: binary
+        application/epub+zip:
+          schema:
+            type: string
+            format: binary
+        application/vnd.openxmlformats-officedocument.wordprocessingml.document:
+          schema:
+            type: string
+            format: binary
+        application/x-ndjson:
+          schema:
+            type: string
+            format: binary
+    304:
+      description: 'If-None-Match 命中，本地文件就是最新的'
+    403:
+      description: 签名无效或已过期
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+    404:
+      description: 文件已过期
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+    416:
+      description: 'Range 超出文件大小'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

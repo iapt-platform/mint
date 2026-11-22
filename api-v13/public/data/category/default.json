@@ -224,8 +224,8 @@
                 "tag": ["vinaya", "parivāra"]
             },
             {
-                "name": "ṭīkā",
-                "tag": ["vinaya", "ṭīkā"],
+                "name": "añña",
+                "tag": ["vinaya", "vinaya-añña"],
                 "children": [
                     {
                         "name": "sāratthadīpanī",
@@ -233,7 +233,7 @@
                     },
                     {
                         "name": "pātimokkha",
-                        "tag": ["vinaya", "ṭīkā", "pātimokkha"]
+                        "tag": ["vinaya", "pātimokkha"]
                     },
                     {
                         "name": "vajirabuddhi",
@@ -245,19 +245,15 @@
                     },
                     {
                         "name": "vinayavinicchayo",
-                        "tag": ["vinaya", "ṭīkā", "vinayavinicchaya"]
+                        "tag": ["vinaya", "vinaya-añña", "vinayavinicchaya"]
                     },
                     {
                         "name": "vinayasaṅgaha",
-                        "tag": ["vinaya", "ṭīkā", "vinayasaṅgaha"]
-                    },
-                    {
-                        "name": "vinayālaṅkāra",
-                        "tag": ["vinaya", "ṭīkā", "vinayālaṅkāra"]
+                        "tag": ["vinaya", "vinaya-añña", "vinayasaṅgaha"]
                     },
                     {
                         "name": "uttaravinicchaya",
-                        "tag": ["vinaya", "ṭīkā", "uttaravinicchaya"]
+                        "tag": ["vinaya", "vinaya-añña", "uttaravinicchaya"]
                     },
                     {
                         "name": "pācityādiyojanā",
@@ -265,11 +261,11 @@
                     },
                     {
                         "name": "khuddasikkhā",
-                        "tag": ["vinaya", "ṭīkā", "khuddasikkhā"]
+                        "tag": ["vinaya", "vinaya-añña", "khuddasikkhā"]
                     },
                     {
                         "name": "mūlasikkhā",
-                        "tag": ["vinaya", "ṭīkā", "mūlasikkhā"]
+                        "tag": ["vinaya", "vinaya-añña", "mūlasikkhā"]
                     }
                 ]
             }

@@ -122,6 +122,11 @@ return [
     'cache' => [
         // 这个值prod,staging无需设置
         'expire' => env('CACHE_EXPIRE', 36000),
+        // 阅读段落成品与章节缓存（PaliContentService::readParagraphs / readChapters）：句子、批注改动有精确失效，
+        // 术语释义、引用句子、channel 名称等没有，改了最多旧这么久
+        'read_paragraph_ttl' => env('CACHE_READ_PARAGRAPH_TTL', 7 * 86400),
+        // 有译文的书号 / 段号索引（ReadingIndexService）：随句子改动失效，过期只为回收空间
+        'read_index_ttl' => env('CACHE_READ_INDEX_TTL', 7 * 86400),
     ],
 
     /**
@@ -199,7 +204,26 @@ return [
             'suggestion' => [],
             'wbw-analyses' => [],
             'ai_translate_v2' => [],
+            // 三藏下载（/v3/tipitaka-exports）：单部作品 / 打包分开，worker：mq:export.tipitaka [--bulk]
+            'export_tipitaka' => [],
+            'export_tipitaka_bulk' => [],
         ],
+    ],
+    /*
+     * 三藏下载（/v3/tipitaka-exports）。生成好的文件以二进制存在 Redis 集群里（RedisCache::putBinary）。
+     * 上限参照全三藏巴利 html（clove/pali_html：148MB，zip 后 33MB），正常数据到不了。
+     */
+    'tipitaka_export' => [
+        // 生成前按范围内句子的 strlen 之和估算，超过就 422，不排队
+        'max_source_chars' => (int) env('TIPITAKA_EXPORT_MAX_SOURCE_CHARS', 160 * 1024 * 1024),
+        // 生成后的文件超过就判失败、不写 Redis（单个值太大会撑爆从库同步缓冲，见 RedisCache 类注释）
+        'max_file_bytes' => (int) env('TIPITAKA_EXPORT_MAX_FILE_BYTES', 64 * 1024 * 1024),
+        // 文件与状态在 Redis 里保留多久
+        'ttl' => 7 * 24 * 3600,
+        // 排队 / 生成中的状态多久没更新就当作 worker 丢了，下次请求重新排队
+        'stale_after' => 1800,
+        'pandoc' => env('PANDOC_PATH', 'pandoc'),
+        'pandoc_timeout' => 1200,
     ],
     'opensearch' => [
         'index' => 'wikipali_global_20261119',

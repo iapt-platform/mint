@@ -4,6 +4,7 @@ use App\Facades\RedisCache;
 use App\Models\PaliText;
 use App\Models\Sentence;
 use App\Services\PaliContentService;
+use App\Services\V3\PaliTextService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 
@@ -32,9 +33,10 @@ it('renders every sentence of a paragraph wrapped in divs', function () {
     // 默认只输出 display
     expect($data)->not->toHaveKey('sentences');
     expect($data['display'])
-        ->toContain("<div id='para-1' class='translation' data-para='1'>")
-        ->toContain("<div class='sentence' data-sid='9001-1-1-1'>")
-        ->toContain("<div class='sentence' data-sid='9001-1-2-2'>")
+        // 段落 class 后面拼 pali_texts.class，这里为空，所以允许末尾空白
+        ->toMatch("/<div id='para-1' class='translation\\s*' data-para='1'>/")
+        ->toContain("<div class='sentence' lang='zh-Hans' data-sid='9001-1-1-1'>")
+        ->toContain("<div class='sentence' lang='zh-Hans' data-sid='9001-1-2-2'>")
         ->toContain("<div class='para-block'>");
 });
 
@@ -51,6 +53,8 @@ it('wraps a chapter title paragraph in a heading', function () {
         'pcd_book_id' => 0,
         'uid' => (string) Str::uuid(),
     ])->save();
+    // pali_texts 按书缓存；生产上只有导入命令改它，导入后同样要 forgetBook()
+    app(PaliTextService::class)->forgetBook(9001);
 
     $display = $this->getJson("/api/v3/tipitaka-reading/{$channel}?book=9001&para=1")
         ->assertOk()

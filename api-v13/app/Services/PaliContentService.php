@@ -22,7 +22,9 @@ use App\Services\Markup\Annotation\AnnotationSet;
 use App\Services\Markup\Format;
 use App\Services\Markup\MarkupService;
 use App\Services\Markup\RenderOptions;
+use App\Services\V3\PaliTextService;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -656,50 +658,121 @@ class PaliContentService
     }
 
     /**
-     * 阅读模式渲染单个段落。
-     * 直接从 sentences 表取单个 channel 的记录，渲染成 html。
-     * 与 paragraphs() 不同：没有译文的句子不保留占位，有多少句子输出多少句子。
+     * 阅读模式渲染单个段落，即只给一段的 {@see self::readParagraphs()}。
+     * 直接从 sentences 表取单个 channel 的记录。与 paragraphs() 不同：没有译文的句子不保留占位，
+     * 有多少句子输出多少句子。
      *
-     * @return array{para: int, display: string, sentences: array<int, array{sid: string, html: string}>}
+     * @return array{para: int, display: string, sentences: list<array{sid: string, html: string}>}
      */
     public function readParagraph(int $book, int $para, string $channelUid, string $format = 'html'): array
     {
-        $level = $this->paragraphLevel($book, $para);
-        // 缓存句子，段落外壳与标题级别有关，不进缓存
-        $key = self::paragraphCacheKey($book, $para, $channelUid, $format);
-        $cached = RedisCache::remember(
-            $key,
-            config('mint.cache.expire'),
-            function () use ($book, $para, $channelUid, $format) {
-                return $this->renderReadSentences($book, $para, $channelUid, $format);
+        return $this->readParagraphs($book, [$para], $channelUid, $format)[$para];
+    }
+
+    /**
+     * 阅读模式渲染同一本书的多个段落。v3 阅读、Laravel 阅读器、三藏下载都从这里取正文。
+     *
+     * 每段的**完整结果**（含段落外壳与段后脚注列表）按 (book, para, channel, format) 缓存，
+     * 命中时不查库；没有译文的段也缓存（display 为空）。没命中的段一起渲染
+     * （{@see self::renderReadParagraphs()}）：channel、句子、批注各查一次，全部句子一次交给 Markup，
+     * 术语、引用句子等每类只查一次。
+     *
+     * 缓存由 Sentence / Discussion 的模型事件删除（{@see self::paragraphChanged()}、{@see self::forgetParagraph()}）；术语释义、
+     * 引用的句子、channel 名称改了没有失效信号，最多旧 `mint.cache.read_paragraph_ttl`。
+     *
+     * @param  list<int>  $paras
+     * @return array<int, array{para: int, display: string, sentences: list<array{sid: string, html: string}>}> 段落号 => 结果，顺序同 $paras
+     */
+    public function readParagraphs(int $book, array $paras, string $channelUid, string $format = 'html'): array
+    {
+        $results = [];
+        $misses = [];
+        foreach (array_unique($paras) as $para) {
+            $cached = RedisCache::get(self::paragraphCacheKey($book, $para, $channelUid, $format));
+            $results[$para] = is_array($cached) ? $cached : null;
+            if ($results[$para] === null) {
+                $misses[] = $para;
             }
-        );
-
-        $result = [
-            'para' => $para,
-            'display' => '',
-            'sentences' => $cached['sentences'],
-        ];
-        if (count($cached['display']) === 0) {
-            return $result;
+        }
+        if ($misses === []) {
+            return $results;
         }
 
-        $pClass = PaliText::where('book', $book)
-            ->where('paragraph', $para)
-            ->value('class');
-
-        if ($format === 'html') {
-            // html 格式加段落外壳；段后追加段落脚注列表（本段义注/复注条目）
-            $content = implode('', $cached['display']);
-            $inner = $level > 0 ? "<h{$level}>{$content}</h{$level}>" : "<div class='para-block'>{$content}</div>";
-            $footnoteList = $this->renderFootnoteList($cached['notes'] ?? []);
-            $result['display'] = "<div id='para-{$para}' class='{$cached['area']} {$pClass}' data-para='{$para}'>{$inner}{$footnoteList}</div>";
-        } else {
-            // 其他格式一行一句
-            $result['display'] = implode("\n", $cached['display']);
+        $ttl = (int) config('mint.cache.read_paragraph_ttl');
+        foreach ($this->renderReadParagraphs($book, $misses, $channelUid, $format) as $para => $result) {
+            RedisCache::put(self::paragraphCacheKey($book, $para, $channelUid, $format), $result, $ttl);
+            $results[$para] = $result;
         }
 
-        return $result;
+        return $results;
+    }
+
+    /**
+     * 区间 [start, end] 的阅读模式正文（html），阅读器按章读用。
+     *
+     * 按平铺章节缓存（{@see PaliTextService::flatChapters()}：标题段到下一个标题段之前是一章，不嵌套），
+     * 一章一个 key，命中时整章一次 GET、不查库。区间完整覆盖的章走章节缓存，没命中的章一起交给
+     * {@see self::readParagraphs()}（各段多半已在段落成品缓存里）拼好回写；区间边缘没盖全的章、
+     * 第一个标题段之前的段直接逐段取。章节缓存与段落成品一起失效（{@see self::forgetParagraph()}）。
+     */
+    public function readChapters(int $book, int $start, int $end, string $channelUid, string $format = 'html'): string
+    {
+        // 区间切成片：[起, 止, 是否整章]
+        $pieces = [];
+        $cursor = $start;
+        foreach (app(PaliTextService::class)->flatChapters($book) as $chapterStart => $chapterEnd) {
+            if ($chapterEnd < $cursor || $chapterStart > $end) {
+                continue;
+            }
+            if ($chapterStart > $cursor) {
+                $pieces[] = [$cursor, $chapterStart - 1, false];
+                $cursor = $chapterStart;
+            }
+            $whole = $chapterStart >= $start && $chapterEnd <= $end;
+            $pieces[] = [$cursor, min($chapterEnd, $end), $whole];
+            $cursor = min($chapterEnd, $end) + 1;
+        }
+        if ($cursor <= $end) {
+            $pieces[] = [$cursor, $end, false];
+        }
+
+        $chapters = [];
+        $paras = [];
+        foreach ($pieces as $i => [$from, $to, $whole]) {
+            if ($whole) {
+                $cached = RedisCache::get(self::chapterCacheKey($book, $from, $channelUid, $format));
+                if (is_string($cached)) {
+                    $chapters[$i] = $cached;
+
+                    continue;
+                }
+            }
+            array_push($paras, ...range($from, $to));
+        }
+        $rendered = $paras === [] ? [] : $this->readParagraphs($book, $paras, $channelUid, $format);
+
+        $ttl = (int) config('mint.cache.read_paragraph_ttl');
+        $separator = $format === 'html' ? '' : "\n";
+        $display = [];
+        foreach ($pieces as $i => [$from, $to, $whole]) {
+            if (! isset($chapters[$i])) {
+                $parts = [];
+                foreach (range($from, $to) as $para) {
+                    if (($rendered[$para]['display'] ?? '') !== '') {
+                        $parts[] = $rendered[$para]['display'];
+                    }
+                }
+                $chapters[$i] = implode($separator, $parts);
+                if ($whole) {
+                    RedisCache::put(self::chapterCacheKey($book, $from, $channelUid, $format), $chapters[$i], $ttl);
+                }
+            }
+            if ($chapters[$i] !== '') {
+                $display[] = $chapters[$i];
+            }
+        }
+
+        return implode($separator, $display);
     }
 
     /**
@@ -707,12 +780,7 @@ class PaliContentService
      */
     public function paragraphLevel(int $book, int $para): int
     {
-        $level = PaliText::where('book', $book)
-            ->where('paragraph', $para)
-            ->where('level', '<', 8)
-            ->value('level');
-
-        return $level ? (int) $level : 0;
+        return app(PaliTextService::class)->headingLevel($book, $para);
     }
 
     /**
@@ -741,21 +809,46 @@ class PaliContentService
     private const MAX_COMMENTARY_SENTENCES = 3;
 
     /**
-     * 段落阅读模式缓存的 key
+     * 段落阅读模式缓存的 key（段落成品：含外壳与脚注列表）。
      */
     public static function paragraphCacheKey(int $book, int $para, string $channelUid, string $format): string
     {
-        // markup：App\Services\Markup 渲染的缓存，与 MdRender 时代的旧缓存分开（旧 key 自然过期）
-        return "/read-para/markup/{$book}-{$para}/{$channelUid}/{$format}";
+        // v4：2026-11-22 起缓存整段成品（原来只缓存句子、外壳每次现查），换前缀让旧缓存自然过期
+        return "/read-para/v4/{$book}-{$para}/{$channelUid}/{$format}";
     }
 
     /**
-     * 删除某个段落的阅读模式缓存。句子有增改删时调用，下次 readParagraph 自动重建。
+     * 平铺章节的阅读正文缓存 key（{@see self::readChapters()}）。
+     */
+    public static function chapterCacheKey(int $book, int $chapter, string $channelUid, string $format): string
+    {
+        return "/read-chapter/v1/{$book}-{$chapter}/{$channelUid}/{$format}";
+    }
+
+    /**
+     * 删除某个段落的阅读模式缓存（段落成品，及它所在平铺章节的章节缓存），下次读时自动重建。
      */
     public static function forgetParagraph(int $book, int $para, string $channelUid): void
     {
+        $chapter = app(PaliTextService::class)->flatChapterOf($book, $para);
         foreach (self::FORMATS as $format) {
             RedisCache::forget(self::paragraphCacheKey($book, $para, $channelUid, $format));
+            if ($chapter !== null) {
+                RedisCache::forget(self::chapterCacheKey($book, $chapter, $channelUid, $format));
+            }
+        }
+    }
+
+    /**
+     * 某段的句子变了（Sentence 的模型事件调用）：删段落成品与所在章节的缓存；「有译文的段」可能变了
+     * （$indexChanged：新建 / 删除句子、strlen 在 0 与非 0 之间变化、句子搬了家）时再删内容索引。
+     * 书号索引的两个参数见 {@see ReadingIndexService::forget()}。
+     */
+    public static function paragraphChanged(int $book, int $para, string $channelUid, bool $indexChanged = false, bool $mayAddBook = false, bool $mayRemoveBook = false): void
+    {
+        self::forgetParagraph($book, $para, $channelUid);
+        if ($indexChanged) {
+            app(ReadingIndexService::class)->forget($channelUid, $book, $mayAddBook, $mayRemoveBook);
         }
     }
 
@@ -771,7 +864,7 @@ class PaliContentService
      *   没有位置的合成一个三角叹号图标放在句尾。纯文本 / markdown 里不显示。
      * - `assessment`（译文评估）：句尾一个对勾图标，颜色按分数分档，带 discussion id，
      *   阅读器点击看分数与理由。一句只有一条（有并发残留时取最近更新的）。纯文本 / markdown 里不显示。
-     *   同段里其它没有评估的句子由 {@see self::renderReadSentences()} 补灰色对勾。
+     *   同段里其它没有评估的句子由 {@see self::renderReadParagraphs()} 补灰色对勾。
      * issue / glossary 只注入未关闭的；批注与评估没有开关状态。
      *
      * 位置按 pos_* 定位，与 quote_exact 对不上（正文改过）时按摘录重新定位。
@@ -779,23 +872,19 @@ class PaliContentService
      * 插入点写的是结构化标记（{@see AnnotationSet}）而不是 HTML：content 里留下占位符，渲染时变成
      * anno-issue / anno-issue-mark / anno-assessment / note 模板节点，任意格式都能输出。
      *
-     * @return array{content: string, notes: list<array{fnId: string, noteHtml: string, citeHtml: string}>, assessed: bool, annotations: AnnotationSet}
+     * 批注由调用方一次查好传进来（{@see self::readingAnnotations()}）。段后脚注列表的正文（纯文本）
+     * 这里不渲染，只给出待渲染的源码（`text`），由调用方整块一次渲染后填进 `noteHtml`。
+     *
+     * @param  list<Discussion>  $records  挂在这句上、要注入阅读页的批注，按创建时间升序
+     * @return array{content: string, notes: list<array{fnId: string, noteHtml: string, citeHtml: string, text: array{source: string, channels: list<string>, contentType: string}, truncated: bool}>, assessed: bool, annotations: AnnotationSet}
      */
-    protected function injectAnnotationNotes(Sentence $row, string $channelType, string $format = 'html'): array
+    protected function injectAnnotationNotes(Sentence $row, string $channelType, array $records): array
     {
         $content = (string) $row->content;
         $annotations = new AnnotationSet;
         $result = ['content' => $content, 'notes' => [], 'assessed' => false, 'annotations' => $annotations];
-        $records = Discussion::where('res_type', 'sentence')
-            ->where('res_id', $row->uid)
-            ->whereIn('type', Discussion::READING_TYPES)
-            // 只注入话题本身；回复（类型跟随话题）不进阅读页
-            ->whereNull('parent')
-            ->where(fn ($q) => $q->whereIn('type', Discussion::STATELESS_TYPES)->orWhere('status', 'active'))
-            ->orderBy('created_at')
-            ->get();
 
-        if ($records->isEmpty()) {
+        if ($records === []) {
             return $result;
         }
 
@@ -830,7 +919,7 @@ class PaliContentService
 
                 continue;
             }
-            $note = $this->renderAnnotationNote($record, $row, $channelType);
+            $note = $this->renderAnnotationNote($record, $row);
             if ($note === null) {
                 continue;
             }
@@ -848,8 +937,10 @@ class PaliContentService
             ];
             $footnotes[$record->id] = [
                 'fnId' => 'fn-'.$record->id,
-                'noteHtml' => $note['noteHtml'],
+                'noteHtml' => '',
                 'citeHtml' => $note['citeHtml'],
+                'text' => $note['text'],
+                'truncated' => $note['truncated'],
             ];
         }
 
@@ -874,9 +965,12 @@ class PaliContentService
      * 把一条批注（commentary / note）整理成要插入正文的 note 模板（正文 + 参数）与段后脚注条目。
      * 不合格的（正文为空、commentary 不是句子模板）返回 null，不插角标也不进脚注列表。
      *
-     * @return array{body: string, params: array<string, string>, noteHtml: string, citeHtml: string, order: array<int, int>}|null
+     * 脚注条目的正文（纯文本）不在这里渲染：`text` 是待渲染的源码，`truncated` 表示义注被截断、
+     * 渲染后要补省略号。整块一起渲染见 {@see self::renderFootnoteTexts()}。
+     *
+     * @return array{body: string, params: array<string, string>, text: array{source: string, channels: list<string>, contentType: string}, truncated: bool, citeHtml: string, order: array<int, int>}|null
      */
-    protected function renderAnnotationNote(Discussion $note, Sentence $row, string $channelType): ?array
+    protected function renderAnnotationNote(Discussion $note, Sentence $row): ?array
     {
         $noteContent = trim((string) $note->content);
         if ($noteContent === '') {
@@ -903,15 +997,14 @@ class PaliContentService
             $source = $noteContent;
         }
         // 段后脚注列表用的纯文本（边注本身是结构化的 note 节点，正文照 markdown 渲染）
-        $noteHtml = (string) app(MarkupService::class)->render($source, new RenderOptions(
-            format: Format::Text,
-            channels: [(string) $row->channel_uid],
-            channelType: $channelType,
-            contentType: $note->effectiveContentType(),
-        ));
+        $text = [
+            'source' => $source,
+            'channels' => [(string) $row->channel_uid],
+            'contentType' => $note->effectiveContentType(),
+        ];
         // 义注被截断时补省略号，提示后面还有；想看全文点 <cite> 跳过去。
-        if (count($sents) > self::MAX_COMMENTARY_SENTENCES) {
-            $noteHtml = rtrim($noteHtml).'...';
+        $truncated = count($sents) > self::MAX_COMMENTARY_SENTENCES;
+        if ($truncated) {
             $source .= '...';
         }
         // 出处只有 commentary 有。跳转目标（义注书-段-起-止）同时挂在 <cite> 和角标
@@ -930,7 +1023,8 @@ class PaliContentService
             // note 模板的正文（markdown）与参数：渲染成 tufte sidenote（label + input + span.sidenote）
             'body' => $source,
             'params' => $params,
-            'noteHtml' => $noteHtml,
+            'text' => $text,
+            'truncated' => $truncated,
             'citeHtml' => $citeHtml,
             // 同一插入点上的先后：按义注原文的先后；普通 note 没有坐标，取 0，排在义注对应之前
             'order' => $sents ? [(int) $sents[0][1], (int) $sents[0][2], (int) $sents[0][3]] : [0, 0, 0],
@@ -939,6 +1033,8 @@ class PaliContentService
 
     /**
      * 段落脚注列表：把本段的注释条目逐条列在段后，每条默认收起为可配置行数（见阅读器 CSS）。
+     *
+     * @param  list<array{fnId: string, noteHtml: string, citeHtml: string}>  $notes
      */
     protected function renderFootnoteList(array $notes): string
     {
@@ -961,42 +1057,114 @@ class PaliContentService
     }
 
     /**
-     * 渲染段落里的句子。不含段落外壳，可直接缓存。
+     * 一次查回这些句子上要注入阅读页的批注，按句子 uid 分组、组内按创建时间升序。
      *
-     * @return array{area: string, display: array<int, string>, sentences: array<int, array{sid: string, html: string}>}
+     * @param  Collection<int, Sentence>  $records
+     * @return array<string, list<Discussion>>
      */
-    protected function renderReadSentences(int $book, int $para, string $channelUid, string $format): array
+    protected function readingAnnotations(Collection $records): array
     {
-        $result = ['area' => 'translation', 'display' => [], 'sentences' => []];
+        $grouped = [];
+        foreach ($records->pluck('uid')->unique()->chunk(1000) as $uids) {
+            Discussion::where('res_type', 'sentence')
+                ->whereIn('res_id', $uids->values()->all())
+                ->whereIn('type', Discussion::READING_TYPES)
+                // 只注入话题本身；回复（类型跟随话题）不进阅读页
+                ->whereNull('parent')
+                ->where(fn ($q) => $q->whereIn('type', Discussion::STATELESS_TYPES)->orWhere('status', 'active'))
+                ->orderBy('created_at')
+                ->get()
+                ->each(function (Discussion $discussion) use (&$grouped) {
+                    $grouped[(string) $discussion->res_id][] = $discussion;
+                });
+        }
+
+        return $grouped;
+    }
+
+    /**
+     * 整块的段后脚注正文（纯文本）一次渲染：批注里的术语、义注句子合在一起查。
+     *
+     * @param  array<int, array{notes: list<array<string, mixed>>}>  $injections
+     * @return array<string, string> "句序号:脚注序号" => 纯文本
+     */
+    protected function renderFootnoteTexts(array $injections, string $channelType): array
+    {
+        $items = [];
+        foreach ($injections as $i => $injected) {
+            foreach ($injected['notes'] as $n => $note) {
+                $items["{$i}:{$n}"] = $note['text'];
+            }
+        }
+        if ($items === []) {
+            return [];
+        }
+        $texts = app(MarkupService::class)->renderMany($items, new RenderOptions(format: Format::Text, channelType: $channelType));
+        foreach ($injections as $i => $injected) {
+            foreach ($injected['notes'] as $n => $note) {
+                $text = (string) ($texts["{$i}:{$n}"] ?? '');
+                $texts["{$i}:{$n}"] = $note['truncated'] ? rtrim($text).'...' : $text;
+            }
+        }
+
+        return $texts;
+    }
+
+    /**
+     * 渲染同一本书的若干段落（没命中缓存的那些），结果含段落外壳，可直接缓存。
+     *
+     * 整块只查三次库：channel、句子（按段、word_start 排序）、批注；全部句子一次交给 Markup 渲染，
+     * 脚注正文再一次。标题级别与段落 class 取自 {@see PaliTextService}（缓存的经文静态数据）。
+     *
+     * @param  list<int>  $paras
+     * @return array<int, array{para: int, display: string, sentences: list<array{sid: string, html: string}>}>
+     */
+    protected function renderReadParagraphs(int $book, array $paras, string $channelUid, string $format): array
+    {
+        $results = [];
+        foreach ($paras as $para) {
+            $results[$para] = ['para' => $para, 'display' => '', 'sentences' => []];
+        }
         $channel = Channel::where('uid', $channelUid)
             ->select(['uid', 'type', 'lang', 'name'])->first();
         if (! $channel) {
-            return $result;
+            return $results;
         }
         $isOrigin = $channel->type === 'original' || $channel->type === 'wbw';
         $channelType = $channel->type === 'nissaya' ? 'nissaya' : 'translation';
-        $result['area'] = $isOrigin ? 'original' : 'translation';
+        $area = $isOrigin ? 'original' : 'translation';
 
         $records = Sentence::select($this->selectCol)
             ->where('book_id', $book)
-            ->where('paragraph', $para)
             ->where('channel_uid', $channelUid)
+            ->whereIn('paragraph', $paras)
+            ->orderBy('paragraph')
             ->orderBy('word_start')
-            ->get();
+            ->get()
+            ->values();
+        if ($records->isEmpty()) {
+            return $results;
+        }
 
-        $allNotes = [];
-        $injections = $records->map(fn (Sentence $row) => $this->injectAnnotationNotes($row, $channelType, $format));
-        // 段里有句子评估过，其余没评估的句子在句尾补灰色对勾：不然读者会把它与下一句的
-        // 对勾连起来，误以为是一句。整段都没评估就都不补（段落本身有分隔）。
-        $markUnassessed = $injections->contains('assessed', true);
+        $annotations = $this->readingAnnotations($records);
+        $injections = [];
+        $assessedParas = [];
+        foreach ($records as $i => $row) {
+            $injections[$i] = $this->injectAnnotationNotes($row, $channelType, $annotations[(string) $row->uid] ?? []);
+            if ($injections[$i]['assessed']) {
+                $assessedParas[(int) $row->paragraph] = true;
+            }
+        }
+
         $sources = [];
         foreach ($records as $i => $row) {
             $injected = $injections[$i];
             $content = $injected['content'];
-            if ($markUnassessed && ! $injected['assessed'] && trim($content) !== '') {
+            // 段里有句子评估过，其余没评估的句子在句尾补灰色对勾：不然读者会把它与下一句的
+            // 对勾连起来，误以为是一句。整段都没评估就都不补（段落本身有分隔）。按段算，不是按整块
+            if (isset($assessedParas[(int) $row->paragraph]) && ! $injected['assessed'] && trim($content) !== '') {
                 $content .= $injected['annotations']->unassessedMark();
             }
-            $allNotes = array_merge($allNotes, $injected['notes']);
             $sources[$i] = [
                 'source' => $content,
                 'channels' => [(string) $row->channel_uid],
@@ -1006,27 +1174,58 @@ class PaliContentService
                 'idPrefix' => "{$row->book_id}-{$row->paragraph}-{$row->word_start}-{$row->word_end}",
             ];
         }
-        // 整段一起渲染：各句里的术语、句子模板（含义注对应）合在一起批量查
-        $rendered = $sources === [] ? [] : app(MarkupService::class)->renderMany(
+        // 整块一起渲染：各句里的术语、句子模板（含义注对应）合在一起批量查
+        $rendered = app(MarkupService::class)->renderMany(
             $sources,
-            new RenderOptions(format: self::markupFormat($format), channelType: $channelType),
+            // markdown 每句末尾附自己的脚注正文（`[^n]: …`）。编号每句从 1 起，跨句会重号，
+            // 整章导出时由 V3\TipitakaExportBuilder 逐句重新编号；不附正文的话 `[^n]` 无处可指
+            new RenderOptions(format: self::markupFormat($format), channelType: $channelType, footnote: $format === 'markdown'),
         );
+        // 段后脚注列表只有 html 有
+        $noteTexts = $format === 'html' ? $this->renderFootnoteTexts($injections, $channelType) : [];
+
+        $display = [];
+        $notes = [];
         foreach ($records as $i => $row) {
+            $para = (int) $row->paragraph;
+            foreach ($injections[$i]['notes'] as $n => $note) {
+                $notes[$para][] = [
+                    'fnId' => $note['fnId'],
+                    'noteHtml' => $noteTexts["{$i}:{$n}"] ?? '',
+                    'citeHtml' => $note['citeHtml'],
+                ];
+            }
             $html = $rendered[$i] ?? '';
             if (empty($html)) {
                 continue;
             }
             $sid = "{$row->book_id}-{$row->paragraph}-{$row->word_start}-{$row->word_end}";
-            $result['sentences'][] = ['sid' => $sid, 'html' => $html];
+            $results[$para]['sentences'][] = ['sid' => $sid, 'html' => $html];
             if ($format === 'html') {
                 $class = $isOrigin ? 'sentence origin' : 'sentence';
-                $result['display'][] = "<div class='{$class}' lang='{$channel->lang}' data-sid='{$sid}'>{$html}</div>";
+                $display[$para][] = "<div class='{$class}' lang='{$channel->lang}' data-sid='{$sid}'>{$html}</div>";
             } else {
-                $result['display'][] = $html;
+                $display[$para][] = $html;
             }
         }
-        $result['notes'] = $allNotes;
 
-        return $result;
+        $paliTexts = app(PaliTextService::class);
+        foreach ($display as $para => $lines) {
+            if ($format !== 'html') {
+                // 其他格式一行一句
+                $results[$para]['display'] = implode("\n", $lines);
+
+                continue;
+            }
+            // html 格式加段落外壳；段后追加段落脚注列表（本段义注/复注条目）
+            $content = implode('', $lines);
+            $level = $paliTexts->headingLevel($book, $para);
+            $pClass = $paliTexts->paragraph($book, $para)['class'] ?? '';
+            $inner = $level > 0 ? "<h{$level}>{$content}</h{$level}>" : "<div class='para-block'>{$content}</div>";
+            $footnoteList = $this->renderFootnoteList($notes[$para] ?? []);
+            $results[$para]['display'] = "<div id='para-{$para}' class='{$area} {$pClass}' data-para='{$para}'>{$inner}{$footnoteList}</div>";
+        }
+
+        return $results;
     }
 }

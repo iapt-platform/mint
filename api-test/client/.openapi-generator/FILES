@@ -20,6 +20,7 @@ docs/Api/GlossariesApi.md
 docs/Api/GroupsApi.md
 docs/Api/HeartbeatApi.md
 docs/Api/InvitesApi.md
+docs/Api/MarkupPreviewsApi.md
 docs/Api/MeApi.md
 docs/Api/NissayaCardsApi.md
 docs/Api/PaliWordFormsApi.md
@@ -36,6 +37,7 @@ docs/Api/TermsApi.md
 docs/Api/TipitakaChannelsApi.md
 docs/Api/TipitakaChapterChannelsApi.md
 docs/Api/TipitakaDiscussionsApi.md
+docs/Api/TipitakaExportsApi.md
 docs/Api/TipitakaPageNumbersApi.md
 docs/Api/TipitakaParagraphChannelsApi.md
 docs/Api/TipitakaReadingApi.md
@@ -246,6 +248,9 @@ docs/Model/PostApiV3GroupsRequest.md
 docs/Model/PostApiV3Invites200Response.md
 docs/Model/PostApiV3Invites200ResponseData.md
 docs/Model/PostApiV3InvitesRequest.md
+docs/Model/PostApiV3MarkupPreviews200Response.md
+docs/Model/PostApiV3MarkupPreviews200ResponseData.md
+docs/Model/PostApiV3MarkupPreviewsRequest.md
 docs/Model/PostApiV3MeReactions200Response.md
 docs/Model/PostApiV3MeReactionsRequest.md
 docs/Model/PostApiV3MeReadingTime200Response.md
@@ -260,6 +265,9 @@ docs/Model/PostApiV3Sessions200ResponseData.md
 docs/Model/PostApiV3SessionsRequest.md
 docs/Model/PostApiV3StudiosStudioChannelsRequest.md
 docs/Model/PostApiV3StudiosStudioTermsRequest.md
+docs/Model/PostApiV3TipitakaExports200Response.md
+docs/Model/PostApiV3TipitakaExports200ResponseData.md
+docs/Model/PostApiV3TipitakaExportsRequest.md
 docs/Model/PostApiV3Users200Response.md
 docs/Model/PostApiV3Users200ResponseData.md
 docs/Model/PostApiV3UsersRequest.md
@@ -281,6 +289,7 @@ lib/Api/GlossariesApi.php
 lib/Api/GroupsApi.php
 lib/Api/HeartbeatApi.php
 lib/Api/InvitesApi.php
+lib/Api/MarkupPreviewsApi.php
 lib/Api/MeApi.php
 lib/Api/NissayaCardsApi.php
 lib/Api/PaliWordFormsApi.php
@@ -297,6 +306,7 @@ lib/Api/TermsApi.php
 lib/Api/TipitakaChannelsApi.php
 lib/Api/TipitakaChapterChannelsApi.php
 lib/Api/TipitakaDiscussionsApi.php
+lib/Api/TipitakaExportsApi.php
 lib/Api/TipitakaPageNumbersApi.php
 lib/Api/TipitakaParagraphChannelsApi.php
 lib/Api/TipitakaReadingApi.php
@@ -512,6 +522,9 @@ lib/Model/PostApiV3GroupsRequest.php
 lib/Model/PostApiV3Invites200Response.php
 lib/Model/PostApiV3Invites200ResponseData.php
 lib/Model/PostApiV3InvitesRequest.php
+lib/Model/PostApiV3MarkupPreviews200Response.php
+lib/Model/PostApiV3MarkupPreviews200ResponseData.php
+lib/Model/PostApiV3MarkupPreviewsRequest.php
 lib/Model/PostApiV3MeReactions200Response.php
 lib/Model/PostApiV3MeReactionsRequest.php
 lib/Model/PostApiV3MeReadingTime200Response.php
@@ -526,6 +539,9 @@ lib/Model/PostApiV3Sessions200ResponseData.php
 lib/Model/PostApiV3SessionsRequest.php
 lib/Model/PostApiV3StudiosStudioChannelsRequest.php
 lib/Model/PostApiV3StudiosStudioTermsRequest.php
+lib/Model/PostApiV3TipitakaExports200Response.php
+lib/Model/PostApiV3TipitakaExports200ResponseData.php
+lib/Model/PostApiV3TipitakaExportsRequest.php
 lib/Model/PostApiV3Users200Response.php
 lib/Model/PostApiV3Users200ResponseData.php
 lib/Model/PostApiV3UsersRequest.php
@@ -548,6 +564,7 @@ test/Api/GlossariesApiTest.php
 test/Api/GroupsApiTest.php
 test/Api/HeartbeatApiTest.php
 test/Api/InvitesApiTest.php
+test/Api/MarkupPreviewsApiTest.php
 test/Api/MeApiTest.php
 test/Api/NissayaCardsApiTest.php
 test/Api/PaliWordFormsApiTest.php
@@ -564,6 +581,7 @@ test/Api/TermsApiTest.php
 test/Api/TipitakaChannelsApiTest.php
 test/Api/TipitakaChapterChannelsApiTest.php
 test/Api/TipitakaDiscussionsApiTest.php
+test/Api/TipitakaExportsApiTest.php
 test/Api/TipitakaPageNumbersApiTest.php
 test/Api/TipitakaParagraphChannelsApiTest.php
 test/Api/TipitakaReadingApiTest.php
@@ -774,6 +792,9 @@ test/Model/PostApiV3GroupsRequestTest.php
 test/Model/PostApiV3Invites200ResponseDataTest.php
 test/Model/PostApiV3Invites200ResponseTest.php
 test/Model/PostApiV3InvitesRequestTest.php
+test/Model/PostApiV3MarkupPreviews200ResponseDataTest.php
+test/Model/PostApiV3MarkupPreviews200ResponseTest.php
+test/Model/PostApiV3MarkupPreviewsRequestTest.php
 test/Model/PostApiV3MeReactions200ResponseTest.php
 test/Model/PostApiV3MeReactionsRequestTest.php
 test/Model/PostApiV3MeReadingTime200ResponseDataTest.php
@@ -788,6 +809,9 @@ test/Model/PostApiV3Sessions200ResponseTest.php
 test/Model/PostApiV3SessionsRequestTest.php
 test/Model/PostApiV3StudiosStudioChannelsRequestTest.php
 test/Model/PostApiV3StudiosStudioTermsRequestTest.php
+test/Model/PostApiV3TipitakaExports200ResponseDataTest.php
+test/Model/PostApiV3TipitakaExports200ResponseTest.php
+test/Model/PostApiV3TipitakaExportsRequestTest.php
 test/Model/PostApiV3Users200ResponseDataTest.php
 test/Model/PostApiV3Users200ResponseTest.php
 test/Model/PostApiV3UsersRequestTest.php

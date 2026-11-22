@@ -44,7 +44,7 @@ class TipitakaTitleService
     private const STATUS_PUBLIC = 30;
 
     /** 书的 tag → layer。一本书有多个时按这个顺序取第一个 */
-    private const LAYER_TAGS = ['mūla' => 'mula', 'aṭṭhakathā' => 'atthakatha', 'ṭīkā' => 'tika', 'añña' => 'anna'];
+    private const LAYER_TAGS = ['mūla' => 'mula', 'aṭṭhakathā' => 'atthakatha', 'ṭīkā' => 'tika', 'vinaya-añña' => 'tika', 'añña' => 'anna'];
 
     /** 没有任何 layer tag 的书 */
     private const DEFAULT_LAYER = 'anna';

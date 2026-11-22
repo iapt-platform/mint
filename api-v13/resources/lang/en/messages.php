@@ -91,4 +91,10 @@ return [
     'term_import_unreadable' => 'This file cannot be read. Upload an xlsx spreadsheet.',
     'term_import_header_required' => 'The first row must hold column names, including at least word and meaning.',
     'term_import_too_many' => 'At most :max rows can be imported at a time.',
+
+    // 三藏下载（/v3/tipitaka-exports）
+    'export_not_found' => 'This download does not exist or has expired. Please start it again.',
+    'export_too_large' => 'This selection is too large to export.',
+    'export_failed' => 'Generating the file failed. Please try again later.',
+    'export_offline_work_only' => 'Offline packages are only available per work.',
 ];

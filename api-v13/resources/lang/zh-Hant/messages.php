@@ -17,4 +17,9 @@ return [
     'sign_up_code_invalid' => '驗證碼不正確或已過期。',
     'invite_invalid' => '邀請無效或已被使用。',
 
+    // 三藏下载（/v3/tipitaka-exports）
+    'export_not_found' => '這個下載不存在或已過期，請重新發起。',
+    'export_too_large' => '範圍太大，無法匯出。',
+    'export_failed' => '檔案生成失敗，請稍後重試。',
+    'export_offline_work_only' => '離線包只能按作品下載。',
 ];

@@ -8818,6 +8818,30 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v3/markup-previews": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 预览一段源码
+         * @description 把还没保存的 markdown 渲染成节点树（与术语、批注的 `body` 同形），不写库，所以是 200 而不是 201。
+         *     口径同阅读页的读模式：术语按第一个 channel 查，句子模板缺省读这些 channel 的译文。
+         *     给了 `channels` 的，每个都要有读权限：不存在 404，看不见 403。
+         *
+         *     实现：`V3\MarkupPreviewController@__invoke`
+         */
+        post: operations["post_api_v3_markup_previews"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v3/me": {
         parameters: {
             query?: never;
@@ -9530,6 +9554,82 @@ export interface paths {
          *     实现：`V3\TipitakaDiscussionController@__invoke`
          */
         get: operations["get_api_v3_tipitaka_discussions_channel_"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/tipitaka-exports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 发起下载
+         * @description 同一份文件（同一 channel、范围、格式，且译文没改过）已经生成好就直接返回 `status = ready`
+         *     与 `download_url`（200）；否则排队生成，返回 `queued`（202，带 `Retry-After`），
+         *     之后轮询 `GET /v3/tipitaka-exports/{id}`。同一份正在生成时不会重复排队。
+         *     格式：`html`、`markdown`、`epub`、`docx`、`offline`（mobile 离线包，NDJSON，下载时 gzip 传输编码，
+         *     每行一段，`html` 与 `tipitaka-reading` 的 display 相同；只能按作品，首行头里有作品的段落区间
+         *     `para` / `end`，客户端按它判断是否覆盖了自己要的范围）。单部作品的 epub / docx
+         *     直接给文件，其余是 zip。私有 channel 只有能读它的人能下载。范围太大（超过全三藏的量）422。
+         *
+         *     实现：`V3\TipitakaExportController@store`
+         */
+        post: operations["post_api_v3_tipitaka_exports"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/tipitaka-exports/{export}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 查看下载状态
+         * @description `status`：`queued` 排队中 / `running` 生成中（`progress` 0–1，`message` 说明当前在哪部作品）/
+         *     `ready` 可下载（带 `download_url`）/ `failed` 失败（重新 POST 即可重试）。
+         *     不存在或已过期 404。
+         *
+         *     实现：`V3\TipitakaExportController@show`
+         */
+        get: operations["get_api_v3_tipitaka_exports_export_"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v3/tipitaka-exports/{export}/file": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 下载文件
+         * @description 支持 `Range`（206，断点续传）与 `If-None-Match`（304，ETag 就是导出 id）。
+         *     离线包（offline）是 NDJSON，带 `Content-Encoding: gzip`，HTTP 客户端会自动解压。
+         *     签名无效或过期 403，文件已过期 404。
+         *
+         *     实现：`V3\TipitakaExportFileController@__invoke`
+         */
+        get: operations["get_api_v3_tipitaka_exports_export_file"];
         put?: never;
         post?: never;
         delete?: never;
@@ -39952,6 +40052,67 @@ export interface operations {
             422: components["responses"]["ProblemValidation"];
         };
     };
+    post_api_v3_markup_previews: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description 源码，最多 20000 字 */
+                    content: string;
+                    /**
+                     * @description 方言
+                     * @default markdown
+                     * @enum {string}
+                     */
+                    content_type?: "markdown" | "markdown-e2";
+                    /** @description 内容所属的 channel uid，最多 10 个 */
+                    channels?: unknown[];
+                    /** @description 没给 channel 时用的语言，如 zh-Hans。缺省用界面语言（Accept-Language 协商的结果） */
+                    lang?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            body?: components["schemas"]["MarkupNode"][];
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            /** @description 给的 channel 没有读权限 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description 给的 channel 不存在 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
     get_api_v3_me: {
         parameters: {
             query?: never;
@@ -42593,6 +42754,212 @@ export interface operations {
             };
             /** @description chapter 不是本书存在的段落 */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    post_api_v3_tipitaka_exports: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /**
+                     * @description channel uid
+                     * @example a19eaf75-c63f-4b84-8125-1bce18311e23
+                     */
+                    channel: string;
+                    /**
+                     * @description 作品（library 作品页 URL 里的 sn）。作品、category 只能给一个，都不给 = 整个 channel
+                     * @example 275
+                     */
+                    work?: number;
+                    /** @description 用坐标指定作品：book + para 所在的那部作品（mobile 用，它不知道 sn）。与 para 同时给 */
+                    book?: number;
+                    /** @description 与 book 同时给，作品里的任一段落号（通常是作品起始段） */
+                    para?: number;
+                    /** @description 分类 id（library 分类页 URL 里的 id），含后代分类 */
+                    category?: number;
+                    /**
+                     * @description 文件格式
+                     * @enum {string}
+                     */
+                    format: "html" | "markdown" | "epub" | "docx" | "offline";
+                };
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            status?: string;
+                            format?: string;
+                            progress?: number;
+                            message?: string | null;
+                            title?: string;
+                            works?: number;
+                            filename?: string;
+                            content_type?: string;
+                            size?: number | null;
+                            ready_at?: string | null;
+                            expires_at?: string | null;
+                            download_url?: string | null;
+                        };
+                    };
+                };
+            };
+            /** @description 已排队生成，响应体同 200 */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            status?: string;
+                            format?: string;
+                            progress?: number;
+                            message?: string | null;
+                            title?: string;
+                            works?: number;
+                            filename?: string;
+                            content_type?: string;
+                            size?: number | null;
+                            ready_at?: string | null;
+                            expires_at?: string | null;
+                            download_url?: string | null;
+                        };
+                    };
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    get_api_v3_tipitaka_exports_export_: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 导出 id（POST 返回的 id） */
+                export: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            status?: string;
+                            format?: string;
+                            progress?: number;
+                            message?: string | null;
+                            title?: string;
+                            works?: number;
+                            filename?: string;
+                            content_type?: string;
+                            size?: number | null;
+                            ready_at?: string | null;
+                            expires_at?: string | null;
+                            download_url?: string | null;
+                        };
+                    };
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    get_api_v3_tipitaka_exports_export_file: {
+        parameters: {
+            query: {
+                /** @description 签名的过期时间（download_url 里自带） */
+                expires: number;
+                /** @description 签名（download_url 里自带） */
+                signature: string;
+            };
+            header?: never;
+            path: {
+                /** @description 导出 id */
+                export: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/zip": string;
+                    "application/epub+zip": string;
+                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document": string;
+                    "application/x-ndjson": string;
+                };
+            };
+            /** @description Range 请求的部分内容 */
+            206: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/zip": string;
+                    "application/epub+zip": string;
+                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document": string;
+                    "application/x-ndjson": string;
+                };
+            };
+            /** @description If-None-Match 命中，本地文件就是最新的 */
+            304: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description 签名无效或已过期 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description 文件已过期 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Range 超出文件大小 */
+            416: {
                 headers: {
                     [name: string]: unknown;
                 };

@@ -2,10 +2,8 @@
 
 namespace App\Services\V3;
 
-use App\Models\PaliText;
-use App\Models\Sentence;
 use App\Services\PaliContentService;
-use Illuminate\Database\Eloquent\Builder;
+use App\Services\ReadingIndexService;
 use Illuminate\Validation\ValidationException;
 
 /**
@@ -33,10 +31,17 @@ class TipitakaReadingService
      */
     public const MAX_PARAGRAPHS_PER_PAGE = 200;
 
-    public function __construct(private readonly PaliContentService $paliService) {}
+    public function __construct(
+        private readonly PaliContentService $paliService,
+        private readonly PaliTextService $paliTexts,
+        private readonly ReadingIndexService $index,
+    ) {}
 
     /**
      * 取一块译文。
+     *
+     * 候选段、游标、进度都在「有译文的段号」索引上算（{@see ReadingIndexService}，命中时不查库），
+     * 正文按书一次交给 {@see PaliContentService::readParagraphs()}。
      *
      * @param  array<string, mixed>  $filters  已经过 FormRequest 校验的查询参数
      * @return array{items: array<int, array<string, mixed>>, meta: array<string, mixed>}
@@ -49,24 +54,15 @@ class TipitakaReadingService
             $unit === 'byte' ? self::MAX_BYTES_PER_PAGE : self::MAX_PARAGRAPHS_PER_PAGE
         );
 
-        $scope = $this->scopedQuery($channel, $filters);
+        $range = $this->scopeRange($filters);
+        $after = isset($filters['after']) ? $this->parseCursor((string) $filters['after']) : null;
 
-        // 多取一行用来判断后面还有没有，不必再查一次
+        // 多取一段用来判断后面还有没有
         $want = $unit === 'byte'
             ? self::MAX_PARAGRAPHS_PER_PAGE
             : min($pageSize, self::MAX_PARAGRAPHS_PER_PAGE);
 
-        $candidates = (clone $scope)
-            ->when($filters['after'] ?? null, fn (Builder $q, string $after) => $this->applyCursor($q, $after))
-            ->distinct()
-            ->select(['book_id', 'paragraph'])
-            ->orderBy('book_id')
-            ->orderBy('paragraph')
-            ->limit($want + 1)
-            ->get()
-            ->map(fn ($row) => ['book' => (int) $row->book_id, 'para' => (int) $row->paragraph])
-            ->all();
-
+        $candidates = $this->candidates($channel, $range, $after, $want + 1);
         $hasMoreBeyondWant = count($candidates) > $want;
         $candidates = array_slice($candidates, 0, $want);
 
@@ -78,9 +74,19 @@ class TipitakaReadingService
         $format = $filters['format'] ?? 'html';
         $include = $filters['include'] ?? 'display';
 
+        // 结果可以跨书：按书分组，一本书一次批量取
+        $byBook = [];
+        foreach ($slice as $coord) {
+            $byBook[$coord['book']][] = $coord['para'];
+        }
+        $rendered = [];
+        foreach ($byBook as $book => $paras) {
+            $rendered[$book] = $this->paliService->readParagraphs($book, $paras, $channel, $format);
+        }
+
         $items = [];
         foreach ($slice as $coord) {
-            $paragraph = $this->paliService->readParagraph($coord['book'], $coord['para'], $channel, $format);
+            $paragraph = $rendered[$coord['book']][$coord['para']];
             if (empty($paragraph['display'])) {
                 continue;
             }
@@ -98,36 +104,27 @@ class TipitakaReadingService
                 // 本块覆盖的最后一段。渲染为空的段落会被剔出 data 但仍算在块内，
                 // 所以游标按 slice 推进而不是按 data 推进，否则会卡在那一段上打转
                 'next_cursor' => $hasMore && $last ? "{$last['book']}-{$last['para']}" : null,
-            ] + $this->progressMeta($scope, $filters, $last),
+            ] + $this->progressMeta($channel, $range, $last),
         ];
     }
 
     /**
-     * 按 filter 收窄的**基础查询**：只有 where，不带 select / distinct / order。
-     *
-     * 分页取数和 count 两边对它的要求不一样（一个要去重的两列，一个要聚合），
-     * 混在一起会拼出 `select distinct book_id, paragraph, count(...)` 这种非法 SQL。
-     * 所以基础查询保持干净，各自 clone 之后再加自己那套。
+     * 按 filter 收窄的范围：不带 book 是整个 channel（null），带 book 是这本书里的段落闭区间。
      *
      * @param  array<string, mixed>  $filters
-     * @return Builder<Sentence>
+     * @return array{book: int, from: int, to: int}|null
      */
-    private function scopedQuery(string $channel, array $filters): Builder
+    private function scopeRange(array $filters): ?array
     {
-        $query = Sentence::query()
-            ->where('channel_uid', $channel)
-            ->where('strlen', '>', 0);
-
         if (! isset($filters['book'])) {
-            return $query;
+            return null;
         }
         $book = (int) $filters['book'];
-        $query->where('book_id', $book);
 
         if (isset($filters['chapter'])) {
             [$from, $to] = $this->chapterRange($book, (int) $filters['chapter']);
 
-            return $query->whereBetween('paragraph', [$from, $to]);
+            return ['book' => $book, 'from' => $from, 'to' => $to];
         }
         if (isset($filters['para'])) {
             $from = (int) $filters['para'];
@@ -136,10 +133,55 @@ class TipitakaReadingService
                 throw ValidationException::withMessages(['to' => __('site.invalid_parameter')]);
             }
 
-            return $query->whereBetween('paragraph', [$from, $to]);
+            return ['book' => $book, 'from' => $from, 'to' => $to];
         }
 
-        return $query;
+        return ['book' => $book, 'from' => PHP_INT_MIN, 'to' => PHP_INT_MAX];
+    }
+
+    /**
+     * 范围内有译文的段（句子 strlen > 0），按 (book, para) 升序，排在游标之后，最多 $limit 段。
+     *
+     * @param  array{book: int, from: int, to: int}|null  $range
+     * @param  array{int, int}|null  $after
+     * @return list<array{book: int, para: int}>
+     */
+    private function candidates(string $channel, ?array $range, ?array $after, int $limit): array
+    {
+        $books = $range === null ? $this->index->books($channel) : [$range['book']];
+        $result = [];
+        foreach ($books as $book) {
+            if ($after !== null && $book < $after[0]) {
+                continue;
+            }
+            foreach ($this->paragraphsIn($channel, $book, $range) as $para) {
+                if ($after !== null && $book === $after[0] && $para <= $after[1]) {
+                    continue;
+                }
+                $result[] = ['book' => $book, 'para' => $para];
+                if (count($result) >= $limit) {
+                    return $result;
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * 这本书里有译文、且在范围内的段号，升序。
+     *
+     * @param  array{book: int, from: int, to: int}|null  $range
+     * @return list<int>
+     */
+    private function paragraphsIn(string $channel, int $book, ?array $range): array
+    {
+        $paras = $this->index->paragraphs($channel, $book);
+        if ($range === null) {
+            return $paras;
+        }
+
+        return array_values(array_filter($paras, fn (int $para) => $para >= $range['from'] && $para <= $range['to']));
     }
 
     /**
@@ -151,28 +193,24 @@ class TipitakaReadingService
      */
     public function chapterRange(int $book, int $chapter): array
     {
-        $head = PaliText::where('book', $book)->where('paragraph', $chapter)->first();
-        if (! $head) {
+        $range = $this->paliTexts->chapterRange($book, $chapter);
+        if ($range === null) {
             abort(404, __('site.not_found'));
         }
 
-        return [$chapter, $chapter + max(1, (int) $head->chapter_len) - 1];
+        return $range;
     }
 
     /**
-     * 游标 `{book}-{para}`：取排在它之后的行。
+     * 游标 `{book}-{para}` → [book, para]。
      *
-     * 用行值比较 `(book_id, paragraph) > (?, ?)` 而不是 `book > ? or (book = ? and para > ?)`，
-     * 一是短，二是 Postgres 能直接走 (book_id, paragraph, …) 那条复合索引。
-     *
-     * @param  Builder<Sentence>  $query
-     * @return Builder<Sentence>
+     * @return array{int, int}
      */
-    private function applyCursor(Builder $query, string $after): Builder
+    private function parseCursor(string $after): array
     {
-        [$book, $para] = array_map('intval', explode('-', $after, 2));
+        [$book, $para] = array_map('intval', explode('-', $after, 2)) + [0, 0];
 
-        return $query->whereRaw('(book_id, paragraph) > (?, ?)', [$book, $para]);
+        return [$book, $para];
     }
 
     /**
@@ -201,8 +239,7 @@ class TipitakaReadingService
     }
 
     /**
-     * 取这些段落的原文字节数。按书分组、每本用首尾段落号一次查回整段区间，
-     * 避免几百个值的 IN 列表；区间里多查回来几行比拼 IN 便宜。
+     * 取这些段落的原文字节数（{@see PaliTextService}，缓存的经文静态数据）。
      *
      * @param  array<int, array{book: int, para: int}>  $candidates
      * @return array<int, array<int, int>> book => (para => 字节数)
@@ -216,10 +253,10 @@ class TipitakaReadingService
 
         $lengths = [];
         foreach ($byBook as $book => $paras) {
-            $lengths[$book] = PaliText::where('book', $book)
-                ->whereBetween('paragraph', [min($paras), max($paras)])
-                ->pluck('lenght', 'paragraph')
-                ->all();
+            $lengths[$book] = array_map(
+                fn (array $row) => $row['length'],
+                $this->paliTexts->paragraphs($book, min($paras), max($paras))
+            );
         }
 
         return $lengths;
@@ -228,30 +265,30 @@ class TipitakaReadingService
     /**
      * 进度用的 total / remaining，**只在带了 book 过滤时给**。
      *
-     * 不带过滤时结果集是整个 channel（实测最大的 52 万段），每页 count 一次要
-     * 八百毫秒、两百多 MB，不值得。那种场景用 next_cursor 判断结束。
+     * 不带过滤时结果集是整个 channel（实测最大的 52 万段），要把每本书的段号索引都读一遍，
+     * 不值得。那种场景用 next_cursor 判断结束。
      *
-     * @param  Builder<Sentence>  $scope
-     * @param  array<string, mixed>  $filters
+     * @param  array{book: int, from: int, to: int}|null  $range
      * @param  array{book: int, para: int}|null  $last
      * @return array<string, int>
      */
-    private function progressMeta(Builder $scope, array $filters, ?array $last): array
+    private function progressMeta(string $channel, ?array $range, ?array $last): array
     {
-        if (! isset($filters['book'])) {
+        if ($range === null) {
             return [];
         }
 
-        $countIn = fn (Builder $q): int => (int) (
-            $q->selectRaw('count(distinct (book_id, paragraph)) as aggregate')->first()?->aggregate ?? 0
-        );
+        $paras = $this->paragraphsIn($channel, $range['book'], $range);
+        $remaining = 0;
+        if ($last !== null) {
+            foreach ($paras as $para) {
+                if ($para > $last['para']) {
+                    $remaining++;
+                }
+            }
+        }
 
-        $total = $countIn(clone $scope);
-        $remaining = $last === null
-            ? 0
-            : $countIn($this->applyCursor(clone $scope, "{$last['book']}-{$last['para']}"));
-
-        return ['total' => $total, 'remaining' => $remaining];
+        return ['total' => count($paras), 'remaining' => $remaining];
     }
 
     /**

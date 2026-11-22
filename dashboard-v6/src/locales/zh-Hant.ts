@@ -13,6 +13,7 @@ import pages from "./zh-Hant/pages";
 import admin from "./zh-Hant/admin";
 import adminStats from "./zh-Hant/admin-stats";
 import search from "./zh-Hant/search";
+import tplBuilder from "./zh-Hant/tpl-builder";
 
 const items = {
   "columns.library.title": "藏經閣",
@@ -79,6 +80,7 @@ const items = {
   ...admin,
   ...adminStats,
   ...search,
+  ...tplBuilder,
 };
 
 export default items;

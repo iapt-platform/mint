@@ -49,11 +49,10 @@
                         <i class="ti ti-book-2 me-1"></i>
                         {{ __('library.read_online') }}
                     </a>
-                    {{-- FIXME: 下载还没有实现 --}}
-                    <button class="btn btn-outline-secondary w-100" disabled>
+                    <a href="{{ route('library.tipitaka.channels.work.download', ['channel' => $book['channel']['uid'], 'sn' => $book['id']]) }}" class="btn btn-outline-secondary w-100">
                         <i class="ti ti-download me-1"></i>
                         {{ __('library.download') }}
-                    </button>
+                    </a>
                 </div>
 
             </div>

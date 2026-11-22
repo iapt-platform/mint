@@ -11,6 +11,7 @@ use App\Http\Controllers\Library\HomeController;
 use App\Http\Controllers\Library\SearchController;
 use App\Http\Controllers\Library\TipitakaChannelController;
 use App\Http\Controllers\Library\TipitakaController;
+use App\Http\Controllers\Library\TipitakaDownloadController;
 use App\Http\Controllers\Library\WikiController;
 use App\Http\Controllers\PageIndexController;
 use App\Http\Controllers\WbwAnalysisController;
@@ -79,6 +80,9 @@ Route::prefix('library')->name('library.')->group(function () {
         Route::get('/category/{id?}', [TipitakaChannelController::class, 'category'])->whereNumber('id')->name('category');
         Route::get('/work/{sn}', [BookController::class, 'show'])->whereNumber('sn')->name('work');
         Route::get('/work/{sn}/read', [BookController::class, 'readWork'])->whereNumber('sn')->name('work.read');
+        // 下载页：一部作品；或整个 channel 打包
+        Route::get('/work/{sn}/download', [TipitakaDownloadController::class, 'work'])->whereNumber('sn')->name('work.download');
+        Route::get('/download', [TipitakaDownloadController::class, 'channel'])->name('download');
         Route::get('/chapter/{chapter}', [BookController::class, 'read'])
             ->where('chapter', '\d+-\d+')->name('chapter');
     });

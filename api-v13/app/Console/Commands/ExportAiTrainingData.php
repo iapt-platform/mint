@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Api\ChannelApi;
 use App\Http\Api\MdRender;
 use App\Models\PaliSentence;
 use App\Models\Sentence;
+use App\Services\ChannelService;
 use App\Services\PaliTextService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
@@ -45,7 +45,7 @@ class ExportAiTrainingData extends Command
      *
      * @return int
      */
-    public function handle()
+    public function handle(ChannelService $channelService)
     {
         Log::info('task export offline sentence-table start');
         // 创建文件夹
@@ -95,7 +95,7 @@ class ExportAiTrainingData extends Command
                 break;
             }
             fwrite($fpIndex, "# {$channel}\n");
-            $channelInfo = ChannelApi::getById($channel);
+            $channelInfo = $channelService->summary($channel);
             if ($channelInfo) {
                 fwrite($fpIndex, "- 版本名称：{$channelInfo['name']}\n");
                 fwrite($fpIndex, "- 语言：{$channelInfo['lang']}\n");

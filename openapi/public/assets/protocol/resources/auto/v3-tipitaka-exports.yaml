@@ -1,0 +1,141 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-tipitaka-exports.yaml
+post:
+  summary: 发起下载
+  tags:
+    - tipitaka-exports
+  operationId: post_api_v3_tipitaka_exports
+  description: |-
+    同一份文件（同一 channel、范围、格式，且译文没改过）已经生成好就直接返回 `status = ready`
+    与 `download_url`（200）；否则排队生成，返回 `queued`（202，带 `Retry-After`），
+    之后轮询 `GET /v3/tipitaka-exports/{id}`。同一份正在生成时不会重复排队。
+    格式：`html`、`markdown`、`epub`、`docx`、`offline`（mobile 离线包，NDJSON，下载时 gzip 传输编码，
+    每行一段，`html` 与 `tipitaka-reading` 的 display 相同；只能按作品，首行头里有作品的段落区间
+    `para` / `end`，客户端按它判断是否覆盖了自己要的范围）。单部作品的 epub / docx
+    直接给文件，其余是 zip。私有 channel 只有能读它的人能下载。范围太大（超过全三藏的量）422。
+
+    实现：`V3\TipitakaExportController@store`
+  security:
+    - {  }
+    -
+      bearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            channel:
+              type: string
+              description: 'channel uid'
+              example: a19eaf75-c63f-4b84-8125-1bce18311e23
+            work:
+              type: integer
+              description: '作品（library 作品页 URL 里的 sn）。作品、category 只能给一个，都不给 = 整个 channel'
+              example: 275
+            book:
+              type: integer
+              description: '用坐标指定作品：book + para 所在的那部作品（mobile 用，它不知道 sn）。与 para 同时给'
+            para:
+              type: integer
+              description: '与 book 同时给，作品里的任一段落号（通常是作品起始段）'
+            category:
+              type: integer
+              description: '分类 id（library 分类页 URL 里的 id），含后代分类'
+            format:
+              type: string
+              description: 文件格式
+              enum:
+                - html
+                - markdown
+                - epub
+                - docx
+                - offline
+          required:
+            - channel
+            - format
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  status:
+                    type: string
+                  format:
+                    type: string
+                  progress:
+                    type: number
+                  message:
+                    type: string
+                    nullable: true
+                  title:
+                    type: string
+                  works:
+                    type: integer
+                  filename:
+                    type: string
+                  content_type:
+                    type: string
+                  size:
+                    type: integer
+                    nullable: true
+                  ready_at:
+                    type: string
+                    nullable: true
+                  expires_at:
+                    type: string
+                    nullable: true
+                  download_url:
+                    type: string
+                    nullable: true
+    202:
+      description: '已排队生成，响应体同 200'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  status:
+                    type: string
+                  format:
+                    type: string
+                  progress:
+                    type: number
+                  message:
+                    type: string
+                    nullable: true
+                  title:
+                    type: string
+                  works:
+                    type: integer
+                  filename:
+                    type: string
+                  content_type:
+                    type: string
+                  size:
+                    type: integer
+                    nullable: true
+                  ready_at:
+                    type: string
+                    nullable: true
+                  expires_at:
+                    type: string
+                    nullable: true
+                  download_url:
+                    type: string
+                    nullable: true
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'
