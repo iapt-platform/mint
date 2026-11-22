@@ -45,6 +45,9 @@
                 <a class="btn btn-sm" href="{{ request()->fullUrlWithQuery(['all' => $showAll ? null : 1]) }}">
                     {{ $showAll ? __('library.only_included') : __('library.show_missing') }}
                 </a>
+                <a class="btn btn-sm btn-primary" href="{{ route('library.tipitaka.channels.download', ['channel' => $channelInfo['uid']]) }}">
+                    <i class="ti ti-download me-1"></i>{{ __('library.download_all') }}
+                </a>
             </div>
         </div>
 

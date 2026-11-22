@@ -260,6 +260,8 @@ function castToType(string $value, string $type): mixed
  *   @unauthenticated       该端点无需登录，不挂 401
  *   @responseStatus 码 描述  额外的状态码。v3 下 2xx 视为另一种成功口径（响应体与 200
  *                          同形，如 201 Created），非 2xx 的响应体是 Problem Details
+ *   @responseFile mime …   成功响应是文件（二进制）而不是 JSON，列出可能的 media type（空格分隔），
+ *                          如下载接口。2xx 的响应体都按它生成
  *   @meta name type 描述     v3 列表响应的手工分页 meta 字段（如游标式阅读接口）。
  *                           声明后 meta 不再套通用 PaginationMeta，而是按声明生成专用 schema
  *
@@ -267,7 +269,7 @@ function castToType(string $value, string $type): mixed
  */
 function parseDocTags(array $tagLines): array
 {
-    $result = ['params' => [], 'deprecated' => false, 'unauthenticated' => false, 'responses' => [], 'meta' => []];
+    $result = ['params' => [], 'deprecated' => false, 'unauthenticated' => false, 'responses' => [], 'meta' => [], 'file' => []];
     foreach ($tagLines as $line) {
         if (str_starts_with($line, '@deprecated')) {
             $result['deprecated'] = true;
@@ -282,6 +284,12 @@ function parseDocTags(array $tagLines): array
         // @responseStatus 503 服务停机维护中 / @responseStatus 201 首次创建
         if (preg_match('/^@responseStatus\s+(\d{3})\s*(.*)$/u', $line, $r)) {
             $result['responses'][$r[1]] = trim($r[2]) ?: '';
+
+            continue;
+        }
+        // @responseFile application/zip application/epub+zip —— 成功响应是文件
+        if (preg_match('/^@responseFile\s+(.+)$/u', $line, $r)) {
+            $result['file'] = preg_split('/\s+/', trim($r[1])) ?: [];
 
             continue;
         }
@@ -992,13 +1000,19 @@ function buildOperation(array $route, string $httpMethod): array
             $success['properties']['meta'] = metaSchema($info);
         }
 
+        // 成功的响应体：JSON，或 @responseFile 声明的文件（每种 media type 都是二进制串）
+        $files = $info['tags']['file'] ?? [];
+        $successContent = $files === []
+            ? ['application/json' => ['schema' => $success]]
+            : array_fill_keys($files, ['schema' => ['type' => 'string', 'format' => 'binary']]);
+
         // 声明了 204 就不再输出默认的 200——控制器 return response()->noContent()
         // 的端点没有 200 这个口径，留着会让前端以为可以读 body
         $declared = $info['tags']['responses'] ?? [];
         $responses = isset($declared[204]) ? [] : [
             '200' => [
                 'description' => '成功',
-                'content' => ['application/json' => ['schema' => $success]],
+                'content' => $successContent,
             ],
         ];
         // 无鉴权的端点用 @unauthenticated 标注，就不再挂 401
@@ -1013,8 +1027,8 @@ function buildOperation(array $route, string $httpMethod): array
         // 响应体与 200 同形；其余是错误，响应体是 Problem Details。
         foreach ($declared as $code => $desc) {
             $isSuccess = $code >= 200 && $code < 300;
-            // 204 / 205 按 RFC 9110 MUST NOT 带消息体，不给 content
-            if ((int) $code === 204 || (int) $code === 205) {
+            // 204 / 205 / 304 按 RFC 9110 MUST NOT 带消息体，不给 content
+            if (in_array((int) $code, [204, 205, 304], true)) {
                 $responses[(string) $code] = ['description' => $desc !== '' ? $desc : '成功，无响应体'];
 
                 continue;
@@ -1022,7 +1036,7 @@ function buildOperation(array $route, string $httpMethod): array
             $responses[(string) $code] = $isSuccess
                 ? [
                     'description' => $desc !== '' ? $desc : '成功',
-                    'content' => ['application/json' => ['schema' => $success]],
+                    'content' => $successContent,
                 ]
                 : [
                     'description' => $desc !== '' ? $desc : 'Problem Details',

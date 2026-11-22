@@ -873,3 +873,198 @@ a.tipitaka-tree__work:hover {
     color: var(--tblr-primary);
     font-weight: 600;
 }
+
+/* ══════════════════════════════════════════
+   下载页（library/tipitaka/download.blade.php）
+   ══════════════════════════════════════════ */
+.tipitaka-download__head {
+    display: flex;
+    gap: 1.25rem;
+    align-items: center;
+    padding: 1.25rem;
+}
+.tipitaka-download__cover {
+    width: 96px;
+    min-width: 96px;
+    height: 128px;
+}
+.tipitaka-download__info {
+    flex: 1;
+    min-width: 0;
+}
+.tipitaka-download__title {
+    font-size: 1.375rem;
+    font-weight: 600;
+    margin: 0;
+}
+.tipitaka-download__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+    margin-top: 0.5rem;
+    color: var(--tblr-secondary);
+    font-size: 0.8125rem;
+}
+.tipitaka-download__back {
+    align-self: flex-start;
+}
+.tipitaka-download__section {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 10px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    margin: 1.5rem 0 0.75rem;
+}
+.tipitaka-download__section small {
+    font-weight: 400;
+    color: var(--tblr-secondary);
+}
+.tipitaka-download__formats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+.tipitaka-download__format {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 1rem;
+    margin: 0;
+    transition: border-color 0.15s;
+}
+.tipitaka-download__format:hover {
+    border-color: var(--tblr-primary);
+}
+.tipitaka-download__format-top {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+.tipitaka-download__format h3 {
+    margin: 0;
+    font-size: 0.9375rem;
+}
+.tipitaka-download__format p {
+    margin: 2px 0 0;
+    color: var(--tblr-secondary);
+    font-size: 0.8125rem;
+}
+.tipitaka-download__icon {
+    flex: none;
+    width: 42px;
+    height: 50px;
+    border-radius: 5px 12px 5px 5px;
+    color: #fff;
+    font: 700 10px/1 var(--tblr-font-monospace, monospace);
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 7px;
+}
+.tipitaka-download__icon--epub { background: #7b4bd1; }
+.tipitaka-download__icon--html { background: #e8590c; }
+.tipitaka-download__icon--docx { background: #1f5fbf; }
+.tipitaka-download__icon--markdown { background: #2b8a3e; }
+.tipitaka-download__file {
+    font: 0.75rem/1.5 var(--tblr-font-monospace, monospace);
+    color: var(--tblr-secondary);
+    background: var(--tblr-bg-surface-secondary);
+    border-radius: 6px;
+    padding: 6px 10px;
+    overflow-wrap: anywhere;
+}
+.tipitaka-download__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+.tipitaka-download__state {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8125rem;
+    color: var(--tblr-secondary);
+}
+.tipitaka-download__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--tblr-warning);
+}
+[data-state="ready"] .tipitaka-download__state,
+.tipitaka-download__state--ready { color: var(--tblr-success); }
+[data-state="ready"] .tipitaka-download__dot,
+.tipitaka-download__state--ready .tipitaka-download__dot { background: var(--tblr-success); }
+.tipitaka-download__state--failed { color: var(--tblr-danger); }
+.tipitaka-download__state--failed .tipitaka-download__dot,
+[data-state="too_large"] .tipitaka-download__dot { background: var(--tblr-danger); }
+.tipitaka-download__progress-text {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 0.8125rem;
+    color: var(--tblr-secondary);
+    margin-bottom: 4px;
+}
+.tipitaka-download__progress-text span:first-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.tipitaka-download__manual {
+    font-size: 0.8125rem;
+    cursor: pointer;
+}
+.tipitaka-download__hint {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: var(--tblr-primary-lt, #e8f0fa);
+    font-size: 0.8125rem;
+}
+.tipitaka-download__works {
+    padding: 0.25rem 0;
+}
+.tipitaka-download__works details + details {
+    border-top: 1px solid var(--tblr-border-color);
+}
+.tipitaka-download__works summary {
+    display: flex;
+    gap: 10px;
+    padding: 10px 16px;
+    cursor: pointer;
+}
+.tipitaka-download__works summary span {
+    margin-left: auto;
+    color: var(--tblr-secondary);
+    font-size: 0.8125rem;
+}
+.tipitaka-download__works ul {
+    margin: 0;
+    padding: 0 16px 12px 36px;
+    columns: 2;
+    column-gap: 24px;
+}
+.tipitaka-download__works li {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 2px 0;
+    font-size: 0.8125rem;
+    break-inside: avoid;
+}
+.tipitaka-download__works li span {
+    color: var(--tblr-secondary);
+}
+@media (max-width: 767px) {
+    .tipitaka-download__formats { grid-template-columns: 1fr; }
+    .tipitaka-download__head { flex-wrap: wrap; }
+    .tipitaka-download__works ul { columns: 1; }
+}

@@ -746,7 +746,10 @@ class PaliContentService
     public static function paragraphCacheKey(int $book, int $para, string $channelUid, string $format): string
     {
         // markup：App\Services\Markup 渲染的缓存，与 MdRender 时代的旧缓存分开（旧 key 自然过期）
-        return "/read-para/markup/{$book}-{$para}/{$channelUid}/{$format}";
+        // markdown 2026-11-21 起句末附脚注正文，换 key 让旧缓存（不带脚注正文）自然过期
+        $suffix = $format === 'markdown' ? '/fn' : '';
+
+        return "/read-para/markup/{$book}-{$para}/{$channelUid}/{$format}{$suffix}";
     }
 
     /**
@@ -1009,7 +1012,9 @@ class PaliContentService
         // 整段一起渲染：各句里的术语、句子模板（含义注对应）合在一起批量查
         $rendered = $sources === [] ? [] : app(MarkupService::class)->renderMany(
             $sources,
-            new RenderOptions(format: self::markupFormat($format), channelType: $channelType),
+            // markdown 每句末尾附自己的脚注正文（`[^n]: …`）。编号每句从 1 起，跨句会重号，
+            // 整章导出时由 V3\TipitakaExportBuilder 逐句重新编号；不附正文的话 `[^n]` 无处可指
+            new RenderOptions(format: self::markupFormat($format), channelType: $channelType, footnote: $format === 'markdown'),
         );
         foreach ($records as $i => $row) {
             $html = $rendered[$i] ?? '';

@@ -891,6 +891,12 @@ paths:
     $ref: ./resources/auto/v3-tipitaka-chapter-channels-book-para.yaml
   '/v3/tipitaka-discussions/{channel}':
     $ref: ./resources/auto/v3-tipitaka-discussions-channel.yaml
+  /v3/tipitaka-exports:
+    $ref: ./resources/auto/v3-tipitaka-exports.yaml
+  '/v3/tipitaka-exports/{export}':
+    $ref: ./resources/auto/v3-tipitaka-exports-export.yaml
+  '/v3/tipitaka-exports/{export}/file':
+    $ref: ./resources/auto/v3-tipitaka-exports-export-file.yaml
   '/v3/tipitaka-page-numbers/{page}':
     $ref: ./resources/auto/v3-tipitaka-page-numbers-page.yaml
   '/v3/tipitaka-paragraph-channels/{book}/{para}':

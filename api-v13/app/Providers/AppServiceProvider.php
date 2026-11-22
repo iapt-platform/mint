@@ -140,6 +140,9 @@ class AppServiceProvider extends ServiceProvider
         // 比对验证码、建账号：按 IP 限，挡住对 6 位验证码的穷举（单个码另有 5 次试错上限）
         RateLimiter::for('sign-up', fn (Request $request): Limit => Limit::perMinute(20)->by('ip:'.$request->ip()));
 
+        // 三藏下载：发起请求要查库统计范围，按 IP 限一下（轮询状态的 GET 不限）
+        RateLimiter::for('tipitaka-exports', fn (Request $request): Limit => Limit::perMinute(30)->by('ip:'.$request->ip()));
+
         // 登录：按「账号 + IP」挡住对单个账号的猜密码，按 IP 挡住换着账号撞库
         RateLimiter::for('sessions', fn (Request $request): array => [
             Limit::perMinute(5)->by('login:'.mb_strtolower((string) $request->input('login')).'|'.$request->ip()),

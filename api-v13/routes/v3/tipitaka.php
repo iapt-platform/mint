@@ -23,6 +23,8 @@ use App\Http\Controllers\V3\PaliWordSuggestionController;
 use App\Http\Controllers\V3\TipitakaChannelController;
 use App\Http\Controllers\V3\TipitakaChapterChannelController;
 use App\Http\Controllers\V3\TipitakaDiscussionController;
+use App\Http\Controllers\V3\TipitakaExportController;
+use App\Http\Controllers\V3\TipitakaExportFileController;
 use App\Http\Controllers\V3\TipitakaPageNumberController;
 use App\Http\Controllers\V3\TipitakaParagraphChannelController;
 use App\Http\Controllers\V3\TipitakaReadingController;
@@ -90,3 +92,16 @@ Route::get('tipitaka-word-paragraphs', [TipitakaWordParagraphController::class, 
 Route::get('tipitaka-page-numbers/{page}', TipitakaPageNumberController::class)
     ->whereNumber('page')
     ->name('tipitaka-page-numbers.show');
+
+// 三藏下载：一部作品 / 一个分类 / 整个 channel 导出成文件，排队生成、存 Redis 7 天。
+// id 是 40 位十六进制的内容指纹；文件只认签名链接（相对签名，反代下不受域名影响）
+Route::post('tipitaka-exports', [TipitakaExportController::class, 'store'])
+    ->middleware('throttle:tipitaka-exports')
+    ->name('tipitaka-exports.store');
+Route::get('tipitaka-exports/{export}', [TipitakaExportController::class, 'show'])
+    ->where('export', '[0-9a-f]{40}')
+    ->name('tipitaka-exports.show');
+Route::get('tipitaka-exports/{export}/file', TipitakaExportFileController::class)
+    ->where('export', '[0-9a-f]{40}')
+    ->middleware('signed:relative')
+    ->name('tipitaka-exports.file');

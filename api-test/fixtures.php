@@ -42,6 +42,11 @@ return [
     'group_name' => 'api-test 团队',
     'group_member_username' => 'test162',
 
+    // tipitaka-exports（三藏下载）：一个公开 channel 与它收录的一部小作品（library 作品页 URL 里的 sn）。
+    // 用例会真的排队生成并等 worker 做完（mq:export.tipitaka 要在跑），文件留在 Redis 里 7 天，不清理
+    'export_channel' => 'a19eaf75-c63f-4b84-8125-1bce18311e23',
+    'export_work' => 276,
+
     // 一个已注册账号的邮箱（email-certifications 的「已注册」用例；只校验、不发信）。
     // 留空则该用例 SKIP。
     'registered_email' => getenv('API_TEST_REGISTERED_EMAIL') ?: null,
