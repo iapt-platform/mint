@@ -466,6 +466,22 @@ describe('templates without data', function () {
         expect(markupRender('{{article|type=article|id=x|title=T}}', Format::Prompt))->toBe('');
     });
 
+    it('renders chapter like article type=chapter', function () {
+        $legacy = markupTree('{{article|type=chapter|book=168|paragraphs=915|title=T}}')[0];
+        $chapter = markupTree('{{chapter|book=168|para=915|title=T}}')[0];
+        expect($chapter['name'])->toBe('article');
+        expect($chapter['props'])->toBe(['type' => 'chapter', 'id' => '168-915', 'title' => 'T', 'parentChannels' => []]);
+        expect($chapter['props'])->toBe(array_diff_key($legacy['props'], ['book' => 0, 'paragraphs' => 0]));
+
+        expect(markupTree('{{chapter|168-915|T|c1|card}}')[0]['props'])
+            ->toMatchArray(['id' => '168-915', 'title' => 'T', 'channel' => 'c1', 'style' => 'card']);
+        // id 优先于 book + para
+        expect(markupTree('{{chapter|id=1-2|book=3|para=4}}')[0]['props']['id'])->toBe('1-2');
+        expect(markupTree('{{chapter}}')[0]['props']['id'])->toBe('');
+        expect(markupRender('{{chapter|1-2|T}}', Format::Text))->toBe('T');
+        expect(markupRender('{{chapter|1-2|T}}', Format::Prompt))->toBe('');
+    });
+
     it('renders nissaya templates and nissaya channel lines', function () {
         expect(markupTree('{{nissaya|evaṃ|ဤသို့=thus}}')[0]['props'])
             ->toMatchArray(['pali' => 'evaṃ', 'meaning' => ['ဤသို့', 'thus']]);

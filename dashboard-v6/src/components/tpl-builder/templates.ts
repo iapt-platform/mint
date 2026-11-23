@@ -87,6 +87,17 @@ export const TEMPLATES: TplSpec[] = [
     ],
   },
   {
+    name: "chapter",
+    fields: [
+      { name: "id", kind: "text", placeholder: "book-para" },
+      { name: "book", kind: "number" },
+      { name: "para", kind: "number" },
+      { name: "title", kind: "text" },
+      { name: "channel", kind: "channel" },
+      style(),
+    ],
+  },
+  {
     name: "para",
     fields: [
       { name: "id", kind: "text", placeholder: "book-para", required: true },
