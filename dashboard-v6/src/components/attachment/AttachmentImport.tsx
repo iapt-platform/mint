@@ -30,7 +30,7 @@ const AttachmentImportWidget = ({
     name: "file",
     listType: "picture",
     multiple: replaceId ? false : true,
-    action: `${import.meta.env.BASE_URL}/api/v2/attachment?id=${replaceId}`,
+    action: `/api/v2/attachment?id=${replaceId}`,
     headers: {
       Authorization: `Bearer ${getToken()}`,
     },

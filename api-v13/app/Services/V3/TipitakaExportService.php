@@ -10,8 +10,10 @@ use App\Services\TipitakaCatalogService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Validation\ValidationException;
+use RuntimeException;
 use Throwable;
 
 /**
@@ -19,7 +21,11 @@ use Throwable;
  *
  * 流程：请求方 request() → 已有同一份文件就直接给；没有就写一条 queued 状态、投递到 RabbitMQ
  * （TipitakaExportQueue：单部作品与打包分两个队列）→ worker `mq:export.tipitaka` 调 run() 生成（TipitakaExportBuilder）→
- * 文件以二进制存进 Redis 集群（RedisCache::putBinary），保留 `mint.tipitaka_export.ttl`。
+ * 文件存进默认磁盘的临时区（生产是 S3），状态存 Redis，保留 `mint.tipitaka_export.ttl`。
+ *
+ * **文件路径按范围固定，不跟 id 走**（{@see self::filePath()}）：同一 channel、同一范围、同一格式永远是同一个对象。
+ * Redis 状态过期、或译文改了换了 id，重新生成时覆盖原来那份，临时区不会积累没人读的旧文件。
+ * 旧 id 的下载链接（7 天内）拿到的是覆盖后的最新文件。
  *
  * **id 就是内容指纹**：channel + 范围 + 格式 + 模板版本 + 范围内句子的最后修改时间与条数。
  * 所以谁先生成谁就给后来的人用；译文一改，指纹就变，自然重新生成，不需要失效逻辑。
@@ -121,8 +127,8 @@ class TipitakaExportService
             abort(404, __('messages.export_not_found'));
         }
         $this->abilities->assertReadable($status['channel'], $userUid);
-        if ($status['status'] === 'ready' && ! $this->fileExists($id)) {
-            // 文件被 Redis 淘汰了，状态还在：当作没生成过，让客户端重新发起
+        if ($status['status'] === 'ready' && ! $this->fileExists($status)) {
+            // 文件被清掉了，状态还在：当作没生成过，让客户端重新发起
             abort(404, __('messages.export_not_found'));
         }
 
@@ -197,12 +203,12 @@ class TipitakaExportService
     }
 
     /**
-     * worker 入口：生成一份导出并存进 Redis。已经生成好、或状态已过期被清掉的直接跳过。
+     * worker 入口：生成一份导出，文件存进临时区、状态存 Redis。已经生成好、或状态已过期被清掉的直接跳过。
      */
     public function run(string $id): void
     {
         $status = $this->find($id);
-        if ($status === null || ($status['status'] === 'ready' && $this->fileExists($id))) {
+        if ($status === null || ($status['status'] === 'ready' && $this->fileExists($status))) {
             return;
         }
         $status = $this->save(['status' => 'running', 'progress' => 0.0, 'message' => null] + $status);
@@ -218,7 +224,14 @@ class TipitakaExportService
                 throw new BusinessException(__('messages.export_too_large'), 422, 'export-too-large');
             }
             $ttl = (int) config('mint.tipitaka_export.ttl');
-            RedisCache::putBinary($this->fileKey($id), $file, $ttl);
+            // S3 上把类型与传输编码写进对象：下载时直接跳到 S3，离线包靠 Content-Encoding: gzip 让客户端自动解压
+            $stored = Storage::put($this->filePath($status), $file, array_filter([
+                'ContentType' => $status['content_type'],
+                'ContentEncoding' => $status['format'] === 'offline' ? 'gzip' : null,
+            ]));
+            if (! $stored) {
+                throw new RuntimeException('tipitaka-export: cannot store '.$this->filePath($status));
+            }
             $this->save([
                 'status' => 'ready',
                 'progress' => 1.0,
@@ -235,31 +248,42 @@ class TipitakaExportService
     }
 
     /**
-     * 文件在 Redis 里的 key。下载接口按它分块读。
+     * 文件在默认磁盘上的路径（临时区）：`{temporary}/tipitaka-exports/{channel}/{format}/{work-sn | category-id | channel}`。
+     * 只由 channel、范围、格式决定，与内容指纹（id）、模板版本无关，重新生成时覆盖同一个对象。
+     *
+     * @param  array<string, mixed>  $status  导出状态（spec() 的字段）
      */
-    public function fileKey(string $id): string
+    public function filePath(array $status): string
     {
-        return "/tipitaka-export/file/{$id}";
+        $scope = match ($status['scope']['kind']) {
+            'work' => 'work-'.$status['scope']['work'],
+            'category' => 'category-'.$status['scope']['category'],
+            default => 'channel',
+        };
+
+        return config('mint.attachments.bucket_name.temporary')."/tipitaka-exports/{$status['channel']}/{$status['format']}/{$scope}";
     }
 
     /**
      * 已生成的文件的元数据；没有（或不可下载）返回 null。
      *
-     * @return array{filename: string, content_type: string, content_encoding: string|null, size: int}|null
+     * @return array{path: string, filename: string, content_type: string, content_encoding: string|null, size: int}|null
      */
     public function file(string $id): ?array
     {
         $status = $this->find($id);
-        $size = RedisCache::binaryLength($this->fileKey($id));
-        if ($status === null || $status['status'] !== 'ready' || $size === null) {
+        if ($status === null || $status['status'] !== 'ready' || ! $this->fileExists($status)) {
             return null;
         }
+        $path = $this->filePath($status);
 
         return [
+            'path' => $path,
             'filename' => $status['filename'],
             'content_type' => $status['content_type'],
             'content_encoding' => $status['format'] === 'offline' ? 'gzip' : null,
-            'size' => $size,
+            // 按文件实际大小：这个范围后来又生成过的话，旧 id 的状态里记的是旧文件的大小
+            'size' => (int) Storage::size($path),
         ];
     }
 
@@ -357,7 +381,7 @@ class TipitakaExportService
     private function reusable(array $status): bool
     {
         return match ($status['status']) {
-            'ready' => $this->fileExists($status['id']),
+            'ready' => $this->fileExists($status),
             'queued', 'running' => now()->diffInSeconds($status['updated_at'], true) < (int) config('mint.tipitaka_export.stale_after'),
             default => false,
         };
@@ -417,9 +441,12 @@ class TipitakaExportService
         return $status;
     }
 
-    private function fileExists(string $id): bool
+    /**
+     * @param  array<string, mixed>  $status
+     */
+    private function fileExists(array $status): bool
     {
-        return RedisCache::binaryLength($this->fileKey($id)) !== null;
+        return Storage::exists($this->filePath($status));
     }
 
     private function statusKey(string $id): string

@@ -17,7 +17,8 @@ class TipitakaExportFileController extends Controller
     /**
      * 下载文件
      *
-     * 支持 `Range`（206，断点续传）与 `If-None-Match`（304，ETag 就是导出 id）。
+     * 文件存在 S3 时 302 跳到 S3 的临时链接（1 小时有效，客户端跟随跳转即可）；本地开发直接返回文件。
+     * 两种情况都支持 `Range`（206，断点续传）与 `If-None-Match`（304）。
      * 离线包（offline）是 NDJSON，带 `Content-Encoding: gzip`，HTTP 客户端会自动解压。
      * 签名无效或过期 403，文件已过期 404。
      *
@@ -30,6 +31,7 @@ class TipitakaExportFileController extends Controller
      *
      * @responseFile application/zip application/epub+zip application/vnd.openxmlformats-officedocument.wordprocessingml.document application/x-ndjson
      *
+     * @responseStatus 302 文件在 S3：跳到临时下载链接
      * @responseStatus 206 Range 请求的部分内容
      * @responseStatus 304 If-None-Match 命中，本地文件就是最新的
      * @responseStatus 403 签名无效或已过期

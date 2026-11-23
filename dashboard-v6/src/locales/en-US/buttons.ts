@@ -120,6 +120,11 @@ const items = {
   "buttons.account.switch": "Switch account",
   "buttons.teamspace.leave": "Back to personal space",
   "buttons.back": "Back",
+  "buttons.group.invite.link": "Get Invite Link",
+  "buttons.group.invite.accept": "Accept and Join",
+  "buttons.group.invite.sign-in": "Sign in to Join",
+  "buttons.group.invite.enter": "Open Team Space",
+  "buttons.group.invite.decline": "Not Now",
 };
 
 export default items;

@@ -206,7 +206,7 @@ const CourseInfoEditWidget = ({
                 return true;
               },
             }}
-            action={`${import.meta.env.BASE_URL}/api/v2/attachment`}
+            action={`/api/v2/attachment`}
             extra="封面必须为正方形。最大512*512"
           />
         </ProForm.Group>

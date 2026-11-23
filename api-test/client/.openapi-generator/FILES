@@ -17,6 +17,7 @@ docs/Api/CreditPolicyApi.md
 docs/Api/DiscussionsApi.md
 docs/Api/EmailCertificationsApi.md
 docs/Api/GlossariesApi.md
+docs/Api/GroupInvitesApi.md
 docs/Api/GroupsApi.md
 docs/Api/HeartbeatApi.md
 docs/Api/InvitesApi.md
@@ -114,6 +115,10 @@ docs/Model/GetApiV3DiscussionsSummary200ResponseDataStatusCounts.md
 docs/Model/GetApiV3GlossariesKind200Response.md
 docs/Model/GetApiV3GlossariesKind200ResponseDataInner.md
 docs/Model/GetApiV3GlossariesKind200ResponseMeta.md
+docs/Model/GetApiV3GroupInvitesToken200Response.md
+docs/Model/GetApiV3GroupInvitesToken200ResponseData.md
+docs/Model/GetApiV3GroupInvitesToken200ResponseDataGroup.md
+docs/Model/GetApiV3GroupInvitesToken200ResponseDataInviter.md
 docs/Model/GetApiV3Groups200Response.md
 docs/Model/GetApiV3Groups200ResponseDataInner.md
 docs/Model/GetApiV3GroupsGroupMembers200Response.md
@@ -242,6 +247,8 @@ docs/Model/PostApiV3DiscussionsDiscussionRepliesRequest.md
 docs/Model/PostApiV3DiscussionsRequest.md
 docs/Model/PostApiV3EmailCertificationsRequest.md
 docs/Model/PostApiV3Groups200Response.md
+docs/Model/PostApiV3GroupsGroupInviteLinks200Response.md
+docs/Model/PostApiV3GroupsGroupInviteLinks200ResponseData.md
 docs/Model/PostApiV3GroupsGroupMembers200Response.md
 docs/Model/PostApiV3GroupsGroupMembersRequest.md
 docs/Model/PostApiV3GroupsRequest.md
@@ -251,6 +258,8 @@ docs/Model/PostApiV3InvitesRequest.md
 docs/Model/PostApiV3MarkupPreviews200Response.md
 docs/Model/PostApiV3MarkupPreviews200ResponseData.md
 docs/Model/PostApiV3MarkupPreviewsRequest.md
+docs/Model/PostApiV3MeGroups200Response.md
+docs/Model/PostApiV3MeGroupsRequest.md
 docs/Model/PostApiV3MeReactions200Response.md
 docs/Model/PostApiV3MeReactionsRequest.md
 docs/Model/PostApiV3MeReadingTime200Response.md
@@ -286,6 +295,7 @@ lib/Api/CreditPolicyApi.php
 lib/Api/DiscussionsApi.php
 lib/Api/EmailCertificationsApi.php
 lib/Api/GlossariesApi.php
+lib/Api/GroupInvitesApi.php
 lib/Api/GroupsApi.php
 lib/Api/HeartbeatApi.php
 lib/Api/InvitesApi.php
@@ -387,6 +397,10 @@ lib/Model/GetApiV3DiscussionsSummary200ResponseDataStatusCounts.php
 lib/Model/GetApiV3GlossariesKind200Response.php
 lib/Model/GetApiV3GlossariesKind200ResponseDataInner.php
 lib/Model/GetApiV3GlossariesKind200ResponseMeta.php
+lib/Model/GetApiV3GroupInvitesToken200Response.php
+lib/Model/GetApiV3GroupInvitesToken200ResponseData.php
+lib/Model/GetApiV3GroupInvitesToken200ResponseDataGroup.php
+lib/Model/GetApiV3GroupInvitesToken200ResponseDataInviter.php
 lib/Model/GetApiV3Groups200Response.php
 lib/Model/GetApiV3Groups200ResponseDataInner.php
 lib/Model/GetApiV3GroupsGroupMembers200Response.php
@@ -516,6 +530,8 @@ lib/Model/PostApiV3DiscussionsDiscussionRepliesRequest.php
 lib/Model/PostApiV3DiscussionsRequest.php
 lib/Model/PostApiV3EmailCertificationsRequest.php
 lib/Model/PostApiV3Groups200Response.php
+lib/Model/PostApiV3GroupsGroupInviteLinks200Response.php
+lib/Model/PostApiV3GroupsGroupInviteLinks200ResponseData.php
 lib/Model/PostApiV3GroupsGroupMembers200Response.php
 lib/Model/PostApiV3GroupsGroupMembersRequest.php
 lib/Model/PostApiV3GroupsRequest.php
@@ -525,6 +541,8 @@ lib/Model/PostApiV3InvitesRequest.php
 lib/Model/PostApiV3MarkupPreviews200Response.php
 lib/Model/PostApiV3MarkupPreviews200ResponseData.php
 lib/Model/PostApiV3MarkupPreviewsRequest.php
+lib/Model/PostApiV3MeGroups200Response.php
+lib/Model/PostApiV3MeGroupsRequest.php
 lib/Model/PostApiV3MeReactions200Response.php
 lib/Model/PostApiV3MeReactionsRequest.php
 lib/Model/PostApiV3MeReadingTime200Response.php
@@ -561,6 +579,7 @@ test/Api/CreditPolicyApiTest.php
 test/Api/DiscussionsApiTest.php
 test/Api/EmailCertificationsApiTest.php
 test/Api/GlossariesApiTest.php
+test/Api/GroupInvitesApiTest.php
 test/Api/GroupsApiTest.php
 test/Api/HeartbeatApiTest.php
 test/Api/InvitesApiTest.php
@@ -658,6 +677,10 @@ test/Model/GetApiV3DiscussionsSummary200ResponseTest.php
 test/Model/GetApiV3GlossariesKind200ResponseDataInnerTest.php
 test/Model/GetApiV3GlossariesKind200ResponseMetaTest.php
 test/Model/GetApiV3GlossariesKind200ResponseTest.php
+test/Model/GetApiV3GroupInvitesToken200ResponseDataGroupTest.php
+test/Model/GetApiV3GroupInvitesToken200ResponseDataInviterTest.php
+test/Model/GetApiV3GroupInvitesToken200ResponseDataTest.php
+test/Model/GetApiV3GroupInvitesToken200ResponseTest.php
 test/Model/GetApiV3Groups200ResponseDataInnerTest.php
 test/Model/GetApiV3Groups200ResponseTest.php
 test/Model/GetApiV3GroupsGroupMembers200ResponseDataInnerTest.php
@@ -786,6 +809,8 @@ test/Model/PostApiV3DiscussionsDiscussionRepliesRequestTest.php
 test/Model/PostApiV3DiscussionsRequestTest.php
 test/Model/PostApiV3EmailCertificationsRequestTest.php
 test/Model/PostApiV3Groups200ResponseTest.php
+test/Model/PostApiV3GroupsGroupInviteLinks200ResponseDataTest.php
+test/Model/PostApiV3GroupsGroupInviteLinks200ResponseTest.php
 test/Model/PostApiV3GroupsGroupMembers200ResponseTest.php
 test/Model/PostApiV3GroupsGroupMembersRequestTest.php
 test/Model/PostApiV3GroupsRequestTest.php
@@ -795,6 +820,8 @@ test/Model/PostApiV3InvitesRequestTest.php
 test/Model/PostApiV3MarkupPreviews200ResponseDataTest.php
 test/Model/PostApiV3MarkupPreviews200ResponseTest.php
 test/Model/PostApiV3MarkupPreviewsRequestTest.php
+test/Model/PostApiV3MeGroups200ResponseTest.php
+test/Model/PostApiV3MeGroupsRequestTest.php
 test/Model/PostApiV3MeReactions200ResponseTest.php
 test/Model/PostApiV3MeReactionsRequestTest.php
 test/Model/PostApiV3MeReadingTime200ResponseDataTest.php

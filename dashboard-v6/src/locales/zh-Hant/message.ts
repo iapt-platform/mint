@@ -20,6 +20,7 @@ const items = {
   "message.confirm-password.validate.fail": "兩次密碼不一致",
   "message.delete.success": "成功刪除{count}條資料",
   "message.task.status.change": "將任務狀態修改為{status}嗎？",
+  "message.group.invite.joined": "已加入團隊「{name}」",
 };
 
 export default items;

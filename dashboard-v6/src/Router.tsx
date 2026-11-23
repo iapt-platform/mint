@@ -36,6 +36,7 @@ const UsersSignUpInvite = lazy(() => import("./pages/users/sign-up-invite"));
 const UsersForgotPassword = lazy(() => import("./pages/users/forgot-password"));
 const UsersResetPassword = lazy(() => import("./pages/users/reset-password"));
 const DashboardIndex = lazy(() => import("./pages/dashboard/index"));
+const TeamInvite = lazy(() => import("./pages/team-invite"));
 
 const Home = lazy(() => import("./pages/home"));
 // 整页搜索；workspace 的搜索弹窗「在整页打开」跳到这里
@@ -84,6 +85,13 @@ const router = createBrowserRouter(
             // 找回密码邮件里的链接，由后端按 mint.server.dashboard_v6_base_path 拼出
             { path: "reset-password/:token", Component: UsersResetPassword },
           ],
+        },
+        // 团队邀请链接（components/group/InviteLink 生成）：不登录也能看，借用未登录页的外壳
+        {
+          path: "team-invite/:token",
+          Component: AnonymousLayout,
+          handle: { crumb: "team-invite" },
+          children: [{ index: true, Component: TeamInvite }],
         },
         {
           path: "dashboard",

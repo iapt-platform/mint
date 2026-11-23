@@ -10,7 +10,7 @@ use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 
 /**
- * 三藏下载（`/v3/tipitaka-exports`）的 worker：生成文件存进 Redis。单部作品的队列 `export_tipitaka`
+ * 三藏下载（`/v3/tipitaka-exports`）的 worker：生成文件存进临时区（生产是 S3）。单部作品的队列 `export_tipitaka`
  * 与打包的队列 `export_tipitaka_bulk`（`--bulk`）各跑一个，大打包不会堵住单部作品的下载。
  *
  * 一次只处理一条（prefetch 1），生成完才 ack。最大的 channel 整个打包约 4 分钟（实测 cs6 html 217 秒，2026-11-22），

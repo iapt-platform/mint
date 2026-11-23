@@ -8,7 +8,7 @@ import {
   LinkOutlined,
 } from "@ant-design/icons";
 
-import { fullUrl } from "../../utils";
+import { fullUrl, libraryUrl } from "../../utils";
 
 const { Text } = Typography;
 
@@ -26,8 +26,8 @@ const TermShareWidget = ({ id, trigger, open, onClose }: IWidget) => {
   const isOpen = open ?? innerOpen;
 
   // 藏经阁（对外公开）访问链接
-  const libraryUrl = id
-    ? `${import.meta.env.VITE_APP_API_SERVER}/library/wiki/${intl.locale}/${id}`
+  const libraryLink = id
+    ? libraryUrl(`wiki/${intl.locale}/${id}`, true)
     : "";
   // 译经楼（工作台）访问链接
   const studioUrl = id ? fullUrl(`/workspace/term/${id}`) : "";
@@ -92,7 +92,7 @@ const TermShareWidget = ({ id, trigger, open, onClose }: IWidget) => {
       >
         {linkRow(
           intl.formatMessage({ id: "labels.library.access.link" }),
-          libraryUrl,
+          libraryLink,
           <GlobalOutlined />
         )}
         <Text

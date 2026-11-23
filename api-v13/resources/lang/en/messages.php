@@ -63,6 +63,7 @@ return [
     'group_has_resources' => 'The team still owns resources. Transfer or delete them before deleting the team.',
     'group_name_exists' => 'You already have a team with this name.',
     'group_share_not_found' => 'This resource is not shared with this team.',
+    'group_invite_invalid' => 'This invitation link is invalid or has expired.',
     'agent_not_allowed' => 'AI models cannot perform this action. Please use a human account.',
     'channel_forbidden' => 'You are not allowed to do this.',
     'channel_studio_forbidden' => 'You cannot view or manage the channels of this studio (team).',

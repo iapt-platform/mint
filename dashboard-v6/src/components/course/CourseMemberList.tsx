@@ -408,7 +408,7 @@ const CourseMemberListWidget = ({ courseId, onSelect }: IWidget) => {
           />,
           <Tooltip title="导出成员列表">
             <a
-              href={`${import.meta.env.BASE_URL}/api/v2/course-member-export?course_id=${courseId}`}
+              href={`/api/v2/course-member-export?course_id=${courseId}`}
               target="_blank"
               key="export"
               rel="noreferrer"

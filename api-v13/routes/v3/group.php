@@ -11,13 +11,22 @@
 */
 
 use App\Http\Controllers\V3\GroupController;
+use App\Http\Controllers\V3\GroupInviteController;
+use App\Http\Controllers\V3\GroupInviteLinkController;
 use App\Http\Controllers\V3\GroupMemberController;
 use App\Http\Controllers\V3\GroupShareController;
 use App\Http\Controllers\V3\MeGroupController;
 use Illuminate\Support\Facades\Route;
 
 // 我加入的团队：没有第二个主体（不会出现 me 以外的值），所以是 /me/ 下的独立端点
-Route::get('me/groups', MeGroupController::class)->middleware('auth.v3')->name('me.groups.index');
+// POST 是凭邀请链接加入团队（加进「我的团队」），token 放请求体
+Route::get('me/groups', [MeGroupController::class, 'index'])->middleware('auth.v3')->name('me.groups.index');
+Route::post('me/groups', [MeGroupController::class, 'store'])->middleware('auth.v3')->name('me.groups.store');
+
+// 打开邀请链接：不登录也能看。token 是 JWT（base64url 三段，用点分隔）
+Route::get('group-invites/{token}', [GroupInviteController::class, 'show'])
+    ->name('group-invites.show')
+    ->where('token', '[A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]+');
 
 // 团队本身。详情可不登录（公开团队谁都能看），其余要登录。只注册 PATCH，不注册 PUT
 Route::apiResource('groups', GroupController::class)
@@ -56,4 +65,9 @@ Route::middleware('auth.v3')->scopeBindings()->group(function () {
         ->only(['index', 'destroy'])
         ->whereUuid('group')
         ->whereNumber('share');
+
+    // 团队邀请链接：只签发，不落库，所以没有列表与删除
+    Route::post('groups/{group}/invite-links', [GroupInviteLinkController::class, 'store'])
+        ->name('groups.invite-links.store')
+        ->whereUuid('group');
 });

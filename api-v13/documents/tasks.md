@@ -46,7 +46,10 @@ php artisan mq:export.tipitaka --bulk
 三藏下载的两个 worker 要分开跑，打包才不会堵住单部作品。它们处理完一条才 ack。实测 cs6 整个 channel（282 部作品）的 html 打包 217 秒、zip 43.7 MiB、
 内存峰值 172 MB（2026-11-22，段落缓存全冷；阅读段落冷启动优化之前是 2286 秒）。
 数据库或渲染变慢时仍可能超过 RabbitMQ 的 `consumer_timeout`（默认 30 分钟），建议调大，否则跑到一半被服务端断开（开发机 `rabbitmq.conf` 是 333600000，约 92 小时）。
-生成的文件存在 Redis 集群里（7 天，`mint.tipitaka_export`），中间文件在 `storage/app/tmp/tipitaka-export/`，跑完即删。
+生成的文件存在默认磁盘的临时区 `{ATTACHMENTS_TEMPORARY_BUCKET_NAME}/tipitaka-exports/{channel}/{format}/{work-sn|category-id|channel}`
+（生产是 S3，下载时 302 跳到 S3 临时链接）。路径只按范围定，Redis 里的导出状态（7 天，`mint.tipitaka_export`）过期或译文改了，
+重新生成时覆盖同一个文件，不会积累旧文件。
+中间文件在 `storage/app/tmp/tipitaka-export/`，跑完即删。
 epub / docx 依赖服务器上的 `pandoc`（3.x，路径可用 `PANDOC_PATH` 指定）。
 
 `ai_translate_v2`（`rabbitmq:consume`）待第二阶段重构 worker 后补上。`content` 队列已移除（无消费者，发送端已注释，见 `SentenceController@update` 的 FIXME）。

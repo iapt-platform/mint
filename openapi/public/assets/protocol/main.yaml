@@ -815,10 +815,14 @@ paths:
     $ref: ./resources/auto/v3-email-certifications.yaml
   '/v3/glossaries/{kind}':
     $ref: ./resources/auto/v3-glossaries-kind.yaml
+  '/v3/group-invites/{token}':
+    $ref: ./resources/auto/v3-group-invites-token.yaml
   /v3/groups:
     $ref: ./resources/auto/v3-groups.yaml
   '/v3/groups/{group}':
     $ref: ./resources/auto/v3-groups-group.yaml
+  '/v3/groups/{group}/invite-links':
+    $ref: ./resources/auto/v3-groups-group-invite-links.yaml
   '/v3/groups/{group}/members':
     $ref: ./resources/auto/v3-groups-group-members.yaml
   '/v3/groups/{group}/members/{member}':

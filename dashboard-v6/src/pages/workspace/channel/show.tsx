@@ -7,7 +7,7 @@ import { ExportOutlined, TeamOutlined } from "@ant-design/icons";
 import ChapterInChannelList from "../../../components/channel/ChapterInChannelList";
 import ShareModal from "../../../components/share/ShareModal";
 
-import { articlePath, fullUrl } from "../../../utils";
+import { articlePath, fullUrl, libraryUrl } from "../../../utils";
 import type { IArticleParam } from "../../../types/article";
 import { EResType } from "../../../components/share/utils";
 import { fetchChannel } from "../../../api/channel";
@@ -39,7 +39,7 @@ const Widget = () => {
             <Space>
               <Button
                 icon={<ExportOutlined />}
-                href={`${import.meta.env.VITE_APP_API_SERVER}/library/tipitaka/channels/${channelId}`}
+                href={libraryUrl(`tipitaka/channels/${channelId}`)}
                 target="_blank"
               >
                 {intl.formatMessage({
