@@ -92,7 +92,7 @@ const DataImportWidget = ({
         fieldProps={{
           name: "file",
         }}
-        action={`${import.meta.env.BASE_URL}/api/v2/attachments?is_tmp=true`}
+        action={`/api/v2/attachments?is_tmp=true`}
       />
     </ModalForm>
   );

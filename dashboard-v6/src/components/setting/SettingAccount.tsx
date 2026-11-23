@@ -112,7 +112,7 @@ const SettingAccountWidget = () => {
             return true;
           },
         }}
-        action={`${import.meta.env.BASE_URL}/api/v2/attachment?type=avatar`}
+        action={`/api/v2/attachment?type=avatar`}
         extra="必须为正方形。最大512*512"
       />
       <ProFormText
