@@ -9,6 +9,7 @@ use App\Services\Markup\Render\RenderContext;
 /**
  * 交给前端 `article` 组件嵌入的模板（{{article}}、{{chapter}}）共用的输出：
  * props 的拼法、纯文本只留标题、html 不输出（只有前端组件能渲染）。
+ * 标题走 {@see self::title()}，模板可覆盖。
  */
 trait EmbedsArticle
 {
@@ -21,7 +22,7 @@ trait EmbedsArticle
         $props = ['type' => $type, 'id' => $id];
         // style 为空时不给：前端组件用它自己的默认值（modal），传空串反而什么都不渲染
         foreach ($optional as $name) {
-            $value = (string) $call->param($name);
+            $value = $name === 'title' ? $this->title($call) : (string) $call->param($name);
             if ($value !== '') {
                 $props[$name] = $value;
             }
@@ -31,9 +32,17 @@ trait EmbedsArticle
         return $props;
     }
 
+    /**
+     * 显示的标题（props 与纯文本共用）；嵌入经文的模板按 {@see CitesParagraph} 补缺省标题。
+     */
+    protected function title(Call $call): string
+    {
+        return (string) $call->param('title');
+    }
+
     public function plain(Call $call, RenderContext $ctx, Format $format): string
     {
-        return $format === Format::Prompt ? '' : (string) $call->param('title');
+        return $format === Format::Prompt ? '' : $this->title($call);
     }
 
     public function html(Call $call, RenderContext $ctx): string

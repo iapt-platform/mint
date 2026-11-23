@@ -482,6 +482,24 @@ describe('templates without data', function () {
         expect(markupRender('{{chapter|1-2|T}}', Format::Prompt))->toBe('');
     });
 
+    it('titles para and chapter references with the wikipali abbreviation and paragraph', function () {
+        // pali_serieses：book 1 自 para 2 起是 namakkāra.
+        expect(markupTree('{{para|id=1-2|style=reference}}')[0]['props']['title'])->toBe('namakkāra.2');
+        expect(markupTree('{{chapter|1-5|style=reference}}')[0]['props']['title'])->toBe('namakkāra.5');
+        expect(markupTree('{{chapter|book=1|para=5|style=reference}}')[0]['props']['title'])->toBe('namakkāra.5');
+        expect(markupTree('{{article|type=chapter|book=1|paragraphs=5|style=reference}}')[0]['props']['title'])->toBe('namakkāra.5');
+        expect(markupTree('{{article|type=para|id=1-5|style=reference}}')[0]['props']['title'])->toBe('namakkāra.5');
+        expect(markupRender('{{chapter|1-5|style=reference}}', Format::Text))->toBe('namakkāra.5');
+        expect(markupRender('{{para|id=1-2|style=reference}}', Format::Text))->toBe('namakkāra.2');
+
+        // 给了标题就用标题；不是 reference 不补；查不到缩写用 id；文章不补
+        expect(markupTree('{{chapter|1-5|T|style=reference}}')[0]['props']['title'])->toBe('T');
+        expect(markupTree('{{chapter|1-5|style=card}}')[0]['props'])->not->toHaveKey('title');
+        expect(markupTree('{{para|id=1-2|style=card}}')[0]['props']['title'])->toBe('');
+        expect(markupTree('{{chapter|99999-1|style=reference}}')[0]['props']['title'])->toBe('99999-1');
+        expect(markupTree('{{article|type=article|id=x|style=reference}}')[0]['props'])->not->toHaveKey('title');
+    });
+
     it('renders nissaya templates and nissaya channel lines', function () {
         expect(markupTree('{{nissaya|evaṃ|ဤသို့=thus}}')[0]['props'])
             ->toMatchArray(['pali' => 'evaṃ', 'meaning' => ['ဤသို့', 'thus']]);

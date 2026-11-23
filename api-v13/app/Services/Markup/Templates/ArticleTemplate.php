@@ -4,6 +4,7 @@ namespace App\Services\Markup\Templates;
 
 use App\Services\Markup\Ir\Call;
 use App\Services\Markup\Render\RenderContext;
+use App\Services\Markup\Templates\Concerns\CitesParagraph;
 use App\Services\Markup\Templates\Concerns\EmbedsArticle;
 
 /**
@@ -14,6 +15,7 @@ use App\Services\Markup\Templates\Concerns\EmbedsArticle;
  */
 final class ArticleTemplate extends Template
 {
+    use CitesParagraph;
     use EmbedsArticle;
 
     protected string $component = 'article';
@@ -48,11 +50,22 @@ final class ArticleTemplate extends Template
      */
     public function references(Call $call): array
     {
-        if (! in_array((string) $call->param('type'), ['chapter', 'para'], true)) {
-            return [];
-        }
+        return $this->citesParagraph($call) ? self::paragraphRef($this->paragraphId($call)) : [];
+    }
 
-        return self::paragraphRef($this->paragraphId($call));
+    /**
+     * 章节 / 段落：`style=reference` 且没给标题时显示缩写 + 段号，与 {{chapter}}、{{para}} 相同。
+     */
+    protected function title(Call $call): string
+    {
+        return $this->citesParagraph($call)
+            ? $this->citedTitle($call, $this->paragraphId($call))
+            : (string) $call->param('title');
+    }
+
+    private function citesParagraph(Call $call): bool
+    {
+        return in_array((string) $call->param('type'), ['chapter', 'para'], true);
     }
 
     private function paragraphId(Call $call): string

@@ -4,16 +4,18 @@ namespace App\Services\Markup\Templates;
 
 use App\Services\Markup\Ir\Call;
 use App\Services\Markup\Render\RenderContext;
+use App\Services\Markup\Templates\Concerns\CitesParagraph;
 use App\Services\Markup\Templates\Concerns\EmbedsArticle;
 
 /**
  * 嵌入经文章节：`{{chapter|id=book-para|title|channel|style}}`，没给 id 时用 `book=` + `para=`。
  *
  * 与 `{{article|type=chapter|…}}` 等价（前端是同一个 `article` 组件），
- * 后者拼 id 也走 {@see self::resolveId()}。
+ * 后者拼 id 也走 {@see self::resolveId()}。`style=reference` 且没给标题时显示缩写 + 段号（{@see CitesParagraph}）。
  */
 final class ChapterTemplate extends Template
 {
+    use CitesParagraph;
     use EmbedsArticle;
 
     protected string $component = 'article';
@@ -53,6 +55,11 @@ final class ChapterTemplate extends Template
     public function references(Call $call): array
     {
         return self::paragraphRef($this->id($call));
+    }
+
+    protected function title(Call $call): string
+    {
+        return $this->citedTitle($call, $this->id($call));
     }
 
     private function id(Call $call): string

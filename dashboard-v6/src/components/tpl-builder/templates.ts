@@ -46,10 +46,16 @@ export type TplValues = Record<string, string | undefined>;
 /** 前端 DisplayWrapper 支持的显示方式（types/template.ts 的 TDisplayStyle） */
 const DISPLAY_STYLES = ["modal", "card", "toggle", "link", "window", "popover"];
 
-const style = (defaultValue?: string): TplField => ({
+/** 嵌入经文的模板（chapter、para）另有行内引用 reference：不写标题时显示「缩写 + 段号」 */
+const PARAGRAPH_STYLES = [...DISPLAY_STYLES, "reference"];
+
+const style = (
+  defaultValue?: string,
+  options: string[] = DISPLAY_STYLES,
+): TplField => ({
   name: "style",
   kind: "select",
-  options: DISPLAY_STYLES,
+  options,
   defaultValue,
 });
 
@@ -94,7 +100,7 @@ export const TEMPLATES: TplSpec[] = [
       { name: "para", kind: "number" },
       { name: "title", kind: "text" },
       { name: "channel", kind: "channel" },
-      style(),
+      style(undefined, PARAGRAPH_STYLES),
     ],
   },
   {
@@ -102,7 +108,7 @@ export const TEMPLATES: TplSpec[] = [
     fields: [
       { name: "id", kind: "text", placeholder: "book-para", required: true },
       { name: "title", kind: "text" },
-      style(),
+      style(undefined, PARAGRAPH_STYLES),
     ],
   },
   {
