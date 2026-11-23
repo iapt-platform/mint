@@ -14,10 +14,6 @@ use Illuminate\Support\Facades\Facade;
  * @method static bool has(string $key)
  * @method static bool forget(string $key)
  * @method static int increment(string $key, int $value = 1)
- * @method static bool putBinary(string $key, string $bytes, \DateTimeInterface|\DateInterval|int|null $ttl = null)
- * @method static string|null getBinary(string $key)
- * @method static int|null binaryLength(string $key)
- * @method static string getBinaryRange(string $key, int $start, int $end)
  *
  * @see \App\Services\RedisCache
  */

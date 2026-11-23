@@ -131,30 +131,6 @@ test('increment 从 0 开始累加，返回新值', function () {
         ->and(RedisCache::get('c'))->toBe(6);
 });
 
-test('二进制原样往返，长度与区间读取正确', function () {
-    $bytes = "\x00\xff\x80PK\x03\x04".random_bytes(1000);
-    RedisCache::putBinary('/bin/a', $bytes, 60);
-
-    expect(RedisCache::getBinary('/bin/a'))->toBe($bytes)
-        ->and(RedisCache::binaryLength('/bin/a'))->toBe(strlen($bytes))
-        ->and(RedisCache::getBinaryRange('/bin/a', 2, 5))->toBe(substr($bytes, 2, 4))
-        ->and(RedisCache::getBinaryRange('/bin/a', 1000, 9999))->toBe(substr($bytes, 1000))
-        ->and(RedisCache::getBinaryRange('/bin/a', 99999, 100000))->toBe('');
-});
-
-test('二进制 key 不存在时读到 null，TTL <= 0 等同 forget', function () {
-    RedisCache::putBinary('/bin/b', 'x', 60);
-    RedisCache::putBinary('/bin/b', 'y', 0);
-
-    expect(RedisCache::getBinary('/bin/b'))->toBeNull()
-        ->and(RedisCache::binaryLength('/bin/b'))->toBeNull()
-        ->and(RedisCache::getBinaryRange('/bin/b', 0, 10))->toBe('');
-});
-
-test('非 UTF-8 字节用 put 存不了，必须走 putBinary', function () {
-    expect(fn () => RedisCache::put('/bin/c', "\xff\xfe"))->toThrow(JsonException::class);
-});
-
 /*
 | 第二部分：契约。连真实 Redis Cluster（mint.redis_cluster），证明 key 名带前缀、
 | 值是 JSON、整数是纯文本（ai-translate 用 int() 读 /task/{id}/pointer）、TTL 与写值一条命令落地，
@@ -232,21 +208,4 @@ test('不存在的 key 读到 null / 默认值，forget 返回 false', function 
     expect($cache->get('missing'))->toBeNull()
         ->and($cache->get('missing', 'd'))->toBe('d')
         ->and($cache->forget('missing'))->toBeFalse();
-})->skip(fn () => ! realRedisAvailable(), '没有可用的 Redis Cluster');
-
-test('二进制在集群里原样落地、带 TTL，可按区间读', function () {
-    $cache = new RedisCacheService(prefix: redisCacheTestPrefix());
-    $bytes = random_bytes(3 * 1024 * 1024);
-    $cache->putBinary('bin', $bytes, 60);
-
-    $chunks = '';
-    for ($offset = 0; $offset < strlen($bytes); $offset += 1048576) {
-        $chunks .= $cache->getBinaryRange('bin', $offset, $offset + 1048575);
-    }
-
-    expect(rawRedisCluster()->get(redisCacheTestPrefix().'/bin'))->toBe($bytes)
-        ->and(rawRedisCluster()->ttl(redisCacheTestPrefix().'/bin'))->toBeGreaterThan(0)->toBeLessThanOrEqual(60)
-        ->and($cache->binaryLength('bin'))->toBe(strlen($bytes))
-        ->and($chunks)->toBe($bytes)
-        ->and($cache->binaryLength('missing-bin'))->toBeNull();
 })->skip(fn () => ! realRedisAvailable(), '没有可用的 Redis Cluster');
