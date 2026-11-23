@@ -16,7 +16,7 @@ import { useAppSelector } from "../../../hooks";
 import { currentUser } from "../../../reducers/current-user";
 
 import { useState } from "react";
-import { articlePath, fullUrl } from "../../../utils";
+import { articlePath, fullUrl, libraryUrl } from "../../../utils";
 
 import type { TRole } from "../../../api/Auth";
 import { useIntl } from "react-intl";
@@ -135,8 +135,7 @@ const TypeArticleReaderToolbarWidget = ({
                     break;
                   case "open_in_library":
                     window.open(
-                      import.meta.env.VITE_APP_API_SERVER +
-                        `/library/anthology/${anthologyId}/read/${articleId}`,
+                      libraryUrl(`anthology/${anthologyId}/read/${articleId}`),
                       "_blank"
                     );
                     break;

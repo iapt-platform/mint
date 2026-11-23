@@ -28,7 +28,7 @@ import type { TTarget } from "../../types";
 import TocPath from "../tipitaka/TocPath";
 import ParagraphNode from "../tipitaka/ParagraphNode";
 import "./article.css";
-import { articlePath, fullUrl } from "../../utils";
+import { articlePath, fullUrl, libraryUrl } from "../../utils";
 
 import { useIntl } from "react-intl";
 
@@ -200,8 +200,7 @@ const TypePali = ({
                 if (key === "tpl") setTplOpen(true);
                 if (key === "library" && channels) {
                   window.open(
-                    import.meta.env.VITE_APP_API_SERVER +
-                      `/library/tipitaka/${id}/read?channel=${channels[0]}`,
+                    libraryUrl(`tipitaka/${id}/read?channel=${channels[0]}`),
                     "_blank",
                   );
                 }

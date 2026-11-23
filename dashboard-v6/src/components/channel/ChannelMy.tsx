@@ -35,6 +35,7 @@ import TokenModal from "../token/TokenModal";
 import NissayaAlignerModal from "../nissaya/NissayaAlignerModal";
 import { useChannelProgress } from "./hooks/useChannelProgress";
 import type { IChannel, IChannelItem } from "../../api/channel";
+import { libraryUrl } from "../../utils";
 
 const { Search } = Input;
 
@@ -336,8 +337,7 @@ const ChannelMy = ({
                         break;
                       case "library":
                         window.open(
-                          import.meta.env.VITE_APP_API_SERVER +
-                            `/library/tipitaka?channel=${ch.id}`,
+                          libraryUrl(`tipitaka?channel=${ch.id}`),
                           "_blank"
                         );
                         break;

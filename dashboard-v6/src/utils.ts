@@ -37,6 +37,24 @@ export function fullUrl(url: string): string {
   return path ? `${prefix}/${path}` : `${prefix}/`;
 }
 
+/**
+ * 藏经阁（Laravel library）地址：VITE_APP_API_SERVER + /library/<path>。
+ * library 不在 v6 的 BASE_URL 下，所以不能用 fullUrl()。
+ * VITE_APP_API_SERVER 为空时是同域的相对路径。
+ * @param path library 下的路径，如 `tipitaka?channel=xxx`（前导 "/" 可有可无）
+ * @param absolute 要复制给别人的链接传 true：VITE_APP_API_SERVER 不是完整地址时补上当前域名
+ */
+export function libraryUrl(path: string, absolute = false): string {
+  const server = (import.meta.env.VITE_APP_API_SERVER ?? "").replace(
+    /\/+$/,
+    ""
+  );
+  const url = `${server}/library/${path.replace(/^\/+/, "")}`;
+  return absolute && !/^https?:\/\//.test(url)
+    ? window.location.origin + url
+    : url;
+}
+
 export function PaliToEn(pali: string): string {
   let output: string = pali.toLowerCase();
   output = output.replaceAll("ā", "a");
