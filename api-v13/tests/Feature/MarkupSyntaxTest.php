@@ -697,9 +697,11 @@ describe('toc', function () {
         ]);
     });
 
-    it('keeps templates inside heading text', function () use ($source, $toc) {
+    it('gives plain text, not the templates inside heading text', function () use ($source, $toc) {
+        // 目录项是链接，再套一层术语链接会和跳转抢鼠标
         $link = $toc(markupTree($source))['children'][0]['children'][0]['children'][0];
-        expect(collect($link['children'])->firstWhere('name', 'term')['props']['word'])->toBe('dhamma');
+        expect($link['children'])->toBe([['type' => 'text', 'value' => '甲 dhamma']]);
+        expect(markupRender($source, Format::Html))->not->toMatch('/<nav class="toc">.*term-ref.*<\/nav>/s');
     });
 
     it('skips a hand-written heading right before it', function () use ($toc, $items) {

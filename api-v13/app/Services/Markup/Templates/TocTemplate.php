@@ -7,8 +7,10 @@ use App\Services\Markup\Ir\Call;
 use App\Services\Markup\Ir\Document;
 use App\Services\Markup\Ir\Element;
 use App\Services\Markup\Ir\Node;
+use App\Services\Markup\Ir\Text;
 use App\Services\Markup\Render\HtmlRenderer;
 use App\Services\Markup\Render\RenderContext;
+use App\Services\Markup\Render\TextRenderer;
 use App\Services\Markup\Templates\Concerns\OwnsBlockTitle;
 
 /**
@@ -18,7 +20,9 @@ use App\Services\Markup\Templates\Concerns\OwnsBlockTitle;
  * - 标题：目录自带一行标题，规则见 {@see OwnsBlockTitle}（labels.toc；`title=` 改文字或隐藏；
  *   紧跟在手写标题后面时不显示）
  * - 兼容旧写法：紧挨在 `{{toc}}` 前面的标题（手写的「## 目录」）不进目录
- * - 遍历整篇内容，写在哪里都能列全；标题里的术语、格式在目录里照常显示
+ * - 遍历整篇内容，写在哪里都能列全
+ * - 目录项只给纯文本：标题里的术语取译名、格式去掉。目录项本身是链接，再套一层术语链接
+ *   （悬停弹卡片、点击打开词条）会和跳转到标题抢鼠标
  *
  * tree：`{name: 'toc', props: {title}, children: [ul]}`；html：`<nav class="toc">`。
  */
@@ -105,11 +109,28 @@ final class TocTemplate extends Template
     }
 
     /**
+     * 目录项文字：标题的纯文本（术语取译名，没有译名取原词；格式去掉）。
+     *
+     * @param  list<Node>  $nodes
+     */
+    private function label(array $nodes, Call $call, RenderContext $ctx): string
+    {
+        $text = new RenderContext(
+            $ctx->options->with(['format' => Format::Text]),
+            $ctx->resolver,
+            new TextRenderer(Format::Text),
+            $ctx->idPrefix,
+        );
+
+        return trim((string) preg_replace('/\s+/u', ' ', $text->renderString(new Document($nodes, true, '', [], $call->scope, fragment: true))));
+    }
+
+    /**
      * 按层级嵌套的 `ul > li > a`。
      *
      * @param  list<array{level: int, id: string, nodes: list<Node>}>  $headings
      */
-    private function tree(array $headings): ?Element
+    private function tree(array $headings, Call $call, RenderContext $ctx): ?Element
     {
         if ($headings === []) {
             return null;
@@ -133,7 +154,7 @@ final class TocTemplate extends Template
                 $stack[] = ['level' => end($stack)['level'] + 1, 'list' => $nested];
             }
             end($stack)['list']->children[] = new Element('li', [], [
-                new Element('a', ['href' => '#'.$heading['id']], $heading['nodes']),
+                new Element('a', ['href' => '#'.$heading['id']], [new Text($this->label($heading['nodes'], $call, $ctx))]),
             ]);
         }
 
@@ -152,14 +173,14 @@ final class TocTemplate extends Template
 
     public function children(Call $call, RenderContext $ctx): ?Document
     {
-        $list = $this->tree($this->headings($call, $ctx));
+        $list = $this->tree($this->headings($call, $ctx), $call, $ctx);
 
         return $list === null ? null : new Document([$list], false, '', [], $call->scope);
     }
 
     public function html(Call $call, RenderContext $ctx): string
     {
-        $list = $this->tree($this->headings($call, $ctx));
+        $list = $this->tree($this->headings($call, $ctx), $call, $ctx);
         if ($list === null || ! $ctx->renderer instanceof HtmlRenderer) {
             return '';
         }
@@ -205,7 +226,7 @@ final class TocTemplate extends Template
         $title = $this->title($call, $ctx);
         $out = $title === '' ? [] : [$title];
         foreach ($headings as $heading) {
-            $text = trim($ctx->renderString(new Document($heading['nodes'], true, '', [], $call->scope, fragment: true)));
+            $text = $this->label($heading['nodes'], $call, $ctx);
             $out[] = str_repeat('  ', $heading['level'] - $top).$line($text, $heading['id']);
         }
 
