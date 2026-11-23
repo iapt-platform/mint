@@ -1,23 +1,28 @@
 <?php
 
+use App\Facades\RedisCache;
 use App\Models\BookTitle;
 use App\Models\Channel;
 use App\Models\PaliText;
 use App\Models\ProgressChapter;
+use App\Models\Sentence;
 use App\Models\Tag;
 use App\Models\TagMap;
 use App\Services\V3\TipitakaExportQueue;
 use App\Services\V3\TipitakaExportService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 /*
 | 三藏下载 /v3/tipitaka-exports。这里断言的是形状而非契约（spectator 未安装）。
 | 生成在测试里同步调 TipitakaExportService::run()，队列换成 mock，不连 RabbitMQ；
-| 文件进的是 RedisCacheFake（TestCase 已换好）。
+| 文件进的是 Storage::fake() 的默认磁盘（本地磁盘的流式下载）；S3 的跳转单独一条测。
 */
 
 uses(RefreshDatabase::class);
+
+beforeEach(fn () => Storage::fake());
 
 function exportPaliText(int $book, int $paragraph, int $level, int $chapterLen, string $toc = ''): PaliText
 {
@@ -155,7 +160,6 @@ it('generates an html work export and serves it through the signed link', functi
     $file = $this->get($data['download_url'])
         ->assertOk()
         ->assertHeader('Content-Type', 'application/zip')
-        ->assertHeader('ETag', '"'.$data['id'].'"')
         ->assertHeader('Accept-Ranges', 'bytes');
     expect($file->headers->get('Content-Disposition'))->toContain("filename*=utf-8''");
     $bytes = $file->streamedContent();
@@ -174,7 +178,56 @@ it('generates an html work export and serves it through the signed link', functi
         ->assertHeader('Content-Range', "bytes 10-19/{$data['size']}");
     expect($part->streamedContent())->toBe(substr($bytes, 10, 10));
     $this->get($data['download_url'], ['Range' => 'bytes=999999999-'])->assertStatus(416);
-    $this->get($data['download_url'], ['If-None-Match' => '"'.$data['id'].'"'])->assertStatus(304);
+    $this->get($data['download_url'], ['If-None-Match' => $file->headers->get('ETag')])->assertStatus(304);
+});
+
+it('stores the file in the temporary area and redirects to a signed S3 link when the disk is S3', function () {
+    config(['filesystems.default' => 's3']);
+    Storage::fake('s3')->buildTemporaryUrlsUsing(
+        fn (string $path, DateTimeInterface $expiration, array $options) => "https://s3.test/{$path}?".http_build_query($options)
+    );
+    fakeExportQueue();
+    ['channel' => $channel, 'sn' => $sn] = exportFixture();
+
+    $data = exportReady(['channel' => $channel, 'work' => $sn, 'format' => 'html']);
+    $path = config('mint.attachments.bucket_name.temporary')."/tipitaka-exports/{$channel}/html/work-{$sn}";
+    Storage::disk('s3')->assertExists($path);
+    expect(Storage::disk('s3')->size($path))->toBe($data['size']);
+
+    $location = $this->get($data['download_url'])->assertRedirect()->headers->get('Location');
+    expect($location)->toStartWith("https://s3.test/{$path}?")
+        ->and(urldecode($location))->toContain('ResponseContentDisposition=attachment;')->toContain("filename*=utf-8''");
+
+    // 文件被生命周期规则清掉了：状态还在也当作没有
+    Storage::disk('s3')->delete($path);
+    $this->get($data['download_url'])->assertNotFound();
+    $this->getJson("/api/v3/tipitaka-exports/{$data['id']}")->assertNotFound();
+});
+
+it('regenerates into the same file once the status expires or the translation changes', function () {
+    fakeExportQueue();
+    ['channel' => $channel, 'sn' => $sn] = exportFixture();
+    $path = config('mint.attachments.bucket_name.temporary')."/tipitaka-exports/{$channel}/html/work-{$sn}";
+
+    $first = exportReady(['channel' => $channel, 'work' => $sn, 'format' => 'html']);
+    expect(Storage::files(dirname($path)))->toBe([$path]);
+
+    // Redis 里的状态过期：重新生成，同一个 id、同一个文件
+    RedisCache::forget("/tipitaka-export/status/{$first['id']}");
+    $again = exportReady(['channel' => $channel, 'work' => $sn, 'format' => 'html']);
+    expect($again['id'])->toBe($first['id'])
+        ->and(Storage::files(dirname($path)))->toBe([$path]);
+
+    // 译文改了：换了 id，仍覆盖同一个文件；旧 id 的链接拿到的是新文件
+    $sentence = Sentence::where('channel_uid', $channel)->orderBy('paragraph')->first();
+    // 范围统计（指纹的来源）缓存 5 分钟；指纹看 max(updated_at)，改动要晚于建好的数据
+    $this->travel(6)->minutes();
+    $sentence->forceFill(['content' => '改过的译文', 'strlen' => 5])->save();
+    $changed = exportReady(['channel' => $channel, 'work' => $sn, 'format' => 'html']);
+    expect($changed['id'])->not->toBe($first['id'])
+        ->and(Storage::files(dirname($path)))->toBe([$path]);
+    $files = unzipExport($this->get($first['download_url'])->assertOk()->streamedContent());
+    expect(array_values($files)[0])->toContain('改过的译文');
 });
 
 it('rejects the file link without a valid signature', function () {

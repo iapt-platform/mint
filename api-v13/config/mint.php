@@ -216,9 +216,10 @@ return [
     'tipitaka_export' => [
         // 生成前按范围内句子的 strlen 之和估算，超过就 422，不排队
         'max_source_chars' => (int) env('TIPITAKA_EXPORT_MAX_SOURCE_CHARS', 160 * 1024 * 1024),
-        // 生成后的文件超过就判失败、不写 Redis（单个值太大会撑爆从库同步缓冲，见 RedisCache 类注释）
+        // 生成后的文件超过就判失败、不上传（整个文件在 worker 内存里拼好再传，cs6 整个 channel 的 html zip 是 44MB）
         'max_file_bytes' => (int) env('TIPITAKA_EXPORT_MAX_FILE_BYTES', 64 * 1024 * 1024),
-        // 文件与状态在 Redis 里保留多久
+        // 导出状态在 Redis 里保留多久。文件在临时区（mint.attachments.bucket_name.temporary/tipitaka-exports/），
+        // 路径按范围固定：状态过期或译文改了，重新生成时覆盖同一个文件
         'ttl' => 7 * 24 * 3600,
         // 排队 / 生成中的状态多久没更新就当作 worker 丢了，下次请求重新排队
         'stale_after' => 1800,

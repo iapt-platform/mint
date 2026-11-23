@@ -2,18 +2,26 @@
 
 namespace App\Services\V3;
 
-use App\Facades\RedisCache;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
- * 把 Redis 里的导出文件流给客户端：按 1MB 分块 GETRANGE 读，不把整个文件读进 PHP 内存；
- * 支持单段 `Range`（mobile 断点续传）与 `If-None-Match`（id 即内容指纹，可当强 ETag）。
+ * 把临时区里的导出文件交给客户端。
+ *
+ * - 默认磁盘是 S3（生产）：302 跳到 S3 的临时签名链接，流量不经 PHP；文件名由链接参数给，
+ *   类型与离线包的 `Content-Encoding: gzip` 已写在对象上，`Range` / `If-None-Match` 由 S3 处理。
+ * - 其他磁盘（本地开发）：自己流式读，按 1MB 分块，不把整个文件读进内存；
+ *   支持单段 `Range`（mobile 断点续传）与 `If-None-Match`。ETag 按文件的大小与修改时间算，不用导出 id：
+ *   同一范围重新生成会覆盖同一个文件，旧 id 的链接拿到的是新文件。
  */
 class TipitakaExportDownload
 {
     private const CHUNK = 1024 * 1024;
+
+    /** 跳去 S3 的签名链接有效多久（秒）。每次下载现签；给慢速网络下的大文件留足时间。 */
+    private const REDIRECT_TTL = 3600;
 
     public function __construct(private readonly TipitakaExportService $exports) {}
 
@@ -23,14 +31,21 @@ class TipitakaExportDownload
         if ($file === null) {
             abort(404, __('messages.export_not_found'));
         }
-        $etag = '"'.$id.'"';
+        $disposition = HeaderUtils::makeDisposition(
+            HeaderUtils::DISPOSITION_ATTACHMENT,
+            $file['filename'],
+            $this->asciiFallback($file['filename']),
+        );
+        if (config('filesystems.disks.'.config('filesystems.default').'.driver') === 's3') {
+            return redirect()->away(Storage::temporaryUrl($file['path'], now()->addSeconds(self::REDIRECT_TTL), [
+                'ResponseContentDisposition' => $disposition,
+            ]));
+        }
+
+        $etag = '"'.$file['size'].'-'.Storage::lastModified($file['path']).'"';
         $headers = [
             'Content-Type' => $file['content_type'],
-            'Content-Disposition' => HeaderUtils::makeDisposition(
-                HeaderUtils::DISPOSITION_ATTACHMENT,
-                $file['filename'],
-                $this->asciiFallback($file['filename']),
-            ),
+            'Content-Disposition' => $disposition,
             'Accept-Ranges' => 'bytes',
             'ETag' => $etag,
             'Cache-Control' => 'private, max-age=0, must-revalidate',
@@ -62,13 +77,25 @@ class TipitakaExportDownload
             $headers['Content-Range'] = "bytes {$start}-{$end}/{$size}";
         }
         $headers['Content-Length'] = (string) ($end - $start + 1);
-        $key = $this->exports->fileKey($id);
+        $path = $file['path'];
 
-        return new StreamedResponse(function () use ($key, $start, $end) {
-            for ($offset = $start; $offset <= $end; $offset += self::CHUNK) {
-                echo RedisCache::getBinaryRange($key, $offset, min($end, $offset + self::CHUNK - 1));
-                flush();
+        return new StreamedResponse(function () use ($path, $start, $end) {
+            $stream = Storage::readStream($path);
+            if ($stream === null) {
+                return;
             }
+            fseek($stream, $start);
+            $remaining = $end - $start + 1;
+            while ($remaining > 0 && ! feof($stream)) {
+                $chunk = fread($stream, min(self::CHUNK, $remaining));
+                if ($chunk === false || $chunk === '') {
+                    break;
+                }
+                echo $chunk;
+                flush();
+                $remaining -= strlen($chunk);
+            }
+            fclose($stream);
         }, $status, $headers);
     }
 
