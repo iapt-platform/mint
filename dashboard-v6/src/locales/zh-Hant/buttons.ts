@@ -121,6 +121,11 @@ const items = {
   "buttons.account.switch": "切換帳號",
   "buttons.teamspace.leave": "切回個人空間",
   "buttons.back": "返回",
+  "buttons.group.invite.link": "取得邀請連結",
+  "buttons.group.invite.accept": "同意加入",
+  "buttons.group.invite.sign-in": "登入後加入",
+  "buttons.group.invite.enter": "進入團隊空間",
+  "buttons.group.invite.decline": "暫不加入",
 };
 
 export default items;

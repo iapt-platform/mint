@@ -24,6 +24,9 @@ use Illuminate\Validation\ValidationException;
  */
 class GroupMemberService
 {
+    /** 加人不指定角色时的默认角色：只读 */
+    public const DEFAULT_ROLE = GroupMember::ROLE_READER;
+
     public function __construct(private readonly GroupAbilityService $abilities) {}
 
     /**
@@ -37,10 +40,7 @@ class GroupMemberService
      */
     public function listForUser(string $userUid, array $filters, int $perPage): LengthAwarePaginator
     {
-        return GroupMember::with([
-            'group:uid,name,description,owner,status,created_at',
-            'group.'.UserService::eagerLoadActor('creator')[0],
-        ])
+        return GroupMember::with($this->myGroupRelations())
             ->where('user_id', $userUid)
             ->whereHas('group', function ($query) use ($userUid, $filters) {
                 if (array_key_exists('owned', $filters)) {
@@ -95,7 +95,7 @@ class GroupMemberService
             throw ValidationException::withMessages(['user_id' => __('messages.group_member_exists')]);
         }
 
-        $role = $data['role'] ?? GroupMember::ROLE_READER;
+        $role = $data['role'] ?? self::DEFAULT_ROLE;
         $member = new GroupMember;
         $member->forceFill([
             'id' => app('snowflake')->id(),
@@ -107,6 +107,20 @@ class GroupMemberService
         ])->save();
 
         return $member->load(UserService::eagerLoadActor()[0]);
+    }
+
+    /**
+     * 由 `$addedBy` 把用户拉进团队（邀请链接用）；已经是成员就原样返回，角色不变。
+     * 返回「我的团队」一行的形状（同 {@see listForUser()}）。
+     *
+     * @throws AuthorizationException `$addedBy` 不能管理成员
+     */
+    public function join(GroupInfo $group, string $userUid, string $addedBy): GroupMember
+    {
+        $member = $this->abilities->membership($userUid, $group->uid)
+            ?? $this->add($group, $addedBy, ['user_id' => $userUid, 'role' => self::DEFAULT_ROLE]);
+
+        return $member->load($this->myGroupRelations());
     }
 
     /**
@@ -144,6 +158,19 @@ class GroupMemberService
         }
 
         $member->delete();
+    }
+
+    /**
+     * 「我的团队」一行要带的团队信息（me/groups 的形状）。
+     *
+     * @return list<string>
+     */
+    private function myGroupRelations(): array
+    {
+        return [
+            'group:uid,name,description,owner,status,created_at',
+            'group.'.UserService::eagerLoadActor('creator')[0],
+        ];
     }
 
     /**

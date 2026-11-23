@@ -4,6 +4,7 @@ import { type ActionType, ProList } from "@ant-design/pro-components";
 import { Tag, Button, Layout, Popconfirm, Select, Space } from "antd";
 
 import GroupAddMember from "./AddMember";
+import GroupInviteLink from "./InviteLink";
 import User from "../auth/User";
 import type { IUser } from "../../api/Auth";
 import {
@@ -57,11 +58,14 @@ const GroupMemberWidget = ({ groupId }: IWidgetGroupFile) => {
           "-" +
           (memberCount?.toString() ?? "")
         }
-        toolBarRender={() => [
-          canManage && groupId ? (
-            <GroupAddMember key="add" groupId={groupId} onCreated={reload} />
-          ) : undefined,
-        ]}
+        toolBarRender={() =>
+          canManage && groupId
+            ? [
+                <GroupInviteLink key="invite" groupId={groupId} />,
+                <GroupAddMember key="add" groupId={groupId} onCreated={reload} />,
+              ]
+            : []
+        }
         request={async (params = {}) => {
           if (!groupId) {
             return { total: 0, success: false, data: [] };

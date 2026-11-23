@@ -201,6 +201,12 @@ const items = {
   "labels.route-error.404": "This content does not exist or has been deleted",
   "labels.route-error.403": "You are not allowed to view this content",
   "labels.route-error.other": "Failed to load. Please try again later",
+  "labels.group.invite.title": "Team Invitation",
+  "labels.group.invite.headline": "{inviter} invites you to join the team space “{name}”",
+  "labels.group.invite.role": "You will join as: {role}",
+  "labels.group.invite.link.hint": "Send this link to the people you want to invite. They join as Readers after accepting. The link is valid until {expires}.",
+  "labels.group.invite.invalid": "This invitation link is invalid or has expired. Ask a team manager for a new one.",
+  "labels.group.invite.member": "You are already a member of this team ({role}).",
 };
 
 export default items;

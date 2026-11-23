@@ -8579,6 +8579,29 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v3/group-invites/{token}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 查看团队邀请
+         * @description 不登录也能看（私有团队也一样，链接本身就是凭证）；登录了 `member_role` 给出
+         *     查看者在这个团队里现有的角色，还不是成员为 null。
+         *
+         *     实现：`V3\GroupInviteController@show`
+         */
+        get: operations["get_api_v3_group_invites_token_"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v3/groups": {
         parameters: {
             query?: never;
@@ -8640,6 +8663,29 @@ export interface paths {
          *     实现：`V3\GroupController@update`
          */
         patch: operations["patch_api_v3_groups_group_"];
+        trace?: never;
+    };
+    "/v3/groups/{group}/invite-links": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 签一张团队邀请链接
+         * @description 团队的 owner / manager 才能调用。7 天有效，经它加入的成员角色是 reader（只读）。
+         *     链接不能单独作废：签发人被移出团队或降为 editor / reader 时，他签的链接全部失效。
+         *
+         *     实现：`V3\GroupInviteLinkController@store`
+         */
+        post: operations["post_api_v3_groups_group_invite_links"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/v3/groups/{group}/members": {
@@ -8959,11 +9005,19 @@ export interface paths {
          * 列出我加入的团队
          * @description 每条带我在团队里的角色（owner / manager / editor / reader），按加入时间排序。
          *
-         *     实现：`V3\MeGroupController@__invoke`
+         *     实现：`V3\MeGroupController@index`
          */
         get: operations["get_api_v3_me_groups"];
         put?: never;
-        post?: never;
+        /**
+         * 凭邀请链接加入团队
+         * @description `invite` 是邀请链接里的 token（见 `POST /v3/groups/{group}/invite-links`），
+         *     加入后角色是 reader（只读）。已经是成员时原样返回现有的成员身份（200，角色不变）。
+         *     只给人类账号，AI 模型的 token 403。
+         *
+         *     实现：`V3\MeGroupController@store`
+         */
+        post: operations["post_api_v3_me_groups"];
         delete?: never;
         options?: never;
         head?: never;
@@ -39286,6 +39340,69 @@ export interface operations {
             422: components["responses"]["ProblemValidation"];
         };
     };
+    get_api_v3_group_invites_token_: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 邀请链接里的 token */
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            group?: {
+                                id?: string;
+                                name?: string;
+                                description?: string | null;
+                                status?: number;
+                                owner?: {
+                                    id?: string;
+                                    nickName?: string;
+                                    userName?: string;
+                                    realName?: string;
+                                    sn?: number;
+                                    avatar?: string;
+                                    roles?: string[];
+                                } | null;
+                            };
+                            inviter?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string | null;
+                                roles?: string[] | null;
+                            };
+                            role?: string;
+                            expires_at?: string;
+                            member_role?: string | null;
+                        };
+                    };
+                };
+            };
+            /** @description 链接无效、已过期，或签发人已不能邀请 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
     get_api_v3_groups: {
         parameters: {
             query?: {
@@ -39569,6 +39686,61 @@ export interface operations {
             };
             401: components["responses"]["ProblemUnauthorized"];
             /** @description 不能修改这个团队 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    post_api_v3_groups_group_invite_links: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 团队 uid */
+                group: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            token?: string;
+                            role?: string;
+                            expires_at?: string;
+                        };
+                    };
+                };
+            };
+            /** @description 签发成功 */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            token?: string;
+                            role?: string;
+                            expires_at?: string;
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            /** @description 不能管理这个团队的成员，或用 AI 模型的 token 调用 */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -40496,6 +40668,95 @@ export interface operations {
                 };
             };
             401: components["responses"]["ProblemUnauthorized"];
+            422: components["responses"]["ProblemValidation"];
+        };
+    };
+    post_api_v3_me_groups: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @description 邀请链接里的 token */
+                    invite: string;
+                };
+            };
+        };
+        responses: {
+            /** @description 成功 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            name?: string;
+                            description?: string | null;
+                            owner_id?: string;
+                            owner?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            status?: number;
+                            role?: string;
+                            member_id?: string;
+                            created_at?: string;
+                            joined_at?: string;
+                        };
+                    };
+                };
+            };
+            /** @description 已加入 */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            id?: string;
+                            name?: string;
+                            description?: string | null;
+                            owner_id?: string;
+                            owner?: {
+                                id?: string;
+                                nickName?: string;
+                                userName?: string;
+                                realName?: string;
+                                sn?: number;
+                                avatar?: string;
+                                roles?: string[];
+                            } | null;
+                            status?: number;
+                            role?: string;
+                            member_id?: string;
+                            created_at?: string;
+                            joined_at?: string;
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["ProblemUnauthorized"];
+            /** @description 用 AI 模型的 token 调用 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
             422: components["responses"]["ProblemValidation"];
         };
     };

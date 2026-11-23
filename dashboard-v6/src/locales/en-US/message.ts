@@ -20,6 +20,7 @@ const items = {
   "message.confirm-password.validate.fail": "password validate fail",
   "message.delete.success": "delete record {count}",
   "message.task.status.change": "Do you want change statue to {status}?",
+  "message.group.invite.joined": "You have joined “{name}”",
 };
 
 export default items;

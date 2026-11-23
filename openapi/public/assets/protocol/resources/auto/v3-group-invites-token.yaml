@@ -1,0 +1,67 @@
+# 由 openapi/scripts/generate.php 生成，请勿手改；补充写到 overrides/v3-group-invites-token.yaml
+get:
+  summary: 查看团队邀请
+  tags:
+    - group-invites
+  operationId: get_api_v3_group_invites_token_
+  description: |-
+    不登录也能看（私有团队也一样，链接本身就是凭证）；登录了 `member_role` 给出
+    查看者在这个团队里现有的角色，还不是成员为 null。
+
+    实现：`V3\GroupInviteController@show`
+  security:
+    - {  }
+    -
+      bearerAuth: []
+  parameters:
+    -
+      name: token
+      in: path
+      required: true
+      schema:
+        type: string
+      description: '邀请链接里的 token'
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  group:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      name: { type: string }
+                      description: { type: string, nullable: true }
+                      status: { type: integer }
+                      owner: { type: object, properties: { id: { type: string }, nickName: { type: string }, userName: { type: string }, realName: { type: string }, sn: { type: integer }, avatar: { type: string }, roles: { type: array, items: { type: string } } }, nullable: true }
+                  inviter:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string, nullable: true }
+                      roles: { type: array, items: { type: string }, nullable: true }
+                  role:
+                    type: string
+                  expires_at:
+                    type: string
+                  member_role:
+                    type: string
+                    nullable: true
+    404:
+      description: 链接无效、已过期，或签发人已不能邀请
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'

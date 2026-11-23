@@ -433,7 +433,7 @@ class TipitakaExportsApi
      *
      * @throws \WikipaliApi\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \SplFileObject|\SplFileObject|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails
+     * @return \SplFileObject|\SplFileObject|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails
      */
     public function getApiV3TipitakaExportsExportFile($export, $expires, $signature, string $contentType = self::contentTypes['getApiV3TipitakaExportsExportFile'][0])
     {
@@ -453,7 +453,7 @@ class TipitakaExportsApi
      *
      * @throws \WikipaliApi\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \SplFileObject|\SplFileObject|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \SplFileObject|\SplFileObject|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails|\WikipaliApi\Model\ProblemDetails, HTTP status code, HTTP response headers (array of strings)
      */
     public function getApiV3TipitakaExportsExportFileWithHttpInfo($export, $expires, $signature, string $contentType = self::contentTypes['getApiV3TipitakaExportsExportFile'][0])
     {
@@ -492,6 +492,12 @@ class TipitakaExportsApi
                 case 206:
                     return $this->handleResponseWithDataType(
                         '\SplFileObject',
+                        $request,
+                        $response,
+                    );
+                case 302:
+                    return $this->handleResponseWithDataType(
+                        '\WikipaliApi\Model\ProblemDetails',
                         $request,
                         $response,
                     );
@@ -555,6 +561,14 @@ class TipitakaExportsApi
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
                         '\SplFileObject',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 302:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\WikipaliApi\Model\ProblemDetails',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);

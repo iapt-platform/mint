@@ -63,6 +63,7 @@ return [
     'group_has_resources' => '团队名下还有资源，请先转让或删除它们再删除团队。',
     'group_name_exists' => '你名下已经有同名的团队了。',
     'group_share_not_found' => '这项资源没有共享给这个团队。',
+    'group_invite_invalid' => '邀请链接无效或已过期。',
     'agent_not_allowed' => 'AI 模型不能执行这个操作，请用人类账号。',
     'channel_forbidden' => '你没有权限执行这个操作。',
     'channel_studio_forbidden' => '你不能查看或管理这个工作室（团队）的版本。',

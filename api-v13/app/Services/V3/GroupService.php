@@ -212,6 +212,14 @@ class GroupService
     }
 
     /**
+     * 按 uid 取团队（带拥有者摘要），不判权限；不存在返回 null。
+     */
+    public function find(string $groupUid): ?GroupInfo
+    {
+        return $this->withCreator()->where('uid', $groupUid)->first();
+    }
+
+    /**
      * @return Builder<GroupInfo>
      */
     private function withCreator(): Builder

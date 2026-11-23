@@ -7,7 +7,7 @@ get:
   description: |-
     每条带我在团队里的角色（owner / manager / editor / reader），按加入时间排序。
 
-    实现：`V3\MeGroupController@__invoke`
+    实现：`V3\MeGroupController@index`
   security:
     -
       bearerAuth: []
@@ -78,5 +78,122 @@ get:
                 $ref: '../../main.yaml#/components/schemas/PaginationMeta'
     401:
       $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    422:
+      $ref: '../../main.yaml#/components/responses/ProblemValidation'
+post:
+  summary: 凭邀请链接加入团队
+  tags:
+    - groups
+  operationId: post_api_v3_me_groups
+  description: |-
+    `invite` 是邀请链接里的 token（见 `POST /v3/groups/{group}/invite-links`），
+    加入后角色是 reader（只读）。已经是成员时原样返回现有的成员身份（200，角色不变）。
+    只给人类账号，AI 模型的 token 403。
+
+    实现：`V3\MeGroupController@store`
+  security:
+    -
+      bearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            invite:
+              type: string
+              description: '邀请链接里的 token'
+          required:
+            - invite
+  responses:
+    200:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  description:
+                    type: string
+                    nullable: true
+                  owner_id:
+                    type: string
+                  owner:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string }
+                      roles: { type: array, items: { type: string } }
+                    nullable: true
+                  status:
+                    type: integer
+                  role:
+                    type: string
+                  member_id:
+                    type: string
+                  created_at:
+                    type: string
+                  joined_at:
+                    type: string
+    201:
+      description: 已加入
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  description:
+                    type: string
+                    nullable: true
+                  owner_id:
+                    type: string
+                  owner:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      nickName: { type: string }
+                      userName: { type: string }
+                      realName: { type: string }
+                      sn: { type: integer }
+                      avatar: { type: string }
+                      roles: { type: array, items: { type: string } }
+                    nullable: true
+                  status:
+                    type: integer
+                  role:
+                    type: string
+                  member_id:
+                    type: string
+                  created_at:
+                    type: string
+                  joined_at:
+                    type: string
+    401:
+      $ref: '../../main.yaml#/components/responses/ProblemUnauthorized'
+    403:
+      description: '用 AI 模型的 token 调用'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '../../main.yaml#/components/schemas/ProblemDetails'
     422:
       $ref: '../../main.yaml#/components/responses/ProblemValidation'

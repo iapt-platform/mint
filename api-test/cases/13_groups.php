@@ -1,10 +1,12 @@
 <?php
 
+use \WikipaliApi\Api\GroupInvitesApi;
 use \WikipaliApi\Api\GroupsApi;
 use \WikipaliApi\Model\PatchApiV3GroupsGroupMembersMemberRequest;
 use \WikipaliApi\Model\PatchApiV3GroupsGroupRequest;
 use \WikipaliApi\Model\PostApiV3GroupsGroupMembersRequest;
 use \WikipaliApi\Model\PostApiV3GroupsRequest;
+use \WikipaliApi\Model\PostApiV3MeGroupsRequest;
 
 /*
  * v3 团队：/v3/groups（搜索、建、看、改、删）、/v3/me/groups、成员、团队文档。
@@ -224,4 +226,53 @@ test('GET /v3/groups/{group}/shares → 200；（无 token）→ 401', function 
 
     $anon = request(fn () => api(GroupsApi::class)->getApiV3GroupsGroupSharesWithHttpInfo($group));
     assert_status(401, $anon, 'group shares 无 token');
+});
+
+/* ---- 邀请链接 ---- */
+
+test('POST /v3/groups/{group}/invite-links（无 token）→ 401；POST /v3/me/groups（无 token）→ 401', function () {
+    $res = request(fn () => api(GroupsApi::class)->postApiV3GroupsGroupInviteLinksWithHttpInfo('11111111-1111-4111-8111-111111111111'));
+    assert_status(401, $res, 'invite-links 无 token');
+    assert_problem($res, 'invite-links 无 token');
+
+    $body = new PostApiV3MeGroupsRequest();
+    $body->setInvite('a.b.c');
+    $join = request(fn () => api(GroupsApi::class)->postApiV3MeGroupsWithHttpInfo($body));
+    assert_status(401, $join, 'me/groups POST 无 token');
+});
+
+test('GET /v3/group-invites/{token}（伪造）→ 404；POST /v3/me/groups（伪造 / 缺 invite）→ 422', function () {
+    $token = required_token();
+    $fake = request(fn () => api(GroupInvitesApi::class)->getApiV3GroupInvitesTokenWithHttpInfo('a.b.c'));
+    assert_status(404, $fake, '伪造邀请');
+    assert_problem($fake, '伪造邀请');
+
+    $body = new PostApiV3MeGroupsRequest();
+    $body->setInvite('a.b.c');
+    $bad = request(fn () => api(GroupsApi::class, $token)->postApiV3MeGroupsWithHttpInfo($body));
+    assert_status(422, $bad, '伪造邀请加入');
+
+    $missing = raw('POST', '/v3/me/groups', [], [], $token);
+    assert_status(422, $missing, '缺 invite');
+});
+
+test('邀请链接一轮：签发 201 → 不登录打开 200 → 成员再同意 200（角色不变）', function () {
+    $token = required_token();
+    $group = test_group($token);
+
+    $issue = request(fn () => api(GroupsApi::class, $token)->postApiV3GroupsGroupInviteLinksWithHttpInfo($group));
+    assert_status(201, $issue, '签发邀请链接');
+    assert_eq('reader', $issue['body']['data']['role'] ?? null, '邀请链接的角色');
+    $invite = $issue['body']['data']['token'];
+
+    $show = request(fn () => api(GroupInvitesApi::class)->getApiV3GroupInvitesTokenWithHttpInfo($invite));
+    assert_status(200, $show, '打开邀请链接');
+    assert_eq($group, $show['body']['data']['group']['id'] ?? null, '邀请里的团队');
+    assert_eq(null, $show['body']['data']['member_role'] ?? null, '未登录时 member_role');
+
+    $body = new PostApiV3MeGroupsRequest();
+    $body->setInvite($invite);
+    $join = request(fn () => api(GroupsApi::class, $token)->postApiV3MeGroupsWithHttpInfo($body));
+    assert_status(200, $join, '已是成员再同意');
+    assert_eq('owner', $join['body']['data']['role'] ?? null, '再同意后角色不变');
 });

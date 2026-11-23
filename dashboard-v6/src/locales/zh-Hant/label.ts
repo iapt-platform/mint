@@ -205,6 +205,12 @@ const items = {
   "labels.route-error.404": "要找的內容不存在，或已被刪除",
   "labels.route-error.403": "你沒有權限查看這個內容",
   "labels.route-error.other": "載入失敗，請稍後再試",
+  "labels.group.invite.title": "團隊邀請",
+  "labels.group.invite.headline": "{inviter} 邀請你加入團隊空間「{name}」",
+  "labels.group.invite.role": "加入後的角色：{role}",
+  "labels.group.invite.link.hint": "把這個連結發給要邀請的人，對方同意後以「唯讀成員」加入。連結在 {expires} 前有效。",
+  "labels.group.invite.invalid": "邀請連結無效或已過期，請向團隊管理員索取新的連結。",
+  "labels.group.invite.member": "你已經是這個團隊的成員（{role}）。",
 };
 
 export default items;
