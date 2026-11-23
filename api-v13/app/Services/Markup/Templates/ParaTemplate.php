@@ -4,12 +4,16 @@ namespace App\Services\Markup\Templates;
 
 use App\Services\Markup\Ir\Call;
 use App\Services\Markup\Render\RenderContext;
+use App\Services\Markup\Templates\Concerns\CitesParagraph;
 
 /**
  * 嵌入经文段落：`{{para|id=book-para|title|style}}`。
+ * `style=reference` 且没给标题时显示缩写 + 段号（{@see CitesParagraph}）。
  */
 final class ParaTemplate extends Template
 {
+    use CitesParagraph;
+
     protected string $component = 'para';
 
     public function params(): array
@@ -24,7 +28,7 @@ final class ParaTemplate extends Template
     {
         $props = [
             'id' => (string) $call->param('id'),
-            'title' => (string) $call->param('title'),
+            'title' => $this->citedTitle($call, (string) $call->param('id')),
             'style' => (string) $call->param('style'),
         ];
         if ($call->scope->channels !== []) {
@@ -41,6 +45,6 @@ final class ParaTemplate extends Template
 
     public function text(Call $call, RenderContext $ctx): string
     {
-        return (string) $call->param('title');
+        return $this->citedTitle($call, (string) $call->param('id'));
     }
 }

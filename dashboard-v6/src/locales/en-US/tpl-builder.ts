@@ -9,6 +9,7 @@ const items = {
   "tpl-builder.select.attachment": "Choose from attachments",
 
   "tpl-builder.tpl.article": "Article / chapter",
+  "tpl-builder.tpl.chapter": "Chapter",
   "tpl-builder.tpl.para": "Paragraph",
   "tpl-builder.tpl.sent": "Sentence",
   "tpl-builder.tpl.quote": "Quote",
@@ -31,6 +32,8 @@ const items = {
 
   "tpl-builder.desc.article":
     "Embed an article, an anthology or a chapter / paragraph. A chapter can be given by book + paragraph instead of an id.",
+  "tpl-builder.desc.chapter":
+    "Embed a chapter; the id is book-paragraph, or give book + paragraph instead.",
   "tpl-builder.desc.para": "Embed a paragraph; the id is book-paragraph.",
   "tpl-builder.desc.sent":
     "Embed a sentence; the id is book-paragraph-start-end. Without a channel, the content's own channel is used.",

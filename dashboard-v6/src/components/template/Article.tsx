@@ -10,16 +10,12 @@ import TypeAnthology from "../article/TypeAnthology";
 import TypePali from "../article/TypePali";
 import TypePage from "../article/TypePage";
 import { articlePath, fullUrl } from "../../utils";
+import { DisplayWrapper } from "../general/DisplayWrapper";
 
 const { Text } = Typography;
 
 export type TDisplayStyle =
-  | "modal"
-  | "card"
-  | "toggle"
-  | "link"
-  | "window"
-  | "popover";
+  "modal" | "card" | "toggle" | "link" | "window" | "popover" | "reference";
 
 interface IWidgetChapterCtl {
   type?: ArticleType;
@@ -140,7 +136,7 @@ export const ArticleCtl = ({
 
   const channelsToken = channel?.split(",").map((item) => item.split("@"));
   channelsToken?.forEach((value) =>
-    sessionStorage.setItem(value[0], value[1] ?? "")
+    sessionStorage.setItem(value[0], value[1] ?? ""),
   );
   const orgChannels = channel
     ? channel.split(",").map((item) => item.split("@")[0])
@@ -184,7 +180,7 @@ export const ArticleCtl = ({
         {
           id: "buttons.open.in.new.tab",
         },
-        { item: "" }
+        { item: "" },
       )}
     </Link>
   );
@@ -252,6 +248,14 @@ export const ArticleCtl = ({
       break;
     case "window":
       output = <div style={{ width: "100%" }}>{article}</div>;
+      break;
+    case "reference":
+      // 行内引用：标题（缺省是后端给的「缩写 + 段号」）虚线下划线，悬停看正文
+      output = (
+        <DisplayWrapper style="reference" title={aTitle}>
+          {article}
+        </DisplayWrapper>
+      );
       break;
     default:
       break;

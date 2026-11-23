@@ -9,6 +9,7 @@ const items = {
   "tpl-builder.select.attachment": "從網盤選擇",
 
   "tpl-builder.tpl.article": "文章 / 章節",
+  "tpl-builder.tpl.chapter": "經文章節",
   "tpl-builder.tpl.para": "經文段落",
   "tpl-builder.tpl.sent": "句子",
   "tpl-builder.tpl.quote": "引用段落",
@@ -31,6 +32,8 @@ const items = {
 
   "tpl-builder.desc.article":
     "嵌入一篇文章、文集或一個章節 / 段落。章節可以只給書號 + 段號，不填 id。",
+  "tpl-builder.desc.chapter":
+    "嵌入一個章節，id 寫成 書號-段號，也可以不寫 id、改填書號與段號。",
   "tpl-builder.desc.para": "嵌入一段經文，id 寫成 書號-段號。",
   "tpl-builder.desc.sent":
     "嵌入一個句子，id 寫成 書號-段號-起始詞-結束詞；不填 channel 用內容所屬的版本。",

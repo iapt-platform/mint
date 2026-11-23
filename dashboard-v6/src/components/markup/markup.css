@@ -1,0 +1,9 @@
+/*
+ * antd 6 给每个 .ant-typography 都写死了 font-size: var(--ant-font-size)（14px），
+ * 标题里的术语、链接等模板组件（Typography.Link / Text）因此不随标题变大。
+ * 标题里的一律继承标题的字号与行高。
+ */
+.markup-view :is(h1, h2, h3, h4, h5, h6) .ant-typography {
+  font-size: inherit;
+  line-height: inherit;
+}

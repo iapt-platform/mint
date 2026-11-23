@@ -19,6 +19,7 @@ final class TemplateRegistry
         'ql' => QuoteLinkTemplate::class,
         'exercise' => ExerciseTemplate::class,
         'article' => ArticleTemplate::class,
+        'chapter' => ChapterTemplate::class,
         'nissaya' => NissayaTemplate::class,
         'mermaid' => MermaidTemplate::class,
         'qa' => QaTemplate::class,

@@ -43,4 +43,14 @@ class PaliSeriesesService
 
         return $result;
     }
+
+    /**
+     * wikipali 缩写 + 段号的引用，如 `dī.ni.1.168`（缩写本身以点结尾）。查不到缩写时为 null。
+     */
+    public function citation(int $book, int $paragraph): ?string
+    {
+        $abbr = $this->find($book, $paragraph)['abbr_wp'] ?? null;
+
+        return $abbr === null ? null : $abbr.$paragraph;
+    }
 }

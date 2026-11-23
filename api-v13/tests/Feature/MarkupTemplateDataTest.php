@@ -357,6 +357,12 @@ describe('ref', function () {
         expect($titles(markupDataTree($source)))->toBe(['second work', 'third work', 'first work']);
     });
 
+    it('collects references from chapter, by id or by book and para', function () use ($titles) {
+        expect($titles(markupDataTree('{{chapter|998-12}} {{chapter|book=997|para=3}}{{ref}}')))
+            ->toBe(['second work', 'third work']);
+        expect($titles(markupDataTree('{{chapter|title=t}}{{ref}}')))->toBe([]);
+    });
+
     it('picks the nearest title, counting a reference to the first paragraph of a work', function () use ($titles) {
         expect($titles(markupDataTree('{{para|id=998-10}}{{ref}}')))->toBe(['second work']);
         expect($titles(markupDataTree('{{para|id=998-9}}{{ref}}')))->toBe(['first work']);

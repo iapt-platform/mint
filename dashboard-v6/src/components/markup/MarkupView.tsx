@@ -3,6 +3,7 @@ import type { CSSProperties } from "react";
 
 import { renderNodes } from "./render";
 import type { MarkupNode } from "./types";
+import "./markup.css";
 
 const { Text } = Typography;
 
@@ -21,7 +22,10 @@ const MarkupView = ({ nodes, className, placeholder, style }: IWidget) => {
     return <Text type="secondary">{placeholder}</Text>;
   }
   return (
-    <Text className={className} style={style}>
+    <Text
+      className={className ? `markup-view ${className}` : "markup-view"}
+      style={style}
+    >
       {renderNodes(nodes)}
     </Text>
   );

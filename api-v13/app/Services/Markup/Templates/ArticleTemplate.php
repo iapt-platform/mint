@@ -2,16 +2,22 @@
 
 namespace App\Services\Markup\Templates;
 
-use App\Services\Markup\Format;
 use App\Services\Markup\Ir\Call;
 use App\Services\Markup\Render\RenderContext;
+use App\Services\Markup\Templates\Concerns\CitesParagraph;
+use App\Services\Markup\Templates\Concerns\EmbedsArticle;
 
 /**
- * 嵌入文章 / 章节：`{{article|type|id|title|channel|style|book|paragraphs|anthology}}`。
- * `type=chapter` 且没给 id 时由 book + paragraphs 拼出 id。
+ * 嵌入文章 / 文集 / 章节 / 段落：`{{article|type|id|title|channel|style|book|paragraphs|anthology}}`。
+ *
+ * 章节另有独立的 {@see ChapterTemplate}（`{{chapter}}`）；这里的 `type=chapter` 是旧写法，
+ * 没给 id 时由 book + paragraphs 拼出 id，拼法与它共用。
  */
 final class ArticleTemplate extends Template
 {
+    use CitesParagraph;
+    use EmbedsArticle;
+
     protected string $component = 'article';
 
     public function params(): array
@@ -34,29 +40,9 @@ final class ArticleTemplate extends Template
     public function props(Call $call, RenderContext $ctx): array
     {
         $type = (string) $call->param('type');
-        $id = (string) $call->param('id');
-        $book = (string) $call->param('book');
-        $paragraphs = (string) $call->param('paragraphs');
-        if ($type === 'chapter' && $id === '') {
-            $id = ((int) $book).'-'.((int) $paragraphs);
-        }
-        $props = ['type' => $type, 'id' => $id];
-        // style 为空时不给：前端组件用它自己的默认值（modal），传空串反而什么都不渲染
-        foreach (['style', 'channel', 'title', 'anthology'] as $name) {
-            $value = (string) $call->param($name);
-            if ($value !== '') {
-                $props[$name] = $value;
-            }
-        }
-        if ($book !== '') {
-            $props['book'] = $book;
-        }
-        if ($paragraphs !== '') {
-            $props['paragraphs'] = $paragraphs;
-        }
-        $props['parentChannels'] = $call->scope->channels;
+        $id = $type === 'chapter' ? $this->paragraphId($call) : (string) $call->param('id');
 
-        return $props;
+        return $this->embedProps($call, $type, $id, ['style', 'channel', 'title', 'anthology', 'book', 'paragraphs']);
     }
 
     /**
@@ -64,25 +50,30 @@ final class ArticleTemplate extends Template
      */
     public function references(Call $call): array
     {
-        $type = (string) $call->param('type');
-        if (! in_array($type, ['chapter', 'para'], true)) {
-            return [];
-        }
-        $id = (string) $call->param('id');
-        if ($id === '') {
-            $id = $call->param('book').'-'.$call->param('paragraphs');
-        }
-
-        return self::paragraphRef($id);
+        return $this->citesParagraph($call) ? self::paragraphRef($this->paragraphId($call)) : [];
     }
 
-    public function plain(Call $call, RenderContext $ctx, Format $format): string
+    /**
+     * 章节 / 段落：`style=reference` 且没给标题时显示缩写 + 段号，与 {{chapter}}、{{para}} 相同。
+     */
+    protected function title(Call $call): string
     {
-        return $format === Format::Prompt ? '' : (string) $call->param('title');
+        return $this->citesParagraph($call)
+            ? $this->citedTitle($call, $this->paragraphId($call))
+            : (string) $call->param('title');
     }
 
-    public function html(Call $call, RenderContext $ctx): string
+    private function citesParagraph(Call $call): bool
     {
-        return '';
+        return in_array((string) $call->param('type'), ['chapter', 'para'], true);
+    }
+
+    private function paragraphId(Call $call): string
+    {
+        return ChapterTemplate::resolveId(
+            (string) $call->param('id'),
+            (string) $call->param('book'),
+            (string) $call->param('paragraphs'),
+        );
     }
 }

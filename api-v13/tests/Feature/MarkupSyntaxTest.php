@@ -466,6 +466,40 @@ describe('templates without data', function () {
         expect(markupRender('{{article|type=article|id=x|title=T}}', Format::Prompt))->toBe('');
     });
 
+    it('renders chapter like article type=chapter', function () {
+        $legacy = markupTree('{{article|type=chapter|book=168|paragraphs=915|title=T}}')[0];
+        $chapter = markupTree('{{chapter|book=168|para=915|title=T}}')[0];
+        expect($chapter['name'])->toBe('article');
+        expect($chapter['props'])->toBe(['type' => 'chapter', 'id' => '168-915', 'title' => 'T', 'parentChannels' => []]);
+        expect($chapter['props'])->toBe(array_diff_key($legacy['props'], ['book' => 0, 'paragraphs' => 0]));
+
+        expect(markupTree('{{chapter|168-915|T|c1|card}}')[0]['props'])
+            ->toMatchArray(['id' => '168-915', 'title' => 'T', 'channel' => 'c1', 'style' => 'card']);
+        // id 优先于 book + para
+        expect(markupTree('{{chapter|id=1-2|book=3|para=4}}')[0]['props']['id'])->toBe('1-2');
+        expect(markupTree('{{chapter}}')[0]['props']['id'])->toBe('');
+        expect(markupRender('{{chapter|1-2|T}}', Format::Text))->toBe('T');
+        expect(markupRender('{{chapter|1-2|T}}', Format::Prompt))->toBe('');
+    });
+
+    it('titles para and chapter references with the wikipali abbreviation and paragraph', function () {
+        // pali_serieses：book 1 自 para 2 起是 namakkāra.
+        expect(markupTree('{{para|id=1-2|style=reference}}')[0]['props']['title'])->toBe('namakkāra.2');
+        expect(markupTree('{{chapter|1-5|style=reference}}')[0]['props']['title'])->toBe('namakkāra.5');
+        expect(markupTree('{{chapter|book=1|para=5|style=reference}}')[0]['props']['title'])->toBe('namakkāra.5');
+        expect(markupTree('{{article|type=chapter|book=1|paragraphs=5|style=reference}}')[0]['props']['title'])->toBe('namakkāra.5');
+        expect(markupTree('{{article|type=para|id=1-5|style=reference}}')[0]['props']['title'])->toBe('namakkāra.5');
+        expect(markupRender('{{chapter|1-5|style=reference}}', Format::Text))->toBe('namakkāra.5');
+        expect(markupRender('{{para|id=1-2|style=reference}}', Format::Text))->toBe('namakkāra.2');
+
+        // 给了标题就用标题；不是 reference 不补；查不到缩写用 id；文章不补
+        expect(markupTree('{{chapter|1-5|T|style=reference}}')[0]['props']['title'])->toBe('T');
+        expect(markupTree('{{chapter|1-5|style=card}}')[0]['props'])->not->toHaveKey('title');
+        expect(markupTree('{{para|id=1-2|style=card}}')[0]['props']['title'])->toBe('');
+        expect(markupTree('{{chapter|99999-1|style=reference}}')[0]['props']['title'])->toBe('99999-1');
+        expect(markupTree('{{article|type=article|id=x|style=reference}}')[0]['props'])->not->toHaveKey('title');
+    });
+
     it('renders nissaya templates and nissaya channel lines', function () {
         expect(markupTree('{{nissaya|evaṃ|ဤသို့=thus}}')[0]['props'])
             ->toMatchArray(['pali' => 'evaṃ', 'meaning' => ['ဤသို့', 'thus']]);
@@ -681,9 +715,11 @@ describe('toc', function () {
         ]);
     });
 
-    it('keeps templates inside heading text', function () use ($source, $toc) {
+    it('gives plain text, not the templates inside heading text', function () use ($source, $toc) {
+        // 目录项是链接，再套一层术语链接会和跳转抢鼠标
         $link = $toc(markupTree($source))['children'][0]['children'][0]['children'][0];
-        expect(collect($link['children'])->firstWhere('name', 'term')['props']['word'])->toBe('dhamma');
+        expect($link['children'])->toBe([['type' => 'text', 'value' => '甲 dhamma']]);
+        expect(markupRender($source, Format::Html))->not->toMatch('/<nav class="toc">.*term-ref.*<\/nav>/s');
     });
 
     it('skips a hand-written heading right before it', function () use ($toc, $items) {
