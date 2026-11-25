@@ -3,9 +3,9 @@
 > 2026-11-25。数据口径：本地开发库 `wikipali`（wbw_templates / pali_texts / book_titles）
 > 与 `storage/resources/pali_title/cs6_para.csv`。
 >
-> 前作 [related-paragraphs-redesign.md](related-paragraphs-redesign.md)（2026-03 审计、
-> 2026-09 第一批实施，工具链曾在 `scripts/related/`，2026-11-25 已删除，见 git 历史）的事实判断大多仍成立，本文不重复，
-> 只在用到时引用（记作「前作 §x」）。本文的不同之处在于**做法**：不再用独立脚本 + 影子表
+> 前作是 `related-paragraphs-redesign.md`（2026-03 审计、2026-09 第一批实施，工具链在 `scripts/related/`），
+> 文档与脚本都已于 2026-11-25 删除，要看去 git 历史（最后一版在 d1d2fe67e 之前）。
+> 本文用到它的结论时记作「前作 …」。本文的不同之处在于**做法**：不再用独立脚本 + 影子表
 > + 自动对齐，而是 `UpgradeRelatedParagraph` 直接从 wbw_templates 重建，差异全部写进
 > 每个 VRI book 一份的补丁文件，按 book_name 逐个解决。
 
