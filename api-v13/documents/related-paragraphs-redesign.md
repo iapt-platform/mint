@@ -1,7 +1,8 @@
 # related_paragraphs 段落关联体系 修复设计文档
 
 > **2026-11-25 起改走新方案**：命令直接从 wbw_templates 重建 + 每个 book 一份补丁，
-> 见 [related-paragraphs-rebuild.md](related-paragraphs-rebuild.md)。本文的事实判断仍可参考。
+> 见 [related-paragraphs-rebuild.md](related-paragraphs-rebuild.md)。本文的事实判断仍可参考；
+> 文中提到的 `scripts/related/` 已于 2026-11-25 删除，要看去 git 历史。
 
 > 状态：**第一批已实施**（2026-09-09，导出器 + 检测器落地于 `api-v13/scripts/related/`，
 > 第一版数据在影子表 `related_paragraphs_v1`，生产表未动）；章回绕与 LLM 补齐两批待做。

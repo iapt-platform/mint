@@ -4,7 +4,7 @@
 > 与 `storage/resources/pali_title/cs6_para.csv`。
 >
 > 前作 [related-paragraphs-redesign.md](related-paragraphs-redesign.md)（2026-03 审计、
-> 2026-09 第一批实施，工具链在 `scripts/related/`）的事实判断大多仍成立，本文不重复，
+> 2026-09 第一批实施，工具链曾在 `scripts/related/`，2026-11-25 已删除，见 git 历史）的事实判断大多仍成立，本文不重复，
 > 只在用到时引用（记作「前作 §x」）。本文的不同之处在于**做法**：不再用独立脚本 + 影子表
 > + 自动对齐，而是 `UpgradeRelatedParagraph` 直接从 wbw_templates 重建，差异全部写进
 > 每个 VRI book 一份的补丁文件，按 book_name 逐个解决。
@@ -156,7 +156,7 @@ php artisan upgrade:related.paragraph --dump --book=108       # 把该书重建�
 `resources/data/related-paragraphs/book-names.csv`，两列 `sn,book_name`，一个真书（`book_titles.sn`，
 一个 level-1）一行，只列需要的 sn。为什么按 sn 而不是按 VRI book：一个 VRI book 常含几部书，
 各属不同 book_name（98 的五部义注分属 abhi3–7，200 / 201 / 203 / 177 同理），按 sn 正好一书一名。
-初值从 `scripts/related/book_config.json` 的 segments 与旧 csv 的多数值生成，逐条人工过一遍。
+初值从 `scripts/related/book_config.json`（已删除，见 git 历史）的 segments 与旧 csv 的多数值生成，逐条人工过一遍。
 
 sn 也解决不了的（一部书跨几个 book_name 且无后缀：202 Pācityādiyojanā、209 Vajirabuddhi-ṭīkā
 跨 vin1–5），走补丁表逐段写名字。
@@ -186,8 +186,8 @@ sn 也解决不了的（一部书跨几个 book_name 且无后缀：202 Pācity�
 - 带后缀那个决定 book_name，不带后缀那个只提供号段。
 - 表外的写法一律报错退出，不静默跳过——旧命令丢段就是静默空转造成的。
 
-解析器可直接移植 `scripts/related/lib/MarkerParser.php`（已全库验证），放 `App\Services\`
-（纯能力，与请求无关）。命令落地后 `scripts/related/` 删除。
+解析器参照前作的 `MarkerParser.php` 重写为 `App\Services\RelatedParagraph\AnchorParser`（纯能力，与请求无关）。
+`scripts/related/` 已于 2026-11-25 删除。
 
 ### 3.2 补丁文件
 
@@ -397,9 +397,9 @@ para,book_name,begin,end
 
 ### 阶段 4：收尾
 
-- [ ] 消费者：插件 `note-context` / `related-cs` 文档说明重编号书的 cs_para 含义
-- [ ] 重导 mobile 离线标题库（`export:mobile-heading`）
-- [ ] 删 `scripts/related/`；`documents/tasks.md` 若登记了本命令，同步更新
+- [x] 消费者：插件 research / translate / harmonize / commentary-align skill、api-read.md、wikipali-api-calls.md 说明重编号书的 cs_para 含义与 `X_A`（插件仓库，未提交）
+- [x] 重导 mobile 离线标题库（`export:mobile.heading`）：导出时 cs_para 为 0 的段落改留 NULL（mobile 只把 NULL 当无对应）；mobile 的作品级对应书改为只数与当前书重叠的号（`src/catalog/commentary.ts`），新库放进 `assets/db/tipitaka.db3`（mobile 仓库，未提交）
+- [x] 删 `scripts/related/`；`documents/tasks.md` 没有登记本命令，无需改
 
 ---
 
