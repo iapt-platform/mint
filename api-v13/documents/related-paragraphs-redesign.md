@@ -1,5 +1,8 @@
 # related_paragraphs 段落关联体系 修复设计文档
 
+> **2026-11-25 起改走新方案**：命令直接从 wbw_templates 重建 + 每个 book 一份补丁，
+> 见 [related-paragraphs-rebuild.md](related-paragraphs-rebuild.md)。本文的事实判断仍可参考。
+
 > 状态：**第一批已实施**（2026-09-09，导出器 + 检测器落地于 `api-v13/scripts/related/`，
 > 第一版数据在影子表 `related_paragraphs_v1`，生产表未动）；章回绕与 LLM 补齐两批待做。
 > 背景：2025-08 数据审计发现 related_paragraphs 存在多类系统性数据错误。
