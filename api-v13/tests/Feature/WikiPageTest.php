@@ -119,13 +119,34 @@ it('follows a redirect to the target term in the same channel', function () {
     $this->get('/library/wiki/zh-Hans/nirv%C4%81%E1%B9%87a')->assertRedirect(route('library.wiki.show', ['zh-Hans', $target]));
 });
 
-it('hides terms of private channels and unknown words', function () {
+it('forbids terms of private channels by id, and hides them and unknown words by word', function () {
     $owner = makeStudio('owner');
     $private = makeChannel($owner);
     Channel::where('uid', $private)->update(['status' => Channel::STATUS_PRIVATE]);
     $guid = wikiTerm($private, 'secret');
 
-    $this->get("/library/wiki/zh-Hans/{$guid}")->assertNotFound();
+    $this->get("/library/wiki/zh-Hans/{$guid}")->assertForbidden();
+    $this->get('/library/wiki/zh-Hans/'.Str::uuid())->assertNotFound();
     $this->get('/library/wiki/zh-Hans/secret')->assertNotFound();
     $this->get('/library/wiki/zh-Hans/no-such-word')->assertNotFound();
+});
+
+it('shows a term of an unlisted channel by id, but never lists it', function () {
+    $owner = makeStudio('owner');
+    $unlisted = makeChannel($owner);
+    Channel::where('uid', $unlisted)->update(['status' => Channel::STATUS_UNLISTED]);
+    $guid = wikiTerm($unlisted, 'zzunlisted', ['quality' => 'featured', 'note' => '不列出的正文。'], ['学处']);
+
+    expect($this->get("/library/wiki/zh-Hans/{$guid}")->assertOk()->getContent())->toContain('不列出的正文。');
+    $this->get('/library/wiki/zh-Hans/zzunlisted')->assertNotFound();
+    expect($this->get('/library/wiki/zh-Hans?category=vinaya&quality=pending')->assertOk()->getContent())
+        ->not->toContain('zzunlisted');
+});
+
+it('treats an empty-string channal as a studio-level term', function () {
+    $owner = makeStudio('owner');
+    $guid = wikiTerm(makeChannel($owner), 'legacy', ['note' => '老数据正文。']);
+    DhammaTerm::where('guid', $guid)->update(['channal' => '']);
+
+    expect($this->get("/library/wiki/zh-Hans/{$guid}")->assertOk()->getContent())->toContain('老数据正文。');
 });
