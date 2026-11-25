@@ -9,7 +9,9 @@ use App\Services\Markup\Format;
 use App\Services\Markup\MarkupService;
 use App\Services\Markup\RenderOptions;
 use App\Services\V3\ChannelAbilityService;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -20,8 +22,9 @@ use Illuminate\Support\Str;
  * 直接查库，不经 OpenSearch：质量取 dhamma_terms.quality，分类取 term_categories（v3 写入时从正文
  * `{{category|…}}` 抽出），摘要取 summary 或正文第一段。正文用新渲染器（{@see MarkupService}）出 HTML。
  *
- * 只列公开的：所在 channel 会被列出（status 30 或系统 channel，{@see ChannelAbilityService::scopeListable()}），
- * 或 studio 级术语（不属于任何 channel）。
+ * 列表、相关词条、其它版本只列公开的：所在 channel 会被列出（status 30 或系统 channel，
+ * {@see ChannelAbilityService::scopeListable()}），或 studio 级术语（不属于任何 channel）。
+ * 按 guid 打开的词条页按「能访问」判（公开不列出的也能看，私有 403）。
  */
 class WikiService
 {
@@ -71,13 +74,15 @@ class WikiService
     /**
      * 按 guid 或词找要显示的词条。
      *
-     * - guid：这一条（要公开）
+     * - guid：这一条，拿到链接就能看（公开不列出的也行），私有 channel 的 403
      * - 词：先找该语言社区 channel（`_community_translation_{lang}_`）里的，没有就取公开词条里质量最高、最近更新的
+     *
+     * @throws AuthorizationException guid 指向私有 channel 的术语
      */
     public function find(string $lang, string $wordOrId): ?DhammaTerm
     {
         if (Str::isUuid($wordOrId)) {
-            return $this->publicTerms(null)->where('guid', $wordOrId)->first();
+            return $this->accessibleTerm($wordOrId);
         }
 
         $community = Channel::where('name', '_community_translation_'.strtolower($lang).'_')
@@ -98,6 +103,33 @@ class WikiService
     }
 
     /**
+     * 按 guid 取一条：拿到链接就能看，与「会不会被列出」无关。
+     *
+     * channel 是公开（30）或公开不列出（20）、系统 channel、或 studio 级术语都能看；
+     * library 没有登录态，私有 channel 的一律 403（{@see ChannelAbilityService::assertReadable()}），
+     * 术语或它所在的 channel 不存在（含软删）返回 null（404）。
+     *
+     * @throws AuthorizationException
+     */
+    private function accessibleTerm(string $guid): ?DhammaTerm
+    {
+        $term = DhammaTerm::where('guid', $guid)->first();
+        if ($term === null) {
+            return null;
+        }
+        $channelUid = $term->channelUid();
+        if ($channelUid !== null) {
+            try {
+                $this->channels->assertReadable($channelUid, null);
+            } catch (ModelNotFoundException) {
+                return null;
+            }
+        }
+
+        return $term;
+    }
+
+    /**
      * 重定向的目标（`word` 或 `word@tag`）：先在同一 channel（studio 级的在同一 owner 的 studio 级术语）里找，
      * 找不到返回 null（读者停在原词条上）。
      */
@@ -112,9 +144,9 @@ class WikiService
         $tag === ''
             ? $query->where(fn (Builder $q) => $q->whereNull('tag')->orWhere('tag', ''))
             : $query->where('tag', $tag);
-        $term->channal !== null
-            ? $query->where('channal', $term->channal)
-            : $query->whereNull('channal')->where('owner', $term->owner);
+        $term->channelUid() !== null
+            ? $query->where('channal', $term->channelUid())
+            : $query->studioLevel()->where('owner', $term->owner);
 
         $target = $query->first();
 
@@ -220,7 +252,7 @@ class WikiService
     private function publicTerms(?string $lang): Builder
     {
         $query = DhammaTerm::query()->where(function (Builder $q) {
-            $q->whereNull('channal')->orWhereIn('channal', function ($sub) {
+            $q->studioLevel()->orWhereIn('channal', function ($sub) {
                 $sub->selectRaw('uid::text')->from('channels')->whereNull('deleted_at');
                 $this->channels->scopeListable($sub, null);
             });

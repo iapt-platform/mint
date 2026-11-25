@@ -56,7 +56,10 @@ interface ITermState {
 }
 
 type TermAction =
+  // 本人在自己 studio 里新建 / 修改了同一个词：换成本人的版本，不再是社区术语
   | { type: "UPDATE_TERM"; payload: Term }
+  // 悬停时取到这条术语的详情：还是同一条，社区状态不变
+  | { type: "LOADED_TERM"; payload: Term }
   | { type: "SET_TERM_DATA"; payload: ITerm };
 
 function termReducer(state: ITermState, action: TermAction): ITermState {
@@ -66,6 +69,12 @@ function termReducer(state: ITermState, action: TermAction): ITermState {
         termData: dataMap(action.payload),
         isInit: false,
         community: false,
+      };
+    case "LOADED_TERM":
+      return {
+        ...state,
+        termData: dataMap(action.payload),
+        isInit: false,
       };
     case "SET_TERM_DATA":
       return {
@@ -176,7 +185,7 @@ export const TermCtl = ({
         fetchTerm(id)
           .then((data) => {
             if (data) {
-              dispatch({ type: "UPDATE_TERM", payload: data });
+              dispatch({ type: "LOADED_TERM", payload: data });
               store.dispatch(upgrade(data));
             }
           })

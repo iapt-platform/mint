@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -50,6 +51,27 @@ class DhammaTerm extends Model
     public function channel(): BelongsTo
     {
         return $this->belongsTo(Channel::class, 'channal', 'uid');
+    }
+
+    /**
+     * 所属 channel 的 uid；studio 级术语给 null。
+     *
+     * studio 级术语的 channal 有两种写法：NULL，以及 2022 年以前 v2 写入的空串（库里一千多条），
+     * 判断「是不是 studio 级」一律走这里，不要直接比 `channal !== null`。
+     */
+    public function channelUid(): ?string
+    {
+        return $this->channal === null || $this->channal === '' ? null : (string) $this->channal;
+    }
+
+    /**
+     * 只要 studio 级术语（channal 为 NULL 或空串，见 {@see self::channelUid()}）。
+     *
+     * @param  Builder<DhammaTerm>  $query
+     */
+    public function scopeStudioLevel(Builder $query): void
+    {
+        $query->where(fn (Builder $q) => $q->whereNull('channal')->orWhere('channal', ''));
     }
 
     /** 编辑者（人类用户）。editor_uid 对 user_infos.userid */

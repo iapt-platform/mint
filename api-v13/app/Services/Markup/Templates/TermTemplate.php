@@ -122,7 +122,12 @@ final class TermTemplate extends Template
     public function html(Call $call, RenderContext $ctx): string
     {
         $props = $this->props($call, $ctx);
-        $class = isset($props['id']) ? 'term-ref' : 'term-ref term_invalid';
+        // 与 v6 术语组件的三种状态对应：没找到（红）、取自社区术语（绿）、找到（蓝）
+        $class = match (true) {
+            ! isset($props['id']) => 'term-ref term_invalid',
+            ! empty($props['isCommunity']) => 'term-ref term_community',
+            default => 'term-ref',
+        };
 
         return '<span class="'.$class.'" data-id="'.e($props['id'] ?? '').'" data-term="'.e($props['word']).'">'
             .e($props['meaning'] ?? $props['word']).'</span>';

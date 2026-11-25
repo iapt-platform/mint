@@ -17,6 +17,7 @@ use App\Tools\Tools;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -80,7 +81,7 @@ class TermService
         if (! $abilities['read']) {
             throw new AuthorizationException(__('messages.term_forbidden'));
         }
-        $term->load($this->relations());
+        $this->loadRelations(new EloquentCollection([$term]));
         $this->decorate(collect([$term]), $viewerUid, withBody: true, render: [
             'channels' => $this->readableChannels($render['channels'] ?? [], $viewerUid),
             'mode' => $render['mode'] ?? 'read',
@@ -164,7 +165,7 @@ class TermService
         }
         $query = DhammaTerm::query()->where('owner', $studioUid);
         if (! empty($filters['general'])) {
-            $query->whereNull('channal');
+            $query->studioLevel();
         }
 
         return $query;
@@ -207,7 +208,7 @@ class TermService
         }
         // 看得见的：studio 级术语，或所在 channel 会被列出给查看者
         $query->where(function (Builder $q) use ($viewerUid) {
-            $q->whereNull('channal')->orWhereIn('channal', function ($sub) use ($viewerUid) {
+            $q->studioLevel()->orWhereIn('channal', function ($sub) use ($viewerUid) {
                 $sub->selectRaw('uid::text')->from('channels')->whereNull('deleted_at');
                 $this->channels->scopeListable($sub, $viewerUid);
             });
@@ -257,7 +258,7 @@ class TermService
             throw new AuthorizationException(__('messages.term_forbidden'));
         }
         $this->guardUnique(
-            DhammaTerm::query()->where('owner', $studioUid)->whereNull('channal')->where('language', $data['language']),
+            DhammaTerm::query()->where('owner', $studioUid)->studioLevel()->where('language', $data['language']),
             $data,
         );
 
@@ -276,13 +277,13 @@ class TermService
      */
     public function update(DhammaTerm $term, array $actor, array $data, ?string $ifMatch): DhammaTerm
     {
-        if (! $this->agents->covers($actor['scope'], $term->channal, null) || ! $this->can($term, $actor['editor'], 'update')) {
+        if (! $this->agents->covers($actor['scope'], $term->channelUid(), null) || ! $this->can($term, $actor['editor'], 'update')) {
             throw new AuthorizationException(__('messages.term_forbidden'));
         }
         if ($ifMatch === null || $ifMatch === '') {
             throw new BusinessException(__('messages.term_if_match_required'), 428, 'precondition-required', [], 'Precondition Required');
         }
-        if ($term->channal !== null && array_key_exists('language', $data)) {
+        if ($term->channelUid() !== null && array_key_exists('language', $data)) {
             throw ValidationException::withMessages(['language' => __('messages.term_language_follows_channel')]);
         }
         $this->guardRedirect($term->word, $term->tag, $data);
@@ -363,7 +364,7 @@ class TermService
             Log::warning('Failed to remove deleted term from index', ['guid' => $term->guid, 'error' => $e->getMessage()]);
         }
 
-        $term->load($this->relations());
+        $this->loadRelations(new EloquentCollection([$term]));
         $this->decorate(collect([$term]), $actorUid, withBody: false);
 
         return $term;
@@ -387,8 +388,8 @@ class TermService
 
         $result = [];
         foreach ($terms as $term) {
-            if ($term->channal !== null) {
-                $ch = $channelAbilities[$term->channal] ?? ['read' => false, 'write' => false];
+            if ($term->channelUid() !== null) {
+                $ch = $channelAbilities[$term->channelUid()] ?? ['read' => false, 'write' => false];
                 $read = $ch['read'];
                 $update = $userUid !== null && $ch['write'];
             } else {
@@ -426,10 +427,11 @@ class TermService
         $order = $filters['order'] ?? 'updated_at';
         $dir = $filters['dir'] ?? ($order === 'word' ? 'asc' : 'desc');
 
-        $page = $query->with($this->relations())
+        $page = $query
             ->orderBy($order, $dir)
             ->orderBy('guid')
             ->paginate($perPage);
+        $this->loadRelations($page->getCollection());
         $this->decorate($page->getCollection(), $viewerUid, withBody: $withBody);
 
         return $page;
@@ -469,8 +471,26 @@ class TermService
             UserService::eagerLoadAssistant('coEditor'),
             // 只取分类名（与外键、排序）；term_categories.id 不对外，也用不到
             'categories:term_guid,category,position',
-            'channel:uid,name',
         ];
+    }
+
+    /**
+     * 预加载 {@see self::relations()} 与所属 channel。
+     *
+     * channel 只给真属于某个 channel 的加载：studio 级的老数据 channal 是空串，
+     * 统一 `with('channel')` 会拿空串去比 uuid 列，PostgreSQL 直接报错。
+     *
+     * @param  EloquentCollection<int, DhammaTerm>  $terms
+     */
+    private function loadRelations(EloquentCollection $terms): void
+    {
+        $terms->load($this->relations());
+        $terms->filter(fn (DhammaTerm $term) => $term->channelUid() !== null)->load('channel:uid,name');
+        $terms->each(function (DhammaTerm $term) {
+            if ($term->channelUid() === null) {
+                $term->setRelation('channel', null);
+            }
+        });
     }
 
     /**
@@ -708,8 +728,8 @@ class TermService
      */
     private function forgetCache(DhammaTerm $term): void
     {
-        $channels = $term->channal !== null
-            ? [$term->channal]
+        $channels = $term->channelUid() !== null
+            ? [$term->channelUid()]
             : Channel::where('owner_uid', $term->owner)->pluck('uid')->all();
         foreach ($channels as $uid) {
             RedisCache::forget("/term/{$uid}/{$term->word}");

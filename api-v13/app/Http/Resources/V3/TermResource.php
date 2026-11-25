@@ -68,7 +68,7 @@ class TermResource extends BaseResource
             'meaning' => (string) $this->meaning,
             'other_meaning' => $this->other_meaning,
             'language' => (string) $this->language,
-            'channel_id' => $this->channal,
+            'channel_id' => $this->channelUid(),
             'channel' => $this->channel ? ['id' => (string) $this->channel->uid, 'name' => (string) $this->channel->name] : null,
             'owner_id' => (string) $this->owner,
             'quality' => $this->quality,
