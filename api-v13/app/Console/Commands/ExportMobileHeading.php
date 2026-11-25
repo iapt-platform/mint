@@ -164,7 +164,9 @@ class ExportMobileHeading extends Command
      *
      * related_paragraphs 中同一段落会有多行，映射到一段连续的 cs_para 区间，
      * 但 book_name 唯一，因此这里取 min(cs_para) 作为起始位置合并成一行。
-     * book_name 为空表示该段落没有对应的注释书，直接跳过（结果列留 NULL）。
+     * book_name 为空或 cs_para 为 0 表示该段落没有对应段落，直接跳过（结果列留 NULL）。
+     * 0 不能照抄：mobile 只把 NULL 当「无对应」，0 会被当成坐标去配同名所有 0 号段落
+     * （related_paragraphs 重建后，复注自己的序言、标题段等都是 0）。
      *
      * @return array<string, array{0:int,1:string}> "book-para" => [cs_para, book_name]
      */
@@ -176,6 +178,7 @@ class ExportMobileHeading extends Command
             ->select(['book', 'para', 'book_name', DB::raw('min(cs_para) as cs_para')])
             ->whereNotNull('book_name')
             ->where('book_name', '<>', '')
+            ->where('cs_para', '>', 0)
             ->groupBy('book', 'para', 'book_name')
             ->orderBy('book')
             ->orderBy('para')
