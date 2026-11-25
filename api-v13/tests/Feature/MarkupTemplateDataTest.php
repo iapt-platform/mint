@@ -91,6 +91,9 @@ describe('term', function () {
 
         $props = markupDataTree('{{term|kusala}}', ['channels' => [$this->channel]])[0]['props'];
         expect($props)->toMatchArray(['meaning' => '善', 'isCommunity' => true]);
+        // HTML 带上社区标记，library 百科页据此着绿色（与 v6 术语组件一致）
+        expect(markupDataRender('{{term|kusala}}', Format::Html, ['channels' => [$this->channel]]))
+            ->toContain('class="term-ref term_community"');
     });
 
     it('filters by tag with word@tag and overrides the label with word#text', function () {

@@ -231,11 +231,19 @@
    五、term-ref 行内术语标记
    ══════════════════════════════════════════ */
 
+/* 颜色与 v6 术语组件一致：找到蓝（主色）、社区术语绿、没找到红；不斜体 */
 .term-ref {
-    font-style: italic;
     color: var(--tblr-primary);
-    border-bottom: 1px dotted var(--tblr-primary);
+    border-bottom: 1px dotted currentColor;
     cursor: pointer;
+}
+
+.term-ref.term_community {
+    color: green;
+}
+
+.term-ref.term_invalid {
+    color: var(--tblr-danger);
 }
 
 /* ══════════════════════════════════════════
