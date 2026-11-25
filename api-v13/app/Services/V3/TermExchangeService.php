@@ -136,7 +136,7 @@ class TermExchangeService
                 }
 
                 return [
-                    'scope' => DhammaTerm::query()->where('owner', $studioUid)->whereNull('channal')->where('language', $language),
+                    'scope' => DhammaTerm::query()->where('owner', $studioUid)->studioLevel()->where('language', $language),
                     'target' => ['channel' => null, 'owner' => $studioUid, 'language' => $language],
                     'language_editable' => true,
                 ];

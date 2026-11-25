@@ -162,6 +162,24 @@ it('shows a term with ETag, and hides terms of private channels', function () {
     $this->getJson('/api/v3/terms/'.Str::uuid())->assertNotFound();
 });
 
+it('treats legacy studio-level terms with an empty-string channal like null ones', function () {
+    [$team, $users] = makeTeam();
+    $created = $this->postJson("/api/v3/studios/{$team}/terms", ['word' => 'legacy', 'meaning' => '老', 'language' => 'zh-Hans'], authHeader($users['owner']))
+        ->assertCreated()->json('data');
+    newTerm(makeChannel($team), $users['owner'], ['word' => 'in-channel']);
+    DhammaTerm::where('guid', $created['id'])->update(['channal' => '']);
+
+    $this->getJson("/api/v3/terms/{$created['id']}")
+        ->assertOk()->assertJsonPath('data.channel_id', null)->assertJsonPath('data.channel', null);
+    $this->getJson("/api/v3/studios/{$team}/terms?order=word", authHeader($users['reader']))
+        ->assertOk()->assertJsonPath('data.*.word', ['in-channel', 'legacy']);
+    $this->getJson("/api/v3/studios/{$team}/terms?general=true", authHeader($users['reader']))
+        ->assertJsonPath('data.*.word', ['legacy']);
+    $this->getJson('/api/v3/terms?word=legacy')->assertOk()->assertJsonPath('data.*.id', [$created['id']]);
+    $this->postJson("/api/v3/studios/{$team}/terms", ['word' => 'legacy', 'meaning' => '重', 'language' => 'zh-Hans'], authHeader($users['owner']))
+        ->assertConflict();
+});
+
 it('renders the body against the requested channels, ignoring those the viewer cannot see', function () {
     $owner = makeStudio('owner');
     $home = makeChannel($owner, 'home');
