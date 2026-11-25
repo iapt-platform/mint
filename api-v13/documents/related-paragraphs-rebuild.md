@@ -228,7 +228,7 @@ para,book_name,begin,end
 2. ~~AI 注释游标~~ → 不处理。`UpgradeSystemCommentary` 的生成产物落在句子号上，与 cs_para 无关；
    `book_name|cs_para` 只是它遍历时的续跑游标。
 3. ~~cs6_para.csv 去留~~ → 命令已不读它。
-4. book 180（Abhidhammamātikā + Mohavicchedanī）维持无名，号清成 0。要配上的话在 sn 书名表加两行即可。
+4. ~~book 180~~ → 起名 `abhimatika`，论母汇编与 Mohavicchedanī 按七节对应（§7.9）。
 
 ---
 
@@ -549,6 +549,15 @@ abhi9 名下四部：178 的 Abhidhammatthasaṅgaha（sn 209）与 Vibhāvinī�
 24 的节号有 7 处笔误，按各节开头的小节名改正：250→146、254→147、264→152、301→157、309→159、311→160、426→172。
 
 代价：23、24 原来节对节的配对，在多节对一段的地方变成「同一段的几节都互相配上」（如心所品第 69–75 节）。
+
+### 7.9 book 180 起名 abhimatika（2026-11-25）
+
+180 是 Abhidhammamātikāpāḷi（@2–1220，七论论母汇编）与注它的 Mohavicchedanī（@1221–2826），原来没有名字、
+只有 Mohavicchedanī 末尾 Nigamana 偈带 19 个锚点（清 0），全书不与任何段落配对。现在由补丁起名 `abhimatika`，
+七节各一个号，两部的同名节对上：1 Dhammasaṅgaṇī（4–39 ↔ 1246–1740）、2 Vibhaṅga（40–146 ↔ 1741–2249）、
+3 Dhātukathā（147–158 ↔ 2250–2339）、4 Puggalapaññatti（159–161 ↔ 2340–2380）、5 Kathāvatthu（162–236 ↔ 2381–2462）、
+6 Yamaka（237–1204 ↔ 2463–2601）、7 Paṭṭhāna（1205–1207 ↔ 2602–2743）。两部的 Nigamana 与 Mohavicchedanī 自己的序言清 0。
+未与 abhi1–7 各论开头的论母逐条对应（那要逐条比对文字，另议）。
 
 ### 7.5 未做 / 待定
 
