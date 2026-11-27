@@ -80,6 +80,10 @@ get:
                     properties:
                       id: { type: string }
                       name: { type: string }
+                      type: { type: string }
+                      lang: { type: string }
+                      studio_id: { type: string }
+                      status: { type: integer }
                     nullable: true
                   owner_id:
                     type: string
@@ -254,6 +258,10 @@ patch:
                     properties:
                       id: { type: string }
                       name: { type: string }
+                      type: { type: string }
+                      lang: { type: string }
+                      studio_id: { type: string }
+                      status: { type: integer }
                     nullable: true
                   owner_id:
                     type: string
@@ -396,6 +404,10 @@ delete:
                     properties:
                       id: { type: string }
                       name: { type: string }
+                      type: { type: string }
+                      lang: { type: string }
+                      studio_id: { type: string }
+                      status: { type: integer }
                     nullable: true
                   owner_id:
                     type: string

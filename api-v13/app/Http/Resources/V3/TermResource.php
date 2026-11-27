@@ -4,6 +4,7 @@ namespace App\Http\Resources\V3;
 
 use App\Http\Resources\Concerns\ResolvesActor;
 use App\Models\DhammaTerm;
+use App\Services\ChannelService;
 use App\Services\Markup\MarkupService;
 use App\Services\V3\TermService;
 use Illuminate\Http\JsonResponse;
@@ -12,10 +13,11 @@ use Illuminate\Http\Request;
 /**
  * 术语 / 百科词条（`dhamma_terms` 表）。
  *
- * **本类不查库。** 编辑者、协作者、分类从预加载的关系上取；`abilities`、`summary_text`、`body`
+ * **本类不查库。** 编辑者、协作者、分类从预加载的关系上取；`channel`、`abilities`、`summary_text`、`body`
  * 由 {@see TermService} 挂上。
  *
- * - `id` 是 guid（不暴露雪花 id）；`channel_id` 为空的是 studio 级术语，`channel` 是它的名字摘要
+ * - `id` 是 guid（不暴露雪花 id）；`channel_id` 为空的是 studio 级术语，`channel` 是所属 channel 的摘要（{@see ChannelService::summary()}，
+ *   `studio_id` 是 channel 拥有者的 uuid）
  * - `summary` / `note` 是源码，方言见 `content_type`；`body` 是渲染后的「摘要 + 正文」节点树（{@see MarkupService}），
  *   单条里有，按词查带 `with_body` 时每条也有；单条带 `format=html` 时换成 HTML 字符串 `html`（给 WebView 显示的客户端）
  * - `summary_text` 是纯文本摘要：有 summary 用它，没有取正文第一段
@@ -37,7 +39,7 @@ class TermResource extends BaseResource
      *     other_meaning: string|null,
      *     language: string,
      *     channel_id: string|null,
-     *     channel: array{id: string, name: string}|null,
+     *     channel: array{id: string, name: string, type: string, lang: string, studio_id: string, status: int}|null,
      *     owner_id: string,
      *     quality: string|null,
      *     content_type: string,
@@ -69,7 +71,7 @@ class TermResource extends BaseResource
             'other_meaning' => $this->other_meaning,
             'language' => (string) $this->language,
             'channel_id' => $this->channelUid(),
-            'channel' => $this->channel ? ['id' => (string) $this->channel->uid, 'name' => (string) $this->channel->name] : null,
+            'channel' => $this->channel_summary ?? null,
             'owner_id' => (string) $this->owner,
             'quality' => $this->quality,
             'content_type' => $this->effectiveContentType(),

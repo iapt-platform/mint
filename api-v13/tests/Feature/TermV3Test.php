@@ -155,6 +155,8 @@ it('shows a term with ETag, and hides terms of private channels', function () {
     expect($res->headers->get('ETag'))->toBe($term['etag']);
     expect($res->json('data.abilities'))->toBe(['update' => false, 'delete' => false]);
     expect($res->json('data.summary_text'))->toBe('正文第一段。');
+    expect($res->json('data.channel'))->toMatchArray(['id' => $channel, 'studio_id' => $owner])
+        ->toHaveKeys(['name', 'type', 'lang', 'status']);
 
     Channel::where('uid', $channel)->update(['status' => Channel::STATUS_PRIVATE]);
     $this->getJson("/api/v3/terms/{$term['id']}")->assertForbidden();

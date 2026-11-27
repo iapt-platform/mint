@@ -7,6 +7,7 @@ use App\Facades\RedisCache;
 use App\Models\Channel;
 use App\Models\DhammaTerm;
 use App\Models\TermCategory;
+use App\Services\ChannelService;
 use App\Services\Markup\Format;
 use App\Services\Markup\MarkupService;
 use App\Services\Markup\RenderOptions;
@@ -60,6 +61,7 @@ class TermService
         private readonly AgentGrantService $agents,
         private readonly MarkupService $markup,
         private readonly UserService $users,
+        private readonly ChannelService $channelSummaries,
     ) {}
 
     /* ------------------------------------------------------------------ 读 */
@@ -475,21 +477,17 @@ class TermService
     }
 
     /**
-     * 预加载 {@see self::relations()} 与所属 channel。
-     *
-     * channel 只给真属于某个 channel 的加载：studio 级的老数据 channal 是空串，
-     * 统一 `with('channel')` 会拿空串去比 uuid 列，PostgreSQL 直接报错。
+     * 预加载 {@see self::relations()}，并挂上所属 channel 的摘要 `channel_summary`（{@see ChannelService::summaries()}，
+     * 整批一次查询；studio 级术语与 channel 已不存在的是 null）。
      *
      * @param  EloquentCollection<int, DhammaTerm>  $terms
      */
     private function loadRelations(EloquentCollection $terms): void
     {
         $terms->load($this->relations());
-        $terms->filter(fn (DhammaTerm $term) => $term->channelUid() !== null)->load('channel:uid,name');
-        $terms->each(function (DhammaTerm $term) {
-            if ($term->channelUid() === null) {
-                $term->setRelation('channel', null);
-            }
+        $summaries = $this->channelSummaries->summaries($terms->map(fn (DhammaTerm $term) => $term->channelUid())->all());
+        $terms->values()->each(function (DhammaTerm $term, int $i) use ($summaries) {
+            $term->channel_summary = $summaries[$i] ?: null;
         });
     }
 
