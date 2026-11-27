@@ -1,7 +1,8 @@
 // src/routes/channelRoutes.ts
-import { lazy } from "react";
+import { createElement, lazy } from "react";
 import type { RouteObject } from "react-router";
 import { groupLoader } from "../api/group";
+import RouteError from "../components/general/RouteError";
 
 const WorkspaceTeam = lazy(() => import("../pages/workspace/team"));
 const WorkspaceTeamShow = lazy(() => import("../pages/workspace/team/show"));
@@ -26,6 +27,7 @@ const channelRoutes: RouteObject[] = [
       {
         path: ":teamId",
         loader: groupLoader,
+        errorElement: createElement(RouteError, { backTo: "/workspace/team" }),
         handle: {
           crumb: (match: { data?: { name?: string } }) =>
             match.data?.name ?? "",

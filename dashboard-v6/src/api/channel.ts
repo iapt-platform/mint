@@ -3,6 +3,7 @@ import type { LoaderFunctionArgs } from "react-router";
 import type { IStudio, TRole } from "./Auth";
 import { get } from "../request";
 import { api, unwrap, unwrapQuiet } from "./client";
+import { ApiError } from "./error";
 import type { paths } from "./schema";
 
 /* ─── v3（channel 本身已迁 v3，取代 v2 channel / channel-my-number / channel-progress）─── */
@@ -174,25 +175,25 @@ export async function channelLoader({ params }: LoaderFunctionArgs) {
         params: { path: { channel } },
       }),
     ).data;
-  } catch {
-    throw new Response("Channel not found", { status: 404 });
+  } catch (e) {
+    // 看不见（v3 回 403）也当不存在；超时、网络不通、5xx 原样抛出，错误页按种类提示并可重试
+    if (e instanceof ApiError && (e.status === 403 || e.status === 404)) {
+      throw new Response("Channel not found", { status: 404 });
+    }
+    throw e;
   }
 }
 
-/** 按 uid 取一个 channel；取不到返回 undefined（只用来显示名字之类，不弹错） */
-export const fetchChannel = async (
-  channel: string,
-): Promise<Channel | undefined> => {
-  try {
-    return unwrapQuiet(
-      await api.GET("/v3/channels/{channel}", {
-        params: { path: { channel } },
-      }),
-    ).data;
-  } catch {
-    return undefined;
-  }
-};
+/**
+ * 按 uid 取一个 channel。失败**抛出** ApiError、不弹提示（quiet）：
+ * 页面级的调用显示错误页，只拿来显示名字的调用自己 catch 回退。
+ */
+export const fetchChannel = async (channel: string): Promise<Channel> =>
+  unwrapQuiet(
+    await api.GET("/v3/channels/{channel}", {
+      params: { path: { channel } },
+    }),
+  ).data as Channel;
 
 // ─── 获取章节内所有句子 ID ───────────────────────────────────────────────────
 

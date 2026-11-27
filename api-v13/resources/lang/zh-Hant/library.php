@@ -92,6 +92,7 @@ return [
     'current_channel' => '目前頻道',
     'created' => '建立時間',
     'updated' => '更新時間',
+    'edited_at' => '編輯於 :time',
     'related_anthology' => '相關文集',
     'articles_suffix' => '篇文章',
 

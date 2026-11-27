@@ -11,6 +11,8 @@ import {
 import { canManageMembers } from "../../api/group-member";
 import { useAppSelector } from "../../hooks";
 import { currentUser, studioList } from "../../reducers/current-user";
+import { useLoadGuard } from "../../hooks/useLoadGuard";
+import ApiErrorResult from "../general/ApiErrorResult";
 
 const { Content } = Layout;
 
@@ -29,19 +31,27 @@ interface IWidget {
  * 团队的 owner / manager，或资源的拥有者，可以把资源移出团队。
  */
 const GroupFileWidget = ({ groupId }: IWidget) => {
+  const load = useLoadGuard();
   const intl = useIntl(); //i18n
   const [resCount, setResCount] = useState(0);
   const user = useAppSelector(currentUser);
   const studios = useAppSelector(studioList);
   // 管理成员与管理团队文档是同一组角色（owner / manager）
   const canManage = canManageMembers(
-    studios?.find((item) => item.id === groupId)?.role
+    studios?.find((item) => item.id === groupId)?.role,
   );
 
   const ref = useRef<ActionType | null>(null);
+  // 加载失败（超时、网络不通…）只显示错误页，不显示空列表
+  if (load.error) {
+    return <ApiErrorResult error={load.error} onRetry={load.retry} />;
+  }
+
   return (
     <Content>
       <ProList<GroupShare>
+        onRequestError={load.onError}
+        key={load.attempt}
         rowKey="id"
         actionRef={ref}
         // groupId 放进 params：切换团队（团队空间或团队详情页）时 ProList 才会重新请求
@@ -79,8 +89,7 @@ const GroupFileWidget = ({ groupId }: IWidget) => {
           },
           actions: {
             render: (_dom, row) =>
-              canManage ||
-              (user?.id && row.resource?.owner_id === user.id) ? (
+              canManage || (user?.id && row.resource?.owner_id === user.id) ? (
                 <Popconfirm
                   title={intl.formatMessage({
                     id: "forms.message.res.remove",
@@ -88,7 +97,7 @@ const GroupFileWidget = ({ groupId }: IWidget) => {
                   onConfirm={() => {
                     if (groupId && row.id) {
                       removeGroupShare(groupId, row.id).then(() =>
-                        ref.current?.reload()
+                        ref.current?.reload(),
                       );
                     }
                   }}
@@ -110,7 +119,7 @@ const GroupFileWidget = ({ groupId }: IWidget) => {
             const res = await fetchGroupShares(
               groupId,
               params.current ?? 1,
-              params.pageSize ?? 20
+              params.pageSize ?? 20,
             );
             setResCount(res.meta?.total ?? 0);
             return {
@@ -118,7 +127,9 @@ const GroupFileWidget = ({ groupId }: IWidget) => {
               success: true,
               data: res.data ?? [],
             };
-          } catch {
+          } catch (e) {
+            // 交给页面显示错误页（不是「暂无数据」）
+            load.onError(e);
             return { total: 0, success: false, data: [] };
           }
         }}

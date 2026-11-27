@@ -15,6 +15,8 @@ import { fetchChannel } from "../../api/channel";
 import DiscussionAuthors from "./DiscussionAuthors";
 import { SeverityTag } from "./SeverityTag";
 import TimeShow from "../general/TimeShow";
+import { useLoadGuard } from "../../hooks/useLoadGuard";
+import ApiErrorResult from "../general/ApiErrorResult";
 
 const { Text } = Typography;
 
@@ -54,6 +56,7 @@ const ChapterDiscussionList = ({
   onOpen,
   onSelect,
 }: IWidget) => {
+  const load = useLoadGuard();
   const { token } = theme.useToken();
   const [selectedId, setSelectedId] = useState<string>();
   const [channel, setChannel] = useState<string | undefined>(channels[0]);
@@ -76,7 +79,14 @@ const ChapterDiscussionList = ({
     if (channels.length < 2) return;
     let alive = true;
     Promise.all(
-      channels.map(async (id) => [id, (await fetchChannel(id))?.name ?? id])
+      // 只为下拉框显示名字；取不到就显示 uid
+      channels.map(async (id) => [
+        id,
+        await fetchChannel(id).then(
+          (c) => c.name ?? id,
+          () => id,
+        ),
+      ]),
     ).then((pairs) => {
       if (alive) setChannelNames(Object.fromEntries(pairs));
     });
@@ -97,8 +107,15 @@ const ChapterDiscussionList = ({
     );
   }
 
+  // 加载失败（超时、网络不通…）只显示错误页，不显示空列表
+  if (load.error) {
+    return <ApiErrorResult error={load.error} onRetry={load.retry} />;
+  }
+
   return (
     <ProList<IComment>
+      onRequestError={load.onError}
+      key={load.attempt}
       rowKey="id"
       onRow={(entity) => ({
         onClick: () => {
@@ -171,7 +188,10 @@ const ChapterDiscussionList = ({
               placeholder="严重程度"
               value={severity}
               onChange={setSeverity}
-              options={SEVERITY_VALUES.map((value) => ({ value, label: value }))}
+              options={SEVERITY_VALUES.map((value) => ({
+                value,
+                label: value,
+              }))}
             />
           ) : undefined}
         </Space>
@@ -201,7 +221,9 @@ const ChapterDiscussionList = ({
                   {entity.title}
                 </Button>
               )}
-              {entity.type !== "discussion" ? <Tag>{entity.type}</Tag> : undefined}
+              {entity.type !== "discussion" ? (
+                <Tag>{entity.type}</Tag>
+              ) : undefined}
               <SeverityTag severity={entity.severity} />
               {status === "all" && entity.status === "close" ? (
                 <Tag>close</Tag>

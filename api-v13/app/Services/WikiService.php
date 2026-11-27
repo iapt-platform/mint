@@ -34,6 +34,7 @@ class WikiService
     public function __construct(
         private readonly ChannelAbilityService $channels,
         private readonly MarkupService $markup,
+        private readonly UserService $users,
     ) {}
 
     /**
@@ -216,6 +217,29 @@ class WikiService
             ->get(['dhamma_terms.word', 'dhamma_terms.meaning', 'dhamma_terms.language'])
             ->map(fn (DhammaTerm $t) => ['word' => (string) $t->word, 'zh' => (string) $t->meaning, 'lang' => (string) $t->language])
             ->all();
+    }
+
+    /**
+     * 词条的编辑者与协作者（人类授权代写的 AI 模型），给词条头部的头像组用。
+     *
+     * @return list<array{name: string, username: string, avatar: string|null, initials: string, color: string}>
+     */
+    public function editors(DhammaTerm $term): array
+    {
+        $term->loadMissing([...UserService::eagerLoadActor(), UserService::eagerLoadAssistant('coEditor')]);
+
+        $people = [$this->users->actor($term->user, $term->aiModel)];
+        if ($term->coEditor) {
+            $people[] = $this->users->assistantProfile($term->coEditor);
+        }
+
+        return array_map(fn (array $p) => [
+            'name' => (string) $p['nickName'],
+            'username' => (string) $p['userName'],
+            'avatar' => ($p['avatar'] ?? '') ?: null,
+            'initials' => mb_substr((string) $p['nickName'], 0, 2),
+            'color' => TipitakaCatalogService::channelColor((string) $p['id']),
+        ], $people);
     }
 
     /**

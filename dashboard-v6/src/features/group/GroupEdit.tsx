@@ -14,6 +14,8 @@ import {
   GROUP_STATUS_PUBLIC,
   updateGroup,
 } from "../../api/group";
+import { useLoadGuard } from "../../hooks/useLoadGuard";
+import ApiErrorResult from "../../components/general/ApiErrorResult";
 
 interface IFormData {
   name: string;
@@ -28,6 +30,12 @@ const GroupEdit = ({ groupId }: IWidget) => {
   const intl = useIntl();
 
   const [title, setTitle] = useState("Loading");
+  const load = useLoadGuard();
+
+  // 取不到团队（超时、网络不通…）只显示错误页，不渲染空表单
+  if (load.error) {
+    return <ApiErrorResult error={load.error} onRetry={load.retry} />;
+  }
 
   return (
     <Card title={title}>
@@ -41,9 +49,17 @@ const GroupEdit = ({ groupId }: IWidget) => {
           setTitle(group?.name ?? values.name);
           message.success(intl.formatMessage({ id: "flashes.success" }));
         }}
-        formKey="group_edit"
+        // formKey 是 request 的缓存键；带上 attempt，「重试」才会真的重新请求
+        formKey={`group_edit_${load.attempt}`}
+        key={load.attempt}
         request={async () => {
-          const group = await fetchGroup(groupId ?? "");
+          let group: Awaited<ReturnType<typeof fetchGroup>>;
+          try {
+            group = await fetchGroup(groupId ?? "");
+          } catch (e) {
+            load.onError(e);
+            throw e;
+          }
           setTitle(group.name ?? "");
           document.title = `${group.name}`;
           return {

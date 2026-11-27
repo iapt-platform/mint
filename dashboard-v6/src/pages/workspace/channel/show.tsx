@@ -26,7 +26,11 @@ const Widget = () => {
 
   useEffect(() => {
     if (channelId) {
-      fetchChannel(channelId).then((channel) => setTitle(channel?.name));
+      // 只为标签页标题；取不到就用默认标题（页面本身由路由 loader 负责报错）
+      fetchChannel(channelId).then(
+        (channel) => setTitle(channel.name),
+        () => setTitle(undefined),
+      );
     }
   }, [channelId]);
   return (

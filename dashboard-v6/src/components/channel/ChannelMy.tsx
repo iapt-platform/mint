@@ -36,6 +36,7 @@ import NissayaAlignerModal from "../nissaya/NissayaAlignerModal";
 import { useChannelProgress } from "./hooks/useChannelProgress";
 import type { IChannel, IChannelItem } from "../../api/channel";
 import { libraryUrl } from "../../utils";
+import ApiErrorResult from "../general/ApiErrorResult";
 
 const { Search } = Input;
 
@@ -69,7 +70,7 @@ function buildTreeData(
   channelList: IChannelItem[],
   selectedRowKeys: React.Key[],
   owner: string,
-  search?: string
+  search?: string,
 ): ChannelTreeNode[] {
   let ordered: IChannelItem[];
 
@@ -82,17 +83,17 @@ function buildTreeData(
     const seen = new Set(selected.map((v) => v.uid));
 
     const progressing = channelList.filter(
-      (v) => v.progress > 0 && !seen.has(v.uid)
+      (v) => v.progress > 0 && !seen.has(v.uid),
     );
     progressing.forEach((v) => seen.add(v.uid));
 
     const mine = channelList.filter(
-      (v) => v.role === "owner" && !seen.has(v.uid)
+      (v) => v.role === "owner" && !seen.has(v.uid),
     );
     mine.forEach((v) => seen.add(v.uid));
 
     const others = channelList.filter(
-      (v) => !seen.has(v.uid) && v.role !== "member"
+      (v) => !seen.has(v.uid) && v.role !== "member",
     );
 
     ordered = [...selected, ...progressing, ...mine, ...others];
@@ -121,7 +122,7 @@ const ChannelMy = ({
   const intl = useIntl();
   console.debug("ChannelMy render");
   // ── 远程数据（hook 负责全部异步逻辑）──────────────────────────────────────
-  const { channels, sentencesId, sentenceCount, loading, refresh } =
+  const { channels, sentencesId, sentenceCount, loading, error, refresh } =
     useChannelProgress(type, articleId);
 
   // ── 局部 UI 状态 ──────────────────────────────────────────────────────────
@@ -157,7 +158,7 @@ const ChannelMy = ({
   // ── 派生数据：useMemo 替代 useEffect + setState，不产生额外渲染轮次 ──────
   const treeData = useMemo(
     () => buildTreeData(channels, selectedRowKeys, owner, search),
-    [channels, selectedRowKeys, owner, search]
+    [channels, selectedRowKeys, owner, search],
   );
 
   // ── 回调 ──────────────────────────────────────────────────────────────────
@@ -184,7 +185,7 @@ const ChannelMy = ({
 
       if (checked.length > selectedRowKeys.length) {
         const add = checked.filter(
-          (v) => !selectedRowKeys.includes(v.toString())
+          (v) => !selectedRowKeys.includes(v.toString()),
         );
         if (add.length > 0) {
           setSelectedRowKeys((prev) => [...prev, add[0]]);
@@ -193,7 +194,7 @@ const ChannelMy = ({
         setSelectedRowKeys(selectedRowKeys.filter((v) => checked.includes(v)));
       }
     },
-    [selectedRowKeys]
+    [selectedRowKeys],
   );
 
   const handleNodeClick = useCallback(
@@ -201,7 +202,7 @@ const ChannelMy = ({
       setDirty(false);
       onSelect?.([{ id: node.key, name: node.channel.title }]);
     },
-    [onSelect]
+    [onSelect],
   );
 
   // ── titleRender ───────────────────────────────────────────────────────────
@@ -234,7 +235,7 @@ const ChannelMy = ({
       }
 
       const badgeIndex = selectedRowKeys.findIndex(
-        (v) => v === node.channel.uid
+        (v) => v === node.channel.uid,
       );
 
       return (
@@ -338,7 +339,7 @@ const ChannelMy = ({
                       case "library":
                         window.open(
                           libraryUrl(`tipitaka?channel=${ch.id}`),
-                          "_blank"
+                          "_blank",
                         );
                         break;
                     }
@@ -353,7 +354,7 @@ const ChannelMy = ({
         </div>
       );
     },
-    [dirty, selectedRowKeys, handleNodeClick, intl, type, articleId]
+    [dirty, selectedRowKeys, handleNodeClick, intl, type, articleId],
   );
 
   // ── 渲染 ──────────────────────────────────────────────────────────────────
@@ -422,7 +423,10 @@ const ChannelMy = ({
           </Space>
         }
       >
-        {loading ? (
+        {error !== undefined ? (
+          // 加载失败（超时、网络不通…）显示原因，不显示空树
+          <ApiErrorResult error={error} onRetry={refresh} />
+        ) : loading ? (
           <Skeleton active />
         ) : (
           <Tree

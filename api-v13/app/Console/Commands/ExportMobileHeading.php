@@ -2,22 +2,26 @@
 
 namespace App\Console\Commands;
 
+use App\Models\BookTitle;
 use App\Models\PaliText;
+use App\Models\RelatedParagraph;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 
 /**
  * 导出移动端离线目录库（SQLite）。
  *
  * 替代 wikipali-mobile 仓库里的 src/data/tipitaka_heading.json（5.5MB，
  * 全量载入内存）。导出 pali_texts 全部段落（不只是章节行，下载功能需要
- * 非章节段落的字符数），除原有目录字段外额外带上：
-
- *  - length：段落字符数（源表列名 `lenght` 为拼写错误，导出时纠正）
+ * 非章节段落的字符数）。输出两张表：
  *
- *  - tags：pali_texts.uid 经 tag_maps / tags 取到的标签名，逗号分隔
- *  - cs_para + book_name：来自 related_paragraphs，用于由段落定位对应的
- *    义注 / 复注章节起始位置（已合并进同一张表，输出只有 pali_text 一张表）
+ *  - pali_text：全量段落，除原有目录字段外额外带上
+ *      - length：段落字符数（源表列名 `lenght` 为拼写错误，导出时纠正）
+ *      - cs_para + book_name：来自 related_paragraphs，用于由段落定位对应的
+ *        义注 / 复注章节起始位置
+ *  - works：作品清单，来自 book_titles（一行 = 一部作品，起点段 (book, paragraph)，
+ *    多为 level=1，少数是 level=2，如书 209 Vajirabuddhi-ṭīkā 拆成的各篇）。
+ *    tags 只挂在作品上：作品起点段的 pali_texts.uid 经 tag_maps / tags 取到的
+ *    标签名，逗号分隔。移动端靠它判断注释层次。
  */
 class ExportMobileHeading extends Command
 {
@@ -25,7 +29,7 @@ class ExportMobileHeading extends Command
         {--out= : 输出文件路径，默认 storage/app/public/export/mobile/tipitaka-heading-<date>.db3}
         {--copy-to= : 导出后额外复制一份到该路径（例如移动端仓库的 assets/db/tipitaka.db3）}';
 
-    protected $description = '导出移动端离线目录 SQLite（含 tags 与义注复注关联段落）';
+    protected $description = '导出移动端离线目录 SQLite（段落 + 作品表 works，含 tags 与义注复注关联段落）';
 
     public function handle(): int
     {
@@ -46,11 +50,13 @@ class ExportMobileHeading extends Command
         $this->createSchema($dbh);
 
         $texts = $this->exportPaliTexts($dbh);
+        $works = $this->exportWorks($dbh);
 
         $this->writeMeta($dbh, [
             'generated_at' => date('c'),
             'source' => config('app.url', ''),
             'pali_text_rows' => (string) $texts,
+            'works_rows' => (string) $works,
         ]);
 
         // 建索引放在插入之后，避免边插边维护索引
@@ -60,10 +66,11 @@ class ExportMobileHeading extends Command
 
         $this->newLine();
         $this->info(sprintf(
-            '导出完成：%s（%s，pali_text %d 行）',
+            '导出完成：%s（%s，pali_text %d 行，works %d 行）',
             $out,
             $this->humanSize(filesize($out)),
-            $texts
+            $texts,
+            $works
         ));
 
         $copyTo = $this->option('copy-to');
@@ -93,10 +100,21 @@ class ExportMobileHeading extends Command
             chapter_len INTEGER,
             chapter_strlen INTEGER,
             parent INTEGER,
-            tags TEXT,
             cs_para INTEGER,
             book_name TEXT,
             PRIMARY KEY (book, paragraph)
+        )');
+
+        // 作品：book_titles 一行一部。作品的段落范围 = [paragraph, 同 book 下一部
+        // 作品的 paragraph - 1]，客户端按此推算，不另存。
+        $dbh->exec('CREATE TABLE works (
+            sn INTEGER PRIMARY KEY,
+            book INTEGER NOT NULL,
+            paragraph INTEGER NOT NULL,
+            level INTEGER,
+            title TEXT,
+            toc TEXT,
+            tags TEXT
         )');
 
         $dbh->exec('CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT)');
@@ -107,6 +125,7 @@ class ExportMobileHeading extends Command
         $dbh->exec('CREATE INDEX idx_pali_text_book_level ON pali_text (book, level)');
         $dbh->exec('CREATE INDEX idx_pali_text_parent ON pali_text (book, parent)');
         $dbh->exec('CREATE INDEX idx_pali_text_related ON pali_text (book_name, cs_para)');
+        $dbh->exec('CREATE UNIQUE INDEX idx_works_book_para ON works (book, paragraph)');
     }
 
     private function exportPaliTexts(\PDO $dbh): int
@@ -116,19 +135,17 @@ class ExportMobileHeading extends Command
         $bar = $this->output->createProgressBar($total);
         $bar->setRedrawFrequency(5000);
 
-        // uid 只用于 join 标签，不写入结果表
-        $tagsByUid = $this->loadTags();
         $related = $this->loadRelated();
 
         $stmt = $dbh->prepare('INSERT INTO pali_text
             (book, paragraph, level, toc, length, chapter_len, chapter_strlen,
-             parent, tags, cs_para, book_name)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+             parent, cs_para, book_name)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
 
         $dbh->beginTransaction();
         $n = 0;
         foreach (
-            PaliText::select(['uid', 'book', 'paragraph', 'level', 'toc',
+            PaliText::select(['book', 'paragraph', 'level', 'toc',
                 'lenght', 'chapter_len', 'chapter_strlen', 'parent'])
                 ->orderBy('book')
                 ->orderBy('paragraph')
@@ -145,7 +162,6 @@ class ExportMobileHeading extends Command
                 $row->chapter_len,
                 $row->chapter_strlen,
                 $row->parent,
-                isset($tagsByUid[$row->uid]) ? implode(',', $tagsByUid[$row->uid]) : null,
                 $rel[0] ?? null,
                 $rel[1] ?? null,
             ]);
@@ -164,7 +180,9 @@ class ExportMobileHeading extends Command
      *
      * related_paragraphs 中同一段落会有多行，映射到一段连续的 cs_para 区间，
      * 但 book_name 唯一，因此这里取 min(cs_para) 作为起始位置合并成一行。
-     * book_name 为空表示该段落没有对应的注释书，直接跳过（结果列留 NULL）。
+     * book_name 为空或 cs_para 为 0 表示该段落没有对应段落，直接跳过（结果列留 NULL）。
+     * 0 不能照抄：mobile 只把 NULL 当「无对应」，0 会被当成坐标去配同名所有 0 号段落
+     * （related_paragraphs 重建后，复注自己的序言、标题段等都是 0）。
      *
      * @return array<string, array{0:int,1:string}> "book-para" => [cs_para, book_name]
      */
@@ -172,10 +190,11 @@ class ExportMobileHeading extends Command
     {
         $this->line('载入 related_paragraphs …');
         $out = [];
-        DB::table('related_paragraphs')
-            ->select(['book', 'para', 'book_name', DB::raw('min(cs_para) as cs_para')])
+        RelatedParagraph::query()
+            ->selectRaw('book, para, book_name, min(cs_para) as cs_para')
             ->whereNotNull('book_name')
             ->where('book_name', '<>', '')
+            ->where('cs_para', '>', 0)
             ->groupBy('book', 'para', 'book_name')
             ->orderBy('book')
             ->orderBy('para')
@@ -189,24 +208,56 @@ class ExportMobileHeading extends Command
         return $out;
     }
 
-    /** @return array<string, string[]> uid => tag names */
-    private function loadTags(): array
+    /**
+     * 作品表：book_titles 一行一部，tags 取作品起点段（pali_texts 同 book/paragraph
+     * 那一行）的 tag_maps → tags。按 sn 排序；同 (book, paragraph) 重复的只留第一条。
+     */
+    private function exportWorks(\PDO $dbh): int
     {
-        $this->line('载入 tag_maps / tags …');
-        $out = [];
-        DB::table('tag_maps')
-            ->join('tags', 'tags.id', '=', 'tag_maps.tag_id')
-            ->where('tag_maps.table_name', 'pali_texts')
-            ->select(['tag_maps.anchor_id', 'tags.name'])
-            ->orderBy('tag_maps.anchor_id')
-            ->chunk(20000, function ($rows) use (&$out) {
-                foreach ($rows as $r) {
-                    $out[$r->anchor_id][] = $r->name;
-                }
-            });
-        $this->line('  标签锚点：'.count($out));
+        $this->line('导出 works（book_titles）…');
+        $titles = BookTitle::orderBy('sn')->get(['sn', 'book', 'paragraph', 'title']);
 
-        return $out;
+        $stmt = $dbh->prepare('INSERT INTO works (sn, book, paragraph, level, title, toc, tags)
+            VALUES (?, ?, ?, ?, ?, ?, ?)');
+
+        $dbh->beginTransaction();
+        $seen = [];
+        $n = 0;
+        foreach ($titles as $bt) {
+            $key = $bt->book.'-'.$bt->paragraph;
+            if (isset($seen[$key])) {
+                $this->warn("  book_titles 重复：{$key}（sn={$bt->sn}），跳过");
+
+                continue;
+            }
+            $seen[$key] = true;
+
+            $text = PaliText::where('book', $bt->book)
+                ->where('paragraph', $bt->paragraph)
+                ->with(['tagMaps' => fn ($q) => $q->where('table_name', 'pali_texts'), 'tagMaps.tags'])
+                ->first(['uid', 'level', 'toc']);
+            if (! $text) {
+                $this->warn("  pali_texts 找不到作品起点段：{$key}（sn={$bt->sn}）");
+            }
+            $tags = $text
+                ? $text->tagMaps->map(fn ($m) => $m->tags?->name)->filter()->unique()->sort()->values()->all()
+                : [];
+
+            $stmt->execute([
+                $bt->sn,
+                $bt->book,
+                $bt->paragraph,
+                $text?->level,
+                $bt->title,
+                $text && $text->toc !== '' ? $text->toc : null,
+                $tags ? implode(',', $tags) : null,
+            ]);
+            $n++;
+        }
+        $dbh->commit();
+        $this->line("  作品：{$n}");
+
+        return $n;
     }
 
     private function writeMeta(\PDO $dbh, array $meta): void

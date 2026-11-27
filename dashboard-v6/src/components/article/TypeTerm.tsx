@@ -16,7 +16,6 @@ import TermShare from "../term/TermShare";
 import { QualityCtl } from "../template/Quality";
 import MarkupView from "../markup/MarkupView";
 import type { MarkupNode } from "../markup/types";
-import type { IUser } from "../../api/Auth";
 
 interface IWidget {
   id?: string;
@@ -113,7 +112,8 @@ const TypeTermWidget = ({
             nodes={term?.body as MarkupNode[] | undefined}
           />,
         ]}
-        editor={(term?.editor ?? undefined) as IUser | undefined}
+        editor={term?.editor}
+        coEditor={term?.co_editor}
         created_at={term?.created_at}
         updated_at={term?.updated_at}
         loading={loading}

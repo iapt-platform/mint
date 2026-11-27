@@ -32,6 +32,8 @@ interface IUseChannelProgressReturn {
   sentencesId: string[];
   sentenceCount: number;
   loading: boolean;
+  /** 加载失败时的错误（超时、网络不通…）；调用方据此显示错误页，不显示空列表 */
+  error: unknown;
   refresh: () => void;
 }
 
@@ -43,6 +45,7 @@ export const useChannelProgress = (
   const [sentencesId, setSentencesId] = useState<string[]>([]);
   const [sentenceCount, setSentenceCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<unknown>();
   const [tick, setTick] = useState(0);
 
   // refresh 引用永远稳定，不会触发任何 re-render
@@ -53,6 +56,7 @@ export const useChannelProgress = (
 
     const load = async () => {
       setLoading(true);
+      setError(undefined);
 
       try {
         // ── 1. 解析出句子 ID 列表 ────────────────────────────────────────────
@@ -88,7 +92,7 @@ export const useChannelProgress = (
             .filter((item): item is IChannelItem => item !== undefined),
         );
       } catch (err) {
-        console.error("useChannelProgress fetch error", err);
+        if (active) setError(err);
       } finally {
         if (active) setLoading(false);
       }
@@ -103,5 +107,5 @@ export const useChannelProgress = (
     // tick 由 refresh() 手动递增，是唯一的主动刷新入口
   }, [type, articleId, tick]);
 
-  return { channels, sentencesId, sentenceCount, loading, refresh };
+  return { channels, sentencesId, sentenceCount, loading, error, refresh };
 };

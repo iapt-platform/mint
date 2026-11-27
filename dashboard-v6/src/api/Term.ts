@@ -2,6 +2,7 @@ import type { IStudio, IUser, TRole } from "./Auth";
 import type { IChannel } from "./channel";
 import type { LoaderFunctionArgs } from "react-router";
 import { api, unwrap, unwrapQuiet } from "./client";
+import { ApiError } from "./error";
 import type { paths } from "./schema";
 
 /* ─── v3（术语本身已迁 v3，取代 v2 terms 的 show / view=channel|studio|word / store / update / destroy）───
@@ -240,7 +241,11 @@ export async function termLoader({ params }: LoaderFunctionArgs) {
     return unwrapQuiet(
       await api.GET("/v3/terms/{term}", { params: { path: { term: termId } } }),
     ).data;
-  } catch {
-    throw new Response("term not found", { status: 404 });
+  } catch (e) {
+    // 看不见（403）也当不存在；超时、网络不通、5xx 原样抛出，错误页按种类提示并可重试
+    if (e instanceof ApiError && (e.status === 403 || e.status === 404)) {
+      throw new Response("term not found", { status: 404 });
+    }
+    throw e;
   }
 }

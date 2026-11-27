@@ -19,6 +19,8 @@ import { fetchMyGroupsPage } from "../../api/group-member";
 import StatusBadge from "../../components/general/StatusBadge";
 import { useAppDispatch } from "../../hooks";
 import { refreshMyGroups } from "../teamspace/refreshMyGroups";
+import { useLoadGuard } from "../../hooks/useLoadGuard";
+import ApiErrorResult from "../../components/general/ApiErrorResult";
 
 interface DataItem {
   sn: number;
@@ -36,6 +38,7 @@ interface IWidget {
 }
 /** 我的团队：「我创建的」与「我参加的」两个标签页（v3 /me/groups 的 owned 过滤） */
 const GroupList = ({ onSelect, onSetting }: IWidget) => {
+  const load = useLoadGuard();
   const intl = useIntl(); //i18n
   const dispatch = useAppDispatch();
 
@@ -47,10 +50,10 @@ const GroupList = ({ onSelect, onSetting }: IWidget) => {
   /** 两个标签页的数量：各取一条，读 meta.total */
   const refreshNumbers = useCallback(() => {
     fetchMyGroupsPage({ owned: true, per_page: 1 }).then((res) =>
-      setMyNumber(res.meta?.total ?? 0)
+      setMyNumber(res.meta?.total ?? 0),
     );
     fetchMyGroupsPage({ owned: false, per_page: 1 }).then((res) =>
-      setCollaborationNumber(res.meta?.total ?? 0)
+      setCollaborationNumber(res.meta?.total ?? 0),
     );
   }, []);
   useEffect(refreshNumbers, [refreshNumbers]);
@@ -92,9 +95,16 @@ const GroupList = ({ onSelect, onSetting }: IWidget) => {
 
   const ref = useRef<ActionType | null>(null);
 
+  // 加载失败（超时、网络不通…）只显示错误页，不显示空列表
+  if (load.error) {
+    return <ApiErrorResult error={load.error} onRetry={load.retry} />;
+  }
+
   return (
     <>
       <ProTable<DataItem>
+        onRequestError={load.onError}
+        key={load.attempt}
         actionRef={ref}
         columns={[
           {
@@ -160,7 +170,7 @@ const GroupList = ({ onSelect, onSetting }: IWidget) => {
                     id: `labels.group.role.${role}`,
                   }),
                 },
-              ])
+              ]),
             ),
           },
           {
@@ -243,7 +253,9 @@ const GroupList = ({ onSelect, onSetting }: IWidget) => {
                 : undefined,
             }));
             return { total: res.meta?.total ?? 0, success: true, data: items };
-          } catch {
+          } catch (e) {
+            // 交给页面显示错误页（不是「暂无数据」）
+            load.onError(e);
             return { total: 0, success: false, data: [] };
           }
         }}
