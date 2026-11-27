@@ -32,6 +32,8 @@ export interface IArticleLayout {
   editor?: IEditorBrief | null;
   /** 协作者（v3 的 co_editor）：人类授权代写的 AI 模型 */
   coEditor?: IEditorBrief | null;
+  /** 显示在编辑者那一行下面（如术语所属的 channel） */
+  afterEditors?: ReactNode;
   owner?: IStudio;
   loading?: boolean;
   errorCode?: number;
@@ -53,6 +55,7 @@ const ArticleLayout = ({
   editor,
   coEditor,
   updated_at,
+  afterEditors,
   resList,
   loading,
   errorCode,
@@ -97,6 +100,7 @@ const ArticleLayout = ({
               coEditor={coEditor}
               updatedAt={updated_at}
             />
+            {afterEditors}
             <Divider />
           </Flex>
           {html
