@@ -517,7 +517,7 @@ class TermService
                 'contentType' => $term->effectiveContentType(),
             ];
             $summary = trim((string) $term->summary);
-            $items["{$term->guid}|summary"] = $base + ['source' => $summary !== '' ? $summary : (string) $term->note];
+            $items["{$term->guid}|summary"] = $base + ['source' => $summary !== '' ? $summary : $this->firstParagraph((string) $term->note)];
             if ($withBody) {
                 $bodyChannels = ! empty($render['channels']) ? $render['channels'] : $base['channels'];
                 $items["{$term->guid}|body"] = ['channels' => $bodyChannels] + $base + ['source' => trim($summary."\n\n".(string) $term->note)];
@@ -533,7 +533,7 @@ class TermService
         foreach ($terms as $term) {
             $term->abilities = $abilities[$term->guid];
             $text = (string) $rendered[Format::Text->value]["{$term->guid}|summary"];
-            $term->summary_text = trim((string) $term->summary) !== '' ? trim($text) : $this->firstParagraph($text);
+            $term->summary_text = trim($text);
             if ($withBody && $bodyFormat === Format::Html) {
                 $term->html = (string) $rendered[Format::Html->value]["{$term->guid}|body"];
             } elseif ($withBody) {
@@ -543,18 +543,45 @@ class TermService
     }
 
     /**
-     * 纯文本渲染（{@see Format::Text}）里段落之间只隔一个换行，第一个非空行就是第一段。
+     * 正文源码（markdown / markdown-e2）的第一个自然段，渲染前在源码上取。
+     *
+     * 不能渲染后再切：纯文本渲染里段落之间与段内换行都只是一个 `\n`，分不出段。
+     * 自然段以空行分隔（两种方言相同），围栏（```）内的空行不算；跳过标题、围栏、分隔线、
+     * 以及只由模板组成的段（`{{toc}}` 等）；段首只由模板组成的行（如 `{{ai}}` 提示）去掉。
+     * 一段也没有时退回整篇。
      */
-    private function firstParagraph(string $text): string
+    private function firstParagraph(string $source): string
     {
-        foreach (preg_split('/\n/u', $text) ?: [] as $paragraph) {
-            $paragraph = trim($paragraph);
-            if ($paragraph !== '') {
-                return $paragraph;
+        $blocks = [];
+        $lines = [];
+        $fenced = false;
+        foreach (preg_split('/\R/u', $source) ?: [] as $line) {
+            if (preg_match('/^\s*(```|~~~)/u', $line) === 1) {
+                $fenced = ! $fenced;
             }
+            if (! $fenced && trim($line) === '') {
+                $blocks[] = $lines;
+                $lines = [];
+
+                continue;
+            }
+            $lines[] = $line;
+        }
+        $blocks[] = $lines;
+
+        $templateOnly = '/^\s*(?:(?<t>\{\{(?:[^{}]++|(?&t))*\}\})\s*)+$/u';
+        foreach ($blocks as $lines) {
+            while ($lines !== [] && preg_match($templateOnly, $lines[0]) === 1) {
+                array_shift($lines);
+            }
+            if ($lines === [] || preg_match('/^\s*(#|```|~~~|([-*_])\s*\2\s*\2[\s\-*_]*$)/u', $lines[0]) === 1) {
+                continue;
+            }
+
+            return implode("\n", $lines);
         }
 
-        return '';
+        return $source;
     }
 
     /**

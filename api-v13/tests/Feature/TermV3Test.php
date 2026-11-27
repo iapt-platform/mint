@@ -162,6 +162,20 @@ it('shows a term with ETag, and hides terms of private channels', function () {
     $this->getJson('/api/v3/terms/'.Str::uuid())->assertNotFound();
 });
 
+it('takes the first natural paragraph of the note as summary_text, in both dialects', function (string $contentType) {
+    $owner = makeStudio('owner');
+    $channel = makeChannel($owner);
+    $note = "## 标题\n\n{{toc}}\n\n{{ai}}\n第一段第一行，\n第一段第二行。\n\n```\n围栏\n\n里的空行\n```\n\n第二段。";
+    $term = newTerm($channel, $owner, ['note' => $note, 'content_type' => $contentType]);
+
+    $text = $this->getJson("/api/v3/terms/{$term['id']}")->assertOk()->json('data.summary_text');
+    expect($text)->toContain('第一段第一行')->toContain('第一段第二行')
+        ->not->toContain('AI')->not->toContain('标题')->not->toContain('第二段');
+
+    $listed = $this->getJson("/api/v3/terms?word={$term['word']}")->assertOk()->json('data.0.summary_text');
+    expect($listed)->toBe($text);
+})->with(['markdown', 'markdown-e2']);
+
 it('treats legacy studio-level terms with an empty-string channal like null ones', function () {
     [$team, $users] = makeTeam();
     $created = $this->postJson("/api/v3/studios/{$team}/terms", ['word' => 'legacy', 'meaning' => '老', 'language' => 'zh-Hans'], authHeader($users['owner']))
