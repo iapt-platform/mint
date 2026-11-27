@@ -22,7 +22,9 @@ const termRoutes: RouteObject[] = [
         loader: termLoader,
         errorElement: createElement(RouteError, { backTo: "/workspace/term" }),
         handle: {
-          crumb: (match: { data: { word: string } }) => match.data.word,
+          // loader 失败时 data 为空（错误页那时也要渲染面包屑）
+          crumb: (match: { data?: { word?: string } }) =>
+            match.data?.word ?? "",
         },
         children: [
           {
