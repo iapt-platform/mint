@@ -120,6 +120,7 @@ const items = {
   "buttons.account.switch": "Switch account",
   "buttons.teamspace.leave": "Back to personal space",
   "buttons.back": "Back",
+  "buttons.retry": "Retry",
   "buttons.group.invite.link": "Get Invite Link",
   "buttons.group.invite.accept": "Accept and Join",
   "buttons.group.invite.sign-in": "Sign in to Join",

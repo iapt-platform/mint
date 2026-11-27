@@ -30,6 +30,8 @@ import {
   type ChannelRef,
   type EditableChannelQuery,
 } from "../../api/channel";
+import { useLoadGuard } from "../../hooks/useLoadGuard";
+import ApiErrorResult from "../general/ApiErrorResult";
 
 const MAX_FALLBACK = 3;
 const MAX_TERM_SOURCE = 10;
@@ -273,6 +275,8 @@ const ChannelLinksWidget = ({ channelId }: IWidget) => {
   const [links, setLinks] = useState<LinksState>();
   const [channelType, setChannelType] = useState<PickType>();
   const [saving, setSaving] = useState(false);
+  const load = useLoadGuard();
+  const { onError } = load;
 
   useEffect(() => {
     if (!channelId) {
@@ -281,13 +285,19 @@ const ChannelLinksWidget = ({ channelId }: IWidget) => {
     Promise.all([fetchChannelLinks(channelId), fetchChannel(channelId)]).then(
       ([data, channel]) => {
         // channels.type 的取值与列表的 type 过滤参数是同一组（IndexChannelRequest::TYPES）
-        setChannelType(channel?.type as PickType | undefined);
+        setChannelType(channel.type as PickType | undefined);
         if (data) {
           setLinks(toState(data));
         }
       },
+      onError,
     );
-  }, [channelId]);
+  }, [channelId, load.attempt, onError]);
+
+  // 取不到（超时、网络不通…）显示错误页，不再一直停在骨架屏
+  if (load.error) {
+    return <ApiErrorResult error={load.error} onRetry={load.retry} />;
+  }
 
   if (!channelId || !links) {
     return <Skeleton active />;

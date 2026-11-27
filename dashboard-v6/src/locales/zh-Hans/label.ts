@@ -65,6 +65,8 @@ const items = {
   "labels.error.403": "没有权限",
   "labels.error.404": "没有找到指定的资源",
   "labels.error.429": "请求过于频繁",
+  "labels.error.timeout": "请求超时，服务器没有在规定时间内响应",
+  "labels.error.network": "无法连接服务器，请检查网络",
   "labels.error.500": "服务器内部错误",
   "labels.error.render-failed": "图形渲染失败",
   "labels.task": "任务",

@@ -65,6 +65,8 @@ const items = {
   "labels.error.403": "沒有權限",
   "labels.error.404": "沒有找到指定的資源",
   "labels.error.429": "請求過於頻繁",
+  "labels.error.timeout": "請求逾時，伺服器沒有在規定時間內回應",
+  "labels.error.network": "無法連線伺服器，請檢查網路",
   "labels.error.500": "伺服器內部錯誤",
   "labels.error.render-failed": "圖形渲染失敗",
   "labels.task": "任務",

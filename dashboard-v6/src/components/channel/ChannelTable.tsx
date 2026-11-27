@@ -38,6 +38,8 @@ import { TransferOutLinedIcon } from "../../../src/assets/icon";
 import { channelTypeFilter } from "./utils";
 import StatusBadge from "../general/StatusBadge";
 import { EResType } from "../share/utils";
+import { useLoadGuard } from "../../hooks/useLoadGuard";
+import ApiErrorResult from "../general/ApiErrorResult";
 
 const { Text } = Typography;
 
@@ -121,6 +123,7 @@ const ChannelTableWidget = ({
   chapter,
   onSelect,
 }: IWidget) => {
+  const load = useLoadGuard();
   const intl = useIntl();
 
   const [openCreate, setOpenCreate] = useState(false);
@@ -214,6 +217,11 @@ const ChannelTableWidget = ({
 
   const ref = useRef<ActionType | null>(null);
 
+  // 加载失败（超时、网络不通…）只显示错误页，不显示空列表
+  if (load.error) {
+    return <ApiErrorResult error={load.error} onRetry={load.retry} />;
+  }
+
   return (
     <>
       {channelType ? (
@@ -224,6 +232,7 @@ const ChannelTableWidget = ({
         />
       ) : undefined}
       <ProTable<IChannelItem>
+        onRequestError={load.onError}
         actionRef={ref}
         // 与文章列表同一套做法（ArticleList）：分页不受控，用 defaultCurrent / defaultPageSize；
         // 除页码外的状态一变就换 key 重新挂载，让新的默认值生效。受控的 current / pageSize 会和
@@ -237,6 +246,8 @@ const ChannelTableWidget = ({
           query.collaborator,
           query.order,
           query.dir,
+          // 「重试」时重新挂载
+          load.attempt,
         ].join("|")}
         columns={[
           {
@@ -531,7 +542,9 @@ const ChannelTableWidget = ({
               }),
             );
             return { total: res?.meta?.total ?? 0, success: true, data: items };
-          } catch {
+          } catch (e) {
+            // 交给页面显示错误页（不是「暂无数据」）
+            load.onError(e);
             return { total: 0, success: false, data: [] };
           }
         }}

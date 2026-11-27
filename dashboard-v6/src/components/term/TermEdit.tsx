@@ -18,6 +18,7 @@ import {
   Dropdown,
   Form,
   Space,
+  Spin,
   Tabs,
   Tag,
 } from "antd";
@@ -49,6 +50,7 @@ import { currentUser as _currentUser } from "../../reducers/current-user";
 import { useActiveStudio } from "../../hooks/useActiveStudio";
 import store from "../../store";
 import { push } from "../../reducers/term-vocabulary";
+import ApiErrorResult from "../general/ApiErrorResult";
 
 interface ValueType {
   key?: string;
@@ -166,6 +168,8 @@ const LeaveGuard = ({
  * - 右上角「取消」「保存」，保存的下拉是「另存为」（弹出版本选择，复制成一条新术语）；
  *   两者完成后都调回调，由调用方决定去哪（编辑页回到预览）
  * - 有未保存的修改时，取消 / 离开会提示保存
+ * - 编辑时先从服务器取这条术语；取不到（超时、网络不通、无权限…）只显示错误页与「重试」，
+ *   不渲染表单——空表单看起来像是加载成功了，保存还会静默失败
  */
 const TermEditWidget = ({
   id,
@@ -191,6 +195,10 @@ const TermEditWidget = ({
   const [currChannel, setCurrChannel] = useState<ValueType[]>([]);
   const [etag, setEtag] = useState<string>();
   const [isGeneral, setIsGeneral] = useState(false);
+  /** 表单初始值；undefined = 还在加载 */
+  const [initialValues, setInitialValues] = useState<IFormValues>();
+  const [loadError, setLoadError] = useState<unknown>();
+  const [loadAttempt, setLoadAttempt] = useState(0);
   const user = useAppSelector(_currentUser);
   const { studioId: activeStudioId } = useActiveStudio();
   const { message, modal } = App.useApp();
@@ -232,6 +240,110 @@ const TermEditWidget = ({
       setMeaningOptions(meaningList);
     });
   }, [word]);
+
+  /** 表单初始值：编辑时从服务器取，新建时按入口给默认值。失败就抛出（由调用处显示错误页） */
+  const loadInitial = async (): Promise<IFormValues> => {
+    let data: IFormValues = {
+      word: word ? word : "",
+      tag: tags?.join(),
+      meaning: "",
+      meaning2: [],
+      note: "",
+      summary: "",
+      quality: null,
+      content_type: TERM_CONTENT_TYPES[0],
+      redirect: "",
+      lang: "",
+    };
+    if (typeof id !== "undefined") {
+      // 编辑：从服务器拉取。quiet：失败由下面的错误页显示，不再弹提示
+      const term = await fetchTerm(id, {}, true);
+      if (!term) {
+        throw new Error(label("labels.route-error.other"));
+      }
+      setEtag(term.etag);
+      setIsGeneral(!term.channel_id);
+      if (term.channel) {
+        setCurrChannel([
+          { label: term.channel.name, value: term.channel.id ?? "" },
+        ]);
+      }
+      if (parentChannelId) {
+        setCopyToChannel(
+          user?.roles?.includes("basic") ? [parentChannelId] : [""],
+        );
+      }
+      data = {
+        id: community ? undefined : term.id,
+        word: term.word,
+        tag: term.tag ?? undefined,
+        meaning: term.meaning,
+        meaning2: term.other_meaning ? term.other_meaning.split(",") : [],
+        note: term.note ?? "",
+        summary: term.summary ?? "",
+        quality: term.quality ?? null,
+        content_type: term.content_type,
+        redirect: term.redirect ?? "",
+        lang: term.language,
+        channelId: community
+          ? (parentChannelId ?? "")
+          : (term.channel_id ?? ""),
+      };
+      if (!community && !term.abilities?.update) {
+        setReadonly(true);
+      }
+    } else if (typeof parentChannelId !== "undefined") {
+      /**
+       * 在 channel 里新建
+       * basic：只能建在这个版本
+       * pro：在自己的 studio 里默认建成通用术语，在别人的版本里建在版本里
+       */
+      const channel = await fetchChannel(parentChannelId);
+      let target = "";
+      if (user?.roles?.includes("basic")) {
+        target = parentChannelId;
+        setCopyToChannel([parentChannelId]);
+      } else {
+        target = user?.id === parentStudioId ? "" : parentChannelId;
+        setCopyToChannel([channel?.owner?.id ?? "", parentChannelId]);
+      }
+      data = {
+        ...data,
+        lang: channel?.lang ?? "",
+        channelId: target,
+      };
+    } else if (channelId) {
+      // 从版本的术语列表新建
+      data = { ...data, channelId };
+    }
+    return data;
+  };
+
+  // 只在挂载与点「重试」时加载（同原来 ProForm request 的时机）；用 ref 取最新的 loadInitial
+  const loadRef = useRef(loadInitial);
+  useEffect(() => {
+    loadRef.current = loadInitial;
+  });
+  useEffect(() => {
+    let cancelled = false;
+    setInitialValues(undefined);
+    setLoadError(undefined);
+    loadRef.current().then(
+      (values) => {
+        if (!cancelled) {
+          setInitialValues(values);
+        }
+      },
+      (e: unknown) => {
+        if (!cancelled) {
+          setLoadError(e);
+        }
+      },
+    );
+    return () => {
+      cancelled = true;
+    };
+  }, [loadAttempt]);
 
   const channelDisable = community || readonly || typeof id !== "undefined";
 
@@ -369,6 +481,28 @@ const TermEditWidget = ({
 
   useImperativeHandle(ref, () => ({ cancel: handleCancel }));
 
+  if (loadError !== undefined) {
+    return (
+      <ApiErrorResult
+        error={loadError}
+        onRetry={() => setLoadAttempt((n) => n + 1)}
+        extra={
+          onCancel ? (
+            <Button onClick={onCancel}>{label("buttons.back")}</Button>
+          ) : undefined
+        }
+      />
+    );
+  }
+
+  if (!initialValues) {
+    return (
+      <div style={{ padding: "50px 0", textAlign: "center" }}>
+        <Spin />
+      </div>
+    );
+  }
+
   return (
     <>
       {blockNavigation && (
@@ -432,82 +566,7 @@ const TermEditWidget = ({
         autoFocusFirstInput={true}
         submitter={false}
         onValuesChange={() => setDirty(true)}
-        request={async () => {
-          let data: IFormValues = {
-            word: word ? word : "",
-            tag: tags?.join(),
-            meaning: "",
-            meaning2: [],
-            note: "",
-            summary: "",
-            quality: null,
-            content_type: TERM_CONTENT_TYPES[0],
-            redirect: "",
-            lang: "",
-          };
-          if (typeof id !== "undefined") {
-            // 编辑：从服务器拉取
-            const term = await fetchTerm(id);
-            if (!term) {
-              return data;
-            }
-            setEtag(term.etag);
-            setIsGeneral(!term.channel_id);
-            if (term.channel) {
-              setCurrChannel([
-                { label: term.channel.name, value: term.channel.id ?? "" },
-              ]);
-            }
-            if (parentChannelId) {
-              setCopyToChannel(
-                user?.roles?.includes("basic") ? [parentChannelId] : [""],
-              );
-            }
-            data = {
-              id: community ? undefined : term.id,
-              word: term.word,
-              tag: term.tag ?? undefined,
-              meaning: term.meaning,
-              meaning2: term.other_meaning ? term.other_meaning.split(",") : [],
-              note: term.note ?? "",
-              summary: term.summary ?? "",
-              quality: term.quality ?? null,
-              content_type: term.content_type,
-              redirect: term.redirect ?? "",
-              lang: term.language,
-              channelId: community
-                ? (parentChannelId ?? "")
-                : (term.channel_id ?? ""),
-            };
-            if (!community && !term.abilities?.update) {
-              setReadonly(true);
-            }
-          } else if (typeof parentChannelId !== "undefined") {
-            /**
-             * 在 channel 里新建
-             * basic：只能建在这个版本
-             * pro：在自己的 studio 里默认建成通用术语，在别人的版本里建在版本里
-             */
-            const channel = await fetchChannel(parentChannelId);
-            let target = "";
-            if (user?.roles?.includes("basic")) {
-              target = parentChannelId;
-              setCopyToChannel([parentChannelId]);
-            } else {
-              target = user?.id === parentStudioId ? "" : parentChannelId;
-              setCopyToChannel([channel?.owner?.id ?? "", parentChannelId]);
-            }
-            data = {
-              ...data,
-              lang: channel?.lang ?? "",
-              channelId: target,
-            };
-          } else if (channelId) {
-            // 从版本的术语列表新建
-            data = { ...data, channelId };
-          }
-          return data;
-        }}
+        initialValues={initialValues}
       >
         <Tabs
           items={[

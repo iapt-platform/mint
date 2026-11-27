@@ -26,6 +26,8 @@ import CopyToModal from "./CopyToModal";
 
 import type { ArticleType } from "../../api/article";
 import Studio from "../../../src/components/auth/Studio";
+import { useLoadGuard } from "../../hooks/useLoadGuard";
+import ApiErrorResult from "../general/ApiErrorResult";
 
 const { Link, Text } = Typography;
 
@@ -51,6 +53,7 @@ const ChannelPickerTableWidget = ({
   defaultOwner = "all",
   reload = false,
 }: IWidget) => {
+  const load = useLoadGuard();
   const intl = useIntl();
   const [selectedRowKeys, setSelectedRowKeys] =
     useState<React.Key[]>(selectedKeys);
@@ -67,6 +70,11 @@ const ChannelPickerTableWidget = ({
       ref.current?.reload();
     }
   }, [reload]);
+
+  // 加载失败（超时、网络不通…）只显示错误页，不显示空列表
+  if (load.error) {
+    return <ApiErrorResult error={load.error} onRetry={load.retry} />;
+  }
 
   return (
     <Space orientation="vertical" style={{ width: "100%" }}>
@@ -100,6 +108,8 @@ const ChannelPickerTableWidget = ({
         />
       ) : undefined}
       <ProList<IChannelItem, IParams>
+        onRequestError={load.onError}
+        key={load.attempt}
         actionRef={ref}
         rowSelection={
           showCheckBox

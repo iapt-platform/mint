@@ -20,6 +20,8 @@ import LangSelect from "../general/LangSelect";
 import PublicitySelect from "../studio/PublicitySelect";
 import { useState } from "react";
 import { useAppSelector } from "../../hooks";
+import { useLoadGuard } from "../../hooks/useLoadGuard";
+import ApiErrorResult from "../general/ApiErrorResult";
 import { currentUser } from "../../reducers/current-user";
 
 interface IFormData {
@@ -47,6 +49,13 @@ const EditWidget = ({ channelId, onLoad }: IWidget) => {
   const [data, setData] = useState<Channel>();
 
   const user = useAppSelector(currentUser);
+  const load = useLoadGuard();
+
+  // 取不到 channel（超时、网络不通…）只显示错误页，不渲染空表单
+  if (load.error) {
+    return <ApiErrorResult error={load.error} onRetry={load.retry} />;
+  }
+
   return (
     <>
       {isSystem ? (
@@ -70,12 +79,14 @@ const EditWidget = ({ channelId, onLoad }: IWidget) => {
           } as ChannelInput);
           message.success(intl.formatMessage({ id: "flashes.success" }));
         }}
-        formKey="channel_edit"
-        request={async () => {
-          const channel = channelId ? await fetchChannel(channelId) : undefined;
-          if (!channel) {
+        // formKey 是 request 的缓存键；带上 attempt，「重试」才会真的重新请求
+        formKey={`channel_edit_${load.attempt}`}
+        key={load.attempt}
+        request={load.guard(async () => {
+          if (!channelId) {
             return { name: "", type: "", lang: "", summary: "", status: 0 };
           }
+          const channel = await fetchChannel(channelId);
           setData(channel);
           onLoad?.(channel);
           setIsSystem(channel.is_system);
@@ -90,7 +101,7 @@ const EditWidget = ({ channelId, onLoad }: IWidget) => {
               null) as TChannelSourceType | null,
             source_id: channel.source_id,
           };
-        }}
+        })}
       >
         <ProForm.Group>
           <ProFormText

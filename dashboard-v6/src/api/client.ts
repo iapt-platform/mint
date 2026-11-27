@@ -8,8 +8,8 @@
 import createClient, { type Middleware } from "openapi-fetch";
 
 import { get as getToken } from "../reducers/session";
-import { get as getUiLang } from "../locales";
-import { ApiError, reportApiError } from "./error";
+import { get as getUiLang, messages } from "../locales";
+import { ApiError, type ApiErrorKind, reportApiError } from "./error";
 import type { paths } from "./schema";
 
 /**
@@ -30,6 +30,77 @@ const authMiddleware: Middleware = {
   },
 };
 
+/** 普通请求的超时（从发出到响应体收完） */
+const TIMEOUT_MS = 30_000;
+/** 上传（multipart）与下载文件（不收 JSON）放宽 */
+const FILE_TIMEOUT_MS = 120_000;
+
+/** 前端合成的「请求没成功」响应带这个头，值是 ApiErrorKind（timeout / network） */
+const TRANSPORT_ERROR_HEADER = "X-Client-Transport-Error";
+
+/** 这几个状态码的响应不能带 body（new Response 会抛异常） */
+const NULL_BODY_STATUS = new Set([101, 204, 205, 304]);
+
+/** 界面语言的文案（非组件代码里取不到 useIntl） */
+const text = (id: string): string =>
+  (messages(getUiLang()) as Record<string, string>)[id] ?? id;
+
+const isFileTransfer = (request: Request): boolean =>
+  (request.headers.get("Content-Type") ?? "").startsWith("multipart/") ||
+  !(request.headers.get("Accept") ?? "application/json").includes("json");
+
+/**
+ * 所有 v3 请求经过这里：
+ *
+ * - **超时**：从发出到响应体收完，超过 TIMEOUT_MS 就中止。浏览器的 fetch 本身没有超时，
+ *   后端不回就会一直等下去
+ * - **超时 / 网络不通不抛异常**：openapi-fetch 遇到 fetch 抛异常会原样抛出，绕过
+ *   `unwrap()`——不弹提示、也不是 ApiError，调用方无从区分。这里把它们换成一个合成的
+ *   失败响应（带 TRANSPORT_ERROR_HEADER），于是和 4xx / 5xx 走同一条路：
+ *   `unwrap()` 弹提示并抛 ApiError，`unwrapQuiet()` 只抛
+ * - **调用方自己取消**（传了 signal 并 abort）照旧抛 AbortError，由调用方忽略
+ *
+ * 响应体在这里读完再交出去，超时才能覆盖「响应头到了、正文迟迟不来」的情况。
+ */
+const fetchWithTimeout = async (request: Request): Promise<Response> => {
+  const timeout = AbortSignal.timeout(
+    isFileTransfer(request) ? FILE_TIMEOUT_MS : TIMEOUT_MS,
+  );
+  try {
+    const response = await fetch(request, {
+      signal: AbortSignal.any([request.signal, timeout]),
+    });
+    const body = NULL_BODY_STATUS.has(response.status)
+      ? null
+      : await response.arrayBuffer();
+    // body 已解压，原来的长度与编码头不再对得上
+    const headers = new Headers(response.headers);
+    headers.delete("Content-Length");
+    headers.delete("Content-Encoding");
+    return new Response(body, {
+      status: response.status,
+      statusText: response.statusText,
+      headers,
+    });
+  } catch (e) {
+    if (request.signal.aborted) {
+      throw e;
+    }
+    const kind: ApiErrorKind = timeout.aborted ? "timeout" : "network";
+    return new Response(
+      JSON.stringify({ title: text(`labels.error.${kind}`) }),
+      {
+        // 状态码只是占位（Response 不接受 0），toApiError 认的是 TRANSPORT_ERROR_HEADER
+        status: kind === "timeout" ? 504 : 503,
+        headers: {
+          "Content-Type": "application/problem+json",
+          [TRANSPORT_ERROR_HEADER]: kind,
+        },
+      },
+    );
+  }
+};
+
 /**
  * baseUrl 是 "/api"，所以调用时写的是 OpenAPI 规格里的 path（如 "/v3/heartbeat"），
  * 最终请求 "/api/v3/heartbeat"。开发期由 vite proxy 转发到后端。
@@ -38,6 +109,7 @@ export const api = createClient<paths>({
   baseUrl: "/api",
   credentials: "include",
   mode: "cors",
+  fetch: fetchWithTimeout,
 });
 
 api.use(authMiddleware);
@@ -53,12 +125,31 @@ type ProblemDetails = {
 };
 
 const toApiError = (result: FetchResult<unknown>): ApiError => {
-  const problem = result.error as ProblemDetails | undefined;
+  const { response } = result;
+  const transport = response.headers.get(TRANSPORT_ERROR_HEADER);
+  if (transport === "timeout" || transport === "network") {
+    return new ApiError(
+      0,
+      text(`labels.error.${transport}`),
+      undefined,
+      transport,
+    );
+  }
+  // 网关回的 502 / 504 等，响应体是 HTML（openapi-fetch 给的是字符串），没有 detail
+  const problem =
+    typeof result.error === "object"
+      ? (result.error as ProblemDetails | null)
+      : undefined;
+  const kind: ApiErrorKind =
+    response.status === 408 || response.status === 504 ? "timeout" : "http";
   // 422 的字段级错误一并带上，表单可以直接用
   return new ApiError(
-    result.response.status,
-    problem?.detail ?? problem?.title,
+    response.status,
+    problem?.detail ??
+      problem?.title ??
+      (kind === "timeout" ? text("labels.error.timeout") : undefined),
     problem?.errors,
+    kind,
   );
 };
 

@@ -18,6 +18,8 @@ import {
 } from "../../api/group-member";
 import { useAppSelector } from "../../hooks";
 import { studioList } from "../../reducers/current-user";
+import { useLoadGuard } from "../../hooks/useLoadGuard";
+import ApiErrorResult from "../general/ApiErrorResult";
 
 const { Content } = Layout;
 
@@ -32,6 +34,7 @@ interface IWidgetGroupFile {
   groupId?: string;
 }
 const GroupMemberWidget = ({ groupId }: IWidgetGroupFile) => {
+  const load = useLoadGuard();
   const intl = useIntl(); //i18n
   const [memberCount, setMemberCount] = useState<number>();
   const studios = useAppSelector(studioList);
@@ -46,9 +49,16 @@ const GroupMemberWidget = ({ groupId }: IWidgetGroupFile) => {
   const ref = useRef<ActionType | null>(null);
   const reload = () => ref.current?.reload();
 
+  // 加载失败（超时、网络不通…）只显示错误页，不显示空列表
+  if (load.error) {
+    return <ApiErrorResult error={load.error} onRetry={load.retry} />;
+  }
+
   return (
     <Content>
       <ProList<GroupMember>
+        onRequestError={load.onError}
+        key={load.attempt}
         rowKey="id"
         actionRef={ref}
         // groupId 放进 params：切换团队（团队空间或团队详情页）时 ProList 才会重新请求
@@ -62,7 +72,11 @@ const GroupMemberWidget = ({ groupId }: IWidgetGroupFile) => {
           canManage && groupId
             ? [
                 <GroupInviteLink key="invite" groupId={groupId} />,
-                <GroupAddMember key="add" groupId={groupId} onCreated={reload} />,
+                <GroupAddMember
+                  key="add"
+                  groupId={groupId}
+                  onCreated={reload}
+                />,
               ]
             : []
         }
@@ -74,7 +88,7 @@ const GroupMemberWidget = ({ groupId }: IWidgetGroupFile) => {
             const res = await fetchGroupMembers(
               groupId,
               params.current ?? 1,
-              params.pageSize ?? 20
+              params.pageSize ?? 20,
             );
             setMemberCount(res.meta?.total);
             return {
@@ -82,7 +96,9 @@ const GroupMemberWidget = ({ groupId }: IWidgetGroupFile) => {
               success: true,
               data: res.data ?? [],
             };
-          } catch {
+          } catch (e) {
+            // 交给页面显示错误页（不是「暂无数据」）
+            load.onError(e);
             return { total: 0, success: false, data: [] };
           }
         }}

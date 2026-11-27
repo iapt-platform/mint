@@ -22,6 +22,8 @@ import TermModal from "./TermModal";
 import { useAppSelector } from "../../hooks";
 import { currentUser } from "../../reducers/current-user";
 import { Link } from "react-router";
+import { useLoadGuard } from "../../hooks/useLoadGuard";
+import ApiErrorResult from "../general/ApiErrorResult";
 
 interface IItem {
   sn: number;
@@ -43,6 +45,7 @@ interface IWidget {
   channelId?: string;
 }
 const TermListWidget = ({ studioId, studioName, channelId }: IWidget) => {
+  const load = useLoadGuard();
   const intl = useIntl();
   const currUser = useAppSelector(currentUser);
 
@@ -85,9 +88,16 @@ const TermListWidget = ({ studioId, studioName, channelId }: IWidget) => {
         ? { studioId }
         : undefined;
 
+  // 加载失败（超时、网络不通…）只显示错误页，不显示空列表
+  if (load.error) {
+    return <ApiErrorResult error={load.error} onRetry={load.retry} />;
+  }
+
   return (
     <>
       <ProTable<IItem>
+        onRequestError={load.onError}
+        key={load.attempt}
         actionRef={ref}
         columns={[
           {

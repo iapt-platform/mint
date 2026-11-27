@@ -28,6 +28,8 @@ import {
 import type { ISentenceResponse } from "../../api/sentence";
 import StatusBadge from "../general/StatusBadge";
 import { SeverityTag } from "./SeverityTag";
+import { useLoadGuard } from "../../hooks/useLoadGuard";
+import ApiErrorResult from "../general/ApiErrorResult";
 
 const { Paragraph, Text } = Typography;
 
@@ -52,6 +54,7 @@ const DiscussionListCardWidget = ({
   onItemCountChange,
   onReady,
 }: IWidget) => {
+  const load = useLoadGuard();
   const ref = useRef<ActionType | null>(null);
   const [activeKey, setActiveKey] = useState<TDiscussionStatus>("active");
   const [activeNumber, setActiveNumber] = useState<number>(0);
@@ -77,9 +80,16 @@ const DiscussionListCardWidget = ({
       </Typography.Paragraph>
     );
   }
+  // 加载失败（超时、网络不通…）只显示错误页，不显示空列表
+  if (load.error) {
+    return <ApiErrorResult error={load.error} onRetry={load.retry} />;
+  }
+
   return (
     <>
       <ProList<IComment>
+        onRequestError={load.onError}
+        key={load.attempt}
         rowKey={(row) => row.id ?? `tpl-${row.tplId}`}
         actionRef={ref}
         metas={{
@@ -196,8 +206,8 @@ const DiscussionListCardWidget = ({
           // summary 也会列出批注类型（note / commentary），讨论面板只新建评论线程
           setCreatableTypes(
             THREAD_TYPES.filter((value) =>
-              summary.creatable_types?.includes(value)
-            )
+              summary.creatable_types?.includes(value),
+            ),
           );
           setActiveNumber(summary.status_counts?.active ?? 0);
           setCloseNumber(summary.status_counts?.close ?? 0);
@@ -220,7 +230,7 @@ const DiscussionListCardWidget = ({
                 .filter(
                   (value) =>
                     res.items.findIndex((old) => old.tplId === value.uid) ===
-                    -1
+                    -1,
                 )
                 .map((item) => {
                   return {

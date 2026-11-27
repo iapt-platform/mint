@@ -1,7 +1,8 @@
 // src/routes/termRoutes.ts
-import { lazy } from "react";
+import { createElement, lazy } from "react";
 import type { RouteObject } from "react-router";
 import { termLoader } from "../api/Term";
+import RouteError from "../components/general/RouteError";
 
 const WorkspaceTerm = lazy(() => import("../pages/workspace/term/list"));
 const WorkspaceTermShow = lazy(() => import("../pages/workspace/term/show"));
@@ -19,6 +20,7 @@ const termRoutes: RouteObject[] = [
       {
         path: ":id",
         loader: termLoader,
+        errorElement: createElement(RouteError, { backTo: "/workspace/term" }),
         handle: {
           crumb: (match: { data: { word: string } }) => match.data.word,
         },

@@ -7,6 +7,7 @@
 import type { LoaderFunctionArgs } from "react-router";
 
 import { api, unwrap, unwrapQuiet, unwrapVoid } from "./client";
+import { ApiError } from "./error";
 import type { paths } from "./schema";
 
 type GroupSingle =
@@ -50,10 +51,14 @@ export async function groupLoader({ params }: LoaderFunctionArgs) {
   }
   try {
     return unwrapQuiet(
-      await api.GET("/v3/groups/{group}", { params: { path: { group } } })
+      await api.GET("/v3/groups/{group}", { params: { path: { group } } }),
     ).data;
-  } catch {
-    throw new Response("team not found", { status: 404 });
+  } catch (e) {
+    // 看不见也当不存在；超时、网络不通、5xx 原样抛出，错误页按种类提示并可重试
+    if (e instanceof ApiError && (e.status === 403 || e.status === 404)) {
+      throw new Response("team not found", { status: 404 });
+    }
+    throw e;
   }
 }
 
@@ -62,7 +67,7 @@ export const searchGroups = async (search: string, perPage = 20) =>
   unwrap(
     await api.GET("/v3/groups", {
       params: { query: { search, per_page: perPage } },
-    })
+    }),
   ).data ?? [];
 
 export const createGroup = async (body: NewGroupInput) =>
@@ -73,33 +78,33 @@ export const updateGroup = async (group: string, body: GroupInput) =>
     await api.PATCH("/v3/groups/{group}", {
       params: { path: { group } },
       body,
-    })
+    }),
   ).data;
 
 /** 名下还有资源时后端 409，unwrapVoid 会弹出原因 */
 export const deleteGroup = async (group: string): Promise<void> =>
   unwrapVoid(
-    await api.DELETE("/v3/groups/{group}", { params: { path: { group } } })
+    await api.DELETE("/v3/groups/{group}", { params: { path: { group } } }),
   );
 
 export const fetchGroupShares = async (
   group: string,
   page: number,
-  perPage: number
+  perPage: number,
 ) =>
   unwrap(
     await api.GET("/v3/groups/{group}/shares", {
       params: { path: { group }, query: { page, per_page: perPage } },
-    })
+    }),
   );
 
 /** 把资源移出团队（只删这条共享，资源本身不动） */
 export const removeGroupShare = async (
   group: string,
-  share: string
+  share: string,
 ): Promise<void> =>
   unwrapVoid(
     await api.DELETE("/v3/groups/{group}/shares/{share}", {
       params: { path: { group, share } },
-    })
+    }),
   );
