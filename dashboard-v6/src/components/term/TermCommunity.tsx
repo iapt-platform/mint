@@ -33,6 +33,7 @@ const TermCommunityWidget = ({ word }: IWidget) => {
   const intl = useIntl();
   const [show, setShow] = useState(false);
   const [wordData, setWordData] = useState<IWord>();
+  const [summaryExpanded, setSummaryExpanded] = useState(false);
 
   useEffect(() => {
     if (typeof word === "undefined") {
@@ -95,6 +96,7 @@ const TermCommunityWidget = ({ word }: IWidget) => {
         });
         _data.editor.sort((a, b) => b.score - a.score);
         setWordData(_data);
+        setSummaryExpanded(false);
         if (_data.editor.length > 0) {
           setShow(true);
         }
@@ -200,15 +202,29 @@ const TermCommunityWidget = ({ word }: IWidget) => {
       <div key="summary">
         <Space style={{ flexWrap: "wrap" }}>
           <Text strong>{"摘要："}</Text>
-          {wordData?.summary.map((item, id) => {
-            return (
-              <Space key={id}>
-                {item.value}
-                <Badge color="geekblue" size="small" count={item.score} />
-              </Space>
-            );
-          })}
         </Space>
+        {/* 只显示第一条摘要，其余点「展开」才显示 */}
+        {(summaryExpanded
+          ? wordData?.summary
+          : wordData?.summary.slice(0, 1)
+        )?.map((item, id) => {
+          return (
+            <div key={id}>
+              {item.value}
+              <Badge color="geekblue" size="small" count={item.score} />
+            </div>
+          );
+        })}
+        {wordData && wordData.summary.length > 1 ? (
+          <Typography.Link onClick={() => setSummaryExpanded((v) => !v)}>
+            {summaryExpanded
+              ? intl.formatMessage({ id: "search.show_less" })
+              : intl.formatMessage(
+                  { id: "search.show_more" },
+                  { n: wordData.summary.length - 1 },
+                )}
+          </Typography.Link>
+        ) : undefined}
       </div>
       <div key="collaborator">
         <Space style={{ flexWrap: "wrap" }}>
