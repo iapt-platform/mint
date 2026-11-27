@@ -291,7 +291,7 @@ class UserService
             'roles' => ['ai'],
             'sn' => 0,
             'avatar' => $this->avatarUrl($assistant->avatar)
-                ?? $this->assistantLogo($assistant->model, $assistant->url),
+                ?? $this->assistantLogo($assistant->name, $assistant->model, $assistant->url),
         ];
     }
 
@@ -369,19 +369,22 @@ class UserService
     }
 
     /**
-     * AI 助手没有自定义头像时的内置 logo：按 model / url 里的关键字挑，都不匹配
-     * 就用通用图标。
+     * AI 助手没有自定义头像时的内置 logo：按 name / model / url 里的关键字挑（不区分大小写），
+     * 都不匹配就用通用图标。
      */
-    private function assistantLogo(?string $model, ?string $url): string
+    private function assistantLogo(?string $name, ?string $model, ?string $url): string
     {
         $logo = 'ai-assistant.png';
-        // model 与 url 分别匹配，不要拼成一个串：关键字可能跨越拼接处产生假匹配。
-        // 两者都可为 null（新建模型时未必填写），转字符串避免 str_contains 报类型错。
+        // 三个字段分别匹配，不要拼成一个串：关键字可能跨越拼接处产生假匹配。
+        // 都可为 null（新建模型时未必填写），转字符串避免 str_contains 报类型错。
+        $fields = array_map(fn (?string $field) => mb_strtolower((string) $field), [$name, $model, $url]);
         foreach (config('mint.ai.logo', []) as $keyword => $file) {
-            if (str_contains((string) $model, (string) $keyword)
-                || str_contains((string) $url, (string) $keyword)) {
-                $logo = $file;
-                break;
+            $keyword = mb_strtolower((string) $keyword);
+            foreach ($fields as $field) {
+                if (str_contains($field, $keyword)) {
+                    $logo = $file;
+                    break 2;
+                }
             }
         }
 
