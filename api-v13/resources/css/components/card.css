@@ -193,6 +193,34 @@
     color: var(--tblr-body-color);
 }
 
+/* 编辑者头像组（编辑者 + 协作者叠放）与编辑时间 */
+.wiki-entry-editors {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--tblr-secondary-color);
+}
+
+.wiki-avatar-group {
+    display: inline-flex;
+}
+
+.wiki-avatar-group__item + .wiki-avatar-group__item {
+    margin-left: -8px;
+}
+
+.wiki-avatar-group__item .author-avatar__img,
+.wiki-avatar-group__item .author-avatar__initials {
+    border: 2px solid var(--tblr-bg-surface, #fff);
+}
+
+.wiki-entry-editors__names {
+    color: var(--tblr-body-color);
+}
+
 /* ══════════════════════════════════════════
    八、精选卡片网格（tipitaka index / wiki index 共用）
    ══════════════════════════════════════════ */

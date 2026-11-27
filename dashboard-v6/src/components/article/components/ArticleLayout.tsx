@@ -1,11 +1,11 @@
-import { Typography, Divider, Skeleton, Space, Flex } from "antd";
-import type { IStudio, IUser } from "../../../api/Auth";
+import { Typography, Divider, Skeleton, Flex } from "antd";
+import type { IStudio } from "../../../api/Auth";
 import VisibleObserver from "../../general/VisibleObserver";
 import MdView from "../../general/MdView";
 import type { JSX, ReactNode } from "react";
 import ArticleSkeleton from "./ArticleSkeleton";
 import ErrorResult from "../../general/ErrorResult";
-import User from "../../auth/User";
+import EditorsLine, { type IEditorBrief } from "../../auth/EditorsLine";
 
 const { Paragraph, Title, Text } = Typography;
 
@@ -29,7 +29,9 @@ export interface IArticleLayout {
   resList?: JSX.Element;
   created_at?: string;
   updated_at?: string;
-  editor?: IUser;
+  editor?: IEditorBrief | null;
+  /** 协作者（v3 的 co_editor）：人类授权代写的 AI 模型 */
+  coEditor?: IEditorBrief | null;
   owner?: IStudio;
   loading?: boolean;
   errorCode?: number;
@@ -49,6 +51,7 @@ const ArticleLayout = ({
   html = [],
   nodes,
   editor,
+  coEditor,
   updated_at,
   resList,
   loading,
@@ -89,9 +92,11 @@ const ArticleLayout = ({
             <Paragraph ellipsis={{ rows: 2, expandable: true, symbol: "more" }}>
               {summary}
             </Paragraph>
-            <Space>
-              <User {...editor} /> edit at {updated_at}
-            </Space>
+            <EditorsLine
+              editor={editor}
+              coEditor={coEditor}
+              updatedAt={updated_at}
+            />
             <Divider />
           </Flex>
           {html

@@ -25,6 +25,7 @@ const items = {
   "labels.first-course": "first course",
   "labels.updated-at": "updated at",
   "labels.created-at": "created at",
+  "labels.edited-at": "edited",
   "labels.recent-scan": "recent scan",
   "labels.icp": "ICP:",
   "labels.no.login": "not login",

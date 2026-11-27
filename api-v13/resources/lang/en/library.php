@@ -92,6 +92,7 @@ return [
     'current_channel' => 'Current Channel',
     'created' => 'Created',
     'updated' => 'Updated',
+    'edited_at' => 'edited :time',
     'related_anthology' => 'Related Anthologies',
     'articles_suffix' => 'articles',
 

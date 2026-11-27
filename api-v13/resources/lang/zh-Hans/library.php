@@ -92,6 +92,7 @@ return [
     'current_channel' => '当前频道',
     'created' => '创建',
     'updated' => '更新',
+    'edited_at' => '编辑于 :time',
     'related_anthology' => '相关文集',
     'articles_suffix' => '篇文章',
 

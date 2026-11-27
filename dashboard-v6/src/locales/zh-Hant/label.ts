@@ -25,6 +25,7 @@ const items = {
   "labels.first-course": "第一個課程",
   "labels.updated-at": "更新於",
   "labels.created-at": "創建於",
+  "labels.edited-at": "編輯於",
   "labels.recent-scan": "最近開啟",
   "labels.icp": "ICP:",
   "labels.no.login": "尚未登入",
