@@ -111,7 +111,7 @@ get:
                       nullable: true
                     channel:
                       type: object
-                      properties: { id: { type: string }, name: { type: string } }
+                      properties: { id: { type: string }, name: { type: string }, type: { type: string }, lang: { type: string }, studio_id: { type: string }, status: { type: integer } }
                       nullable: true
                     owner_id:
                       type: string
@@ -277,6 +277,10 @@ post:
                     properties:
                       id: { type: string }
                       name: { type: string }
+                      type: { type: string }
+                      lang: { type: string }
+                      studio_id: { type: string }
+                      status: { type: integer }
                     nullable: true
                   owner_id:
                     type: string
@@ -376,6 +380,10 @@ post:
                     properties:
                       id: { type: string }
                       name: { type: string }
+                      type: { type: string }
+                      lang: { type: string }
+                      studio_id: { type: string }
+                      status: { type: integer }
                     nullable: true
                   owner_id:
                     type: string

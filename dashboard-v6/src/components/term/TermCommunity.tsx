@@ -22,7 +22,7 @@ interface IItem<R> {
 }
 interface IWord {
   meaning: IItem<string>[];
-  note: IItem<string>[];
+  summary: IItem<string>[];
   editor: IItem<IUser>[];
 }
 
@@ -33,7 +33,7 @@ const TermCommunityWidget = ({ word }: IWidget) => {
   const intl = useIntl();
   const [show, setShow] = useState(false);
   const [wordData, setWordData] = useState<IWord>();
-  const minScore = 100; //分数阈值。低于这个分数只显示在弹出菜单中
+  const [summaryExpanded, setSummaryExpanded] = useState(false);
 
   useEffect(() => {
     if (typeof word === "undefined") {
@@ -43,7 +43,7 @@ const TermCommunityWidget = ({ word }: IWidget) => {
     lookupTerms({ word, per_page: 200 })
       .then((json) => {
         const meaning = new Map<string, number>();
-        const note = new Map<string, number>();
+        const summary = new Map<string, number>();
         const editorId = new Map<string, number>();
         const editor = new Map<string, IUser>();
         for (const it of json.data ?? []) {
@@ -54,10 +54,14 @@ const TermCommunityWidget = ({ word }: IWidget) => {
             meaning.set(it.meaning, score ? score + currScore : currScore);
           }
 
-          if (it.note) {
-            score = note.get(it.note);
-            const noteScore = it.note.length;
-            note.set(it.note, score ? score + noteScore : noteScore);
+          // summary_text：有 summary 用它，没有取正文第一段（后端算好的纯文本）
+          if (it.summary_text) {
+            score = summary.get(it.summary_text);
+            const summaryScore = it.summary_text.length;
+            summary.set(
+              it.summary_text,
+              score ? score + summaryScore : summaryScore,
+            );
           }
 
           if (it.editor?.id) {
@@ -68,7 +72,7 @@ const TermCommunityWidget = ({ word }: IWidget) => {
         }
         const _data: IWord = {
           meaning: [],
-          note: [],
+          summary: [],
           editor: [],
         };
         meaning.forEach((value, key) => {
@@ -77,12 +81,12 @@ const TermCommunityWidget = ({ word }: IWidget) => {
           }
         });
         _data.meaning.sort((a, b) => b.score - a.score);
-        note.forEach((value, key) => {
+        summary.forEach((value, key) => {
           if (key && key.length > 0) {
-            _data.note.push({ value: key, score: value });
+            _data.summary.push({ value: key, score: value });
           }
         });
-        _data.note.sort((a, b) => b.score - a.score);
+        _data.summary.sort((a, b) => b.score - a.score);
 
         editorId.forEach((value, key) => {
           const currEditor = editor.get(key);
@@ -92,6 +96,7 @@ const TermCommunityWidget = ({ word }: IWidget) => {
         });
         _data.editor.sort((a, b) => b.score - a.score);
         setWordData(_data);
+        setSummaryExpanded(false);
         if (_data.editor.length > 0) {
           setShow(true);
         }
@@ -194,20 +199,32 @@ const TermCommunityWidget = ({ word }: IWidget) => {
           ) : undefined}
         </Space>
       </div>
-      <div key="note">
+      <div key="summary">
         <Space style={{ flexWrap: "wrap" }}>
-          <Text strong>{"note:"}</Text>
-          {wordData?.note
-            .filter((value) => value.score >= minScore)
-            .map((item, id) => {
-              return (
-                <Space key={id}>
-                  {item.value}
-                  <Badge color="geekblue" size="small" count={item.score} />
-                </Space>
-              );
-            })}
+          <Text strong>{"摘要："}</Text>
         </Space>
+        {/* 只显示第一条摘要，其余点「展开」才显示 */}
+        {(summaryExpanded
+          ? wordData?.summary
+          : wordData?.summary.slice(0, 1)
+        )?.map((item, id) => {
+          return (
+            <div key={id}>
+              {item.value}
+              <Badge color="geekblue" size="small" count={item.score} />
+            </div>
+          );
+        })}
+        {wordData && wordData.summary.length > 1 ? (
+          <Typography.Link onClick={() => setSummaryExpanded((v) => !v)}>
+            {summaryExpanded
+              ? intl.formatMessage({ id: "search.show_less" })
+              : intl.formatMessage(
+                  { id: "search.show_more" },
+                  { n: wordData.summary.length - 1 },
+                )}
+          </Typography.Link>
+        ) : undefined}
       </div>
       <div key="collaborator">
         <Space style={{ flexWrap: "wrap" }}>

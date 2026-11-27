@@ -1,4 +1,4 @@
-import { Breadcrumb, Button, Space } from "antd";
+import { Breadcrumb, Button, Divider, Space, Typography } from "antd";
 import { useIntl } from "react-intl";
 import { EditOutlined, ShareAltOutlined } from "@ant-design/icons";
 import type { ArticleMode } from "../../api/article";
@@ -13,9 +13,12 @@ import ArticleHeader from "./components/ArticleHeader";
 import ArticleLayout from "./components/ArticleLayout";
 import { useTerm } from "./hooks/useTerm";
 import TermShare from "../term/TermShare";
+import ChannelStatusTag from "../channel/ChannelStatusTag";
 import { QualityCtl } from "../template/Quality";
 import MarkupView from "../markup/MarkupView";
 import type { MarkupNode } from "../markup/types";
+
+const { Text } = Typography;
 
 interface IWidget {
   id?: string;
@@ -114,6 +117,15 @@ const TypeTermWidget = ({
         ]}
         editor={term?.editor}
         coEditor={term?.co_editor}
+        afterEditors={
+          term?.channel ? (
+            <Space size="small">
+              <Divider orientation="vertical" />
+              <Text type="secondary">{term.channel.name}</Text>
+              <ChannelStatusTag status={term.channel.status} />
+            </Space>
+          ) : undefined
+        }
         created_at={term?.created_at}
         updated_at={term?.updated_at}
         loading={loading}

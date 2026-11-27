@@ -37927,6 +37927,10 @@ export interface operations {
                             channel?: {
                                 id?: string;
                                 name?: string;
+                                type?: string;
+                                lang?: string;
+                                studio_id?: string;
+                                status?: number;
                             } | null;
                             owner_id?: string;
                             quality?: string | null;
@@ -38043,6 +38047,10 @@ export interface operations {
                             channel?: {
                                 id?: string;
                                 name?: string;
+                                type?: string;
+                                lang?: string;
+                                studio_id?: string;
+                                status?: number;
                             } | null;
                             owner_id?: string;
                             quality?: string | null;
@@ -38104,6 +38112,10 @@ export interface operations {
                             channel?: {
                                 id?: string;
                                 name?: string;
+                                type?: string;
+                                lang?: string;
+                                studio_id?: string;
+                                status?: number;
                             } | null;
                             owner_id?: string;
                             quality?: string | null;
@@ -42072,6 +42084,10 @@ export interface operations {
                             channel?: {
                                 id?: string;
                                 name?: string;
+                                type?: string;
+                                lang?: string;
+                                studio_id?: string;
+                                status?: number;
                             } | null;
                             owner_id?: string;
                             quality?: string | null;
@@ -42191,6 +42207,10 @@ export interface operations {
                             channel?: {
                                 id?: string;
                                 name?: string;
+                                type?: string;
+                                lang?: string;
+                                studio_id?: string;
+                                status?: number;
                             } | null;
                             owner_id?: string;
                             quality?: string | null;
@@ -42252,6 +42272,10 @@ export interface operations {
                             channel?: {
                                 id?: string;
                                 name?: string;
+                                type?: string;
+                                lang?: string;
+                                studio_id?: string;
+                                status?: number;
                             } | null;
                             owner_id?: string;
                             quality?: string | null;
@@ -42414,6 +42438,10 @@ export interface operations {
                             channel?: {
                                 id?: string;
                                 name?: string;
+                                type?: string;
+                                lang?: string;
+                                studio_id?: string;
+                                status?: number;
                             } | null;
                             owner_id?: string;
                             quality?: string | null;
@@ -42498,6 +42526,10 @@ export interface operations {
                             channel?: {
                                 id?: string;
                                 name?: string;
+                                type?: string;
+                                lang?: string;
+                                studio_id?: string;
+                                status?: number;
                             } | null;
                             owner_id?: string;
                             quality?: string | null;
@@ -42583,6 +42615,10 @@ export interface operations {
                             channel?: {
                                 id?: string;
                                 name?: string;
+                                type?: string;
+                                lang?: string;
+                                studio_id?: string;
+                                status?: number;
                             } | null;
                             owner_id?: string;
                             quality?: string | null;
@@ -42696,6 +42732,10 @@ export interface operations {
                             channel?: {
                                 id?: string;
                                 name?: string;
+                                type?: string;
+                                lang?: string;
+                                studio_id?: string;
+                                status?: number;
                             } | null;
                             owner_id?: string;
                             quality?: string | null;
