@@ -127,7 +127,7 @@ const SearchVocabulary = ({
         value={input}
         style={{ width: "100%" }}
         classNames={{ popup: { root: "certain-category-search-dropdown" } }}
-        popupMatchSelectWidth={400}
+        popupMatchSelectWidth={true}
         options={options}
         onChange={(val: string) => {
           setInput(val);
