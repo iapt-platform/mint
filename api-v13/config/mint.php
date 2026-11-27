@@ -185,7 +185,7 @@ return [
         'logo' => [
             'gemini' => 'gemini-color.png',
             'grok' => 'grok.png',
-            'Claude' => 'claude-color.png',
+            'claude' => 'claude-color.png',
             'api.openai.com' => 'openai.png',
             'qwen' => 'qwen-color.png',
             'deepseek' => 'deepseek-color.png',
